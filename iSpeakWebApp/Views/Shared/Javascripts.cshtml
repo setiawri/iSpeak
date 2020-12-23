@@ -1,0 +1,203 @@
+﻿<!-- hidden value to reset datatable state save -->
+<span id="removeDatatablesStateSave" class="d-none">@ViewBag.RemoveDatatablesStateSave</span>
+
+<script type="text/javascript">
+
+    // TEXTBOX =====================================================================================================================================================
+
+    function ZeroIfEmpty(value) { return setIfEmpty(value, 0); }
+    function setIfEmpty(value, defaultValue) {
+        if (value == '')
+            return defaultValue;
+        else
+            return value;
+    }
+
+    function applyEventsToInputTextboxes() {
+        //45 = minus sign
+        //46 = dot sign
+        //48-57 = 0-9
+
+        $('.numericonly').bind('keypress', function (e) {
+            return event.charCode == 45 || event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57);
+        });
+
+        $('.positivenumericonly').bind('keypress', function (e) {
+            return event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57);
+        });
+
+        $('.integeronly').bind('keypress', function (e) {
+            return event.charCode == 45 || (event.charCode >= 48 && event.charCode <= 57);
+        });
+
+        $('.positiveintegeronly').bind('keypress', function (e) {
+            return (event.charCode >= 48 && event.charCode <= 57);
+        });
+
+        //allow editing text after initial select all on focus
+        $('input').on('focus', function (e) {
+            $(this)
+                .one('mouseup', function () {
+                    $(this).select();
+                    return false;
+                })
+                .select();
+        });
+    }
+
+    // NAVIGATION MENU =============================================================================================================================================
+
+    function activateMenu(id) {
+        $('#Menu_'+id).addClass('active');
+    }
+
+    // BOOTBOX =====================================================================================================================================================
+
+    function showBootboxMessage() {
+        if ('@ViewBag.BootboxMessage' != '') {
+            bootbox.alert({ backdrop: true, message: '@ViewBag.BootboxMessage' });
+        }
+    }
+
+    // CALENDAR ====================================================================================================================================================
+
+    $('.daterange-picker').daterangepicker({ singleDatePicker: true, locale: { format: 'YYYY/MM/DD' } });
+
+    // DATE MANIPULATOR ============================================================================================================================================
+
+    var monthNames = ["Jan", "Feb", "Mar", "Apr",
+        "May", "Jun", "Jul", "Aug",
+        "Sep", "Oct", "Nov", "Dec"];
+    function formatDate(date, format) {
+        var result = "";
+        if (format == 'dd MMM yyyy') {
+            var dd = (('' + date.getDate()).length < 2 ? '0' : '') + date.getDate() + ' ';
+            var MMM = monthNames[date.getMonth()];
+            var yyyy = date.getFullYear();
+
+            result = dd + ' ' + MMM + ' ' + yyyy;
+        }
+        return result;
+    }
+
+    function parseJSONDate(value) {
+        return new Date(parseInt((value).match(/\d+/)[0]));
+    }
+
+    // STRING MANIPULATOR ==========================================================================================================================================
+
+    function appendChange(originalText, oldValue, newValue, pretext) {
+        if (oldValue != newValue)
+            return append(originalText, pretext + "'" + oldValue + "' => '" + newValue + "'");
+        else
+            return originalText;
+    }
+
+    function append(originalText, newValue) {
+        if (originalText == "" && newValue != "")
+            return newValue;
+        else if (newValue == "")
+            return originalText;
+        else {
+            if (originalText != "")
+                originalText += " <BR>";
+            return originalText += newValue;
+        }
+    }
+
+    // ACTIVITY LOGS ===============================================================================================================================================
+
+    function Log(id) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetLog", "ActivityLogs", new { Area = "" })',
+            data: {
+                ReffId: id
+            },
+            success: function (data) {
+                var dialog = bootbox.alert({
+                    title: 'Log',
+                    size: 'large',
+                    message: data.content,
+                    backdrop: true
+                }).off("shown.bs.modal"); //scroll to top
+            }, //end success
+            error: function (result) {
+                bootbox.alert({ backdrop: true, message: "Error " + result });
+            } //end error
+        }); //end ajax
+    }
+
+    // DATATABLES PLUGIN ===========================================================================================================================================
+
+    var datatable = $('.datatable').DataTable({
+        autoWidth: false,
+        pagingType: 'full_numbers',
+        order: [[0, 'asc']],
+        bStateSave: true,
+        stateSaveCallback: function (settings, data) {
+            localStorage.setItem('DataTables_' + settings.sInstance, JSON.stringify(data))
+        },
+        stateLoadCallback: function (settings) {
+            return JSON.parse(localStorage.getItem('DataTables_' + settings.sInstance))
+        },
+        stateLoadParams: function (settings, data) {
+            if ($("#removeDatatablesStateSave").text() == "1") {
+                data.search.search = "";
+                data.start = 0;
+            }
+        },
+        columnDefs: [
+            { searchable: false, targets: "non-searchable" },
+            { orderable: false, targets: "non-sortable" }
+        ],
+        dom: '<"datatable-header"flp>' +
+            '<"datatable-scroll"t>' +
+            '<"datatable-footer"ilp>',
+        language: {
+            emptyTable: "Gunakan filter dan tekan tombol search untuk menampilkan data",
+            search: '<span>Filter:</span> _INPUT_',
+            searchPlaceholder: 'enter keyword',
+            lengthMenu: '<span>Rows:</span> _MENU_',
+            paginate: {
+                'first': 'First', 'last': 'Last', 'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;', 'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;'
+            }
+        }
+    });
+
+    function getSearch() {
+        if ((search == null || search == "") && $('input[aria-controls=DataTables_Table_0]').val() != undefined)
+            return $('input[aria-controls=DataTables_Table_0]').val();
+        else
+            return "";
+    }
+
+    function setSearch(search) {
+        if ($('input[aria-controls=DataTables_Table_0]').val() != undefined)
+            $('input[aria-controls=DataTables_Table_0]').val(search).keyup();
+    }
+
+    // MOUSE EVENTS ================================================================================================================================================
+
+    //disable scrollwheel mouse on input type number
+    $(document).on("wheel", "input[type=number]", function (e) {
+        $(this).blur();
+    });
+
+    //==============================================================================================================================================================
+
+    $(document).ready(function () {
+        $("input").attr("autocomplete", "off"); //turn off autocomplete
+        $('.form-input-styled').uniform(); //??
+        $('.select2').select2(); //apply filtering on dropdownlists
+        $('form:not(.filter) :input:visible:enabled:first').select(); //select content of first control
+
+        if (document.querySelector('.form-check-input-switchery') != null) {
+            var switchery = new Switchery(document.querySelector('.form-check-input-switchery')); //on-off switch
+        }
+
+        applyEventsToInputTextboxes(); //call here so it is executed initially
+        showBootboxMessage();
+    });
+
+</script>
