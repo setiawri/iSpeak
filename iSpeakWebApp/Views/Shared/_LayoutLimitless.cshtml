@@ -56,35 +56,37 @@
                         <i class="icon-gear mr-2"></i>Settings
                     </a>
                     <div class="dropdown-menu">
-                        <a href="@Url.Action("Edit", "Settings", new { Area = "" })" class="dropdown-item">General Settings</a>
-                        <a href="@Url.Action("Index", "Regions", new { Area = "", rss=1 })" class="dropdown-item">Wilayah</a>
+                        <a href="@Url.Action("Index", "Consignments")" class="dropdown-item">General Settings</a>
+                        <a href="@Url.Action("Index", "Role")" class="dropdown-item">User Roles</a>
+                        <a href="@Url.Action("Index", "Branches")" class="dropdown-item">Branches</a>
                         <div class="dropdown-submenu">
-                            <a href="#" class="dropdown-item dropdown-toggle">Employee</a>
+                            <a href="#" class="dropdown-item dropdown-toggle">Inventory</a>
                             <div class="dropdown-menu">
-                                <a href="@Url.Action("Index", "EmploymentTypes", new { Area = "", rss=1 })" class="dropdown-item">Tipe Kerja</a>
-                                <a href="@Url.Action("Index", "MaritalStatuses", new { Area = "", rss=1 })" class="dropdown-item">Status Kawin</a>
-                                <a href="@Url.Action("Index", "CounterAreas", new { Area = "", rss=1 })" class="dropdown-item">Area</a>
-                                <a href="@Url.Action("Index", "PayrollDepartments", new { Area = "", rss=1 })" class="dropdown-item">Departemen</a>
-                                <a href="@Url.Action("Index", "Banks", new { Area = "", rss=1 })" class="dropdown-item">Bank</a>
+                                <a href="@Url.Action("Index", "Suppliers")" class="dropdown-item">Suppliers</a>
+                                <a href="@Url.Action("Index", "Products")" class="dropdown-item">Products</a>
+                                <a href="@Url.Action("Index", "Units")" class="dropdown-item">Units</a>
                             </div>
                         </div>
                         <div class="dropdown-submenu">
-                            <a href="#" class="dropdown-item dropdown-toggle">Payroll</a>
+                            <a href="#" class="dropdown-item dropdown-toggle">Lessons</a>
                             <div class="dropdown-menu">
-                                <a href="@Url.Action("Index", "PayrollPaymentDates", new { Area = "Payroll", rss=1 })" class="dropdown-item">Tgl Bayar</a>
-                                <a href="@Url.Action("Index", "RegionPayrates", new { Area = "Payroll", rss=1 })" class="dropdown-item">UMP</a>
-                                <a href="@Url.Action("Index", "PayrollEarnings", new { Area = "Payroll", rss=1 })" class="dropdown-item">Pendapatan</a>
-                                <a href="@Url.Action("Index", "PayrollDeductions", new { Area = "Payroll", rss=1 })" class="dropdown-item">Pemotongan</a>
-                                <a href="@Url.Action("Index", "PayrollDebts", new { Area = "Payroll", rss=1 })" class="dropdown-item">Hutang</a>
+                                <a href="@Url.Action("Index", "Languages")" class="dropdown-item">Languages</a>
+                                <a href="@Url.Action("Index", "LessonTypes")" class="dropdown-item">Lesson Types</a>
+                                <a href="@Url.Action("Index", "LessonPackages")" class="dropdown-item">Lesson Packages</a>
                             </div>
                         </div>
                         <div class="dropdown-submenu">
-                            <a href="#" class="dropdown-item dropdown-toggle">Reimbursement</a>
+                            <a href="#" class="dropdown-item dropdown-toggle">Expenses</a>
                             <div class="dropdown-menu">
-                                <a href="@Url.Action("Index", "ReimbursementPaymentDates", new { Area = "Reimbursement", rss=1 })" class="dropdown-item">Tgl Bayar</a>
-                                <a href="@Url.Action("Index", "ReimbursementCategories", new { Area = "Reimbursement", rss=1 })" class="dropdown-item">Kategori</a>
+                                <a href="@Url.Action("Index", "ExpenseCategories")" class="dropdown-item">Expense Categories</a>
+                                <a href="@Url.Action("Index", "Expenses")" class="dropdown-item">Expenses</a>
                             </div>
                         </div>
+                        <a href="@Url.Action("Index", "Consignments")" class="dropdown-item">Consignments</a>
+                        <a href="@Url.Action("Index", "Vouchers")" class="dropdown-item">Vouchers</a>
+                        <a href="@Url.Action("Index", "Services")" class="dropdown-item">Services</a>
+                        <a href="@Url.Action("Index", "PettyCashRecordsCategories")" class="dropdown-item">Petty Cash Categories</a>
+                        <a href="@Url.Action("Index", "PromotionEvents")" class="dropdown-item">Promotion Events</a>
                     </div>
                 </li>
             </ul>

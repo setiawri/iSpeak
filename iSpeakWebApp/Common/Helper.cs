@@ -26,8 +26,19 @@ namespace iSpeakWebApp
         public const string IMAGEFOLDERPATH = "~"+ IMAGEFOLDERURL;
         public const string NOIMAGEFILE = "no-image.jpg";
 
+        /* DATABASE INFORMATION *******************************************************************************************************************************/
+
+        private const string DEVCOMPUTERNAME = "RQ-ASUS";
+        private const string SERVERNAME_DEV = @".\SQLEXPRESS";
+        private const string SERVERNAME_LIVE = "43.255.152.25";
+        private const string DBNAME = "iSpeakWeb";
+        private const string USERID = "ispeak";
+        private const string PASSWORD = "1SpeakWell";
+
         /* METHODS ********************************************************************************************************************************************/
-        
+
+        public static string ConnectionString { get { return DBConnection.getWebConnectionString(Environment.MachineName == DEVCOMPUTERNAME ? SERVERNAME_DEV : SERVERNAME_LIVE, DBNAME, USERID, PASSWORD); } }
+
         public static string getImageUrl(string imageName, HttpRequestBase Request, HttpServerUtilityBase Server)
         {
             string filename = NOIMAGEFILE;
