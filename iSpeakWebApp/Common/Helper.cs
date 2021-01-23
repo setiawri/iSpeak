@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.IO;
 using LIBUtil;
+using iSpeakWebApp.Controllers;
 
 namespace iSpeakWebApp
 {
@@ -51,6 +52,11 @@ namespace iSpeakWebApp
             }
 
             return (Request.ApplicationPath + IMAGEFOLDERURL + filename).Replace("//", "/");
+        }
+
+        public static Guid getBranchId(HttpSessionStateBase Session) 
+        { 
+            return (Guid)Session[UserAccountsController.SESSION_Branches_Id];
         }
 
         public static DateTime setFilterViewBag(ControllerBase controller, int? year, int? month, DateTime? PayPeriod, string search, string periodChange, int? ActionType)

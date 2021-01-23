@@ -1,6 +1,16 @@
 ﻿
 namespace iSpeakWebApp
 {
+    public enum EnumReminderStatuses : byte
+    {
+        New,
+        InProgress,
+        OnHold,
+        Waiting,
+        Completed,
+        Cancel
+    }
+
     public enum EnumActions
     {
         Create,

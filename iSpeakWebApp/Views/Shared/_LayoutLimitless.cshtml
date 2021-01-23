@@ -21,6 +21,9 @@
             <span class="navbar-text ml-md-3 mr-md-auto h1 my-0 py-1">@Helper.COMPANYNAME</span>
             <span class="navbar-text">
             </span>
+            <span class="navbar-text">
+                @Html.DropDownList("Branches_Id", new SelectList(SelectLists.getBranchList(Session), "Value", "Text", Helper.getBranchId(Session).ToString()), new { @class = "select2" })
+            </span>
             <ul class="navbar-nav">
                 <li class="nav-item dropdown dropdown-user">
                     <a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">

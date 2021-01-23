@@ -125,6 +125,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Common\SelectLists.cs" />
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -133,6 +134,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\RemindersModel.cs" />
+    <Compile Include="Models\BranchesModel.cs" />
     <Compile Include="Models\UserAccountsModel.cs" />
     <Compile Include="Models\SettingsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

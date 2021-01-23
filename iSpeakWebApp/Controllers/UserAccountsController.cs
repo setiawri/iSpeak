@@ -29,6 +29,7 @@ namespace iSpeakWebApp.Controllers
         public const string SESSION_UserAccounts_Id = "UserAccounts_Id";
         public const string SESSION_UserAccounts_Username = "UserAccounts_Username";
         public const string SESSION_UserAccounts_ResetPassword = "UserAccounts_ResetPassword";
+        public const string SESSION_Branches_Id = "Branches_Id";
 
         public const string SESSION_OperatorPrivilegePayrollModel_PayrollApproval = "OperatorPrivilegePayrollModel_PayrollApproval";
         public const string SESSION_OperatorPrivilegePayrollModel_ReimbursementApproval = "OperatorPrivilegePayrollModel_ReimbursementApproval";
@@ -178,6 +179,7 @@ namespace iSpeakWebApp.Controllers
                 Session[SESSION_UserAccounts_Id] = model.Id;
                 Session[SESSION_UserAccounts_Username] = model.Username;
                 Session[SESSION_UserAccounts_ResetPassword] = model.ResetPassword;
+                Session[SESSION_Branches_Id] = model.Default_Branches_Id;
 
                 AccessList accessList = new AccessList();
                 //accessList.populate(result.OperatorPrivilegePayrollModel);

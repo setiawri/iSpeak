@@ -1,6 +1,89 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model IEnumerable<iSpeakWebApp.Models.RemindersModel>
+
+@{
+    ViewBag.Title = "Dashboard";
 }
+
+<div class="content-wrapper">
+    <!-- Content area -->
+    <div class="content">
+        <!-- Form inputs -->
+        <div class="card animated bounceInLeft">
+            <div class="card-body">
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-reminders-tab" data-toggle="tab" href="#nav-reminders" role="tab" aria-controls="nav-reminders" aria-selected="true">Reminders (@ViewBag.ActiveReminderCount)</a>
+                        <a class="nav-item nav-link" id="nav-currentbirthdays-tab" data-toggle="tab" href="#nav-currentbirthdays" role="tab" aria-controls="nav-currentbirthdays" aria-selected="false">Current Birthdays</a>
+                        <a class="nav-item nav-link" id="nav-nextbirthdays-tab" data-toggle="tab" href="#nav-nextbirthdays" role="tab" aria-controls="nav-nextbirthdays" aria-selected="false">Next Birthdays</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-reminders" role="tabpanel" aria-labelledby="nav-reminders-tab">
+                        <a href="@Url.Action("CreateReminder", "Home", new { Area = "" })" class="btn btn-sm btn-success">Create<i class="icon-plus22 ml-2"></i></a>
+                        <div class="table-responsive">
+                            <table class="table table-hover datatable">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.Timestamp)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                                            <td>
+                                                @if (item.Status_enumid == EnumReminderStatuses.New)
+                                                {
+                                                    <span class="badge badge-dark d-block">New</span>
+                                                }
+                                                else if (item.Status_enumid == EnumReminderStatuses.InProgress)
+                                                {
+                                                    <span class="badge badge-info d-block">In Progress</span>
+                                                }
+                                                else if (item.Status_enumid == EnumReminderStatuses.OnHold)
+                                                {
+                                                    <span class="badge bg-brown d-block">On Hold</span>
+                                                }
+                                                else if (item.Status_enumid == EnumReminderStatuses.Waiting)
+                                                {
+                                                    <span class="badge badge-warning d-block">Waiting</span>
+                                                }
+                                                else if (item.Status_enumid == EnumReminderStatuses.Completed)
+                                                {
+                                                    <span class="badge badge-primary d-block">Completed</span>
+                                                }
+                                                else if (item.Status_enumid == EnumReminderStatuses.Cancel)
+                                                {
+                                                    <span class="badge badge-danger d-block">Cancel</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0)" onclick="Update_Reminder('@item.Id')">Update</a> |
+                                                <a href="javascript:void(0)" onclick="View_Log('@item.Id')">Log</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="nav-currentbirthdays" role="tabpanel" aria-labelledby="nav-currentbirthdays-tab">...</div>
+
+
+                    <div class="tab-pane fade" id="nav-nextbirthdays" role="tabpanel" aria-labelledby="nav-nextbirthdays-tab">...</div>
+                </div>
+            </div>
+        </div>
+        <!-- /form inputs -->
+    </div>
+    <!-- /content area -->
+</div>
 
 <script type="text/javascript">
 
