@@ -220,7 +220,7 @@
     <Content Include="Views\Shared\Scripts.cshtml" />
     <Content Include="Views\Shared\Javascripts.cshtml" />
     <Content Include="Views\UserAccounts\Login.cshtml" />
-    <Content Include="Views\UserAccounts\ResetPassword.cshtml" />
+    <Content Include="Views\UserAccounts\ChangePassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\LIBUtil\LIBUtil\LIBUtil\LIBUtil.csproj">

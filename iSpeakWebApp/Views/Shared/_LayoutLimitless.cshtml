@@ -28,8 +28,8 @@
                         @*<span>@Session[OperatorController.SESSION_Username]</span>*@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        @*<a href="@Url.Action("ChangePassword", "Manage")" class="dropdown-item"><i class="icon-lock2"></i> Change Password</a>*@
-                        @*<a href="@Url.Action("LogOff", OperatorController.CONTROLLERNAME, new { Area = "" })" class="dropdown-item"><i class="icon-switch2"></i> Logout</a>*@
+                        <a href="@Url.Action("ChangePassword", UserAccountsController.CONTROLLERNAME)" class="dropdown-item"><i class="icon-lock2"></i>Change Password</a>
+                        <a href="@Url.Action("LogOff", UserAccountsController.CONTROLLERNAME)" class="dropdown-item"><i class="icon-switch2"></i>Logout</a>
                     </div>
                 </li>
             </ul>

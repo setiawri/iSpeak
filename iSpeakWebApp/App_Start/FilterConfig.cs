@@ -18,7 +18,7 @@ namespace iSpeakWebApp
             public void OnActionExecuting(ActionExecutingContext context)
             {
                 if (context.ActionDescriptor.ActionName != nameof(UserAccountsController.Login)
-                    && context.ActionDescriptor.ActionName != nameof(UserAccountsController.ResetPassword))
+                    && context.ActionDescriptor.ActionName != nameof(UserAccountsController.ChangePassword))
                 {
                     if (!UserAccountsController.isLoggedIn(context.HttpContext.Session))
                     {

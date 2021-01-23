@@ -72,7 +72,7 @@ namespace iSpeakWebApp.Controllers
                 if (userAccount.ResetPassword)
                 {
                     TempData["UserAccountsModel"] = userAccount;
-                    return RedirectToAction(nameof(UserAccountsController.ResetPassword), CONTROLLERNAME, new { returnUrl = returnUrl });
+                    return RedirectToAction(nameof(UserAccountsController.ChangePassword), CONTROLLERNAME, new { returnUrl = returnUrl });
                 }
                 else
                 {
@@ -83,22 +83,32 @@ namespace iSpeakWebApp.Controllers
         }
 
 
-        /* RESET PASSWORD PAGE ********************************************************************************************************************************/
+        /* CHANGE PASSWORD PAGE *******************************************************************************************************************************/
 
-        public ActionResult ResetPassword(string returnUrl)
+        public ActionResult ChangePassword(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
             UserAccountsModel model = (UserAccountsModel)TempData["UserAccountsModel"];
+            object Id = getUserId(Session);
+            if (model == null)
+            {
+                if(Id == null)
+                    return RedirectToAction(nameof(Login));
+                else
+                    model = db.UserAccounts.Where(x => x.Id == (Guid)Id).FirstOrDefault();
+            }
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult ResetPassword(Guid Id, string NewPassword, string ConfirmPassword, string returnUrl)
+        public ActionResult ChangePassword(Guid Id, string CurrentPassword, string NewPassword, string ConfirmPassword, string returnUrl)
         {
             UserAccountsModel model = db.UserAccounts.Where(x => x.Id == Id).FirstOrDefault();
-
             string SanitizedNewPassword = Util.sanitizeString(NewPassword);
-            if (string.IsNullOrEmpty(SanitizedNewPassword) || SanitizedNewPassword.Length < 6)
+
+            if (HashPassword(CurrentPassword) != model.Password)
+                ModelState.AddModelError("", "Invalid current password");
+            else if (string.IsNullOrEmpty(SanitizedNewPassword) || SanitizedNewPassword.Length < 6)
                 ModelState.AddModelError("", "Invalid new password. Must be at least 6 characters");
             else if(string.IsNullOrEmpty(ConfirmPassword) || SanitizedNewPassword != ConfirmPassword)
                 ModelState.AddModelError("", "Invalid confirm password");
@@ -146,9 +156,9 @@ namespace iSpeakWebApp.Controllers
             }
         }
 
-        public static int getUserId(HttpSessionStateBase Session)
+        public static object getUserId(HttpSessionStateBase Session)
         {
-            return int.Parse(Session[SESSION_UserAccounts_Id].ToString());
+            return Session[SESSION_UserAccounts_Id];
         }
 
         public static bool isLoggedIn(HttpSessionStateBase Session)
@@ -156,7 +166,7 @@ namespace iSpeakWebApp.Controllers
             return Session[SESSION_UserAccounts_Id] != null;
         }
 
-        public static bool isResetPassword(HttpSessionStateBase Session)
+        public static bool isChangePassword(HttpSessionStateBase Session)
         {
             return (bool)Session[SESSION_UserAccounts_ResetPassword];
         }
