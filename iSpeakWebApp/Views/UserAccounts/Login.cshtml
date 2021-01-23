@@ -1,0 +1,85 @@
+﻿@using iSpeakWebApp.Controllers
+@model iSpeakWebApp.Models.UserAccountsModel
+@{
+    Layout = null;
+    ViewBag.Title = "Login";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewBag.Title</title>
+    @Html.Partial("Scripts")
+</head>
+<body class="bg-slate-800">
+    <!-- Page content -->
+    <div class="page-content">
+        <!-- Main content -->
+        <div class="content-wrapper">
+            <!-- Content area -->
+            <div class="content d-flex justify-content-center align-items-center">
+                <!-- Login card -->
+                @using (Html.BeginForm("Login", UserAccountsController.CONTROLLERNAME,
+                    new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+                    new { @style = "width:350px", @class = "form-horizontal login-form", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="card mb-0">
+                        <div class="card-body">
+                            <span class="form-text text-center display-1 text-muted">@Helper.COMPANYNAME</span>
+                            <div class="text-center mb-3">
+                                @*<i class="icon-info3 icon-2x text-warning-400 border-warning-400 border-3 rounded-round p-3 mb-3 mt-1"></i>*@
+                                @*<img src="~/assets/images/logo.png" class="img-responsive img-circle img-rounded rounded-round mb-3" width="150px" />*@
+                                @*<h5 class="mb-0">Login</h5>*@
+                                @*<span class="d-block text-muted">Your credentials</span>*@
+                            </div>
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group form-group-feedback form-group-feedback-left mx-4">
+                                <input type="text" id="Username" name="Username" value="@(ViewBag.Username ?? "")" class="form-control" placeholder="Username">
+                                <div class="form-control-feedback">
+                                    <i class="icon-user text-muted"></i>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-feedback form-group-feedback-left mx-4">
+                                <input type="password" id="Password" name="Password" class="form-control" placeholder="Password">
+                                <div class="form-control-feedback">
+                                    <i class="icon-lock2 text-muted"></i>
+                                </div>
+                            </div>
+                            <div class="form-group d-flex align-items-center mx-4">
+                                <div class="form-check mb-0 d-none">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" name="remember" class="form-input-styled" checked data-fouc>
+                                        Remember
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group mx-4">
+                                <button type="submit" class="btn btn-primary btn-block">Sign in<i class="icon-circle-right2 ml-2"></i></button>
+                            </div>
+                            <span class="form-text text-center text-muted">@Helper.APP_VERSION</span>
+                        </div>
+                    </div>
+                }
+                <!-- /login card -->
+            </div>
+            <!-- /content area -->
+        </div>
+        <!-- /main content -->
+    </div>
+    <!-- /page content -->
+</body>
+</html>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.form-input-styled').uniform();
+
+        if ($('#Username').val() == '')
+            $('#Username').select();
+        else
+            $('#Password').select();
+    });
+</script>

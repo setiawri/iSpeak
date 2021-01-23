@@ -28,7 +28,7 @@ namespace iSpeakWebApp
 
         /* DATABASE INFORMATION *******************************************************************************************************************************/
 
-        private const string DEVCOMPUTERNAME = "RQ-ASUS";
+        public const string DEVCOMPUTERNAME = "RQ-ASUS";
         private const string SERVERNAME_DEV = @".\SQLEXPRESS";
         private const string SERVERNAME_LIVE = "43.255.152.25";
         private const string DBNAME = "iSpeakWeb";

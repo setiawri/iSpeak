@@ -29,7 +29,7 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
                         @*<a href="@Url.Action("ChangePassword", "Manage")" class="dropdown-item"><i class="icon-lock2"></i> Change Password</a>*@
-                        @*<a href="@Url.Action("LogOff", OperatorController.LOGIN_CONTROLLERNAME, new { Area = "" })" class="dropdown-item"><i class="icon-switch2"></i> Logout</a>*@
+                        @*<a href="@Url.Action("LogOff", OperatorController.CONTROLLERNAME, new { Area = "" })" class="dropdown-item"><i class="icon-switch2"></i> Logout</a>*@
                     </div>
                 </li>
             </ul>
@@ -50,6 +50,61 @@
                     <a href="@Url.Action("Index", "Home", new { Area = "", rss=1 })" class="navbar-nav-link">
                         <i class="icon-home4 mr-2"></i>Dashboard
                     </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
+                        <i class="icon-list3 mr-2"></i>
+                        Sale
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="@Url.Action("Index", "Sale")" class="dropdown-item">Sale Invoices</a>
+                        <a href="@Url.Action("Print", "Payments")" class="dropdown-item">Payments</a>
+                        <a href="@Url.Action("Index", "Return")" class="dropdown-item">Returns</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
+                        <i class="icon-notebook mr-2"></i>
+                        Schedules
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="@Url.Action("TutorIndex", "Schedules")" class="dropdown-item">Tutor</a>
+                        <a href="@Url.Action("StudentIndex", "Schedules")" class="dropdown-item">Student</a>
+                        <a href="@Url.Action("Search", "Schedules")" class="dropdown-item">Search</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("Index", "LessonSessions")" class="navbar-nav-link">
+                        <i class="icon-meter2 mr-2"></i>
+                        Sessions
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="@Url.Action("Index", "Inventory")" class="navbar-nav-link">
+                        <i class="icon-clipboard6 mr-2"></i>
+                        Inventory
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="@Url.Action("Index", "PettyCashRecords")" class="navbar-nav-link">
+                        <i class="icon-drawer mr-2"></i>
+                        Petty Cash
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
+                        <i class="icon-stats-bars2 mr-2"></i>
+                        Internal
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="@Url.Action("NewStudent", "Reports")" class="dropdown-item">New Student</a>
+                        <a href="@Url.Action("Index", "HourlyRates")" class="dropdown-item">Payroll Rates</a>
+                        <a href="@Url.Action("Index", "Payrolls")" class="dropdown-item">New Payroll</a>
+                        <a href="@Url.Action("Payroll", "Reports")" class="dropdown-item">Payroll</a>
+                        <a href="@Url.Action("PayrollPayments", "Reports")" class="dropdown-item">Payroll Payments</a>
+                        <a href="@Url.Action("ProfitLoss", "Reports")" class="dropdown-item">Profit &amp; Loss</a>
+                        <a href="@Url.Action("SendEmails", "Reports")" class="dropdown-item">Send Emails</a>
+                    </div>
                 </li>
                 <li id="Menu_Settings" class="nav-item dropdown">
                     <a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
@@ -88,6 +143,18 @@
                         <a href="@Url.Action("Index", "PettyCashRecordsCategories")" class="dropdown-item">Petty Cash Categories</a>
                         <a href="@Url.Action("Index", "PromotionEvents")" class="dropdown-item">Promotion Events</a>
                     </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="@Url.Action("Index", "User")" class="navbar-nav-link">
+                        <i class="icon-users2 mr-2"></i>
+                        Accounts
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="@Url.Action("Index", "Files")" class="navbar-nav-link">
+                        <i class="icon-file-upload2 mr-2"></i>
+                        Files
+                    </a>
                 </li>
             </ul>
         </div>

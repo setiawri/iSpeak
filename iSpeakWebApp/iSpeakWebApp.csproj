@@ -128,10 +128,12 @@
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\UserAccountsController.cs" />
     <Compile Include="DBContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\UserAccountsModel.cs" />
     <Compile Include="Models\SettingsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -217,6 +219,8 @@
     <Content Include="Views\Shared\_LayoutLimitless.cshtml" />
     <Content Include="Views\Shared\Scripts.cshtml" />
     <Content Include="Views\Shared\Javascripts.cshtml" />
+    <Content Include="Views\UserAccounts\Login.cshtml" />
+    <Content Include="Views\UserAccounts\ResetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\LIBUtil\LIBUtil\LIBUtil\LIBUtil.csproj">
