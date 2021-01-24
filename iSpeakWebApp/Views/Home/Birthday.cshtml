@@ -1,0 +1,124 @@
+﻿@model IEnumerable<iSpeakWebApp.Models.UserAccountsModel>
+
+<div class="row mt-0">
+    <div class="col-lg-2">
+        <div class="row col-lg-12">
+            <label class="mb-0">Month</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <button type="button" class="btn btn-light" onclick="MonthsDropdownChange('MonthsDropdown', '@EnumActions.Previous.ToString()')">&lt;</button>
+                    <select id="MonthsDropdown" class="form-control select2">
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-light" onclick="MonthsDropdownChange('MonthsDropdown', '@EnumActions.Next.ToString()')">&gt;</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row col-lg-2">
+        <div class="col-lg-12">
+            <label class="mb-0">Role</label>
+            <div class="input-group">
+                @Html.DropDownList("UserAccountRoles", ViewBag.UserAccountRoles as SelectList, "ALL", new { @class = "select2", @style = "height:auto;" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row col-lg-2">
+        <div class="col-lg-12">
+            <label class="mb-0">&nbsp;</label>
+            <div class="form-group mb-0">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-primary form-control" onclick="LoadBirthdays()"><i class="icon-reload-alt mr-2"></i>LOAD</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table id="datatableBirthday" class="table table-hover datatable">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th>Fullname</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#MonthsDropdown').val('@DateTime.UtcNow.Month').trigger('change');
+
+        $('#datatableBirthday').DataTable().column(0).visible(false);
+    });
+
+    function LoadBirthdays() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("UpdateBirthday", "Home")',
+            data: {
+                month: $('#MonthsDropdown').val(),
+                UserAccountRoles_Id: $('#UserAccountRoles').val()
+            },
+            success: function (data) {
+                var datatable = $('#datatableBirthday').DataTable();
+                datatable.clear().draw();
+                var remainingDayCount = 0;
+                var todayDate = (new Date()).getDate();
+                var birthday;
+                var remainingDayCount;
+                var badge;
+                $.each(data.result, function (index, row) {
+                    birthday = parseJSONDate(row.Birthday);
+                    remainingDayCount = birthday.getDate() - todayDate;
+                    if (remainingDayCount == 0) {
+                        badge = '<span class="badge badge-success">Today</span>';
+                    } else {
+                        badge = '<span class="badge badge-primary">In ' + remainingDayCount + ' days</span>';
+                    }
+
+                    datatable.row.add([
+                        remainingDayCount,
+                        badge,
+                        row.Fullname,
+                        formatDate(birthday, 'dd MMM yyyy')
+                        
+                    ]).draw();
+                    //datatable.row.add([
+                    //    0,
+                    //    row.Fullname,
+                    //    row.Birthday,
+                    //    ''
+                    //]).draw();
+                });
+            }, //end success
+            error: function (result) {
+                bootbox.alert({ backdrop: true, message: "Error " + result });
+            } //end error
+        }); //end ajax
+    }
+
+</script>

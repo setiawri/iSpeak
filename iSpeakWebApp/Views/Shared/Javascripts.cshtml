@@ -45,6 +45,33 @@
         });
     }
 
+    // DROPDOWNLIST ================================================================================================================================================
+
+    function getMonthDropDownValue(start, change) {
+        var startingMonth = parseInt(start);
+        var changeMonth = parseInt(change);
+        var newMonth = startingMonth + changeMonth;
+        if (newMonth > 12) {
+            newMonth -= 12;
+        }
+        else if (newMonth == 0) {
+            newMonth += 12;
+        }
+        return newMonth;
+    }
+
+    function MonthsDropdownChange(id, action) {
+        if (action == '@EnumActions.Previous.ToString()') {
+            DropdownChange(id, getMonthDropDownValue($('#'+id).val(), -1));
+        } else {
+            DropdownChange(id, getMonthDropDownValue($('#'+id).val(), 1));
+        }
+    }
+
+    function DropdownChange(id, value) {
+        $('#'+id).val(value).trigger('change');
+    }
+
     // NAVIGATION MENU =============================================================================================================================================
 
     function activateMenu(id) {
@@ -65,23 +92,42 @@
 
     // DATE MANIPULATOR ============================================================================================================================================
 
+    function parseJSONDate(value) {
+        return new Date(parseInt((value).match(/\d+/)[0]));
+    }
+
     var monthNames = ["Jan", "Feb", "Mar", "Apr",
         "May", "Jun", "Jul", "Aug",
         "Sep", "Oct", "Nov", "Dec"];
-    function formatDate(date, format) {
-        var result = "";
-        if (format == 'dd MMM yyyy') {
-            var dd = (('' + date.getDate()).length < 2 ? '0' : '') + date.getDate() + ' ';
-            var MMM = monthNames[date.getMonth()];
-            var yyyy = date.getFullYear();
 
-            result = dd + ' ' + MMM + ' ' + yyyy;
-        }
-        return result;
+    function formatDate(value, format) {
+        var date = "";
+        var month = "";
+        var year = "";
+
+        var delimiter = getDateDelimiter(format);
+
+        format = format.split(delimiter);
+
+        if (format.length > 0 && format[0] == 'dd')
+            date = (('' + value.getDate()).length < 2 ? '0' : '') + value.getDate() + ' ';
+
+        if (format.length > 1 &&format[1] == 'MMM')
+            month = monthNames[value.getMonth()];
+        
+        if (format.length > 2 && format[2] == 'yyyy')
+            year = value.getFullYear();
+
+        return [date, month, year].filter(Boolean).join(delimiter);
     }
 
-    function parseJSONDate(value) {
-        return new Date(parseInt((value).match(/\d+/)[0]));
+    function getDateDelimiter(value) {
+        if (value.split(" ").length > 1)
+            return " ";
+        else if (value.split("-").length > 1)
+            return "-";
+        else if (value.split("/").length > 1)
+            return "/";
     }
 
     // STRING MANIPULATOR ==========================================================================================================================================

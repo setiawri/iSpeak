@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web;
 using System.Data.Entity;
 using System;
+using System.Collections.Generic;
 using LIBUtil;
 
 using System.Web.Mvc;
@@ -29,7 +30,7 @@ namespace iSpeakWebApp.Controllers
         public const string SESSION_UserAccounts_Id = "UserAccounts_Id";
         public const string SESSION_UserAccounts_Username = "UserAccounts_Username";
         public const string SESSION_UserAccounts_ResetPassword = "UserAccounts_ResetPassword";
-        public const string SESSION_Branches_Id = "Branches_Id";
+        public const string SESSION_ActiveBranches_Id = "Branches_Id";
 
         public const string SESSION_OperatorPrivilegePayrollModel_PayrollApproval = "OperatorPrivilegePayrollModel_PayrollApproval";
         public const string SESSION_OperatorPrivilegePayrollModel_ReimbursementApproval = "OperatorPrivilegePayrollModel_ReimbursementApproval";
@@ -83,7 +84,6 @@ namespace iSpeakWebApp.Controllers
             }
         }
 
-
         /* CHANGE PASSWORD PAGE *******************************************************************************************************************************/
 
         public ActionResult ChangePassword(string returnUrl)
@@ -132,6 +132,13 @@ namespace iSpeakWebApp.Controllers
 
         /* METHODS ********************************************************************************************************************************************/
 
+        public ActionResult UpdateActiveBranch(Guid BranchId, string returnUrl)
+        {
+            Session[SESSION_ActiveBranches_Id] = BranchId;
+
+            return RedirectToLocal(returnUrl);
+        }
+
         public ActionResult LogOff()
         {
             Session[SESSION_UserAccounts_Id] = null;
@@ -179,7 +186,7 @@ namespace iSpeakWebApp.Controllers
                 Session[SESSION_UserAccounts_Id] = model.Id;
                 Session[SESSION_UserAccounts_Username] = model.Username;
                 Session[SESSION_UserAccounts_ResetPassword] = model.ResetPassword;
-                Session[SESSION_Branches_Id] = model.Default_Branches_Id;
+                Session[SESSION_ActiveBranches_Id] = model.Branches_Id;
 
                 AccessList accessList = new AccessList();
                 //accessList.populate(result.OperatorPrivilegePayrollModel);
@@ -187,6 +194,44 @@ namespace iSpeakWebApp.Controllers
                 //Session[SESSION_OperatorPrivilegePayrollModel_PayrollApproval] = accessList.OperatorPrivilegePayrollModel.Approval;
                 //Session[SESSION_OperatorPrivilegePayrollModel_ReimbursementApproval] = accessList.OperatorPrivilegePayrollModel.ReimbursementApproval;
             }
+        }
+
+        /* DATABASE METHODS ***********************************************************************************************************************************/
+
+        public List<UserAccountsModel> getBirthdays(Guid Branches_Id, Guid? UserAccountRoles_Id, int? BirthdayListMonth) { return get(Branches_Id, null, true, UserAccountRoles_Id, BirthdayListMonth); }
+        public UserAccountsModel get(Guid Id) { return get(null, Id, false, null, null).FirstOrDefault(); }
+        public List<UserAccountsModel> get(Guid? Branches_Id, Guid? Id, bool? isActiveOnly, Guid? UserAccountRoles_Id, int? BirthdayListMonth)
+        {
+            if (Branches_Id == null)
+                Helper.getActiveBranchId(Session);
+
+            List<UserAccountsModel> models = db.Database.SqlQuery<UserAccountsModel>(@"
+                        SELECT UserAccounts.*
+                        FROM UserAccounts
+                        WHERE 1=1
+							AND (@Id IS NULL OR UserAccounts.Id = @Id)
+							AND (@Branches_Id IS NULL OR UserAccounts.Branches_Id = @Branches_Id)
+							AND (@isActiveOnly = 0 OR UserAccounts.Active = 1)
+							AND (@UserAccountRoles_Id IS NULL OR UserAccounts.Id IN (
+								SELECT UserAccounts_Id 
+								FROM UserAccountRoleAssignments 
+								WHERE UserAccountRoles_Id = @UserAccountRoles_Id
+							))
+							AND (@BirthdayListMonth IS NULL OR (
+									MONTH(UserAccounts.Birthday) = @BirthdayListMonth
+									AND (MONTH(GETDATE()) <> @BirthdayListMonth OR DAY(UserAccounts.Birthday) >= DAY(GETDATE()))
+								)
+							)
+						ORDER BY UserAccounts.Fullname ASC
+                    ",
+                    DBConnection.getSqlParameter(UserAccountsModel.COL_Id.Name, Id),
+                    DBConnection.getSqlParameter("UserAccountRoles_Id", UserAccountRoles_Id),
+                    DBConnection.getSqlParameter("Branches_Id", Branches_Id),
+                    DBConnection.getSqlParameter("isActiveOnly", isActiveOnly),
+                    DBConnection.getSqlParameter("BirthdayListMonth", BirthdayListMonth)
+                ).ToList();
+
+            return models;
         }
 
         /******************************************************************************************************************************************************/

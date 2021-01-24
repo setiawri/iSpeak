@@ -54,9 +54,10 @@ namespace iSpeakWebApp
             return (Request.ApplicationPath + IMAGEFOLDERURL + filename).Replace("//", "/");
         }
 
-        public static Guid getBranchId(HttpSessionStateBase Session) 
-        { 
-            return (Guid)Session[UserAccountsController.SESSION_Branches_Id];
+        public static Guid getActiveBranchId(HttpSessionStateBase Session) 
+        {
+            object obj = Session[UserAccountsController.SESSION_ActiveBranches_Id];
+            return (Guid)obj;
         }
 
         public static DateTime setFilterViewBag(ControllerBase controller, int? year, int? month, DateTime? PayPeriod, string search, string periodChange, int? ActionType)

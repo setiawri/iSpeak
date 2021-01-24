@@ -1,0 +1,62 @@
+﻿@model IEnumerable<iSpeakWebApp.Models.RemindersModel>
+
+    <a href="@Url.Action("CreateReminder", "Home", new { Area = "" })" class="btn btn-sm btn-success">Create<i class="icon-plus22 ml-2"></i></a>
+    <div class="table-responsive">
+        <table class="table table-hover datatable">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Timestamp)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                        <td>
+                            @if (item.Status_enumid == EnumReminderStatuses.New)
+                            {
+                                <span class="badge badge-dark d-block">New</span>
+                            }
+                            else if (item.Status_enumid == EnumReminderStatuses.InProgress)
+                            {
+                                <span class="badge badge-info d-block">In Progress</span>
+                            }
+                            else if (item.Status_enumid == EnumReminderStatuses.OnHold)
+                            {
+                                <span class="badge bg-brown d-block">On Hold</span>
+                            }
+                            else if (item.Status_enumid == EnumReminderStatuses.Waiting)
+                            {
+                                <span class="badge badge-warning d-block">Waiting</span>
+                            }
+                            else if (item.Status_enumid == EnumReminderStatuses.Completed)
+                            {
+                                <span class="badge badge-primary d-block">Completed</span>
+                            }
+                            else if (item.Status_enumid == EnumReminderStatuses.Cancel)
+                            {
+                                <span class="badge badge-danger d-block">Cancel</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="javascript:void(0)" onclick="Update_Reminder('@item.Id')">Update</a> |
+                            <a href="javascript:void(0)" onclick="View_Log('@item.Id')">Log</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        activateMenu('Home');
+    });
+
+</script>

@@ -12,7 +12,7 @@ namespace iSpeakWebApp.Models
 
         public Guid Branches_Id { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Timestamp { get; set; }
 
         [Required]
