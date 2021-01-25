@@ -29,8 +29,7 @@
             <div class="form-group mb-0">
                 <div class="btn-toolbar">
                     <div class="btn-group">
-                        @*<button onclick="Create()" class="btn btn-success">ADD<i class="icon-plus22 ml-2"></i></button>*@
-                        <a href="@Url.Action("Create", "Reminders", new { Area = "" })" class="btn btn-success form-control">Create<i class="icon-plus22 ml-2"></i></a>
+                        <a href="@Url.Action("Create", "Reminders")" class="btn btn-success form-control">Create<i class="icon-plus22 ml-2"></i></a>
                     </div>
                 </div>
             </div>
@@ -94,7 +93,7 @@
                         formatDate(parseJSONDate(row.Timestamp), 'dd MMM yyyy'),
                         row.Description,
                         status,
-                        '<a href="javascript:void(0)" onclick="Update_Reminder(\'' + row.Id + '\')">Edit</a>'
+                        '<a href="javascript:void(0)" onclick="Edit(\'' + row.Id + '\')">Edit</a>'
                         + ' • <a href="javascript:void(0)" onclick="Log(\'' + row.Id + '\')">Log</a>'
                     ]).draw();
                 });
@@ -103,6 +102,11 @@
                 bootbox.alert({ backdrop: true, message: "Error " + result });
             } //end error
         }); //end ajax
+    }
+
+    function Edit(id) {
+        var url = '@Url.Action("Edit","Reminders", new { id = "__data" })';
+        window.location.href = url.replace("__data", id);
     }
 
 </script>

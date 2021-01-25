@@ -54,14 +54,14 @@ namespace iSpeakWebApp.Controllers
         public static void AddCreateLog(DBContext db, HttpSessionStateBase Session, Guid reffId) { Add(db, Session, reffId, "Created"); }
         public static void Add(DBContext db, HttpSessionStateBase Session, Guid reffId, string description)
         {
-            //db.ActivityLogsModel.Add(new ActivityLogsModel
-            //{
-            //    Id = Guid.NewGuid(),
-            //    ReffId = reffId,
-            //    Timestamp = DateTime.Now,
-            //    Description = description,
-            //    Operator_ID = OperatorController.getUserId(Session)
-            //});
+            db.ActivityLogs.Add(new ActivityLogsModel
+            {
+                Id = Guid.NewGuid(),
+                ReffId = reffId,
+                Timestamp = DateTime.Now,
+                Description = description,
+                UserAccounts_Id = (Guid)UserAccountsController.getUserId(Session)
+            });
         }
 
         public static string editStringFormat(string fieldName) { return fieldName + ": '{0}' to '{1}'"; }

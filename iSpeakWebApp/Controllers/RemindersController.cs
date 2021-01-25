@@ -38,8 +38,38 @@ namespace iSpeakWebApp.Controllers
                 model.Id = Guid.NewGuid();
                 model.Branches_Id = Helper.getActiveBranchId(Session);
                 db.Reminders.Add(model);
-                //ActivityLogsController.AddCreateLog(db, Session, model.Id);
+                ActivityLogsController.AddCreateLog(db, Session, model.Id);
                 db.SaveChanges();
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+
+            return View(model);
+        }
+
+        /* EDIT ***********************************************************************************************************************************************/
+
+        public ActionResult Edit(Guid? Id)
+        {
+            if (Id == null)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
+            RemindersModel model = db.Reminders.Where(x => x.Id == Id).FirstOrDefault();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(RemindersModel model, string Notes)
+        {
+            if (ModelState.IsValid)
+            {
+                string log = string.Format("[{0}] {1}", Util.GetEnumDescription<EnumReminderStatuses>(model.Status_enumid), Notes);
+
+                db.Entry(model).State = EntityState.Modified;
+                ActivityLogsController.Add(db, Session, model.Id, log);
+                db.SaveChanges();
+
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
 

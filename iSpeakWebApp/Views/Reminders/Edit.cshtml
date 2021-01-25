@@ -1,0 +1,62 @@
+﻿@model iSpeakWebApp.Models.RemindersModel
+
+@{
+    ViewBag.Root = "Reminders";
+    ViewBag.Title = "Edit";
+}
+
+<div class="content-wrapper">
+
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.Timestamp)
+            @Html.HiddenFor(model => model.Branches_Id)
+            @Html.HiddenFor(model => model.Description)
+            <!-- Form inputs -->
+            <div class="card">
+                <div class="card-header header-elements-inline">
+                    <h5 class="card-title">@ViewBag.Root</h5>
+                </div>
+                <div class="card-body">
+                    <fieldset class="mb-3">
+                        <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Title</legend>
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.Status_enumid, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
+                            <div class="col-lg-2">
+                                @Html.DropDownListFor(model => model.Status_enumid, LIBUtil.Util.GetEnumSelectList<EnumReminderStatuses>(), "Pilih", new { @class = "form-control select2" })
+                                @Html.ValidationMessageFor(model => model.Status_enumid, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-1">Notes</label>
+                            <div class="col-lg-2">
+                                @Html.TextArea("Notes", string.Empty, 3, 50, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div>
+                        <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
+                        <a href="@Url.Action("CreateReminder", "Home")" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- /form inputs -->
+        }
+    </div>
+    <!-- /content area -->
+
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        activateMenu('Home');
+        setDateRangePicker('Timestamp', '@string.Format("{0:yyyy/MM/dd}", DateTime.Now)');
+    });
+
+</script>

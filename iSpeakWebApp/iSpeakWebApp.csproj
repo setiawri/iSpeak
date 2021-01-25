@@ -232,6 +232,7 @@
     <Content Include="Views\Reminders\IndexPartial.cshtml" />
     <Content Include="Views\UserAccounts\BirthdaysPartial.cshtml" />
     <Content Include="Views\Reminders\Create.cshtml" />
+    <Content Include="Views\Reminders\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\LIBUtil\LIBUtil\LIBUtil\LIBUtil.csproj">

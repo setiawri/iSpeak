@@ -19,6 +19,7 @@ namespace iSpeakWebApp.Models
         [Required]
         public string Description { get; set; }
 
+        [Display(Name = "Status")]
         public EnumReminderStatuses Status_enumid { get; set; }
 
     }
