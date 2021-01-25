@@ -94,8 +94,8 @@
                         formatDate(parseJSONDate(row.Timestamp), 'dd MMM yyyy'),
                         row.Description,
                         status,
-                        '<a href="javascript:void(0)" onclick="Update_Reminder(' + row.Id + ')">Update</a>'
-                        + ' • <a href="javascript:void(0)" onclick="View_Log(' + row.Id + ')">Log</a>'
+                        '<a href="javascript:void(0)" onclick="Update_Reminder(\'' + row.Id + '\')">Edit</a>'
+                        + ' • <a href="javascript:void(0)" onclick="Log(\'' + row.Id + '\')">Log</a>'
                     ]).draw();
                 });
             }, //end success

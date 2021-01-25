@@ -8,6 +8,7 @@ namespace iSpeakWebApp
         public DBContext() { this.Database.Connection.ConnectionString = Helper.ConnectionString; }
 
         public DbSet<SettingsModel> Settings { get; set; }
+        public DbSet<ActivityLogsModel> ActivityLogs { get; set; }
 
         /* USER ACCOUNTS **************************************************************************************************************************************/
         public DbSet<UserAccountsModel> UserAccounts { get; set; }
