@@ -90,6 +90,11 @@
 
     $('.daterange-picker').daterangepicker({ singleDatePicker: true, locale: { format: 'YYYY/MM/DD' } });
 
+    function setDateRangePicker(id, value) {
+        $('#' + id).data('daterangepicker').setStartDate(value);
+        $('#' + id).data('daterangepicker').setEndDate(value);
+    }
+
     // DATE MANIPULATOR ============================================================================================================================================
 
     function parseJSONDate(value) {
@@ -101,6 +106,7 @@
         "Sep", "Oct", "Nov", "Dec"];
 
     function formatDate(value, format) {
+        var result = [];
         var date = "";
         var month = "";
         var year = "";
@@ -108,17 +114,27 @@
         var delimiter = getDateDelimiter(format);
 
         format = format.split(delimiter);
+        for (i = 0; i < format.length; i++) {
 
-        if (format.length > 0 && format[0] == 'dd')
-            date = (('' + value.getDate()).length < 2 ? '0' : '') + value.getDate() + ' ';
+            if (format[i] == 'dd') {
+                result.push((('' + value.getDate()).length < 2 ? '0' : '') + value.getDate() + ' ');
+            }
 
-        if (format.length > 1 &&format[1] == 'MMM')
-            month = monthNames[value.getMonth()];
+            if (format[i].includes('M')) {
+                if (format[i] == 'MMM') {
+                    month = monthNames[value.getMonth()];
+                } else if (format[i] == 'MM') {
+                    month = (('' + value.getMonth()).length < 2 ? '0' : '') + value.getMonth() + ' ';
+                }        
+                result.push(month);
+            }
+
+            if (format[i] == 'yyyy')
+                result.push(value.getFullYear());
+        } 
         
-        if (format.length > 2 && format[2] == 'yyyy')
-            year = value.getFullYear();
 
-        return [date, month, year].filter(Boolean).join(delimiter);
+        return result.filter(Boolean).join(delimiter);
     }
 
     function getDateDelimiter(value) {

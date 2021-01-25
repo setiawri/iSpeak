@@ -125,10 +125,11 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Common\SelectLists.cs" />
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\BranchesController.cs" />
+    <Compile Include="Controllers\RemindersController.cs" />
     <Compile Include="Controllers\UserAccountRolesController.cs" />
     <Compile Include="Controllers\UserAccountsController.cs" />
     <Compile Include="DBContext.cs" />
@@ -226,8 +227,9 @@
     <Content Include="Views\Shared\Javascripts.cshtml" />
     <Content Include="Views\UserAccounts\Login.cshtml" />
     <Content Include="Views\UserAccounts\ChangePassword.cshtml" />
-    <Content Include="Views\Home\Reminder.cshtml" />
-    <Content Include="Views\Home\Birthday.cshtml" />
+    <Content Include="Views\Reminders\IndexPartial.cshtml" />
+    <Content Include="Views\UserAccounts\BirthdaysPartial.cshtml" />
+    <Content Include="Views\Reminders\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\LIBUtil\LIBUtil\LIBUtil\LIBUtil.csproj">

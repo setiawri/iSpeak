@@ -12,6 +12,7 @@ namespace iSpeakWebApp.Models
 
         public Guid Branches_Id { get; set; }
 
+        [Display(Name = "Date")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Timestamp { get; set; }
 
@@ -19,5 +20,6 @@ namespace iSpeakWebApp.Models
         public string Description { get; set; }
 
         public EnumReminderStatuses Status_enumid { get; set; }
+
     }
 }

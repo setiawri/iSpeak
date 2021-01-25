@@ -22,7 +22,7 @@
             <span class="navbar-text">
             </span>
             <span class="navbar-text">
-                @Html.DropDownList("BranchId", new SelectList(SelectLists.getBranchList(Session), "Value", "Text", Helper.getActiveBranchId(Session).ToString()), new { @class = "select2", @onchange = "updateActiveBranch()" })
+                @Html.DropDownList("BranchId", new SelectList(BranchSelectLists.get(), "Value", "Text", Helper.getActiveBranchId(Session).ToString()), new { @class = "select2", @onchange = "updateActiveBranch()" })
             </span>
             <ul class="navbar-nav">
                 <li class="nav-item dropdown dropdown-user">
@@ -50,7 +50,7 @@
         <div class="navbar-collapse collapse" id="navbar-navigation">
             <ul class="navbar-nav">
                 <li id="Menu_Home" class="nav-item">
-                    <a href="@Url.Action("Index", "Home", new { Area = "", rss=1 })" class="navbar-nav-link">
+                    <a href="@Url.Action("Index", "Home", new { rss=1 })" class="navbar-nav-link">
                         <i class="icon-home4 mr-2"></i>Dashboard
                     </a>
                 </li>
@@ -60,9 +60,9 @@
                         Sale
                     </a>
                     <div class="dropdown-menu">
-                        <a href="@Url.Action("Index", "Sale")" class="dropdown-item">Sale Invoices</a>
-                        <a href="@Url.Action("Print", "Payments")" class="dropdown-item">Payments</a>
-                        <a href="@Url.Action("Index", "Return")" class="dropdown-item">Returns</a>
+                        <a href="@Url.Action("Index", "Sale", new { rss=1 })" class="dropdown-item">Sale Invoices</a>
+                        <a href="@Url.Action("Print", "Payments", new { rss=1 })" class="dropdown-item">Payments</a>
+                        <a href="@Url.Action("Index", "Return", new { rss=1 })" class="dropdown-item">Returns</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -71,25 +71,25 @@
                         Schedules
                     </a>
                     <div class="dropdown-menu">
-                        <a href="@Url.Action("TutorIndex", "Schedules")" class="dropdown-item">Tutor</a>
-                        <a href="@Url.Action("StudentIndex", "Schedules")" class="dropdown-item">Student</a>
-                        <a href="@Url.Action("Search", "Schedules")" class="dropdown-item">Search</a>
+                        <a href="@Url.Action("TutorIndex", "Schedules", new { rss=1 })" class="dropdown-item">Tutor</a>
+                        <a href="@Url.Action("StudentIndex", "Schedules", new { rss=1 })" class="dropdown-item">Student</a>
+                        <a href="@Url.Action("Search", "Schedules", new { rss=1 })" class="dropdown-item">Search</a>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a href="@Url.Action("Index", "LessonSessions")" class="navbar-nav-link">
+                    <a href="@Url.Action("Index", "LessonSessions", new { rss=1 })" class="navbar-nav-link">
                         <i class="icon-meter2 mr-2"></i>
                         Sessions
                     </a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a href="@Url.Action("Index", "Inventory")" class="navbar-nav-link">
+                    <a href="@Url.Action("Index", "Inventory", new { rss=1 })" class="navbar-nav-link">
                         <i class="icon-clipboard6 mr-2"></i>
                         Inventory
                     </a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a href="@Url.Action("Index", "PettyCashRecords")" class="navbar-nav-link">
+                    <a href="@Url.Action("Index", "PettyCashRecords", new { rss=1 })" class="navbar-nav-link">
                         <i class="icon-drawer mr-2"></i>
                         Petty Cash
                     </a>
@@ -100,13 +100,13 @@
                         Internal
                     </a>
                     <div class="dropdown-menu">
-                        <a href="@Url.Action("NewStudent", "Reports")" class="dropdown-item">New Student</a>
-                        <a href="@Url.Action("Index", "HourlyRates")" class="dropdown-item">Payroll Rates</a>
-                        <a href="@Url.Action("Index", "Payrolls")" class="dropdown-item">New Payroll</a>
-                        <a href="@Url.Action("Payroll", "Reports")" class="dropdown-item">Payroll</a>
-                        <a href="@Url.Action("PayrollPayments", "Reports")" class="dropdown-item">Payroll Payments</a>
-                        <a href="@Url.Action("ProfitLoss", "Reports")" class="dropdown-item">Profit &amp; Loss</a>
-                        <a href="@Url.Action("SendEmails", "Reports")" class="dropdown-item">Send Emails</a>
+                        <a href="@Url.Action("NewStudent", "Reports", new { rss=1 })" class="dropdown-item">New Student</a>
+                        <a href="@Url.Action("Index", "HourlyRates", new { rss=1 })" class="dropdown-item">Payroll Rates</a>
+                        <a href="@Url.Action("Index", "Payrolls", new { rss=1 })" class="dropdown-item">New Payroll</a>
+                        <a href="@Url.Action("Payroll", "Reports", new { rss=1 })" class="dropdown-item">Payroll</a>
+                        <a href="@Url.Action("PayrollPayments", "Reports", new { rss=1 })" class="dropdown-item">Payroll Payments</a>
+                        <a href="@Url.Action("ProfitLoss", "Reports", new { rss=1 })" class="dropdown-item">Profit &amp; Loss</a>
+                        <a href="@Url.Action("SendEmails", "Reports", new { rss=1 })" class="dropdown-item">Send Emails</a>
                     </div>
                 </li>
                 <li id="Menu_Settings" class="nav-item dropdown">
@@ -114,47 +114,47 @@
                         <i class="icon-gear mr-2"></i>Settings
                     </a>
                     <div class="dropdown-menu">
-                        <a href="@Url.Action("Index", "Consignments")" class="dropdown-item">General Settings</a>
-                        <a href="@Url.Action("Index", "Role")" class="dropdown-item">User Roles</a>
-                        <a href="@Url.Action("Index", "Branches")" class="dropdown-item">Branches</a>
+                        <a href="@Url.Action("Index", "Consignments", new { rss=1 })" class="dropdown-item">General Settings</a>
+                        <a href="@Url.Action("Index", "Role", new { rss=1 })" class="dropdown-item">User Roles</a>
+                        <a href="@Url.Action("Index", "Branches", new { rss=1 })" class="dropdown-item">Branches</a>
                         <div class="dropdown-submenu">
                             <a href="#" class="dropdown-item dropdown-toggle">Inventory</a>
                             <div class="dropdown-menu">
-                                <a href="@Url.Action("Index", "Suppliers")" class="dropdown-item">Suppliers</a>
-                                <a href="@Url.Action("Index", "Products")" class="dropdown-item">Products</a>
-                                <a href="@Url.Action("Index", "Units")" class="dropdown-item">Units</a>
+                                <a href="@Url.Action("Index", "Suppliers", new { rss=1 })" class="dropdown-item">Suppliers</a>
+                                <a href="@Url.Action("Index", "Products", new { rss=1 })" class="dropdown-item">Products</a>
+                                <a href="@Url.Action("Index", "Units", new { rss=1 })" class="dropdown-item">Units</a>
                             </div>
                         </div>
                         <div class="dropdown-submenu">
                             <a href="#" class="dropdown-item dropdown-toggle">Lessons</a>
                             <div class="dropdown-menu">
-                                <a href="@Url.Action("Index", "Languages")" class="dropdown-item">Languages</a>
-                                <a href="@Url.Action("Index", "LessonTypes")" class="dropdown-item">Lesson Types</a>
-                                <a href="@Url.Action("Index", "LessonPackages")" class="dropdown-item">Lesson Packages</a>
+                                <a href="@Url.Action("Index", "Languages", new { rss=1 })" class="dropdown-item">Languages</a>
+                                <a href="@Url.Action("Index", "LessonTypes", new { rss=1 })" class="dropdown-item">Lesson Types</a>
+                                <a href="@Url.Action("Index", "LessonPackages", new { rss=1 })" class="dropdown-item">Lesson Packages</a>
                             </div>
                         </div>
                         <div class="dropdown-submenu">
                             <a href="#" class="dropdown-item dropdown-toggle">Expenses</a>
                             <div class="dropdown-menu">
-                                <a href="@Url.Action("Index", "ExpenseCategories")" class="dropdown-item">Expense Categories</a>
-                                <a href="@Url.Action("Index", "Expenses")" class="dropdown-item">Expenses</a>
+                                <a href="@Url.Action("Index", "ExpenseCategories", new { rss=1 })" class="dropdown-item">Expense Categories</a>
+                                <a href="@Url.Action("Index", "Expenses", new { rss=1 })" class="dropdown-item">Expenses</a>
                             </div>
                         </div>
-                        <a href="@Url.Action("Index", "Consignments")" class="dropdown-item">Consignments</a>
-                        <a href="@Url.Action("Index", "Vouchers")" class="dropdown-item">Vouchers</a>
-                        <a href="@Url.Action("Index", "Services")" class="dropdown-item">Services</a>
-                        <a href="@Url.Action("Index", "PettyCashRecordsCategories")" class="dropdown-item">Petty Cash Categories</a>
-                        <a href="@Url.Action("Index", "PromotionEvents")" class="dropdown-item">Promotion Events</a>
+                        <a href="@Url.Action("Index", "Consignments", new { rss=1 })" class="dropdown-item">Consignments</a>
+                        <a href="@Url.Action("Index", "Vouchers", new { rss=1 })" class="dropdown-item">Vouchers</a>
+                        <a href="@Url.Action("Index", "Services", new { rss=1 })" class="dropdown-item">Services</a>
+                        <a href="@Url.Action("Index", "PettyCashRecordsCategories", new { rss=1 })" class="dropdown-item">Petty Cash Categories</a>
+                        <a href="@Url.Action("Index", "PromotionEvents", new { rss=1 })" class="dropdown-item">Promotion Events</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a href="@Url.Action("Index", "User")" class="navbar-nav-link">
+                    <a href="@Url.Action("Index", "User", new { rss=1 })" class="navbar-nav-link">
                         <i class="icon-users2 mr-2"></i>
                         Accounts
                     </a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a href="@Url.Action("Index", "Files")" class="navbar-nav-link">
+                    <a href="@Url.Action("Index", "Files", new { rss=1 })" class="navbar-nav-link">
                         <i class="icon-file-upload2 mr-2"></i>
                         Files
                     </a>

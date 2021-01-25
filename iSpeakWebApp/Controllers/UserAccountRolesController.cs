@@ -23,9 +23,7 @@ namespace iSpeakWebApp.Controllers
         public static void setDropDownListViewBag(DBContext db, ControllerBase controller)
         {
             List<UserAccountRolesModel> models = get(db);
-            controller.ViewBag.UserAccountRoles = new SelectList(models,
-                    UserAccountRolesModel.COL_Id.Name, UserAccountRolesModel.COL_Name.Name);
-            controller.ViewBag.UserAccountRolesCount = models.Count;
+            controller.ViewBag.UserAccountRoles = new SelectList(models, UserAccountRolesModel.COL_Id.Name, UserAccountRolesModel.COL_Name.Name);
         }
 
         /******************************************************************************************************************************************************/

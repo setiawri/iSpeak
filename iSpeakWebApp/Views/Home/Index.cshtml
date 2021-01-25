@@ -16,11 +16,11 @@
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-reminders" role="tabpanel" aria-labelledby="nav-reminders-tab">
-                        @{Html.RenderAction("Reminder", "Home");}
+                        @{Html.RenderAction("IndexPartial", "Reminders");}
                     </div>
 
                     <div class="tab-pane fade" id="nav-birthdays" role="tabpanel" aria-labelledby="nav-birthdays-tab">
-                        @{Html.RenderAction("Birthday", "Home");}
+                        @{Html.RenderAction("BirthdaysPartial", "UserAccounts");}
                     </div>
 
                     </div>

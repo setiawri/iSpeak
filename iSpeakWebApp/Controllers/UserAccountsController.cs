@@ -47,6 +47,7 @@ namespace iSpeakWebApp.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Login(UserAccountsModel model, string returnUrl)
         {
             //bypass login
@@ -102,6 +103,7 @@ namespace iSpeakWebApp.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ChangePassword(Guid Id, string CurrentPassword, string NewPassword, string ConfirmPassword, string returnUrl)
         {
             UserAccountsModel model = db.UserAccounts.Where(x => x.Id == Id).FirstOrDefault();
@@ -128,6 +130,28 @@ namespace iSpeakWebApp.Controllers
             ViewBag.NewPassword = NewPassword;
             ViewBag.ConfirmPassword = ConfirmPassword;
             return View(model);
+        }
+
+        /* BIRTHDAYS ******************************************************************************************************************************************/
+
+        public PartialViewResult BirthdaysPartial(int? rss)
+        {
+            ViewBag.RemoveDatatablesStateSave = rss;
+
+            List<UserAccountsModel> models = getBirthdays(Helper.getActiveBranchId(Session), null, DateTime.Now.Month);
+
+            //ViewBag.ActiveReminderCount = remindersModels.Count;
+            UserAccountRolesController.setDropDownListViewBag(db, this);
+
+            return PartialView("BirthdaysPartial", models);
+        }
+
+        public JsonResult GetBirthdayData(int? month, Guid? UserAccountRoles_Id)
+        {
+            List<UserAccountsModel> models = getBirthdays(Helper.getActiveBranchId(Session), UserAccountRoles_Id, (int)month);
+
+            //ViewBag.ActiveReminderCount = remindersModels.Count;
+            return Json(new { result = models, count = models.Count }, JsonRequestBehavior.AllowGet);
         }
 
         /* METHODS ********************************************************************************************************************************************/
@@ -198,7 +222,7 @@ namespace iSpeakWebApp.Controllers
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public List<UserAccountsModel> getBirthdays(Guid Branches_Id, Guid? UserAccountRoles_Id, int? BirthdayListMonth) { return get(Branches_Id, null, true, UserAccountRoles_Id, BirthdayListMonth); }
+        public List<UserAccountsModel> getBirthdays(Guid Branches_Id, Guid? UserAccountRoles_Id, int BirthdayListMonth) { return get(Branches_Id, null, true, UserAccountRoles_Id, BirthdayListMonth); }
         public UserAccountsModel get(Guid Id) { return get(null, Id, false, null, null).FirstOrDefault(); }
         public List<UserAccountsModel> get(Guid? Branches_Id, Guid? Id, bool? isActiveOnly, Guid? UserAccountRoles_Id, int? BirthdayListMonth)
         {

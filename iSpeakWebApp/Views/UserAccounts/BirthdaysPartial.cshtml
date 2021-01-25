@@ -78,7 +78,7 @@
     function LoadBirthdays() {
         $.ajax({
             type: "POST",
-            url: '@Url.Action("UpdateBirthday", "Home")',
+            url: '@Url.Action("GetBirthdayData", "UserAccounts")',
             data: {
                 month: $('#MonthsDropdown').val(),
                 UserAccountRoles_Id: $('#UserAccountRoles').val()

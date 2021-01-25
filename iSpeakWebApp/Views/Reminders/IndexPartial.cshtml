@@ -1,0 +1,108 @@
+﻿@model IEnumerable<iSpeakWebApp.Models.RemindersModel>
+
+<div id="ReminderPartialView" class="row mt-0">
+    <div class="row col-lg-2">
+        <div class="col-lg-12">
+            <label class="mb-0">Status</label>
+            <div class="input-group">
+                @Html.DropDownList("ReminderStatus", EnumHelper.GetSelectList(typeof(EnumReminderStatuses)), "Incomplete", new { @class = "select2", @style = "height:auto;" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row col-lg-1">
+        <div class="col-lg-12">
+            <label class="mb-0">&nbsp;</label>
+            <div class="form-group mb-0">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-primary form-control" onclick="LoadReminders()"><i class="icon-reload-alt mr-2"></i>LOAD</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row col-lg-1">
+        <div class="col-lg-12">
+            <label class="mb-0">&nbsp;</label>
+            <div class="form-group mb-0">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        @*<button onclick="Create()" class="btn btn-success">ADD<i class="icon-plus22 ml-2"></i></button>*@
+                        <a href="@Url.Action("Create", "Reminders", new { Area = "" })" class="btn btn-success form-control">Create<i class="icon-plus22 ml-2"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="table-responsive">
+    <table id="datatableReminder" class="table table-hover datatable">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        activateMenu('Home');
+        LoadReminders();
+        $('#datatableReminder').DataTable().column(0).visible(false);
+    });
+
+    function LoadReminders() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetData", "Reminders")',
+            data: {
+                status: $('#ReminderStatus').val()
+            },
+            success: function (data) {
+                var datatable = $('#datatableReminder').DataTable();
+                datatable.clear().draw();
+                $.each(data.result, function (index, row) {
+
+                    var status = '';
+                    if (row.Status_enumid == '@((int)EnumReminderStatuses.New)')
+                        status = '<span class="badge badge-dark d-block">New</span>';
+                    else if (row.Status_enumid == '@((int)EnumReminderStatuses.InProgress)')
+                        status = '<span class="badge badge-info d-block">In Progress</span>';
+                    else if (row.Status_enumid == '@((int)EnumReminderStatuses.OnHold)')
+                        status = '<span class="badge bg-brown d-block">On Hold</span>';
+                    else if (row.Status_enumid == '@((int)EnumReminderStatuses.Waiting)')
+                        status = '<span class="badge badge-warning d-block">Waiting</span>';
+                    else if (row.Status_enumid == '@((int)EnumReminderStatuses.Completed)')
+                        status = '<span class="badge badge-primary d-block">Completed</span>';
+                    else if (row.Status_enumid == '@((int)EnumReminderStatuses.Cancel)')
+                        status = '<span class="badge badge-danger d-block">Cancelled</span>';
+
+                    datatable.row.add([
+                        formatDate(parseJSONDate(row.Timestamp), 'yyyy MM dd'),
+                        formatDate(parseJSONDate(row.Timestamp), 'dd MMM yyyy'),
+                        row.Description,
+                        status,
+                        '<a href="javascript:void(0)" onclick="Update_Reminder(' + row.Id + ')">Update</a>'
+                        + ' • <a href="javascript:void(0)" onclick="View_Log(' + row.Id + ')">Log</a>'
+                    ]).draw();
+                });
+            }, //end success
+            error: function (result) {
+                bootbox.alert({ backdrop: true, message: "Error " + result });
+            } //end error
+        }); //end ajax
+    }
+
+</script>
