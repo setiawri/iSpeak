@@ -60,6 +60,8 @@
         activateMenu('Home');
         LoadReminders();
         $('#datatableReminder').DataTable().column(0).visible(false);
+
+        UpdateReminderCount('@ViewBag.ReminderCount');
     });
 
     function LoadReminders() {
@@ -93,7 +95,7 @@
                         formatDate(parseJSONDate(row.Timestamp), 'dd MMM yyyy'),
                         row.Description,
                         status,
-                        '<a href="javascript:void(0)" onclick="Edit(\'' + row.Id + '\')">Edit</a>'
+                        '<a href="javascript:void(0)" onclick="Edit(ViewBag\'' + row.Id + '\')">Edit</a>'
                         + ' • <a href="javascript:void(0)" onclick="Log(\'' + row.Id + '\')">Log</a>'
                     ]).draw();
                 });

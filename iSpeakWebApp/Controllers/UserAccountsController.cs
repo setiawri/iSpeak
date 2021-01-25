@@ -140,7 +140,7 @@ namespace iSpeakWebApp.Controllers
 
             List<UserAccountsModel> models = getBirthdays(Helper.getActiveBranchId(Session), null, DateTime.Now.Month);
 
-            //ViewBag.ActiveReminderCount = remindersModels.Count;
+            ViewBag.BirthdayCount = models.Count;
             UserAccountRolesController.setDropDownListViewBag(db, this);
 
             return PartialView("BirthdaysPartial", models);
@@ -149,9 +149,8 @@ namespace iSpeakWebApp.Controllers
         public JsonResult GetBirthdayData(int? month, Guid? UserAccountRoles_Id)
         {
             List<UserAccountsModel> models = getBirthdays(Helper.getActiveBranchId(Session), UserAccountRoles_Id, (int)month);
-
-            //ViewBag.ActiveReminderCount = remindersModels.Count;
-            return Json(new { result = models, count = models.Count }, JsonRequestBehavior.AllowGet);
+            
+            return Json(new { result = models}, JsonRequestBehavior.AllowGet);
         }
 
         /* METHODS ********************************************************************************************************************************************/

@@ -73,6 +73,8 @@
         $('#MonthsDropdown').val('@DateTime.UtcNow.Month').trigger('change');
 
         $('#datatableBirthday').DataTable().column(0).visible(false);
+
+        UpdateBirthdayCount('@ViewBag.BirthdayCount');
     });
 
     function LoadBirthdays() {
@@ -105,7 +107,7 @@
                         badge,
                         row.Fullname,
                         formatDate(birthday, 'dd MMM yyyy')
-                        
+
                     ]).draw();
                     //datatable.row.add([
                     //    0,

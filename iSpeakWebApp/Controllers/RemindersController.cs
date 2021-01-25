@@ -19,7 +19,10 @@ namespace iSpeakWebApp.Controllers
         {
             ViewBag.RemoveDatatablesStateSave = rss;
 
-            return PartialView("IndexPartial", getReminders(Helper.getActiveBranchId(Session), null));
+            var models = getReminders(Helper.getActiveBranchId(Session), null);
+            ViewBag.ReminderCount = models.Count;
+
+            return PartialView("IndexPartial", models);
         }
 
         /* CREATE *********************************************************************************************************************************************/
