@@ -1,0 +1,102 @@
+﻿@model iSpeakWebApp.Models.UserAccountRolesModel
+
+@{
+    ViewBag.Root = "Roles";
+    ViewBag.Title = "Edit";
+}
+
+<div class="content-wrapper">
+
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm())
+        {
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.Id)
+                <!-- Form inputs -->
+                <div class="card">
+                    <div class="card-header header-elements-inline">
+                        <h5 class="card-title">@ViewBag.Root</h5>
+                    </div>
+                    <div class="card-body">
+                        <fieldset>
+                            <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Title</legend>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                                <div class="col-lg-2">
+                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-5"></div>
+                            </div>
+
+                            <hr />
+
+                            <label class="h5 mb-0">REMINDERS</label>
+                            <div class="pl-0">
+                                <div id="Reminders_Div">
+                                    <button id="Reminders" type="button" class="btn mb-1 mr-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                    <label id="Reminders_Label" class="col-form-label">@Model.Reminders_Notes</label>
+                                </div>
+                                <div id="Reminders_Edit" class="input-group d-none mb-1">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.Reminders_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes" } })
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    @Html.CheckBoxFor(model => model.Reminders_View)
+                                </div>
+                                <div class="input-group-append">
+                                    @Html.LabelFor(model => model.Reminders_View, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.Reminders_Add)
+                                    </div>
+                                    @Html.LabelFor(model => model.Reminders_Add, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.Reminders_Edit)
+                                    </div>
+                                    @Html.LabelFor(model => model.Reminders_Edit, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                </div>
+                            </div>
+
+                            <hr />
+
+                        </fieldset>
+
+                        <div id="submitDiv">
+                            <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
+                            <a href="@Url.Action("Index", "UserAccountRoles")" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
+                        </div>
+
+                        <div style="position:fixed; bottom:100px;right:30px;">
+                            <button type="button" class="btn mb-1 mr-1 btn-lg fa-2x" style="width:70px;height:70px;" onclick="ScrollTo('submitDiv'); this.blur();">
+                                <span class="icon-arrow-down52 text-primary" style="font-size:28pt;"></span>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- /form inputs -->
+            }
+        }
+    </div>
+    <!-- /content area -->
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        activateMenu('Settings');
+
+        $('.notesbutton').click(function (event) {
+            var id = '#' + event.target.id;
+            $(id + '_Div').addClass('d-none');
+            $(id + '_Edit').removeClass('d-none');
+            $(id + '_Notes').select();
+        });
+    });
+
+</script>

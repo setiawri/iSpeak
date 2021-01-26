@@ -36,9 +36,4 @@ namespace iSpeakWebApp
         All = 0
     }
 
-    public enum UserAccountAccess
-    {
-
-    }
-
 }

@@ -7,10 +7,13 @@ namespace iSpeakWebApp
     {
         public DBContext() { this.Database.Connection.ConnectionString = Helper.ConnectionString; }
 
+        /******************************************************************************************************************************************************/
+
         public DbSet<SettingsModel> Settings { get; set; }
         public DbSet<ActivityLogsModel> ActivityLogs { get; set; }
 
         /* USER ACCOUNTS **************************************************************************************************************************************/
+
         public DbSet<UserAccountsModel> UserAccounts { get; set; }
         public DbSet<UserAccountRolesModel> UserAccountRoles { get; set; }
 
@@ -18,5 +21,7 @@ namespace iSpeakWebApp
 
         public DbSet<BranchesModel> Branches { get; set; }
         public DbSet<RemindersModel> Reminders { get; set; }
+
+        /******************************************************************************************************************************************************/
     }
 }

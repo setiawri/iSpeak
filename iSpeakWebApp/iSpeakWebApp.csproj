@@ -138,9 +138,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ActivityLogsModel.cs" />
+    <Compile Include="Models\UserAccountRoleAssignmentsModel.cs" />
     <Compile Include="Models\RemindersModel.cs" />
     <Compile Include="Models\BranchesModel.cs" />
-    <Compile Include="Models\UserAccountsRolesModel.cs" />
+    <Compile Include="Models\UserAccountRolesModel.cs" />
     <Compile Include="Models\UserAccountsModel.cs" />
     <Compile Include="Models\SettingsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -233,6 +234,9 @@
     <Content Include="Views\UserAccounts\BirthdaysPartial.cshtml" />
     <Content Include="Views\Reminders\Create.cshtml" />
     <Content Include="Views\Reminders\Edit.cshtml" />
+    <Content Include="Views\UserAccountRoles\Index.cshtml" />
+    <Content Include="Views\UserAccountRoles\Create.cshtml" />
+    <Content Include="Views\UserAccountRoles\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\LIBUtil\LIBUtil\LIBUtil\LIBUtil.csproj">

@@ -1,5 +1,7 @@
 ﻿@{
     ViewBag.Title = "Dashboard";
+
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
 }
 
 <div class="content-wrapper">
@@ -9,20 +11,23 @@
         <div class="card animated bounceInLeft">
             <div class="card-body">
                 <nav>
-                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-reminders-tab" data-toggle="tab" href="#nav-reminders" role="tab" aria-controls="nav-reminders" aria-selected="true" onclick="document.activeElement.blur();">Reminders (<label id="ReminderCount"></label>)</a>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">                        
+                        @if (access.Reminders_View)
+                        {
+                            <a class="nav-item nav-link active" id="nav-reminders-tab" data-toggle="tab" href="#nav-reminders" role="tab" aria-controls="nav-reminders" aria-selected="true" onclick="document.activeElement.blur();">Reminders (<label id="ReminderCount"></label>)</a>
+                        }
                         <a class="nav-item nav-link" id="nav-birthdays-tab" data-toggle="tab" href="#nav-birthdays" role="tab" aria-controls="nav-birthdays" aria-selected="false" onclick="document.activeElement.blur(); LoadBirthdays();">Birthdays (<label id="BirthdayCount"></label>)</a>
                     </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-reminders" role="tabpanel" aria-labelledby="nav-reminders-tab">
-                        @{Html.RenderAction("IndexPartial", "Reminders");}
-                    </div>
-
+                    @if (access.Reminders_View)
+                    {
+                        <div class="tab-pane fade show active" id="nav-reminders" role="tabpanel" aria-labelledby="nav-reminders-tab">
+                            @{Html.RenderAction("IndexPartial", "Reminders");}
+                        </div>
+                    }
                     <div class="tab-pane fade" id="nav-birthdays" role="tabpanel" aria-labelledby="nav-birthdays-tab">
                         @{Html.RenderAction("BirthdaysPartial", "UserAccounts");}
-                    </div>
-
                     </div>
                 </div>
             </div>
@@ -36,6 +41,10 @@
 
     $(document).ready(function () {
         activateMenu('Home');
+
+        if ('@access.Reminders_View' == 'False') {
+            $('#nav-birthdays-tab').click();
+        }
     });
 
     function UpdateReminderCount(value) {

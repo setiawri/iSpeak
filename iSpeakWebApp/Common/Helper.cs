@@ -2,8 +2,9 @@
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
-using LIBUtil;
 using iSpeakWebApp.Controllers;
+using iSpeakWebApp.Models;
+using LIBUtil;
 
 namespace iSpeakWebApp
 {
@@ -12,6 +13,7 @@ namespace iSpeakWebApp
         public string Name;
         public Guid Id;
         public string Display;
+        public string LogDisplay;
     }
 
     public class Helper
@@ -56,8 +58,7 @@ namespace iSpeakWebApp
 
         public static Guid getActiveBranchId(HttpSessionStateBase Session) 
         {
-            object obj = Session[UserAccountsController.SESSION_ActiveBranches_Id];
-            return (Guid)obj;
+            return (Guid)Session[UserAccountsController.SESSION_ActiveBranches_Id];
         }
 
         public static DateTime setFilterViewBag(ControllerBase controller, int? year, int? month, DateTime? PayPeriod, string search, string periodChange, int? ActionType)

@@ -167,6 +167,18 @@
         }
     }
 
+    function appendWithDelimiter(originalText, newValue, delimiter) {
+        if (originalText == "" && newValue != "")
+            return newValue;
+        else if (newValue == "")
+            return originalText;
+        else {
+            if (originalText != "")
+                originalText += delimiter;
+            return originalText += newValue;
+        }
+    }
+
     // ACTIVITY LOGS ===============================================================================================================================================
 
     function Log(id) {
@@ -261,5 +273,11 @@
         applyEventsToInputTextboxes(); //call here so it is executed initially
         showBootboxMessage();
     });
+
+    function ScrollTo(id) {
+        $('html, body').animate({
+            scrollTop: $('#' + id).offset().top
+        }, 1000);
+    }
 
 </script>

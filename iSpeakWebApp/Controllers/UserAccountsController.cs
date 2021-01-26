@@ -10,30 +10,15 @@ using System.Web.Mvc;
 
 namespace iSpeakWebApp.Controllers
 {
-    public class AccessList
-    {
-        //public OperatorPrivilegePayrollModel OperatorPrivilegePayrollModel;
-
-        public AccessList() { }
-
-        //public void populate(OperatorPrivilegePayrollModel operatorPrivilegePayrollModel)
-        //{
-        //    OperatorPrivilegePayrollModel = operatorPrivilegePayrollModel;
-        //}
-    }
-
     public class UserAccountsController : Controller
     {
         public const string ACTIONNAME_Login = "Login";
         public const string CONTROLLERNAME = "UserAccounts";
+        
+        public const string SESSION_UserAccount = "UserAccount";
+        public const string SESSION_UserAccountAccess = "UserAccountAccess";
+        public const string SESSION_ActiveBranches_Id = "ActiveBranches_Id";
 
-        public const string SESSION_UserAccounts_Id = "UserAccounts_Id";
-        public const string SESSION_UserAccounts_Username = "UserAccounts_Username";
-        public const string SESSION_UserAccounts_ResetPassword = "UserAccounts_ResetPassword";
-        public const string SESSION_ActiveBranches_Id = "Branches_Id";
-
-        public const string SESSION_OperatorPrivilegePayrollModel_PayrollApproval = "OperatorPrivilegePayrollModel_PayrollApproval";
-        public const string SESSION_OperatorPrivilegePayrollModel_ReimbursementApproval = "OperatorPrivilegePayrollModel_ReimbursementApproval";
 
         private readonly DBContext db = new DBContext();
 
@@ -143,7 +128,7 @@ namespace iSpeakWebApp.Controllers
             ViewBag.BirthdayCount = models.Count;
             UserAccountRolesController.setDropDownListViewBag(db, this);
 
-            return PartialView("BirthdaysPartial", models);
+            return PartialView("BirthdaysPartial");
         }
 
         public JsonResult GetBirthdayData(int? month, Guid? UserAccountRoles_Id)
@@ -164,7 +149,7 @@ namespace iSpeakWebApp.Controllers
 
         public ActionResult LogOff()
         {
-            Session[SESSION_UserAccounts_Id] = null;
+            Session[SESSION_UserAccount] = null;
             return RedirectToAction(nameof(Login));
         }
 
@@ -189,34 +174,47 @@ namespace iSpeakWebApp.Controllers
 
         public static object getUserId(HttpSessionStateBase Session)
         {
-            return Session[SESSION_UserAccounts_Id];
+            if (getUserAccount(Session) == null)
+                return null;
+            else
+                return getUserAccount(Session).Id;
+        }
+
+        public static UserAccountsModel getUserAccount(HttpSessionStateBase Session)
+        {
+            if (Session[SESSION_UserAccount] == null)
+                return null;
+            else
+                return (UserAccountsModel)Session[SESSION_UserAccount];
+        }
+
+        public static UserAccountRolesModel getUserAccess(HttpSessionStateBase Session)
+        {
+            return (UserAccountRolesModel)Session[SESSION_UserAccountAccess];
         }
 
         public static bool isLoggedIn(HttpSessionStateBase Session)
         {
-            return Session[SESSION_UserAccounts_Id] != null;
+            return getUserAccount(Session) != null;
         }
 
         public static bool isChangePassword(HttpSessionStateBase Session)
         {
-            return (bool)Session[SESSION_UserAccounts_ResetPassword];
+            return getUserAccount(Session).ResetPassword;
         }
 
-        private static void setLoginSession(HttpSessionStateBase Session, UserAccountsModel model)
+        public static void setLoginSession(HttpSessionStateBase Session, UserAccountsModel model)
         {
             if (model != null)
             {
-                Session[SESSION_UserAccounts_Id] = model.Id;
-                Session[SESSION_UserAccounts_Username] = model.Username;
-                Session[SESSION_UserAccounts_ResetPassword] = model.ResetPassword;
+                Session[SESSION_UserAccount] = model;
                 Session[SESSION_ActiveBranches_Id] = model.Branches_Id;
-
-                AccessList accessList = new AccessList();
-                //accessList.populate(result.OperatorPrivilegePayrollModel);
-
-                //Session[SESSION_OperatorPrivilegePayrollModel_PayrollApproval] = accessList.OperatorPrivilegePayrollModel.Approval;
-                //Session[SESSION_OperatorPrivilegePayrollModel_ReimbursementApproval] = accessList.OperatorPrivilegePayrollModel.ReimbursementApproval;
+                Session[SESSION_UserAccountAccess] = UserAccountRolesController.getAccesses(new DBContext(), model.Id);
             }
+        }
+        public static void updateLoginSession(HttpSessionStateBase Session)
+        {
+            setLoginSession(Session, (UserAccountsModel)Session[SESSION_UserAccount]);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
