@@ -214,7 +214,7 @@ namespace iSpeakWebApp.Controllers
 
         public ActionResult LogOff()
         {
-            Session[SESSION_UserAccount] = updatenull;
+            Session[SESSION_UserAccount] = null;
             return RedirectToAction(nameof(Login));
         }
 
