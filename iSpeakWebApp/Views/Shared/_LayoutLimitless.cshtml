@@ -28,7 +28,8 @@
                 <li class="nav-item dropdown dropdown-user">
                     <a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
                         <img src="@Helper.getImageUrl("profile.png", Request, Server)" class="rounded-circle" alt="">
-                        <span>@UserAccountsController.getUserAccount(Session).Fullname.Split(' ')[0]</span>
+                        <span>@UserAccountsController.getUserAccount(Session).Fullname</span>
+                        @*<span>@UserAccountsController.getUserAccount(Session).Fullname.Split(' ')[0]</span>*@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a href="@Url.Action("ChangePassword", UserAccountsController.CONTROLLERNAME)" class="dropdown-item"><i class="icon-lock2"></i>Change Password</a>
@@ -114,9 +115,14 @@
                         <i class="icon-gear mr-2"></i>Settings
                     </a>
                     <div class="dropdown-menu">
-                        <a href="@Url.Action("Index", "Consignments", new { rss=1 })" class="dropdown-item">General Settings</a>
-                        <a href="@Url.Action("Index", "UserAccountRoles", new { rss=1 })" class="dropdown-item">User Roles</a>
-                        <a href="@Url.Action("Index", "Branches", new { rss=1 })" class="dropdown-item">Branches</a>
+                        <div class="dropdown-submenu">
+                            <a href="#" class="dropdown-item dropdown-toggle">General Settings</a>
+                            <div class="dropdown-menu">
+                                <a href="@Url.Action("Index", "Settings", new { rss=1 })" class="dropdown-item">General Settings</a>
+                                <a href="@Url.Action("Index", "UserAccountRoles", new { rss=1 })" class="dropdown-item">User Roles</a>
+                                <a href="@Url.Action("Index", "Branches", new { rss=1 })" class="dropdown-item">Branches</a>
+                            </div>
+                        </div>
                         <div class="dropdown-submenu">
                             <a href="#" class="dropdown-item dropdown-toggle">Inventory</a>
                             <div class="dropdown-menu">

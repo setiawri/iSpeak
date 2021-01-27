@@ -74,8 +74,8 @@
 
     // NAVIGATION MENU =============================================================================================================================================
 
-    function activateMenu(id) {
-        $('#Menu_'+id).addClass('active');
+    function activateNavigationMenu() {
+        $('#Menu_@ViewBag.SelectedNavigationMenu').addClass('active');
     }
 
     // BOOTBOX =====================================================================================================================================================
@@ -270,6 +270,7 @@
             var switchery = new Switchery(document.querySelector('.form-check-input-switchery')); //on-off switch
         }
 
+        activateNavigationMenu();
         applyEventsToInputTextboxes(); //call here so it is executed initially
         showBootboxMessage();
     });

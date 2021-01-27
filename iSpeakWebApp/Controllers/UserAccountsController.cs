@@ -147,12 +147,6 @@ namespace iSpeakWebApp.Controllers
             return RedirectToLocal(returnUrl);
         }
 
-        public ActionResult LogOff()
-        {
-            Session[SESSION_UserAccount] = null;
-            return RedirectToAction(nameof(Login));
-        }
-
         private ActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
@@ -212,9 +206,16 @@ namespace iSpeakWebApp.Controllers
                 Session[SESSION_UserAccountAccess] = UserAccountRolesController.getAccesses(new DBContext(), model.Id);
             }
         }
+
         public static void updateLoginSession(HttpSessionStateBase Session)
         {
             setLoginSession(Session, (UserAccountsModel)Session[SESSION_UserAccount]);
+        }
+
+        public ActionResult LogOff()
+        {
+            Session[SESSION_UserAccount] = updatenull;
+            return RedirectToAction(nameof(Login));
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/

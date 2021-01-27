@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<iSpeakWebApp.Models.RemindersModel>
 @{ 
+    ViewBag.SelectedNavigationMenu = "Home";
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
 }
 
@@ -61,7 +62,6 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        activateMenu('Home');
         LoadReminders();
         $('#datatableReminder').DataTable().column(0).visible(false);
 

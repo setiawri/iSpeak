@@ -1,6 +1,7 @@
 ﻿@model iSpeakWebApp.Models.RemindersModel
 
 @{
+    ViewBag.SelectedNavigationMenu = "Home";
     ViewBag.Root = "Reminders";
     ViewBag.Title = "Edit";
 }
@@ -55,7 +56,6 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        activateMenu('Home');
         setDateRangePicker('Timestamp', '@string.Format("{0:yyyy/MM/dd}", DateTime.Now)');
     });
 

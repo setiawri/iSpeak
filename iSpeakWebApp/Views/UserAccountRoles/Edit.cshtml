@@ -1,6 +1,7 @@
 ﻿@model iSpeakWebApp.Models.UserAccountRolesModel
 
 @{
+    ViewBag.SelectedNavigationMenu = "Settings";
     ViewBag.Root = "Roles";
     ViewBag.Title = "Edit";
 }
@@ -89,7 +90,6 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        activateMenu('Settings');
 
         $('.notesbutton').click(function (event) {
             var id = '#' + event.target.id;
