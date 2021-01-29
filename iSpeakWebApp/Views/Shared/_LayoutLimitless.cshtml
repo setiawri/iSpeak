@@ -1,5 +1,7 @@
 ﻿@using iSpeakWebApp.Controllers
-
+@{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -119,7 +121,10 @@
                             <a href="#" class="dropdown-item dropdown-toggle">General Settings</a>
                             <div class="dropdown-menu">
                                 <a href="@Url.Action("Index", "Settings", new { rss=1 })" class="dropdown-item">General Settings</a>
-                                <a href="@Url.Action("Index", "UserAccountRoles", new { rss=1 })" class="dropdown-item">User Roles</a>
+                                @if (access.UserAccountRoles_View)
+                                {
+                                    <a href="@Url.Action("Index", "UserAccountRoles", new { rss=1 })" class="dropdown-item">User Roles</a>
+                                }
                                 <a href="@Url.Action("Index", "Branches", new { rss=1 })" class="dropdown-item">Branches</a>
                             </div>
                         </div>
@@ -217,10 +222,6 @@
                 bootbox.alert({ backdrop: true, message: "Error " + result });
             } //end error
         }); //end ajax
-    }
-
-    function getActiveBranchId() {
-        return $('#BranchId').val();
     }
 
 </script>

@@ -270,15 +270,51 @@
             var switchery = new Switchery(document.querySelector('.form-check-input-switchery')); //on-off switch
         }
 
-        activateNavigationMenu();
         applyEventsToInputTextboxes(); //call here so it is executed initially
+        activateNavigationMenu();
+        setNavigationMenuVisibility();
+
         showBootboxMessage();
     });
 
-    function ScrollTo(id) {
+    function setNavigationMenuVisibility() {
+        $('#navbar-navigation').children('ul:first').children('li').each(function (index) { //main menu
+            var subMenu = $(this).children('div:first').children('div.dropdown-submenu'); //sub menu lvl 1
+
+            recursivelySetSubmenuVisibility(subMenu);
+
+            //hide main menu if has no children
+            subMenu = $(this).children('div:first').children('div.dropdown-submenu');
+            var notlabels = $(this).children('a:not(.dropdown-toggle)');
+            var label = $(this).children('a.dropdown-toggle');
+            var links = $(this).children('div:first').children('a');
+            if (subMenu.length == 0 && ((notlabels.length == 0 && links.length == 0) || label == 1)) {
+                $(this).addClass('d-none');
+            }
+        });
+    }
+
+    function recursivelySetSubmenuVisibility(subMenu) {
+        if (subMenu.length == 0) {
+            return; //exit recursion
+        } else {
+            subMenu.each(function () {
+                var nextSubMenu = $(this).children('div:first').children('div.dropdown-submenu');
+                recursivelySetSubmenuVisibility(nextSubMenu);
+
+                nextSubMenu = $(this).children('div:first').children('div.dropdown-submenu');
+                var label = $(this).children('a.dropdown-toggle');
+                var links = $(this).children('div:first').children('a');
+                if (nextSubMenu.length == 0 && (links.length == 0 || label == 1))
+                    $(this).addClass('d-none');
+            });
+        }
+    }
+
+    function ScrollTo(id,duration) {
         $('html, body').animate({
             scrollTop: $('#' + id).offset().top
-        }, 1000);
+        }, duration);
     }
 
 </script>

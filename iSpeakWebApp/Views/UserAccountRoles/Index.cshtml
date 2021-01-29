@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<iSpeakWebApp.Models.UserAccountRolesModel>
 
 @{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     ViewBag.SelectedNavigationMenu = "Settings";
     ViewBag.Root = "Roles";
     ViewBag.Title = "Index";
@@ -15,7 +16,10 @@
                 <h5 class="card-title">@ViewBag.Root</h5>
             </div>
             <div class="card-body">
-                <a href="@Url.Action("Create", "UserAccountRoles")" class="btn btn-sm btn-success">Create<i class="icon-plus22 ml-2"></i></a>
+                @if (access.UserAccountRoles_Add)
+                {
+                    <a href="@Url.Action("Create", "UserAccountRoles")" class="btn btn-sm btn-success">Create<i class="icon-plus22 ml-2"></i></a>
+                }
                 <div class="table-responsive">
                     <table class="table table-hover datatable">
                         <thead>
@@ -30,8 +34,11 @@
                                 <tr>
                                     <td>@Html.DisplayFor(modelItem => item.Name)</td>
                                     <td>
-                                        @Html.ActionLink("Edit", "Edit", new { id = item.Id })
-                                        • <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                        @if (access.UserAccountRoles_Edit)
+                                        {
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.Id })@(" • ")
+                                        }
+                                        <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                     </td>
                                 </tr>
                             }

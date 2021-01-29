@@ -65,6 +65,36 @@
 
                             <hr />
 
+                            <label class="h5 mb-0">USER ACCOUNT ROLES</label>
+                            <div class="pl-0">
+                                <div id="UserAccountRoles_Div">
+                                    <button id="UserAccountRoles" type="button" class="btn mb-1 mr-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                    <label id="UserAccountRoles_Label" class="col-form-label">@Model.UserAccountRoles_Notes</label>
+                                </div>
+                                <div id="UserAccountRoles_Edit" class="input-group d-none mb-1">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.UserAccountRoles_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes" } })
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    @Html.CheckBoxFor(model => model.UserAccountRoles_View)
+                                </div>
+                                <div class="input-group-append">
+                                    @Html.LabelFor(model => model.UserAccountRoles_View, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.UserAccountRoles_Add)
+                                    </div>
+                                    @Html.LabelFor(model => model.UserAccountRoles_Add, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.UserAccountRoles_Edit)
+                                    </div>
+                                    @Html.LabelFor(model => model.UserAccountRoles_Edit, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                </div>
+                            </div>
+
+                            <hr />
+
                         </fieldset>
 
                         <div id="submitDiv">
@@ -73,7 +103,7 @@
                         </div>
 
                         <div style="position:fixed; bottom:100px;right:30px;">
-                            <button type="button" class="btn mb-1 mr-1 btn-lg fa-2x" style="width:70px;height:70px;" onclick="ScrollTo('submitDiv'); this.blur();">
+                            <button type="button" class="btn mb-1 mr-1 btn-lg fa-2x" style="width:70px;height:70px;" onclick="ScrollTo('submitDiv',1000); this.blur();">
                                 <span class="icon-arrow-down52 text-primary" style="font-size:28pt;"></span>
                             </button>
                         </div>

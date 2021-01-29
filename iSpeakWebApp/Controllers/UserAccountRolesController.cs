@@ -4,9 +4,18 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System;
 using System.Web;
+using System.Web.Mvc;
 using LIBUtil;
 
-using System.Web.Mvc;
+/*
+ * To add new user access:
+ * - add items in UserAccountRolesModel
+ * - add items to database table UserAccountRoles
+ * - add items in UserAccountRoles > Edit.cshtml
+ * - add items in Post UserAccountRolesController.Edit() 
+ * - add items in UserAccountRolesController.getAccesses() 
+ * - update views that use the items
+ */
 
 namespace iSpeakWebApp.Controllers
 {
@@ -83,10 +92,17 @@ namespace iSpeakWebApp.Controllers
                     string log = string.Empty;
                     log = Util.webAppendChange(log, originalModel.Name, model.Name, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Name.LogDisplay));
 
+                    //Reminders
+                    log = Util.webAppendChange(log, originalModel.Reminders_Notes, model.Reminders_Notes, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Reminders_Notes.LogDisplay));
                     log = Util.webAppendChange(log, originalModel.Reminders_Add, model.Reminders_Add, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Reminders_Add.LogDisplay));
                     log = Util.webAppendChange(log, originalModel.Reminders_Edit, model.Reminders_Edit, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Reminders_Edit.LogDisplay));
-                    log = Util.webAppendChange(log, originalModel.Reminders_Notes, model.Reminders_Notes, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Reminders_Notes.LogDisplay));
                     log = Util.webAppendChange(log, originalModel.Reminders_View, model.Reminders_View, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Reminders_View.LogDisplay));
+
+                    //User Account Roles
+                    log = Util.webAppendChange(log, originalModel.UserAccountRoles_Notes, model.UserAccountRoles_Notes, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_UserAccountRoles_Notes.LogDisplay));
+                    log = Util.webAppendChange(log, originalModel.UserAccountRoles_Add, model.UserAccountRoles_Add, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_UserAccountRoles_Add.LogDisplay));
+                    log = Util.webAppendChange(log, originalModel.UserAccountRoles_Edit, model.UserAccountRoles_Edit, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_UserAccountRoles_Edit.LogDisplay));
+                    log = Util.webAppendChange(log, originalModel.UserAccountRoles_View, model.UserAccountRoles_View, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_UserAccountRoles_View.LogDisplay));
 
                     if (!string.IsNullOrEmpty(log))
                     {
@@ -116,9 +132,15 @@ namespace iSpeakWebApp.Controllers
             UserAccountRolesModel model = new UserAccountRolesModel();
             foreach( UserAccountRolesModel item in get(db, null, UserAccounts_Id))
             {
+                //Reminders
                 if (item.Reminders_Add) model.Reminders_Add = true;
                 if (item.Reminders_Edit) model.Reminders_Edit = true;
                 if (item.Reminders_View) model.Reminders_View = true;
+
+                //UserAccountRoles
+                if (item.UserAccountRoles_Add) model.UserAccountRoles_Add = true;
+                if (item.UserAccountRoles_Edit) model.UserAccountRoles_Edit = true;
+                if (item.UserAccountRoles_View) model.UserAccountRoles_View = true;
             }
 
             return model;
