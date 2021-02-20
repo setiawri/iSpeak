@@ -1,0 +1,52 @@
+﻿@model IEnumerable<iSpeakWebApp.Models.BranchesModel>
+
+@{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    ViewBag.Root = "Branches";
+    ViewBag.Title = "Index";
+}
+
+<div class="content-wrapper">
+    <!-- Content area -->
+    <div class="content">
+        <!-- Form inputs -->
+        <div class="card animated bounceInLeft">
+            <div class="card-header header-elements-inline">
+                <h5 class="card-title">@ViewBag.Root</h5>
+            </div>
+            <div class="card-body">
+                @if (access.Branches_Add)
+                {
+                   <a href="@Url.Action("Create", "Branches", new { Area = "" })" class="btn btn-sm btn-success">Create New <i class="icon-plus22 ml-2"></i></a>
+                }
+                <div class="table-responsive">
+                    <table class="table table-hover datatable">
+                        <thead>
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.Name)</th>
+                                <th class="non-searchable non-sortable"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                    <td>
+                                        @if (access.Branches_Edit)
+                                        {
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.Id })@(" • ")
+                                        }
+                                        <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- /form inputs -->
+    </div>
+    <!-- /content area -->
+</div>

@@ -109,6 +109,12 @@ namespace iSpeakWebApp.Controllers
                     log = Util.webAppendChange(log, originalModel.Settings_Edit, model.Settings_Edit, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Settings_Edit.LogDisplay));
                     log = Util.webAppendChange(log, originalModel.Settings_View, model.Settings_View, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Settings_View.LogDisplay));
 
+                    //Branches
+                    log = Util.webAppendChange(log, originalModel.Branches_Notes, model.Branches_Notes, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Branches_Notes.LogDisplay));
+                    log = Util.webAppendChange(log, originalModel.Branches_Add, model.Branches_Add, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Branches_Add.LogDisplay));
+                    log = Util.webAppendChange(log, originalModel.Branches_Edit, model.Branches_Edit, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Branches_Edit.LogDisplay));
+                    log = Util.webAppendChange(log, originalModel.Branches_View, model.Branches_View, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Branches_View.LogDisplay));
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -150,6 +156,12 @@ namespace iSpeakWebApp.Controllers
                 //Settings
                 if (item.Settings_Edit) model.Settings_Edit = true;
                 if (item.Settings_View) model.Settings_View = true;
+
+                //Branches
+                if (item.Branches_Add) model.Branches_Add = true;
+                if (item.Branches_Edit) model.Branches_Edit = true;
+                if (item.Branches_View) model.Branches_View = true;
+
             }
 
             return model;

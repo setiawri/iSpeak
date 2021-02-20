@@ -39,19 +39,19 @@ namespace iSpeakWebApp.Models
 
         [Display(Name = "Notes")]
         public string UserAccountRoles_Notes { get; set; }
-        public static ModelMember COL_UserAccountRoles_Notes = new ModelMember { Name = "UserAccountRoles_Notes", Display = "Notes", LogDisplay="User Account Roles Notes" };
+        public static ModelMember COL_UserAccountRoles_Notes = new ModelMember { Name = "UserAccountRoles_Notes", Display = "Notes", LogDisplay="Branches Notes" };
 
         [Display(Name = "Add")]
         public bool UserAccountRoles_Add { get; set; }
-        public static ModelMember COL_UserAccountRoles_Add = new ModelMember { Name = "UserAccountRoles_Add", Display = "Add", LogDisplay = "User Account Roles Add" };
+        public static ModelMember COL_UserAccountRoles_Add = new ModelMember { Name = "UserAccountRoles_Add", Display = "Add", LogDisplay = "Branches Add" };
 
         [Display(Name = "View")]
         public bool UserAccountRoles_View { get; set; }
-        public static ModelMember COL_UserAccountRoles_View = new ModelMember { Name = "UserAccountRoles_View", Display = "View", LogDisplay = "User Account Roles View" };
+        public static ModelMember COL_UserAccountRoles_View = new ModelMember { Name = "UserAccountRoles_View", Display = "View", LogDisplay = "Branches View" };
 
         [Display(Name = "Edit")]
         public bool UserAccountRoles_Edit { get; set; }
-        public static ModelMember COL_UserAccountRoles_Edit = new ModelMember { Name = "UserAccountRoles_Edit", Display = "Edit", LogDisplay = "User Account Roles Edit" };
+        public static ModelMember COL_UserAccountRoles_Edit = new ModelMember { Name = "UserAccountRoles_Edit", Display = "Edit", LogDisplay = "Branches Edit" };
 
         /* APPLICATION SETTINGS *******************************************************************************************************************************/
 
@@ -66,6 +66,26 @@ namespace iSpeakWebApp.Models
         [Display(Name = "Edit")]
         public bool Settings_Edit { get; set; }
         public static ModelMember COL_Settings_Edit = new ModelMember { Name = "Settings_Edit", Display = "Edit", LogDisplay = "Settings Roles Edit" };
+
+        /* BRANCHES *******************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string Branches_Notes { get; set; }
+        public static ModelMember COL_Branches_Notes = new ModelMember { Name = "Branches_Notes", Display = "Notes", LogDisplay = "Branches Notes" };
+
+        [Display(Name = "Add")]
+        public bool Branches_Add { get; set; }
+        public static ModelMember COL_Branches_Add = new ModelMember { Name = "Branches_Add", Display = "Add", LogDisplay = "Branches Add" };
+
+        [Display(Name = "View")]
+        public bool Branches_View { get; set; }
+        public static ModelMember COL_Branches_View = new ModelMember { Name = "Branches_View", Display = "View", LogDisplay = "Branches View" };
+
+        [Display(Name = "Edit")]
+        public bool Branches_Edit { get; set; }
+        public static ModelMember COL_Branches_Edit = new ModelMember { Name = "Branches_Edit", Display = "Edit", LogDisplay = "Branches Edit" };
+
+        /******************************************************************************************************************************************************/
 
     }
 }

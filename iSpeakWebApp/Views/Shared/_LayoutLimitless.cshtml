@@ -128,7 +128,10 @@
                                 {
                                     <a href="@Url.Action("Index", "UserAccountRoles", new { rss=1 })" class="dropdown-item">User Roles</a>
                                 }
-                                <a href="@Url.Action("Index", "Branches", new { rss=1 })" class="dropdown-item">Branches</a>
+                                @if (access.Branches_View)
+                                {
+                                    <a href="@Url.Action("Index", "Branches", new { rss=1 })" class="dropdown-item">Branches</a>
+                                }
                             </div>
                         </div>
                         <div class="dropdown-submenu">

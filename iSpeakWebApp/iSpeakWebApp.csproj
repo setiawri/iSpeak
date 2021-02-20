@@ -241,6 +241,9 @@
     <Content Include="Views\UserAccountRoles\Create.cshtml" />
     <Content Include="Views\UserAccountRoles\Edit.cshtml" />
     <Content Include="Views\Settings\Edit.cshtml" />
+    <Content Include="Views\Branches\Create.cshtml" />
+    <Content Include="Views\Branches\Edit.cshtml" />
+    <Content Include="Views\Branches\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\LIBUtil\LIBUtil\LIBUtil\LIBUtil.csproj">

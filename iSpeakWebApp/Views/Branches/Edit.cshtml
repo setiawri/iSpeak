@@ -1,0 +1,95 @@
+﻿@model iSpeakWebApp.Models.BranchesModel
+
+@{
+    ViewBag.Root = "Bank";
+    ViewBag.Title = "Edit";
+}
+
+<div class="content-wrapper">
+
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm(new { page = ViewBag.CurrentPage }))
+        {
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.Id)
+                <!-- Form inputs -->
+                <div class="card">
+                    <div class="card-header header-elements-inline">
+                        <h5 class="card-title">@ViewBag.Root</h5>
+                    </div>
+                    <div class="card-body">
+                        <fieldset class="mb-3">
+                            <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Title</legend>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label col-lg-2 required" })
+                                <div class="col-lg-5">
+                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-5"></div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "col-form-label col-lg-2 required" })
+                                <div class="col-lg-5">
+                                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "col-form-label col-lg-2" })
+                                <div class="col-lg-5">
+                                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "col-form-label col-lg-2" })
+                                <div class="col-lg-5">
+                                    @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.InvoiceHeaderText, htmlAttributes: new { @class = "col-form-label col-lg-2" })
+                                <div class="col-lg-5">
+                                    @Html.TextAreaFor(model => model.InvoiceHeaderText, new { @class = "form-control", @rows = 3 })
+                                    @Html.ValidationMessageFor(model => model.InvoiceHeaderText, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "col-form-label col-lg-2" })
+                                <div class="col-lg-5">
+                                    <div class="form-check form-check-switchery">
+                                        <label class="form-check-label">
+                                            @Html.EditorFor(model => model.Active, new { htmlAttributes = new { @class = "form-check-input-switchery" } })
+                                        </label>
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </fieldset>
+
+                        @if (iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session).Branches_Edit)
+                        {
+                            <div>
+                                <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
+                                <a href="@Url.Action("Index", "Branches", new { Area = "Payroll" })" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <!-- /form inputs -->
+            }
+        }
+    </div>
+    <!-- /content area -->
+</div>
