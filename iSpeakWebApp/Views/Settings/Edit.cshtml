@@ -1,0 +1,218 @@
+﻿@model iSpeakWebApp.Models.SettingsModel
+@using iSpeakWebApp.Models
+
+@{
+    ViewBag.SelectedNavigationMenu = "Internal";
+    ViewBag.Root = "APPLICATION SETTINGS";
+    ViewBag.Title = "Edit";
+}
+
+<style>
+    th, td {
+        white-space: nowrap;
+    }
+</style>
+
+<div class="content-wrapper">
+
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <!-- Form inputs -->
+            <div class="card">
+                <div class="card-header header-elements-inline pb-0">
+                    <h3 class="card-title">@ViewBag.Root</h3>
+                </div>
+                <div class="card-body">
+                    <fieldset class="mb-3">
+                        @Html.ValidationMessage("ValidationMessage", "", new { @class = "text-danger" })
+
+                        <hr />
+
+                        @Html.LabelFor(model => model.AutoEntryForCashPayments, htmlAttributes: new { @class = "h5 mb-0 required" })
+                        <div class="row pl-0">
+                            <div>
+                                <button type="button" class="btn mb-1 ml-2 mr-1 px-1 icon-notebook" onclick="Log('@SettingsModel.COL_AutoEntryForCashPayments.Id')"></button>
+                            </div>
+                            <div id="AutoEntryForCashPayments_Div">
+                                <button id="AutoEntryForCashPayments" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                <label id="AutoEntryForCashPayments_Label" class="col-form-label">@Model.AutoEntryForCashPayments_Notes</label>
+                            </div>
+                            <div class="col-lg-11 pl-0">
+                                <div id="AutoEntryForCashPayments_Edit" class="input-group d-none mb-1 ml-0 pl-0">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.AutoEntryForCashPayments_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes", @title = Model.AutoEntryForCashPayments_Notes } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group col-lg-6 pl-0">
+                            @Html.DropDownListFor(model => model.AutoEntryForCashPayments, ViewBag.PettyCashRecordsCategories as SelectList, "Select Category", new { @class = "form-control select2" })
+                        </div>
+                        @Html.ValidationMessage("AutoEntryForCashPayments", "", new { @class = "text-danger" })
+
+                        <hr />
+
+                        @Html.LabelFor(model => model.UserSetRoleAllowed, htmlAttributes: new { @class = "h5 mb-0 required" })
+                        <div class="row pl-0">
+                            <div>
+                                <button type="button" class="btn mb-1 ml-2 mr-1 px-1 icon-notebook" onclick="Log('@SettingsModel.COL_UserSetRoleAllowed.Id')"></button>
+                            </div>
+                            <div id="UserSetRoleAllowed_Div">
+                                <button id="UserSetRoleAllowed" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                <label id="UserSetRoleAllowed_Label" class="col-form-label">@Model.UserSetRoleAllowed_Notes</label>
+                            </div>
+                            <div class="col-lg-11 pl-0">
+                                <div id="UserSetRoleAllowed_Edit" class="input-group d-none mb-1 ml-0 pl-0">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.UserSetRoleAllowed_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes", @title = Model.UserSetRoleAllowed_Notes } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group col-lg-6 pl-0">
+                            @Html.DropDownListFor(model => model.UserSetRoleAllowed, ViewBag.UserAccountRoles as SelectList, "Select Category", new { @class = "form-control select2" })
+                        </div>
+                        @Html.ValidationMessage("UserSetRoleAllowed", "", new { @class = "text-danger" })
+
+                        <hr />
+
+                        @Html.LabelFor(model => model.ResetPassword, htmlAttributes: new { @class = "h5 mb-0 required" })
+                        <div class="row pl-0">
+                            <div>
+                                <button type="button" class="btn mb-1 ml-2 mr-1 px-1 icon-notebook" onclick="Log('@SettingsModel.COL_ResetPassword.Id')"></button>
+                            </div>
+                            <div id="ResetPassword_Div">
+                                <button id="ResetPassword" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                <label id="ResetPassword_Label" class="col-form-label">@Model.ResetPassword_Notes</label>
+                            </div>
+                            <div class="col-lg-11 pl-0">
+                                <div id="ResetPassword_Edit" class="input-group d-none mb-1 ml-0 pl-0">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.ResetPassword_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes", @title = Model.ResetPassword_Notes } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group col-lg-6 pl-0">
+                            @Html.PasswordFor(model => model.ResetPassword, new { @class = "form-control passwordTextbox ResetPassword", @placeholder = "Reset Password" })
+                            <span class="input-group-append">
+                                <span class="input-group-text showPassword" title="Show Password"><i class="icon icon-eye2"></i></span>
+                            </span>
+                        </div>
+                        @Html.ValidationMessage("ResetPassword", "", new { @class = "text-danger" })
+
+                        <hr />
+
+                        @Html.LabelFor(model => model.RolesToSeeReminders, htmlAttributes: new { @class = "h5 mb-0" })
+                        <div class="row pl-0">
+                            <div>
+                                <button type="button" class="btn mb-1 ml-2 mr-1 px-1 icon-notebook" onclick="Log('@SettingsModel.COL_RolesToSeeReminders.Id')"></button>
+                            </div>
+                            <div id="RolesToSeeReminders_Div">
+                                <button id="RolesToSeeReminders" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                <label id="RolesToSeeReminders_Label" class="col-form-label">@Model.RolesToSeeReminders_Notes</label>
+                            </div>
+                            <div class="col-lg-11 pl-0">
+                                <div id="RolesToSeeReminders_Edit" class="input-group d-none mb-1 ml-0 pl-0">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.RolesToSeeReminders_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes", @title = Model.RolesToSeeReminders_Notes } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 pl-0">
+                            @Html.ListBoxFor(model => model.RolesToSeeReminders_List, ViewBag.UserAccountRoles as SelectList, new { @class = "form-control select2", @multiple = "multiple" })
+                        </div>
+
+                        <hr />
+
+                        @Html.LabelFor(model => model.FullAccessForTutorSchedules, htmlAttributes: new { @class = "h5 mb-0" })
+                        <div class="row pl-0">
+                            <div>
+                                <button type="button" class="btn mb-1 ml-2 mr-1 px-1 icon-notebook" onclick="Log('@SettingsModel.COL_FullAccessForTutorSchedules.Id')"></button>
+                            </div>
+                            <div id="FullAccessForTutorSchedules_Div">
+                                <button id="FullAccessForTutorSchedules" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                <label id="FullAccessForTutorSchedules_Label" class="col-form-label">@Model.FullAccessForTutorSchedules_Notes</label>
+                            </div>
+                            <div class="col-lg-11 pl-0">
+                                <div id="FullAccessForTutorSchedules_Edit" class="input-group d-none mb-1 ml-0 pl-0">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.FullAccessForTutorSchedules_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes", @title = Model.FullAccessForTutorSchedules_Notes } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 pl-0">
+                            @Html.ListBoxFor(model => model.FullAccessForTutorSchedules_List, ViewBag.UserAccountRoles as SelectList, new { @class = "form-control select2", @multiple = "multiple" })
+                        </div>
+
+                        <hr />
+
+                        @Html.LabelFor(model => model.ShowOnlyOwnUserData, htmlAttributes: new { @class = "h5 mb-0" })
+                        <div class="row pl-0">
+                            <div>
+                                <button type="button" class="btn mb-1 ml-2 mr-1 px-1 icon-notebook" onclick="Log('@SettingsModel.COL_ShowOnlyOwnUserData.Id')"></button>
+                            </div>
+                            <div id="ShowOnlyOwnUserData_Div">
+                                <button id="ShowOnlyOwnUserData" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                <label id="ShowOnlyOwnUserData_Label" class="col-form-label">@Model.ShowOnlyOwnUserData_Notes</label>
+                            </div>
+                            <div class="col-lg-11 pl-0">
+                                <div id="ShowOnlyOwnUserData_Edit" class="input-group d-none mb-1 ml-0 pl-0">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.ShowOnlyOwnUserData_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes", @title = Model.ShowOnlyOwnUserData_Notes } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 pl-0">
+                            @Html.ListBoxFor(model => model.ShowOnlyOwnUserData_List, ViewBag.UserAccountRoles as SelectList, new { @class = "form-control select2", @multiple = "multiple" })
+                        </div>
+
+                        <hr />
+
+                        @Html.LabelFor(model => model.PayrollRatesRoles, htmlAttributes: new { @class = "h5 mb-0" })
+                        <div class="row pl-0">
+                            <div>
+                                <button type="button" class="btn mb-1 ml-2 mr-1 px-1 icon-notebook" onclick="Log('@SettingsModel.COL_PayrollRatesRoles.Id')"></button>
+                            </div>
+                            <div id="PayrollRatesRoles_Div">
+                                <button id="PayrollRatesRoles" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                <label id="PayrollRatesRoles_Label" class="col-form-label">@Model.PayrollRatesRoles_Notes</label>
+                            </div>
+                            <div class="col-lg-11 pl-0">
+                                <div id="PayrollRatesRoles_Edit" class="input-group d-none mb-1 ml-0 pl-0">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.PayrollRatesRoles_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes", @title = Model.PayrollRatesRoles_Notes } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 pl-0">
+                            @Html.ListBoxFor(model => model.PayrollRatesRoles_List, ViewBag.UserAccountRoles as SelectList, new { @class = "form-control select2", @multiple = "multiple" })
+                        </div>
+
+                        <hr />
+
+                    </fieldset>
+                    <div id="submitDiv">
+                        <button type="submit" class="btn btn-primary">Save Changes <i class="icon-paperplane ml-2"></i></button>
+                    </div>
+
+                    <div style="position:fixed; bottom:100px;right:30px;">
+                        <button type="button" class="btn mb-1 mr-1 btn-lg fa-2x" style="width:70px;height:70px;" onclick="ScrollTo('submitDiv',1000); this.blur();">
+                            <span class="icon-arrow-down52 text-primary" style="font-size:28pt;"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- /form inputs -->
+        }
+    </div>
+    <!-- /content area -->
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('.ResetPassword').val('@ViewBag.ResetPassword');
+    })
+</script>

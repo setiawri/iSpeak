@@ -128,6 +128,7 @@
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Controllers\ActivityLogsController.cs" />
+    <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\BranchesController.cs" />
     <Compile Include="Controllers\RemindersController.cs" />
@@ -138,6 +139,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ActivityLogsModel.cs" />
+    <Compile Include="Models\PettyCashRecordsCategoriesModel.cs" />
     <Compile Include="Models\UserAccountRoleAssignmentsModel.cs" />
     <Compile Include="Models\RemindersModel.cs" />
     <Compile Include="Models\BranchesModel.cs" />
@@ -159,10 +161,11 @@
     <Content Include="assets\css\icons\icomoon\styles.css" />
     <Content Include="assets\css\layout.min.css" />
     <Content Include="assets\font\Roboto.css" />
+    <Content Include="assets\img\happy_bday.jpg" />
+    <Content Include="assets\img\landing_page.jpg" />
+    <Content Include="assets\img\logo.png" />
     <Content Include="assets\img\no-image.jpg" />
     <Content Include="assets\img\profile.png" />
-    <Content Include="assets\img\TTD Bu Merry.jpg" />
-    <Content Include="assets\img\TTDBuMerry.jpg" />
     <Content Include="assets\js\app.js" />
     <Content Include="assets\js\main\bootstrap.bundle.min.js" />
     <Content Include="assets\js\main\jquery.min.js" />
@@ -237,6 +240,7 @@
     <Content Include="Views\UserAccountRoles\Index.cshtml" />
     <Content Include="Views\UserAccountRoles\Create.cshtml" />
     <Content Include="Views\UserAccountRoles\Edit.cshtml" />
+    <Content Include="Views\Settings\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\LIBUtil\LIBUtil\LIBUtil\LIBUtil.csproj">

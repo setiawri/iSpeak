@@ -41,7 +41,7 @@ namespace iSpeakWebApp.Controllers
                                 <td>{1}</td>
                                 <td>{2}</td>
                             </tr>
-                    ", item.ActivityLog.Timestamp, item.ActivityLog.Description, item.UserAccount.Fullname);
+                    ", item.ActivityLog.Timestamp, item.ActivityLog.Description.Replace(Environment.NewLine, "<BR>"), item.UserAccount.Fullname);
             }
 
             message += "</tbody></table></div>";

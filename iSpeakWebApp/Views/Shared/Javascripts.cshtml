@@ -81,8 +81,10 @@
     // BOOTBOX =====================================================================================================================================================
 
     function showBootboxMessage() {
-        if ('@ViewBag.BootboxMessage' != '') {
-            bootbox.alert({ backdrop: true, message: '@ViewBag.BootboxMessage' });
+        var msg = '@TempData["BootboxMessage"]';
+        if (msg !== '') {
+            msg = msg.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+            bootbox.alert({ backdrop: true, message: msg });
         }
     }
 
@@ -125,14 +127,14 @@
                     month = monthNames[value.getMonth()];
                 } else if (format[i] == 'MM') {
                     month = (('' + value.getMonth()).length < 2 ? '0' : '') + value.getMonth() + ' ';
-                }        
+                }
                 result.push(month);
             }
 
             if (format[i] == 'yyyy')
                 result.push(value.getFullYear());
-        } 
-        
+        }
+
 
         return result.filter(Boolean).join(delimiter);
     }
@@ -261,6 +263,8 @@
     //==============================================================================================================================================================
 
     $(document).ready(function () {
+        setNavigationMenuVisibility();
+
         $("input").attr("autocomplete", "off"); //turn off autocomplete
         $('.form-input-styled').uniform(); //??
         $('.select2').select2(); //apply filtering on dropdownlists
@@ -270,9 +274,23 @@
             var switchery = new Switchery(document.querySelector('.form-check-input-switchery')); //on-off switch
         }
 
+        $('.notesbutton').click(function (event) {
+            var id = '#' + event.target.id;
+            $(id + '_Div').addClass('d-none');
+            $(id + '_Edit').removeClass('d-none');
+            $(id + '_Notes').select();
+        });
+
+        $('.showPassword').mousedown(function () {
+            $('.passwordTextbox').attr('type', 'text');
+        }).mouseup(function () {
+            $('.passwordTextbox').attr('type', 'password');
+        }).mouseout(function () {
+            $('.passwordTextbox').attr('type', 'password');
+        });
+
         applyEventsToInputTextboxes(); //call here so it is executed initially
         activateNavigationMenu();
-        setNavigationMenuVisibility();
 
         showBootboxMessage();
     });
@@ -289,7 +307,7 @@
             var label = $(this).children('a.dropdown-toggle');
             var links = $(this).children('div:first').children('a');
             if (subMenu.length == 0 && ((notlabels.length == 0 && links.length == 0) || label == 1)) {
-                $(this).addClass('d-none');
+                $(this).remove();
             }
         });
     }
@@ -306,7 +324,7 @@
                 var label = $(this).children('a.dropdown-toggle');
                 var links = $(this).children('div:first').children('a');
                 if (nextSubMenu.length == 0 && (links.length == 0 || label == 1))
-                    $(this).addClass('d-none');
+                    $(this).remove();
             });
         }
     }

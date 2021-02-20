@@ -29,8 +29,9 @@
                     @Html.AntiForgeryToken()
                     <div class="card mb-0">
                         <div class="card-body">
-                            <span class="form-text text-center display-1 text-muted">@Helper.COMPANYNAME</span>
+                            @*<span class="form-text text-center display-1 text-muted">@Helper.COMPANYNAME</span>*@
                             <div class="text-center mb-3">
+                                <img src="@Helper.getImageUrl("logo.png", Request, Server)" class="img-responsive img-circle img-rounded rounded-round my-2" width="300px" />
                                 @*<i class="icon-info3 icon-2x text-warning-400 border-warning-400 border-3 rounded-round p-3 mb-3 mt-1"></i>*@
                                 @*<img src="~/assets/images/logo.png" class="img-responsive img-circle img-rounded rounded-round mb-3" width="150px" />*@
                                 @*<h5 class="mb-0">Login</h5>*@
