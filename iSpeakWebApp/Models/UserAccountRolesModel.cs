@@ -53,5 +53,19 @@ namespace iSpeakWebApp.Models
         public bool UserAccountRoles_Edit { get; set; }
         public static ModelMember COL_UserAccountRoles_Edit = new ModelMember { Name = "UserAccountRoles_Edit", Display = "Edit", LogDisplay = "User Account Roles Edit" };
 
+        /* APPLICATION SETTINGS *******************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string Settings_Notes { get; set; }
+        public static ModelMember COL_Settings_Notes = new ModelMember { Name = "Settings_Notes", Display = "Notes", LogDisplay = "Settings Roles Notes" };
+
+        [Display(Name = "View")]
+        public bool Settings_View { get; set; }
+        public static ModelMember COL_Settings_View = new ModelMember { Name = "Settings_View", Display = "View", LogDisplay = "Settings Roles View" };
+
+        [Display(Name = "Edit")]
+        public bool Settings_Edit { get; set; }
+        public static ModelMember COL_Settings_Edit = new ModelMember { Name = "Settings_Edit", Display = "Edit", LogDisplay = "Settings Roles Edit" };
+
     }
 }

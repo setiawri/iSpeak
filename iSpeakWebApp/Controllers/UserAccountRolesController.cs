@@ -104,6 +104,11 @@ namespace iSpeakWebApp.Controllers
                     log = Util.webAppendChange(log, originalModel.UserAccountRoles_Edit, model.UserAccountRoles_Edit, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_UserAccountRoles_Edit.LogDisplay));
                     log = Util.webAppendChange(log, originalModel.UserAccountRoles_View, model.UserAccountRoles_View, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_UserAccountRoles_View.LogDisplay));
 
+                    //Settings
+                    log = Util.webAppendChange(log, originalModel.Settings_Notes, model.Settings_Notes, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Settings_Notes.LogDisplay));
+                    log = Util.webAppendChange(log, originalModel.Settings_Edit, model.Settings_Edit, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Settings_Edit.LogDisplay));
+                    log = Util.webAppendChange(log, originalModel.Settings_View, model.Settings_View, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Settings_View.LogDisplay));
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -141,6 +146,10 @@ namespace iSpeakWebApp.Controllers
                 if (item.UserAccountRoles_Add) model.UserAccountRoles_Add = true;
                 if (item.UserAccountRoles_Edit) model.UserAccountRoles_Edit = true;
                 if (item.UserAccountRoles_View) model.UserAccountRoles_View = true;
+
+                //Settings
+                if (item.Settings_Edit) model.Settings_Edit = true;
+                if (item.Settings_View) model.Settings_View = true;
             }
 
             return model;

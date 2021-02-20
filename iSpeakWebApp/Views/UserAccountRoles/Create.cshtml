@@ -1,6 +1,7 @@
 ﻿@model iSpeakWebApp.Models.UserAccountRolesModel
 
 @{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     ViewBag.SelectedNavigationMenu = "Settings";
     ViewBag.Root = "Roles";
     ViewBag.Title = "Create";
@@ -30,10 +31,14 @@
                             <div class="col-lg-9"></div>
                         </div>
                     </fieldset>
-                    <div>
-                        <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
-                        <a href="@Url.Action("Index", "UserAccountRoles")" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
-                    </div>
+
+                    @if (access.UserAccountRoles_Add)
+                    {
+                        <div>
+                            <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
+                            <a href="@Url.Action("Index", "UserAccountRoles")" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
+                        </div>
+                    }
                 </div>
             </div>
             <!-- /form inputs -->

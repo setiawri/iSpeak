@@ -1,6 +1,7 @@
 ﻿@model iSpeakWebApp.Models.RemindersModel
 
 @{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     ViewBag.SelectedNavigationMenu = "Home";
     ViewBag.Root = "Reminders";
     ViewBag.Title = "Edit";
@@ -39,10 +40,14 @@
                             </div>
                         </div>
                     </fieldset>
-                    <div>
-                        <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
-                        <a href="@Url.Action("CreateReminder", "Home")" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
-                    </div>
+
+                    @if (access.Reminders_Edit)
+                    {
+                        <div>
+                            <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
+                            <a href="@Url.Action("CreateReminder", "Home")" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
+                        </div>
+                    }
                 </div>
             </div>
             <!-- /form inputs -->

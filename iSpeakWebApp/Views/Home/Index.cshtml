@@ -1,8 +1,7 @@
 ﻿@{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     ViewBag.SelectedNavigationMenu = "Home";
     ViewBag.Title = "Dashboard";
-
-    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
 }
 
 <div class="content-wrapper">

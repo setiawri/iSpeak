@@ -110,7 +110,10 @@
                         <a href="@Url.Action("PayrollPayments", "Reports", new { rss=1 })" class="dropdown-item">Payroll Payments</a>
                         <a href="@Url.Action("ProfitLoss", "Reports", new { rss=1 })" class="dropdown-item">Profit &amp; Loss</a>
                         <a href="@Url.Action("SendEmails", "Reports", new { rss=1 })" class="dropdown-item">Send Emails</a>
-                        <a href="@Url.Action("Edit", "Settings", new { rss=1 })" class="dropdown-item">Application Settings</a>
+                        @if (access.Settings_View)
+                        {
+                            <a href="@Url.Action("Edit", "Settings", new { rss = 1 })" class="dropdown-item">Application Settings</a>
+                        }
                     </div>
                 </li>
                 <li id="Menu_Settings" class="nav-item dropdown">

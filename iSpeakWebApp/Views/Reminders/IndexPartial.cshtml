@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<iSpeakWebApp.Models.RemindersModel>
 @{ 
-    ViewBag.SelectedNavigationMenu = "Home";
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    ViewBag.SelectedNavigationMenu = "Home";
 }
 
 <div id="ReminderPartialView" class="row mt-0">

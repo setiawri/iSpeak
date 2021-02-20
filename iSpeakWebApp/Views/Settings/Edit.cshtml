@@ -2,6 +2,7 @@
 @using iSpeakWebApp.Models
 
 @{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     ViewBag.SelectedNavigationMenu = "Internal";
     ViewBag.Root = "APPLICATION SETTINGS";
     ViewBag.Title = "Edit";
@@ -26,7 +27,7 @@
                     <h3 class="card-title">@ViewBag.Root</h3>
                 </div>
                 <div class="card-body">
-                    <fieldset class="mb-3">
+                    <fieldset>
                         @Html.ValidationMessage("ValidationMessage", "", new { @class = "text-danger" })
 
                         <hr />
@@ -192,15 +193,20 @@
                         <hr />
 
                     </fieldset>
-                    <div id="submitDiv">
-                        <button type="submit" class="btn btn-primary">Save Changes <i class="icon-paperplane ml-2"></i></button>
-                    </div>
 
-                    <div style="position:fixed; bottom:100px;right:30px;">
-                        <button type="button" class="btn mb-1 mr-1 btn-lg fa-2x" style="width:70px;height:70px;" onclick="ScrollTo('submitDiv',1000); this.blur();">
-                            <span class="icon-arrow-down52 text-primary" style="font-size:28pt;"></span>
-                        </button>
-                    </div>
+                    @if (access.Settings_Edit)
+                    {
+                        <div id="submitDiv" class="mt-3">
+                            <button type="submit" class="btn btn-primary">Save Changes <i class="icon-paperplane ml-2"></i></button>
+                            <a href="@Url.Action("Index", "Home")" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
+                        </div>
+
+                        <div style="position:fixed; bottom:100px;right:30px;">
+                            <button type="button" class="btn mb-1 mr-1 btn-lg fa-2x" style="width:70px;height:70px;" onclick="ScrollTo('submitDiv',1000); this.blur();">
+                                <span class="icon-arrow-down52 text-primary" style="font-size:28pt;"></span>
+                            </button>
+                        </div>
+                    }
                 </div>
             </div>
             <!-- /form inputs -->

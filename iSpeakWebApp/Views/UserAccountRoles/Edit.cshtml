@@ -1,6 +1,7 @@
 ﻿@model iSpeakWebApp.Models.UserAccountRolesModel
 
 @{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     ViewBag.SelectedNavigationMenu = "Settings";
     ViewBag.Root = "Roles";
     ViewBag.Title = "Edit";
@@ -95,19 +96,47 @@
 
                             <hr />
 
+                            <label class="h5 mb-0">APPLICATION SETTINGS</label>
+                            <div class="pl-0">
+                                <div id="Settings_Div">
+                                    <button id="Settings" type="button" class="btn mb-1 mr-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                    <label id="Settings_Label" class="col-form-label">@Model.Settings_Notes</label>
+                                </div>
+                                <div id="Settings_Edit" class="input-group d-none mb-1">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.Settings_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes" } })
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    @Html.CheckBoxFor(model => model.Settings_View)
+                                </div>
+                                <div class="input-group-append">
+                                    @Html.LabelFor(model => model.Settings_View, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.Settings_Edit)
+                                    </div>
+                                    @Html.LabelFor(model => model.Settings_Edit, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                </div>
+                            </div>
+
+                            <hr />
+
                         </fieldset>
 
-                        <div id="submitDiv">
-                            <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
-                            <a href="@Url.Action("Index", "UserAccountRoles")" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
-                        </div>
+                        @if (access.UserAccountRoles_Edit)
+                        {
+                            <div id="submitDiv" class="mt-3">
+                                <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
+                                <a href="@Url.Action("Index", "UserAccountRoles")" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
+                            </div>
 
-                        <div style="position:fixed; bottom:100px;right:30px;">
-                            <button type="button" class="btn mb-1 mr-1 btn-lg fa-2x" style="width:70px;height:70px;" onclick="ScrollTo('submitDiv',1000); this.blur();">
-                                <span class="icon-arrow-down52 text-primary" style="font-size:28pt;"></span>
-                            </button>
-                        </div>
-
+                            <div style="position:fixed; bottom:100px;right:30px;">
+                                <button type="button" class="btn mb-1 mr-1 btn-lg fa-2x" style="width:70px;height:70px;" onclick="ScrollTo('submitDiv',1000); this.blur();">
+                                    <span class="icon-arrow-down52 text-primary" style="font-size:28pt;"></span>
+                                </button>
+                            </div>
+                        }
                     </div>
                 </div>
                 <!-- /form inputs -->
