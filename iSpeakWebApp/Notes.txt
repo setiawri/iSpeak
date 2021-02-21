@@ -1,0 +1,12 @@
+﻿IMPROVEMENTS:
+
+Promotion Events:
+- model: add field StartDate
+- Index: add filter to show date range
+- rearrange Index layout
+
+Branches:
+- index: add filter all/active/non active
+- index: header text field with multiple line is not showing on datatables
+
+

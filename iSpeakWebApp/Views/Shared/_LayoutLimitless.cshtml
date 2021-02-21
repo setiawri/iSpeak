@@ -122,19 +122,6 @@
                     </a>
                     <div class="dropdown-menu">
                         <div class="dropdown-submenu">
-                            <a href="#" class="dropdown-item dropdown-toggle">General Settings</a>
-                            <div class="dropdown-menu">
-                                @if (access.UserAccountRoles_View)
-                                {
-                                    <a href="@Url.Action("Index", "UserAccountRoles", new { rss=1 })" class="dropdown-item">User Roles</a>
-                                }
-                                @if (access.Branches_View)
-                                {
-                                    <a href="@Url.Action("Index", "Branches", new { rss=1 })" class="dropdown-item">Branches</a>
-                                }
-                            </div>
-                        </div>
-                        <div class="dropdown-submenu">
                             <a href="#" class="dropdown-item dropdown-toggle">Inventory</a>
                             <div class="dropdown-menu">
                                 <a href="@Url.Action("Index", "Suppliers", new { rss=1 })" class="dropdown-item">Suppliers</a>
@@ -161,7 +148,18 @@
                         <a href="@Url.Action("Index", "Vouchers", new { rss=1 })" class="dropdown-item">Vouchers</a>
                         <a href="@Url.Action("Index", "Services", new { rss=1 })" class="dropdown-item">Services</a>
                         <a href="@Url.Action("Index", "PettyCashRecordsCategories", new { rss=1 })" class="dropdown-item">Petty Cash Categories</a>
-                        <a href="@Url.Action("Index", "PromotionEvents", new { rss=1 })" class="dropdown-item">Promotion Events</a>
+                        @if (access.PromotionEvents_View)
+                        {
+                            <a href="@Url.Action("Index", "PromotionEvents", new { rss = 1 })" class="dropdown-item">Promotion Events</a>
+                        }
+                        @if (access.UserAccountRoles_View)
+                        {
+                            <a href="@Url.Action("Index", "UserAccountRoles", new { rss=1 })" class="dropdown-item">User Roles</a>
+                        }
+                        @if (access.Branches_View)
+                        {
+                            <a href="@Url.Action("Index", "Branches", new { rss=1 })" class="dropdown-item">Branches</a>
+                        }
                     </div>
                 </li>
                 <li class="nav-item dropdown">

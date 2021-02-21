@@ -1,8 +1,8 @@
-﻿@model IEnumerable<iSpeakWebApp.Models.BranchesModel>
+﻿@model IEnumerable<iSpeakWebApp.Models.PromotionEventsModel>
 
 @{
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
-    ViewBag.Root = "Branches";
+    ViewBag.Root = "PROMOTION EVENTS";
     ViewBag.Title = "Index";
 }
 
@@ -15,18 +15,20 @@
                 <h5 class="card-title">@ViewBag.Root</h5>
             </div>
             <div class="card-body">
-                @if (access.Branches_Add)
+                @if (access.PromotionEvents_Add)
                 {
-                   <a href="@Url.Action("Create", "Branches", new { Area = "" })" class="btn btn-sm btn-success">Create New <i class="icon-plus22 ml-2"></i></a>
+                   <a href="@Url.Action("Create", "PromotionEvents", new { Area = "" })" class="btn btn-sm btn-success">Create New <i class="icon-plus22 ml-2"></i></a>
                 }
                 <div class="table-responsive">
                     <table class="table table-hover datatable">
                         <thead>
                             <tr>
                                 <th>@Html.DisplayNameFor(model => model.Name)</th>
-                                <th>@Html.DisplayNameFor(model => model.Address)</th>
-                                <th>@Html.DisplayNameFor(model => model.PhoneNumber)</th>
-                                <th>@Html.DisplayNameFor(model => model.InvoiceHeaderText)</th>
+                                <th>@Html.DisplayNameFor(model => model.Location)</th>
+                                <th>@Html.DisplayNameFor(model => model.TotalDays)</th>
+                                <th>@Html.DisplayNameFor(model => model.EventFee)</th>
+                                <th>@Html.DisplayNameFor(model => model.PersonnelCost)</th>
+                                <th>@Html.DisplayNameFor(model => model.AdditionalCost)</th>
                                 <th>@Html.DisplayNameFor(model => model.Notes)</th>
                                 <th class="non-searchable non-sortable"></th>
                             </tr>
@@ -36,20 +38,14 @@
                             {
                             <tr>
                                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Address)</td>
-                                <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
-                                <td class="wrap">@Html.DisplayFor(modelItem => item.InvoiceHeaderText)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Location)</td>
+                                <td>@Html.DisplayFor(modelItem => item.TotalDays)</td>
+                                <td>@Html.DisplayFor(modelItem => item.EventFee)</td>
+                                <td>@Html.DisplayFor(modelItem => item.PersonnelCost)</td>
+                                <td>@Html.DisplayFor(modelItem => item.AdditionalCost)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Notes)</td>
                                 <td>
-                                    @if (item.Active)
-                                    {
-                                        <span class="badge badge-success d-block">Active</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge badge-dark d-block">Not Active</span>
-                                    }
-                                    @if (access.Branches_Edit)
+                                    @if (access.PromotionEvents_Edit)
                                     {
                                         @Html.ActionLink("Edit", "Edit", new { id = item.Id })@(" • ")
                                     }

@@ -2,6 +2,7 @@
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
+using System.Linq;
 using iSpeakWebApp.Controllers;
 using iSpeakWebApp.Models;
 using LIBUtil;
@@ -85,6 +86,22 @@ namespace iSpeakWebApp
             ViewBag.ActionType = Util.validateParameter(ActionType);
 
             return payPeriod;
+        }
+
+        public static string appendLog<T>(DBContext db, string originalText, object oldValue, object newValue, string logDisplay)
+        {
+            if (typeof(T) == typeof(BranchesModel))
+            {
+                oldValue = db.Branches.Where(x => x.Id == (Guid)oldValue).FirstOrDefault().Name;
+                newValue = db.Branches.Where(x => x.Id == (Guid)newValue).FirstOrDefault().Name;
+            }
+
+            return appendLog(originalText, oldValue, newValue, logDisplay);
+        }
+
+        public static string appendLog(string originalText, object oldValue, object newValue, string logDisplay)
+        {
+            return LIBUtil.Util.webAppendChange(originalText, oldValue, newValue, Controllers.ActivityLogsController.editStringFormat(logDisplay));
         }
 
         /******************************************************************************************************************************************************/

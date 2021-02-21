@@ -85,6 +85,25 @@ namespace iSpeakWebApp.Models
         public bool Branches_Edit { get; set; }
         public static ModelMember COL_Branches_Edit = new ModelMember { Name = "Branches_Edit", Display = "Edit", LogDisplay = "Branches Edit" };
 
+
+        /* PROMOTION EVENTS ***********************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string PromotionEvents_Notes { get; set; }
+        public static ModelMember COL_PromotionEvents_Notes = new ModelMember { Name = "PromotionEvents_Notes", Display = "Notes", LogDisplay = "PromotionEvents Notes" };
+
+        [Display(Name = "Add")]
+        public bool PromotionEvents_Add { get; set; }
+        public static ModelMember COL_PromotionEvents_Add = new ModelMember { Name = "PromotionEvents_Add", Display = "Add", LogDisplay = "PromotionEvents Add" };
+
+        [Display(Name = "View")]
+        public bool PromotionEvents_View { get; set; }
+        public static ModelMember COL_PromotionEvents_View = new ModelMember { Name = "PromotionEvents_View", Display = "View", LogDisplay = "PromotionEvents View" };
+
+        [Display(Name = "Edit")]
+        public bool PromotionEvents_Edit { get; set; }
+        public static ModelMember COL_PromotionEvents_Edit = new ModelMember { Name = "PromotionEvents_Edit", Display = "Edit", LogDisplay = "PromotionEvents Edit" };
+
         /******************************************************************************************************************************************************/
 
     }

@@ -23,12 +23,12 @@ namespace iSpeakWebApp.Models
         public string PhoneNumber { get; set; }
         public static ModelMember COL_PhoneNumber = new ModelMember { Name = "PhoneNumber", Display = "Phone Number", LogDisplay = "PhoneNumber" };
 
-        public string Notes { get; set; }
-        public static ModelMember COL_Notes = new ModelMember { Name = "Notes", Display = "Notes", LogDisplay = "Notes" };
-
-        [Display(Name = "Invoice Header Text")]
+        [Display(Name = "Invoice Header")]
         public string InvoiceHeaderText { get; set; }
         public static ModelMember COL_InvoiceHeaderText = new ModelMember { Name = "InvoiceHeaderText", Display = "Invoice Header Text", LogDisplay = "Invoice Header Text" };
+
+        public string Notes { get; set; }
+        public static ModelMember COL_Notes = new ModelMember { Name = "Notes", Display = "Notes", LogDisplay = "Notes" };
 
         public bool Active { get; set; }
         public static ModelMember COL_Active = new ModelMember { Name = "Active", Display = "Active", LogDisplay = "Active" };

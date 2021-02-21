@@ -9,62 +9,42 @@ using LIBUtil;
 
 namespace iSpeakWebApp.Controllers
 {
-    public static class BranchSelectLists
-    {
-        static SelectList BranchList;
-
-        public static SelectList get()
-        {
-            if (BranchList == null)
-                update();
-
-            return BranchList;
-        }
-
-        //IMPROVEMENT: need to call this method when branches table change
-        public static void update()
-        {
-            DBContext db = new DBContext();
-            BranchList = new SelectList(BranchesController.get(true).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Name.ToString() }), "Value", "Text");
-        }
-    }
-
-    public class BranchesController : Controller
+    public class PromotionEventsController : Controller
     {
         private readonly DBContext db = new DBContext();
 
         /* INDEX **********************************************************************************************************************************************/
 
-        // GET: Branches
+        // GET: PromotionEvents
         public ActionResult Index(int? rss)
         {
             ViewBag.RemoveDatatablesStateSave = rss;
 
-            return View(db.Branches);
+            return View(db.PromotionEvents);
         }
 
         /* CREATE *********************************************************************************************************************************************/
 
-        // GET: Branches/Create
+        // GET: PromotionEvents/Create
         public ActionResult Create()
         {
-            return View();
+            return View(new PromotionEventsModel());
         }
 
-        // POST: Branches/Create
+        // POST: PromotionEvents/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(BranchesModel model)
+        public ActionResult Create(PromotionEventsModel model)
         {
             if (ModelState.IsValid)
             {
                 if (isExists(EnumActions.Create, null, model.Name))
-                    ModelState.AddModelError(BranchesModel.COL_Name.Name, $"{model.Name} sudah terdaftar");
+                    ModelState.AddModelError(PromotionEventsModel.COL_Name.Name, $"{model.Name} sudah terdaftar");
                 else
                 {
                     model.Id = Guid.NewGuid();
-                    model.Active = true;
-                    db.Branches.Add(model);
+                    model.Branches_Id = Helper.getActiveBranchId(Session);
+                    db.PromotionEvents.Add(model);
                     ActivityLogsController.AddCreateLog(db, Session, model.Id);
                     db.SaveChanges();
                     return RedirectToAction(nameof(Index));
@@ -76,35 +56,37 @@ namespace iSpeakWebApp.Controllers
 
         /* EDIT ***********************************************************************************************************************************************/
 
-        // GET: Branches/Edit/{id}
+        // GET: PromotionEvents/Edit/{id}
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
                 return RedirectToAction(nameof(Index));
 
-            return View(db.Branches.Find(id));
+            return View(db.PromotionEvents.Find(id));
         }
 
-        // POST: Branches/Edit/{id}
+        // POST: PromotionEvents/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(BranchesModel modifiedModel)
+        public ActionResult Edit(PromotionEventsModel modifiedModel)
         {
             if (ModelState.IsValid)
             {
                 if (isExists(EnumActions.Edit, modifiedModel.Id, modifiedModel.Name))
-                    ModelState.AddModelError(BranchesModel.COL_Name.Name, $"{modifiedModel.Name} sudah terdaftar");
+                    ModelState.AddModelError(PromotionEventsModel.COL_Name.Name, $"{modifiedModel.Name} sudah terdaftar");
                 else
                 {
-                    BranchesModel originalModel = db.Branches.AsNoTracking().Where(x => x.Id == modifiedModel.Id).FirstOrDefault();
+                    PromotionEventsModel originalModel = db.PromotionEvents.AsNoTracking().Where(x => x.Id == modifiedModel.Id).FirstOrDefault();
 
                     string log = string.Empty;
-                    log = Helper.appendLog(log, originalModel.Name, modifiedModel.Name, BranchesModel.COL_Name.LogDisplay);
-                    log = Helper.appendLog(log, originalModel.Address, modifiedModel.Address, BranchesModel.COL_Address.LogDisplay);
-                    log = Helper.appendLog(log, originalModel.PhoneNumber, modifiedModel.PhoneNumber, BranchesModel.COL_PhoneNumber.LogDisplay);
-                    log = Helper.appendLog(log, originalModel.Notes, modifiedModel.Notes, BranchesModel.COL_Notes.LogDisplay);
-                    log = Helper.appendLog(log, originalModel.InvoiceHeaderText, modifiedModel.InvoiceHeaderText, BranchesModel.COL_InvoiceHeaderText.LogDisplay);
-                    log = Helper.appendLog(log, originalModel.Active, modifiedModel.Active, BranchesModel.COL_Active.LogDisplay);
+                    log = Helper.appendLog<BranchesModel>(db, log, originalModel.Branches_Id, modifiedModel.Branches_Id, PromotionEventsModel.COL_Branches_Id.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.Name, modifiedModel.Name, PromotionEventsModel.COL_Name.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.Location, modifiedModel.Location, PromotionEventsModel.COL_Location.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.TotalDays, modifiedModel.TotalDays, PromotionEventsModel.COL_TotalDays.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.EventFee, modifiedModel.EventFee, PromotionEventsModel.COL_EventFee.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.PersonnelCost, modifiedModel.PersonnelCost, PromotionEventsModel.COL_PersonnelCost.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.AdditionalCost, modifiedModel.AdditionalCost, PromotionEventsModel.COL_AdditionalCost.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.Notes, modifiedModel.Notes, PromotionEventsModel.COL_Notes.LogDisplay);
 
                     if (!string.IsNullOrEmpty(log))
                     {
@@ -122,14 +104,11 @@ namespace iSpeakWebApp.Controllers
 
         /* METHODS ********************************************************************************************************************************************/
 
-
-
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public static List<BranchesModel> get(bool isActiveOnly)
+        public static List<PromotionEventsModel> get()
         {
-            return new DBContext().Branches.AsNoTracking()
-                .Where(x => x.Active == isActiveOnly)
+            return new DBContext().PromotionEvents.AsNoTracking()
                 .OrderBy(x => x.Name)
                 .ToList();
         }
@@ -137,14 +116,14 @@ namespace iSpeakWebApp.Controllers
         public bool isExists(EnumActions action, Guid? id, object value)
         {
             var result = action == EnumActions.Create
-                ? db.Branches.AsNoTracking().Where(x => x.Name.ToLower() == value.ToString().ToLower()).FirstOrDefault()
-                : db.Branches.AsNoTracking().Where(x => x.Name.ToLower() == value.ToString().ToLower() && x.Id != id).FirstOrDefault();
+                ? db.PromotionEvents.AsNoTracking().Where(x => x.Name.ToLower() == value.ToString().ToLower()).FirstOrDefault()
+                : db.PromotionEvents.AsNoTracking().Where(x => x.Name.ToLower() == value.ToString().ToLower() && x.Id != id).FirstOrDefault();
             return result != null;
         }
 
         public static void setDropDownListViewBag(DBContext db, ControllerBase controller)
         {
-            controller.ViewBag.Branches = new SelectList(db.Branches.AsNoTracking().OrderBy(x => x.Name).ToList(), BranchesModel.COL_Id.Name, BranchesModel.COL_Name.Name);
+            controller.ViewBag.PromotionEvents = new SelectList(db.PromotionEvents.AsNoTracking().OrderBy(x => x.Name).ToList(), PromotionEventsModel.COL_Id.Name, PromotionEventsModel.COL_Name.Name);
         }
 
         /******************************************************************************************************************************************************/

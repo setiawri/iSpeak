@@ -90,30 +90,36 @@ namespace iSpeakWebApp.Controllers
                     UserAccountRolesModel originalModel = get(db, model.Id);
 
                     string log = string.Empty;
-                    log = Util.webAppendChange(log, originalModel.Name, model.Name, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Name.LogDisplay));
+                    log = Helper.appendLog(log, originalModel.Name, model.Name, UserAccountRolesModel.COL_Name.LogDisplay);
 
                     //Reminders
-                    log = Util.webAppendChange(log, originalModel.Reminders_Notes, model.Reminders_Notes, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Reminders_Notes.LogDisplay));
-                    log = Util.webAppendChange(log, originalModel.Reminders_Add, model.Reminders_Add, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Reminders_Add.LogDisplay));
-                    log = Util.webAppendChange(log, originalModel.Reminders_Edit, model.Reminders_Edit, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Reminders_Edit.LogDisplay));
-                    log = Util.webAppendChange(log, originalModel.Reminders_View, model.Reminders_View, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Reminders_View.LogDisplay));
+                    log = Helper.appendLog(log, originalModel.Reminders_Notes, model.Reminders_Notes, UserAccountRolesModel.COL_Reminders_Notes.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.Reminders_Add, model.Reminders_Add, UserAccountRolesModel.COL_Reminders_Add.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.Reminders_Edit, model.Reminders_Edit, UserAccountRolesModel.COL_Reminders_Edit.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.Reminders_View, model.Reminders_View, UserAccountRolesModel.COL_Reminders_View.LogDisplay);
 
                     //User Account Roles
-                    log = Util.webAppendChange(log, originalModel.UserAccountRoles_Notes, model.UserAccountRoles_Notes, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_UserAccountRoles_Notes.LogDisplay));
-                    log = Util.webAppendChange(log, originalModel.UserAccountRoles_Add, model.UserAccountRoles_Add, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_UserAccountRoles_Add.LogDisplay));
-                    log = Util.webAppendChange(log, originalModel.UserAccountRoles_Edit, model.UserAccountRoles_Edit, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_UserAccountRoles_Edit.LogDisplay));
-                    log = Util.webAppendChange(log, originalModel.UserAccountRoles_View, model.UserAccountRoles_View, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_UserAccountRoles_View.LogDisplay));
+                    log = Helper.appendLog(log, originalModel.UserAccountRoles_Notes, model.UserAccountRoles_Notes, UserAccountRolesModel.COL_UserAccountRoles_Notes.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.UserAccountRoles_Add, model.UserAccountRoles_Add, UserAccountRolesModel.COL_UserAccountRoles_Add.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.UserAccountRoles_Edit, model.UserAccountRoles_Edit, UserAccountRolesModel.COL_UserAccountRoles_Edit.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.UserAccountRoles_View, model.UserAccountRoles_View, UserAccountRolesModel.COL_UserAccountRoles_View.LogDisplay);
 
                     //Settings
-                    log = Util.webAppendChange(log, originalModel.Settings_Notes, model.Settings_Notes, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Settings_Notes.LogDisplay));
-                    log = Util.webAppendChange(log, originalModel.Settings_Edit, model.Settings_Edit, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Settings_Edit.LogDisplay));
-                    log = Util.webAppendChange(log, originalModel.Settings_View, model.Settings_View, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Settings_View.LogDisplay));
+                    log = Helper.appendLog(log, originalModel.Settings_Notes, model.Settings_Notes, UserAccountRolesModel.COL_Settings_Notes.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.Settings_Edit, model.Settings_Edit, UserAccountRolesModel.COL_Settings_Edit.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.Settings_View, model.Settings_View, UserAccountRolesModel.COL_Settings_View.LogDisplay);
 
                     //Branches
-                    log = Util.webAppendChange(log, originalModel.Branches_Notes, model.Branches_Notes, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Branches_Notes.LogDisplay));
-                    log = Util.webAppendChange(log, originalModel.Branches_Add, model.Branches_Add, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Branches_Add.LogDisplay));
-                    log = Util.webAppendChange(log, originalModel.Branches_Edit, model.Branches_Edit, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Branches_Edit.LogDisplay));
-                    log = Util.webAppendChange(log, originalModel.Branches_View, model.Branches_View, ActivityLogsController.editStringFormat(UserAccountRolesModel.COL_Branches_View.LogDisplay));
+                    log = Helper.appendLog(log, originalModel.Branches_Notes, model.Branches_Notes, UserAccountRolesModel.COL_Branches_Notes.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.Branches_Add, model.Branches_Add, UserAccountRolesModel.COL_Branches_Add.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.Branches_Edit, model.Branches_Edit, UserAccountRolesModel.COL_Branches_Edit.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.Branches_View, model.Branches_View, UserAccountRolesModel.COL_Branches_View.LogDisplay);
+
+                    //PromotionEvents
+                    log = Helper.appendLog(log, originalModel.PromotionEvents_Notes, model.PromotionEvents_Notes, UserAccountRolesModel.COL_PromotionEvents_Notes.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.PromotionEvents_Add, model.PromotionEvents_Add, UserAccountRolesModel.COL_PromotionEvents_Add.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.PromotionEvents_Edit, model.PromotionEvents_Edit, UserAccountRolesModel.COL_PromotionEvents_Edit.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.PromotionEvents_View, model.PromotionEvents_View, UserAccountRolesModel.COL_PromotionEvents_View.LogDisplay);
 
                     if (!string.IsNullOrEmpty(log))
                     {
@@ -161,6 +167,11 @@ namespace iSpeakWebApp.Controllers
                 if (item.Branches_Add) model.Branches_Add = true;
                 if (item.Branches_Edit) model.Branches_Edit = true;
                 if (item.Branches_View) model.Branches_View = true;
+
+                //PromotionEvents
+                if (item.PromotionEvents_Add) model.PromotionEvents_Add = true;
+                if (item.PromotionEvents_Edit) model.PromotionEvents_Edit = true;
+                if (item.PromotionEvents_View) model.PromotionEvents_View = true;
 
             }
 

@@ -3,7 +3,7 @@
 @{
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     ViewBag.SelectedNavigationMenu = "Settings";
-    ViewBag.Root = "Roles";
+    ViewBag.Root = "ROLE ACCESS";
     ViewBag.Title = "Edit";
 }
 
@@ -19,12 +19,10 @@
                 <!-- Form inputs -->
                 <div class="card">
                     <div class="card-header header-elements-inline">
-                        <h5 class="card-title">@ViewBag.Root</h5>
+                        <h3 class="card-title">@ViewBag.Root</h3>
                     </div>
                     <div class="card-body">
                         <fieldset>
-                            <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Title</legend>
-
                             <div class="form-group row">
                                 @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label col-lg-1" })
                                 <div class="col-lg-2">
@@ -39,7 +37,7 @@
                             <label class="h5 mb-0">REMINDERS</label>
                             <div class="pl-0">
                                 <div id="Reminders_Div">
-                                    <button id="Reminders" type="button" class="btn mb-1 mr-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                    <button id="Reminders" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
                                     <label id="Reminders_Label" class="col-form-label">@Model.Reminders_Notes</label>
                                 </div>
                                 <div id="Reminders_Edit" class="input-group d-none mb-1">
@@ -69,7 +67,7 @@
                             <label class="h5 mb-0">USER ACCOUNT ROLES</label>
                             <div class="pl-0">
                                 <div id="UserAccountRoles_Div">
-                                    <button id="UserAccountRoles" type="button" class="btn mb-1 mr-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                    <button id="UserAccountRoles" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
                                     <label id="UserAccountRoles_Label" class="col-form-label">@Model.UserAccountRoles_Notes</label>
                                 </div>
                                 <div id="UserAccountRoles_Edit" class="input-group d-none mb-1">
@@ -99,7 +97,7 @@
                             <label class="h5 mb-0">APPLICATION SETTINGS</label>
                             <div class="pl-0">
                                 <div id="Settings_Div">
-                                    <button id="Settings" type="button" class="btn mb-1 mr-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                    <button id="Settings" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
                                     <label id="Settings_Label" class="col-form-label">@Model.Settings_Notes</label>
                                 </div>
                                 <div id="Settings_Edit" class="input-group d-none mb-1">
@@ -125,7 +123,7 @@
                             <label class="h5 mb-0">BRANCHES</label>
                             <div class="pl-0">
                                 <div id="Branches_Div">
-                                    <button id="Branches" type="button" class="btn mb-1 mr-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                    <button id="Branches" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
                                     <label id="Branches_Label" class="col-form-label">@Model.Branches_Notes</label>
                                 </div>
                                 <div id="Branches_Edit" class="input-group d-none mb-1">
@@ -147,6 +145,37 @@
                                         @Html.CheckBoxFor(model => model.Branches_Edit)
                                     </div>
                                     @Html.LabelFor(model => model.Branches_Edit, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                </div>
+                            </div>
+
+                            <hr />
+
+
+                            <label class="h5 mb-0">PROMOTION EVENTS</label>
+                            <div class="pl-0">
+                                <div id="PromotionEvents_Div">
+                                    <button id="PromotionEvents" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                    <label id="PromotionEvents_Label" class="col-form-label">@Model.PromotionEvents_Notes</label>
+                                </div>
+                                <div id="PromotionEvents_Edit" class="input-group d-none mb-1">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.PromotionEvents_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes" } })
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    @Html.CheckBoxFor(model => model.PromotionEvents_View)
+                                </div>
+                                <div class="input-group-append">
+                                    @Html.LabelFor(model => model.PromotionEvents_View, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.PromotionEvents_Add)
+                                    </div>
+                                    @Html.LabelFor(model => model.PromotionEvents_Add, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.PromotionEvents_Edit)
+                                    </div>
+                                    @Html.LabelFor(model => model.PromotionEvents_Edit, htmlAttributes: new { @class = "input-group-text mr-2" })
                                 </div>
                             </div>
 
