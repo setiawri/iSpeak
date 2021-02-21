@@ -104,6 +104,25 @@ namespace iSpeakWebApp.Models
         public bool PromotionEvents_Edit { get; set; }
         public static ModelMember COL_PromotionEvents_Edit = new ModelMember { Name = "PromotionEvents_Edit", Display = "Edit", LogDisplay = "PromotionEvents Edit" };
 
+
+        /* PROMOTION EVENTS ***********************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string PettyCashRecordsCategories_Notes { get; set; }
+        public static ModelMember COL_PettyCashRecordsCategories_Notes = new ModelMember { Name = "PettyCashRecordsCategories_Notes", Display = "Notes", LogDisplay = "PettyCashRecordsCategories Notes" };
+
+        [Display(Name = "Add")]
+        public bool PettyCashRecordsCategories_Add { get; set; }
+        public static ModelMember COL_PettyCashRecordsCategories_Add = new ModelMember { Name = "PettyCashRecordsCategories_Add", Display = "Add", LogDisplay = "PettyCashRecordsCategories Add" };
+
+        [Display(Name = "View")]
+        public bool PettyCashRecordsCategories_View { get; set; }
+        public static ModelMember COL_PettyCashRecordsCategories_View = new ModelMember { Name = "PettyCashRecordsCategories_View", Display = "View", LogDisplay = "PettyCashRecordsCategories View" };
+
+        [Display(Name = "Edit")]
+        public bool PettyCashRecordsCategories_Edit { get; set; }
+        public static ModelMember COL_PettyCashRecordsCategories_Edit = new ModelMember { Name = "PettyCashRecordsCategories_Edit", Display = "Edit", LogDisplay = "PettyCashRecordsCategories Edit" };
+
         /******************************************************************************************************************************************************/
 
     }

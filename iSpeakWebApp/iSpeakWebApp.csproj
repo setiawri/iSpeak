@@ -128,6 +128,7 @@
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Controllers\ActivityLogsController.cs" />
+    <Compile Include="Controllers\PettyCashRecordsCategoriesController.cs" />
     <Compile Include="Controllers\PromotionEventsController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -250,6 +251,9 @@
     <Content Include="Views\PromotionEvents\Create.cshtml" />
     <Content Include="Views\PromotionEvents\Edit.cshtml" />
     <Content Include="Views\PromotionEvents\Index.cshtml" />
+    <Content Include="Views\PettyCashRecordsCategories\Create.cshtml" />
+    <Content Include="Views\PettyCashRecordsCategories\Edit.cshtml" />
+    <Content Include="Views\PettyCashRecordsCategories\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\LIBUtil\LIBUtil\LIBUtil\LIBUtil.csproj">

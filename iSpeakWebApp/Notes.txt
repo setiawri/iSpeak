@@ -7,6 +7,10 @@ Promotion Events:
 
 Branches:
 - index: add filter all/active/non active
-- index: header text field with multiple line is not showing on datatables
 
 
+Petty Cash Categories:
+- index: add filter all/active/non active
+- set defaultrow to apply to only one item. when an item is set to true, set all others to false
+	or remove defaultrow since default is set in settings
+-

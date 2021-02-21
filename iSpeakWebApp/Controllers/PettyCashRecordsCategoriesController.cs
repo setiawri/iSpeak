@@ -1,69 +1,47 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
-using System.Collections.Generic;
 using System.Web.Mvc;
 using iSpeakWebApp.Models;
 
 namespace iSpeakWebApp.Controllers
 {
-    public static class BranchSelectLists
-    {
-        static SelectList BranchList;
-
-        public static SelectList get()
-        {
-            if (BranchList == null)
-                update();
-
-            return BranchList;
-        }
-
-        //IMPROVEMENT: need to call this method when branches table change
-        public static void update()
-        {
-            DBContext db = new DBContext();
-            List<BranchesModel> models = db.Branches.AsNoTracking().Where(x => x.Active == true).OrderBy(x => x.Name).ToList();
-            BranchList = new SelectList(models.Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Name.ToString() }), "Value", "Text");
-        }
-    }
-
-    public class BranchesController : Controller
+    public class PettyCashRecordsCategoriesController : Controller
     {
         private readonly DBContext db = new DBContext();
 
         /* INDEX **********************************************************************************************************************************************/
 
-        // GET: Branches
+        // GET: PettyCashRecordsCategories
         public ActionResult Index(int? rss)
         {
             ViewBag.RemoveDatatablesStateSave = rss;
 
-            return View(db.Branches);
+            return View(db.PettyCashRecordsCategories);
         }
 
         /* CREATE *********************************************************************************************************************************************/
 
-        // GET: Branches/Create
+        // GET: PettyCashRecordsCategories/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Branches/Create
+        // POST: PettyCashRecordsCategories/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(BranchesModel model)
+        public ActionResult Create(PettyCashRecordsCategoriesModel model)
         {
             if (ModelState.IsValid)
             {
                 if (isExists(EnumActions.Create, null, model.Name))
-                    ModelState.AddModelError(BranchesModel.COL_Name.Name, $"{model.Name} sudah terdaftar");
+                    ModelState.AddModelError(PettyCashRecordsCategoriesModel.COL_Name.Name, $"{model.Name} sudah terdaftar");
                 else
                 {
                     model.Id = Guid.NewGuid();
                     model.Active = true;
-                    db.Branches.Add(model);
+                    db.PettyCashRecordsCategories.Add(model);
                     ActivityLogsController.AddCreateLog(db, Session, model.Id);
                     db.SaveChanges();
                     return RedirectToAction(nameof(Index));
@@ -75,38 +53,38 @@ namespace iSpeakWebApp.Controllers
 
         /* EDIT ***********************************************************************************************************************************************/
 
-        // GET: Branches/Edit/{id}
+        // GET: PettyCashRecordsCategories/Edit/{id}
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
                 return RedirectToAction(nameof(Index));
 
-            return View(db.Branches.Find(id));
+            return View(db.PettyCashRecordsCategories.Find(id));
         }
 
-        // POST: Branches/Edit/{id}
+        // POST: PettyCashRecordsCategories/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(BranchesModel modifiedModel)
+        public ActionResult Edit(PettyCashRecordsCategoriesModel modifiedModel)
         {
             if (ModelState.IsValid)
             {
                 if (isExists(EnumActions.Edit, modifiedModel.Id, modifiedModel.Name))
-                    ModelState.AddModelError(BranchesModel.COL_Name.Name, $"{modifiedModel.Name} sudah terdaftar");
+                    ModelState.AddModelError(PettyCashRecordsCategoriesModel.COL_Name.Name, $"{modifiedModel.Name} sudah terdaftar");
                 else
                 {
-                    BranchesModel originalModel = db.Branches.AsNoTracking().Where(x => x.Id == modifiedModel.Id).FirstOrDefault();
+                    PettyCashRecordsCategoriesModel originalModel = db.PettyCashRecordsCategories.AsNoTracking().Where(x => x.Id == modifiedModel.Id).FirstOrDefault();
 
                     string log = string.Empty;
-                    log = Helper.appendLog(log, originalModel.Name, modifiedModel.Name, BranchesModel.COL_Name.LogDisplay);
-                    log = Helper.appendLog(log, originalModel.Address, modifiedModel.Address, BranchesModel.COL_Address.LogDisplay);
-                    log = Helper.appendLog(log, originalModel.PhoneNumber, modifiedModel.PhoneNumber, BranchesModel.COL_PhoneNumber.LogDisplay);
-                    log = Helper.appendLog(log, originalModel.Notes, modifiedModel.Notes, BranchesModel.COL_Notes.LogDisplay);
-                    log = Helper.appendLog(log, originalModel.InvoiceHeaderText, modifiedModel.InvoiceHeaderText, BranchesModel.COL_InvoiceHeaderText.LogDisplay);
-                    log = Helper.appendLog(log, originalModel.Active, modifiedModel.Active, BranchesModel.COL_Active.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.Name, modifiedModel.Name, PettyCashRecordsCategoriesModel.COL_Name.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.Default_row, modifiedModel.Default_row, PettyCashRecordsCategoriesModel.COL_Default_row.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.Notes, modifiedModel.Notes, PettyCashRecordsCategoriesModel.COL_Notes.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.Active, modifiedModel.Active, PettyCashRecordsCategoriesModel.COL_Active.LogDisplay);
 
                     if (!string.IsNullOrEmpty(log))
                     {
+                        db.PettyCashRecordsCategories.
+
                         db.Entry(modifiedModel).State = EntityState.Modified;
                         ActivityLogsController.AddEditLog(db, Session, modifiedModel.Id, log);
                         db.SaveChanges();
@@ -121,21 +99,19 @@ namespace iSpeakWebApp.Controllers
 
         /* METHODS ********************************************************************************************************************************************/
 
-
-
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
         public bool isExists(EnumActions action, Guid? id, object value)
         {
             var result = action == EnumActions.Create
-                ? db.Branches.AsNoTracking().Where(x => x.Name.ToLower() == value.ToString().ToLower()).FirstOrDefault()
-                : db.Branches.AsNoTracking().Where(x => x.Name.ToLower() == value.ToString().ToLower() && x.Id != id).FirstOrDefault();
+                ? db.PettyCashRecordsCategories.AsNoTracking().Where(x => x.Name.ToLower() == value.ToString().ToLower()).FirstOrDefault()
+                : db.PettyCashRecordsCategories.AsNoTracking().Where(x => x.Name.ToLower() == value.ToString().ToLower() && x.Id != id).FirstOrDefault();
             return result != null;
         }
 
         public static void setDropDownListViewBag(DBContext db, ControllerBase controller)
         {
-            controller.ViewBag.Branches = new SelectList(db.Branches.AsNoTracking().OrderBy(x => x.Name).ToList(), BranchesModel.COL_Id.Name, BranchesModel.COL_Name.Name);
+            controller.ViewBag.PettyCashRecordsCategories = new SelectList(db.PettyCashRecordsCategories.AsNoTracking().OrderBy(x => x.Name).ToList(), PettyCashRecordsCategoriesModel.COL_Id.Name, PettyCashRecordsCategoriesModel.COL_Name.Name);
         }
 
         /******************************************************************************************************************************************************/

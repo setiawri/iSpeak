@@ -150,7 +150,6 @@
 
                             <hr />
 
-
                             <label class="h5 mb-0">PROMOTION EVENTS</label>
                             <div class="pl-0">
                                 <div id="PromotionEvents_Div">
@@ -176,6 +175,36 @@
                                         @Html.CheckBoxFor(model => model.PromotionEvents_Edit)
                                     </div>
                                     @Html.LabelFor(model => model.PromotionEvents_Edit, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <label class="h5 mb-0">PETTY CASH CATEGORIES</label>
+                            <div class="pl-0">
+                                <div id="PettyCashRecordsCategories_Div">
+                                    <button id="PettyCashRecordsCategories" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                    <label id="PettyCashRecordsCategories_Label" class="col-form-label">@Model.PettyCashRecordsCategories_Notes</label>
+                                </div>
+                                <div id="PettyCashRecordsCategories_Edit" class="input-group d-none mb-1">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.PettyCashRecordsCategories_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes" } })
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    @Html.CheckBoxFor(model => model.PettyCashRecordsCategories_View)
+                                </div>
+                                <div class="input-group-append">
+                                    @Html.LabelFor(model => model.PettyCashRecordsCategories_View, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.PettyCashRecordsCategories_Add)
+                                    </div>
+                                    @Html.LabelFor(model => model.PettyCashRecordsCategories_Add, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.PettyCashRecordsCategories_Edit)
+                                    </div>
+                                    @Html.LabelFor(model => model.PettyCashRecordsCategories_Edit, htmlAttributes: new { @class = "input-group-text mr-2" })
                                 </div>
                             </div>
 

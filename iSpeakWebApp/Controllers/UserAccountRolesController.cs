@@ -11,9 +11,9 @@ using LIBUtil;
  * To add new user access:
  * - add items in UserAccountRolesModel
  * - add items to database table UserAccountRoles
- * - add items in UserAccountRoles > Edit.cshtml
  * - add items in Post UserAccountRolesController.Edit() 
  * - add items in UserAccountRolesController.getAccesses() 
+ * - add items in UserAccountRoles > Edit.cshtml
  * - update views that use the items
  */
 
@@ -121,6 +121,12 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.appendLog(log, originalModel.PromotionEvents_Edit, model.PromotionEvents_Edit, UserAccountRolesModel.COL_PromotionEvents_Edit.LogDisplay);
                     log = Helper.appendLog(log, originalModel.PromotionEvents_View, model.PromotionEvents_View, UserAccountRolesModel.COL_PromotionEvents_View.LogDisplay);
 
+                    //PettyCashRecordsCategories
+                    log = Helper.appendLog(log, originalModel.PettyCashRecordsCategories_Notes, model.PettyCashRecordsCategories_Notes, UserAccountRolesModel.COL_PettyCashRecordsCategories_Notes.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.PettyCashRecordsCategories_Add, model.PettyCashRecordsCategories_Add, UserAccountRolesModel.COL_PettyCashRecordsCategories_Add.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.PettyCashRecordsCategories_Edit, model.PettyCashRecordsCategories_Edit, UserAccountRolesModel.COL_PettyCashRecordsCategories_Edit.LogDisplay);
+                    log = Helper.appendLog(log, originalModel.PettyCashRecordsCategories_View, model.PettyCashRecordsCategories_View, UserAccountRolesModel.COL_PettyCashRecordsCategories_View.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -172,6 +178,11 @@ namespace iSpeakWebApp.Controllers
                 if (item.PromotionEvents_Add) model.PromotionEvents_Add = true;
                 if (item.PromotionEvents_Edit) model.PromotionEvents_Edit = true;
                 if (item.PromotionEvents_View) model.PromotionEvents_View = true;
+
+                //PettyCashRecordsCategories
+                if (item.PettyCashRecordsCategories_Add) model.PettyCashRecordsCategories_Add = true;
+                if (item.PettyCashRecordsCategories_Edit) model.PettyCashRecordsCategories_Edit = true;
+                if (item.PettyCashRecordsCategories_View) model.PettyCashRecordsCategories_View = true;
 
             }
 

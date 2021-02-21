@@ -17,9 +17,11 @@ namespace iSpeakWebApp.Models
         public string Notes { get; set; }
         public static ModelMember COL_Notes = new ModelMember { Name = "Notes", Display = "Notes", LogDisplay = "Notes" };
 
-        [Display(Name = "Default Row")]
+        [Display(Name = "Default")]
         public bool Default_row { get; set; }
+        public static ModelMember COL_Default_row = new ModelMember { Name = "Default_row", Display = "Default Row", LogDisplay = "Default Row" };
 
         public bool Active { get; set; }
+        public static ModelMember COL_Active = new ModelMember { Name = "Active", Display = "Active", LogDisplay = "Active" };
     }
 }

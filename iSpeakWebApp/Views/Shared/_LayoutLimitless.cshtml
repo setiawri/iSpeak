@@ -147,7 +147,10 @@
                         <a href="@Url.Action("Index", "Consignments", new { rss=1 })" class="dropdown-item">Consignments</a>
                         <a href="@Url.Action("Index", "Vouchers", new { rss=1 })" class="dropdown-item">Vouchers</a>
                         <a href="@Url.Action("Index", "Services", new { rss=1 })" class="dropdown-item">Services</a>
-                        <a href="@Url.Action("Index", "PettyCashRecordsCategories", new { rss=1 })" class="dropdown-item">Petty Cash Categories</a>
+                        @if (access.PettyCashRecordsCategories_View)
+                        {
+                            <a href="@Url.Action("Index", "PettyCashRecordsCategories", new { rss=1 })" class="dropdown-item">Petty Cash Categories</a>
+                        }
                         @if (access.PromotionEvents_View)
                         {
                             <a href="@Url.Action("Index", "PromotionEvents", new { rss = 1 })" class="dropdown-item">Promotion Events</a>
