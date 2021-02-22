@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 using iSpeakWebApp.Models;
+using LIBUtil;
 
 namespace iSpeakWebApp.Controllers
 {
@@ -13,11 +15,12 @@ namespace iSpeakWebApp.Controllers
         /* INDEX **********************************************************************************************************************************************/
 
         // GET: PettyCashRecordsCategories
-        public ActionResult Index(int? rss)
+        public ActionResult Index(int? rss, int? Active)
         {
             ViewBag.RemoveDatatablesStateSave = rss;
+            ViewBag.Active = Active;
 
-            return View(db.PettyCashRecordsCategories);
+            return View(get(null, Active));
         }
 
         /* CREATE *********************************************************************************************************************************************/
@@ -35,7 +38,7 @@ namespace iSpeakWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (isExists(EnumActions.Create, null, model.Name))
+                if (isExists(null, model.Name))
                     ModelState.AddModelError(PettyCashRecordsCategoriesModel.COL_Name.Name, $"{model.Name} sudah terdaftar");
                 else
                 {
@@ -69,7 +72,7 @@ namespace iSpeakWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (isExists(EnumActions.Edit, modifiedModel.Id, modifiedModel.Name))
+                if (isExists(modifiedModel.Id, modifiedModel.Name))
                     ModelState.AddModelError(PettyCashRecordsCategoriesModel.COL_Name.Name, $"{modifiedModel.Name} sudah terdaftar");
                 else
                 {
@@ -83,8 +86,6 @@ namespace iSpeakWebApp.Controllers
 
                     if (!string.IsNullOrEmpty(log))
                     {
-                        db.PettyCashRecordsCategories.
-
                         db.Entry(modifiedModel).State = EntityState.Modified;
                         ActivityLogsController.AddEditLog(db, Session, modifiedModel.Id, log);
                         db.SaveChanges();
@@ -101,12 +102,28 @@ namespace iSpeakWebApp.Controllers
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public bool isExists(EnumActions action, Guid? id, object value)
+        public bool isExists(Guid? id, object value)
         {
-            var result = action == EnumActions.Create
-                ? db.PettyCashRecordsCategories.AsNoTracking().Where(x => x.Name.ToLower() == value.ToString().ToLower()).FirstOrDefault()
-                : db.PettyCashRecordsCategories.AsNoTracking().Where(x => x.Name.ToLower() == value.ToString().ToLower() && x.Id != id).FirstOrDefault();
-            return result != null;
+            return get(id, null).Count > 0;
+        }
+
+        public List<PettyCashRecordsCategoriesModel> get(Guid? Id, int? Active)
+        {
+            List<PettyCashRecordsCategoriesModel> models = db.Database.SqlQuery<PettyCashRecordsCategoriesModel>(@"
+                        SELECT PettyCashRecordsCategories.*
+                        FROM PettyCashRecordsCategories
+                        WHERE 1=1
+							AND (@Id IS NULL OR PettyCashRecordsCategories.Id = @Id)
+							AND (@Id IS NOT NULL OR (
+                                (@Active IS NULL OR PettyCashRecordsCategories.Active = @Active)
+                            ))
+						ORDER BY PettyCashRecordsCategories.Name ASC
+                    ",
+                    DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Id.Name, Id),
+                    DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Active.Name, Active)
+                ).ToList();
+
+            return models;
         }
 
         public static void setDropDownListViewBag(DBContext db, ControllerBase controller)

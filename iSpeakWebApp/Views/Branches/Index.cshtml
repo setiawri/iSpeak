@@ -9,60 +9,92 @@
 <div class="content-wrapper">
     <!-- Content area -->
     <div class="content">
-        <!-- Form inputs -->
-        <div class="card animated bounceInLeft">
-            <div class="card-header header-elements-inline">
-                <h5 class="card-title">@ViewBag.Root</h5>
-            </div>
-            <div class="card-body">
-                @if (access.Branches_Add)
-                {
-                   <a href="@Url.Action("Create", "Branches", new { Area = "" })" class="btn btn-sm btn-success">Create New <i class="icon-plus22 ml-2"></i></a>
-                }
-                <div class="table-responsive">
-                    <table class="table table-hover datatable">
-                        <thead>
-                            <tr>
-                                <th>@Html.DisplayNameFor(model => model.Name)</th>
-                                <th>@Html.DisplayNameFor(model => model.Address)</th>
-                                <th>@Html.DisplayNameFor(model => model.PhoneNumber)</th>
-                                <th>@Html.DisplayNameFor(model => model.InvoiceHeaderText)</th>
-                                <th>@Html.DisplayNameFor(model => model.Notes)</th>
-                                <th class="non-searchable non-sortable"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
+        @using (Html.BeginForm("Index", "PettyCashRecordsCategories", FormMethod.Get))
+        {
+            <!-- Form inputs -->
+            <div class="card animated bounceInLeft">
+                <div class="card-header header-elements-inline pb-1">
+                    <h5 class="card-title">@ViewBag.Root</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row mx-0">
+                        <div>
+                            @if (access.Branches_Add)
                             {
-                            <tr>
-                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Address)</td>
-                                <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
-                                <td class="tablecellwrap">@Html.DisplayFor(modelItem => item.InvoiceHeaderText)</td>
-                                <td class="tablecellwrap">@Html.DisplayFor(modelItem => item.Notes)</td>
-                                <td>
-                                    @if (item.Active)
-                                    {
-                                        <span class="badge badge-success d-block" style="width:100px;">Active</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge badge-dark d-block" style="width:100px;">Not Active</span>
-                                    }
-                                    @if (access.Branches_Edit)
-                                    {
-                                        @Html.ActionLink("Edit", "Edit", new { id = item.Id })@(" • ")
-                                    }
-                                    <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
-                                </td>
-                            </tr>
+                                <label class="mb-0">&nbsp;</label>
+                                <div><a href="@Url.Action("Create", "Branches", new { Area = "" })" class="btn btn-sm btn-success">Create New <i class="icon-plus22 ml-2"></i></a></div>
                             }
-                        </tbody>
-                    </table>
+                        </div>
+                        <div class="row ml-3">
+                            <label class="mb-0">Active</label>
+                            <div class="input-group">
+                                <select id="FILTER_Active" name="Active" class="custom-select">
+                                    <option value="" selected>ALL</option>
+                                    <option value="1">Active</option>
+                                    <option value="0">Not Active</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="ml-3">
+                            <label class="mb-0">&nbsp;</label>
+                            <button type="submit" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>FILTER</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover datatable">
+                            <thead>
+                                <tr>
+                                    <th>@Html.DisplayNameFor(model => model.Name)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Address)</th>
+                                    <th>@Html.DisplayNameFor(model => model.PhoneNumber)</th>
+                                    <th>@Html.DisplayNameFor(model => model.InvoiceHeaderText)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Notes)</th>
+                                    <th class="non-searchable non-sortable"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="align-top">@Html.DisplayFor(modelItem => item.Name)</td>
+                                        <td class="align-top">@Html.DisplayFor(modelItem => item.Address)</td>
+                                        <td class="align-top">@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                                        <td class="align-top tablecellwrap">@Html.DisplayFor(modelItem => item.InvoiceHeaderText)</td>
+                                        <td class="align-top tablecellwrap">@Html.DisplayFor(modelItem => item.Notes)</td>
+                                        <td class="align-top">
+                                            @if (item.Active)
+                                            {
+                                                <span class="badge badge-success d-block" style="width:100px;">ACTIVE</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-dark d-block" style="width:100px;">NOT ACTIVE</span>
+                                            }
+                                            @if (access.Branches_Edit)
+                                            {
+                                                @Html.ActionLink("Edit", "Edit", new { id = item.Id })@(" • ")
+                                            }
+                                            <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- /form inputs -->
+            <!-- /form inputs -->
+        }
     </div>
     <!-- /content area -->
 </div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#FILTER_Active').val('@ViewBag.Active');
+    });
+
+</script>

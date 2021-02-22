@@ -4,12 +4,13 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using iSpeakWebApp.Models;
+using LIBUtil;
 
 namespace iSpeakWebApp.Controllers
 {
     public static class BranchSelectLists
     {
-        static SelectList BranchList;
+        static SelectList BranchList; //for global branch dropdownlist
 
         public static SelectList get()
         {
@@ -19,12 +20,10 @@ namespace iSpeakWebApp.Controllers
             return BranchList;
         }
 
-        //IMPROVEMENT: need to call this method when branches table change
+        //always call this method when branches table change so global branch ddl is updated
         public static void update()
         {
-            DBContext db = new DBContext();
-            List<BranchesModel> models = db.Branches.AsNoTracking().Where(x => x.Active == true).OrderBy(x => x.Name).ToList();
-            BranchList = new SelectList(models.Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Name.ToString() }), "Value", "Text");
+            BranchList = new SelectList(BranchesController.get(new DBContext(), null, 1).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Name.ToString() }), "Value", "Text");
         }
     }
 
@@ -35,11 +34,12 @@ namespace iSpeakWebApp.Controllers
         /* INDEX **********************************************************************************************************************************************/
 
         // GET: Branches
-        public ActionResult Index(int? rss)
+        public ActionResult Index(int? rss, int? Active)
         {
             ViewBag.RemoveDatatablesStateSave = rss;
+            ViewBag.Active = Active;
 
-            return View(db.Branches);
+            return View(get(db, null, Active));
         }
 
         /* CREATE *********************************************************************************************************************************************/
@@ -57,7 +57,7 @@ namespace iSpeakWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (isExists(EnumActions.Create, null, model.Name))
+                if (isExists(null, model.Name))
                     ModelState.AddModelError(BranchesModel.COL_Name.Name, $"{model.Name} sudah terdaftar");
                 else
                 {
@@ -66,6 +66,7 @@ namespace iSpeakWebApp.Controllers
                     db.Branches.Add(model);
                     ActivityLogsController.AddCreateLog(db, Session, model.Id);
                     db.SaveChanges();
+                    BranchSelectLists.update();
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -91,7 +92,7 @@ namespace iSpeakWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (isExists(EnumActions.Edit, modifiedModel.Id, modifiedModel.Name))
+                if (isExists(modifiedModel.Id, modifiedModel.Name))
                     ModelState.AddModelError(BranchesModel.COL_Name.Name, $"{modifiedModel.Name} sudah terdaftar");
                 else
                 {
@@ -110,6 +111,7 @@ namespace iSpeakWebApp.Controllers
                         db.Entry(modifiedModel).State = EntityState.Modified;
                         ActivityLogsController.AddEditLog(db, Session, modifiedModel.Id, log);
                         db.SaveChanges();
+                        BranchSelectLists.update();
                     }
 
                     return RedirectToAction(nameof(Index));
@@ -121,16 +123,39 @@ namespace iSpeakWebApp.Controllers
 
         /* METHODS ********************************************************************************************************************************************/
 
-
-
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public bool isExists(EnumActions action, Guid? id, object value)
+        public bool isExists(Guid? Id, string Name)
         {
-            var result = action == EnumActions.Create
-                ? db.Branches.AsNoTracking().Where(x => x.Name.ToLower() == value.ToString().ToLower()).FirstOrDefault()
-                : db.Branches.AsNoTracking().Where(x => x.Name.ToLower() == value.ToString().ToLower() && x.Id != id).FirstOrDefault();
-            return result != null;
+            return db.Database.SqlQuery<BranchesModel>(@"
+                        SELECT Branches.*
+                        FROM Branches
+                        WHERE 1=1 
+							AND (@Id IS NOT NULL OR Branches.Name = @Name)
+							AND (@Id IS NULL OR (Branches.Name = @Name AND Branches.Id <> @Id))
+                    ",
+                    DBConnection.getSqlParameter(BranchesModel.COL_Id.Name, Id),
+                    DBConnection.getSqlParameter(BranchesModel.COL_Name.Name, Name)
+                ).Count() > 0;
+        }
+
+        public static List<BranchesModel> get(DBContext db, Guid? Id, int? Active)
+        {
+            List<BranchesModel> models = db.Database.SqlQuery<BranchesModel>(@"
+                        SELECT Branches.*
+                        FROM Branches
+                        WHERE 1=1
+							AND (@Id IS NULL OR Branches.Id = @Id)
+							AND (@Id IS NOT NULL OR (
+                                (@Active IS NULL OR Branches.Active = @Active)
+                            ))
+						ORDER BY Branches.Name ASC
+                    ",
+                    DBConnection.getSqlParameter(BranchesModel.COL_Id.Name, Id),
+                    DBConnection.getSqlParameter(BranchesModel.COL_Active.Name, Active)
+                ).ToList();
+
+            return models;
         }
 
         public static void setDropDownListViewBag(DBContext db, ControllerBase controller)

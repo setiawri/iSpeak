@@ -5,12 +5,6 @@ Promotion Events:
 - Index: add filter to show date range
 - rearrange Index layout
 
-Branches:
-- index: add filter all/active/non active
-
-
 Petty Cash Categories:
-- index: add filter all/active/non active
 - set defaultrow to apply to only one item. when an item is set to true, set all others to false
 	or remove defaultrow since default is set in settings
--
