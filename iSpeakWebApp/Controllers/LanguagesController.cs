@@ -78,8 +78,8 @@ namespace iSpeakWebApp.Controllers
                     LanguagesModel originalModel = db.Languages.AsNoTracking().Where(x => x.Id == modifiedModel.Id).FirstOrDefault();
 
                     string log = string.Empty;
-                    log = Helper.append(log, originalModel.Name, modifiedModel.Name, ActivityLogsController.editStringFormat(LanguagesModel.COL_Name.LogDisplay));
-                    log = Helper.append(log, originalModel.Active, modifiedModel.Active, ActivityLogsController.editStringFormat(LanguagesModel.COL_Active.LogDisplay));
+                    log = Helper.append(log, originalModel.Name, modifiedModel.Name, LanguagesModel.COL_Name.LogDisplay);
+                    log = Helper.append(log, originalModel.Active, modifiedModel.Active, LanguagesModel.COL_Active.LogDisplay);
 
                     if (!string.IsNullOrEmpty(log))
                     {

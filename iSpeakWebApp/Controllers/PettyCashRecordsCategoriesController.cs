@@ -79,10 +79,10 @@ namespace iSpeakWebApp.Controllers
                     PettyCashRecordsCategoriesModel originalModel = db.PettyCashRecordsCategories.AsNoTracking().Where(x => x.Id == modifiedModel.Id).FirstOrDefault();
 
                     string log = string.Empty;
-                    log = Helper.append(log, originalModel.Name, modifiedModel.Name, ActivityLogsController.editStringFormat(PettyCashRecordsCategoriesModel.COL_Name.LogDisplay));
-                    log = Helper.append(log, originalModel.Default_row, modifiedModel.Default_row, ActivityLogsController.editStringFormat(PettyCashRecordsCategoriesModel.COL_Default_row.LogDisplay));
-                    log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, ActivityLogsController.editStringFormat(PettyCashRecordsCategoriesModel.COL_Notes.LogDisplay));
-                    log = Helper.append(log, originalModel.Active, modifiedModel.Active, ActivityLogsController.editStringFormat(PettyCashRecordsCategoriesModel.COL_Active.LogDisplay));
+                    log = Helper.append(log, originalModel.Name, modifiedModel.Name, PettyCashRecordsCategoriesModel.COL_Name.LogDisplay);
+                    log = Helper.append(log, originalModel.Default_row, modifiedModel.Default_row, PettyCashRecordsCategoriesModel.COL_Default_row.LogDisplay);
+                    log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, PettyCashRecordsCategoriesModel.COL_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.Active, modifiedModel.Active, PettyCashRecordsCategoriesModel.COL_Active.LogDisplay);
 
                     if (!string.IsNullOrEmpty(log))
                     {

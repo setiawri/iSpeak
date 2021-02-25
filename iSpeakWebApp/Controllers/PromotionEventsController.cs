@@ -79,14 +79,14 @@ namespace iSpeakWebApp.Controllers
                     PromotionEventsModel originalModel = db.PromotionEvents.AsNoTracking().Where(x => x.Id == modifiedModel.Id).FirstOrDefault();
 
                     string log = string.Empty;
-                    log = Helper.append<BranchesModel>(log, originalModel.Branches_Id, modifiedModel.Branches_Id, ActivityLogsController.editStringFormat(PromotionEventsModel.COL_Branches_Id.LogDisplay));
-                    log = Helper.append(log, originalModel.Name, modifiedModel.Name, ActivityLogsController.editStringFormat(PromotionEventsModel.COL_Name.LogDisplay));
-                    log = Helper.append(log, originalModel.Location, modifiedModel.Location, ActivityLogsController.editStringFormat(PromotionEventsModel.COL_Location.LogDisplay));
-                    log = Helper.append(log, originalModel.TotalDays, modifiedModel.TotalDays, ActivityLogsController.editStringFormat(PromotionEventsModel.COL_TotalDays.LogDisplay));
-                    log = Helper.append(log, originalModel.EventFee, modifiedModel.EventFee, ActivityLogsController.editIntFormat(PromotionEventsModel.COL_EventFee.LogDisplay));
-                    log = Helper.append(log, originalModel.PersonnelCost, modifiedModel.PersonnelCost, ActivityLogsController.editIntFormat(PromotionEventsModel.COL_PersonnelCost.LogDisplay));
-                    log = Helper.append(log, originalModel.AdditionalCost, modifiedModel.AdditionalCost, ActivityLogsController.editIntFormat(PromotionEventsModel.COL_AdditionalCost.LogDisplay));
-                    log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, ActivityLogsController.editStringFormat(PromotionEventsModel.COL_Notes.LogDisplay));
+                    log = Helper.append<BranchesModel>(log, originalModel.Branches_Id, modifiedModel.Branches_Id, PromotionEventsModel.COL_Branches_Id.LogDisplay);
+                    log = Helper.append(log, originalModel.Name, modifiedModel.Name, PromotionEventsModel.COL_Name.LogDisplay);
+                    log = Helper.append(log, originalModel.Location, modifiedModel.Location, PromotionEventsModel.COL_Location.LogDisplay);
+                    log = Helper.append(log, originalModel.TotalDays, modifiedModel.TotalDays, PromotionEventsModel.COL_TotalDays.LogDisplay);
+                    log = Helper.append(log, originalModel.EventFee, modifiedModel.EventFee, PromotionEventsModel.COL_EventFee.LogDisplay);
+                    log = Helper.append(log, originalModel.PersonnelCost, modifiedModel.PersonnelCost, PromotionEventsModel.COL_PersonnelCost.LogDisplay);
+                    log = Helper.append(log, originalModel.AdditionalCost, modifiedModel.AdditionalCost, PromotionEventsModel.COL_AdditionalCost.LogDisplay);
+                    log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, PromotionEventsModel.COL_Notes.LogDisplay);
 
                     if (!string.IsNullOrEmpty(log))
                     {
