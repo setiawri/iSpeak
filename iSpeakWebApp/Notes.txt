@@ -8,3 +8,4 @@ Promotion Events:
 Petty Cash Categories:
 - set defaultrow to apply to only one item. when an item is set to true, set all others to false
 	or remove defaultrow since default is set in settings
+

@@ -13,7 +13,6 @@ namespace iSpeakWebApp
 
         /* USER ACCOUNTS **************************************************************************************************************************************/
 
-        public DbSet<UserAccountsModel> UserAccounts { get; set; }
         public DbSet<UserAccountRolesModel> UserAccountRoles { get; set; }
 
         /******************************************************************************************************************************************************/
@@ -22,6 +21,7 @@ namespace iSpeakWebApp
         public DbSet<RemindersModel> Reminders { get; set; }
         public DbSet<PettyCashRecordsCategoriesModel> PettyCashRecordsCategories { get; set; }
         public DbSet<PromotionEventsModel> PromotionEvents { get; set; }
+        public DbSet<LanguagesModel> Languages { get; set; }
 
         /******************************************************************************************************************************************************/
 

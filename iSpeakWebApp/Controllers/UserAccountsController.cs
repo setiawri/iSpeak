@@ -1,7 +1,6 @@
 ﻿using iSpeakWebApp.Models;
 using System.Linq;
 using System.Web;
-using System.Data.Entity;
 using System;
 using System.Collections.Generic;
 using LIBUtil;
@@ -21,6 +20,138 @@ namespace iSpeakWebApp.Controllers
 
 
         private readonly DBContext db = new DBContext();
+
+        /* INDEX **********************************************************************************************************************************************/
+
+        // GET: UserAccounts
+        public ActionResult Index(int? rss, string FILTER_Keyword, int? FILTER_Active)
+        {
+            ViewBag.RemoveDatatablesStateSave = rss;
+            ViewBag.FILTER_Keyword = FILTER_Keyword;
+            ViewBag.FILTER_Active = FILTER_Active;
+
+            if(!string.IsNullOrEmpty(FILTER_Keyword) || FILTER_Active != null)
+                return View(get(FILTER_Keyword, FILTER_Active));
+            else
+                return View();
+        }
+
+        // POST: UserAccounts
+        [HttpPost]
+        public ActionResult Index(string FILTER_Keyword, int? FILTER_Active)
+        {
+            ViewBag.FILTER_Keyword = FILTER_Keyword;
+            ViewBag.FILTER_Active = FILTER_Active;
+
+            return View(get(FILTER_Keyword, FILTER_Active));
+        }
+
+        /* CREATE *********************************************************************************************************************************************/
+
+        // GET: UserAccounts/Create
+        public ActionResult Create(string FILTER_Keyword, int? FILTER_Active)
+        {
+            setCreateViewBags(FILTER_Keyword, FILTER_Active);
+            return View(new UserAccountsModel());
+        }
+
+        // POST: UserAccounts/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(UserAccountsModel model, string FILTER_Keyword, int? FILTER_Active)
+        {
+            Util.debug(ModelState, ViewData);
+
+            if (ModelState.IsValid)
+            {
+                if (isExists(model.Fullname, model.Birthday))
+                    ModelState.AddModelError(UserAccountsModel.COL_Fullname.Name, $"{model.Fullname} dengan tanggal lahir yang sama sudah terdaftar");
+                else
+                {
+                    model.Password = SettingsController.get(db).ResetPassword;
+                    model.Branches_Id = Helper.getActiveBranchId(Session);
+                    model.Username = generateUsername(model.Fullname, model.Birthday);
+
+                    add(model);
+                    ActivityLogsController.AddCreateLog(db, Session, model.Id);
+                    db.SaveChanges();
+                    return RedirectToAction(nameof(Edit), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
+                }
+            }
+
+            setCreateViewBags(FILTER_Keyword, FILTER_Active);
+            return View(model);
+        }
+
+        private void setCreateViewBags(string FILTER_Keyword, int? FILTER_Active)
+        {
+            ViewBag.FILTER_Keyword = FILTER_Keyword;
+            ViewBag.FILTER_Active = FILTER_Active;
+        }
+
+        /* EDIT ***********************************************************************************************************************************************/
+
+        // GET: UserAccounts/Edit/{id}
+        public ActionResult Edit(Guid? id, string FILTER_Keyword, int? FILTER_Active)
+        {
+            if (id == null)
+                return RedirectToAction(nameof(Index));
+
+            UserAccountsModel model = get((Guid)id);
+            setEditViewBags(FILTER_Keyword, FILTER_Active);
+            return View(model);
+        }
+
+        // POST: UserAccounts/Edit/{id}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(UserAccountsModel modifiedModel, string FILTER_Keyword, int? FILTER_Active)
+        {
+            if (ModelState.IsValid)
+            {
+                if (isExists(modifiedModel.Id, modifiedModel.Username))
+                    ModelState.AddModelError(UserAccountsModel.COL_Username.Name, $"{modifiedModel.Username} sudah terdaftar");
+                else
+                {
+                    UserAccountsModel originalModel = get(modifiedModel.Id);
+
+                    string log = string.Empty;
+                    log = Helper.append(log, originalModel.Username, modifiedModel.Username, UserAccountsModel.COL_Username.LogDisplay);
+                    log = Helper.append(log, originalModel.Fullname, modifiedModel.Fullname, UserAccountsModel.COL_Fullname.LogDisplay);
+                    log = Helper.append(log, originalModel.Birthday, modifiedModel.Birthday, UserAccountsModel.COL_Birthday.LogDisplay);
+                    log = Helper.append<BranchesModel>(log, originalModel.Branches_Id, modifiedModel.Branches_Id, UserAccountsModel.COL_Branches_Id.LogDisplay);
+                    log = Helper.append(log, originalModel.Active, modifiedModel.Active, UserAccountsModel.COL_Active.LogDisplay);
+                    log = Helper.append(log, originalModel.ResetPassword, modifiedModel.ResetPassword, UserAccountsModel.COL_ResetPassword.LogDisplay);
+                    log = Helper.append(log, originalModel.Email, modifiedModel.Email, UserAccountsModel.COL_Email.LogDisplay);
+                    log = Helper.append(log, originalModel.Address, modifiedModel.Address, UserAccountsModel.COL_Address.LogDisplay);
+                    log = Helper.append(log, originalModel.Phone1, modifiedModel.Phone1, UserAccountsModel.COL_Phone1.LogDisplay);
+                    log = Helper.append(log, originalModel.Phone2, modifiedModel.Phone2, UserAccountsModel.COL_Phone2.LogDisplay);
+                    log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, UserAccountsModel.COL_Notes.LogDisplay);
+                    log = Helper.append<PromotionEventsModel>(log, originalModel.PromotionEvents_Id, modifiedModel.PromotionEvents_Id, UserAccountsModel.COL_PromotionEvents_Id.LogDisplay);
+
+                    log = Helper.addLogForList<UserAccountRolesModel>(log, originalModel.Roles_List, modifiedModel.Roles_List, UserAccountsModel.COL_Roles.LogDisplay);
+                    log = Helper.addLogForList<LanguagesModel>(log, originalModel.Interest_List, modifiedModel.Interest_List, UserAccountsModel.COL_Interest.LogDisplay);
+
+                    if (!string.IsNullOrEmpty(log))
+                        update(modifiedModel, log);
+
+                    return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
+                }
+            }
+
+            setEditViewBags(FILTER_Keyword, FILTER_Active);
+            return View(modifiedModel);
+        }
+
+        private void setEditViewBags(string FILTER_Keyword, int? FILTER_Active)
+        {
+            ViewBag.FILTER_Keyword = FILTER_Keyword;
+            ViewBag.FILTER_Active = FILTER_Active;
+            UserAccountRolesController.setDropDownListViewBag(db, this);
+            BranchesController.setDropDownListViewBag(db, this);
+            LanguagesController.setDropDownListViewBag(db, this);
+            PromotionEventsController.setDropDownListViewBag(db, this);
+        }
 
         /* LOGIN PAGE *****************************************************************************************************************************************/
 
@@ -45,8 +176,7 @@ namespace iSpeakWebApp.Controllers
             }
             
             string hashedPassword = HashPassword(model.Password);
-
-            UserAccountsModel userAccount = db.UserAccounts.Where(x => x.Username.ToLower() == model.Username.ToLower() && x.Password == hashedPassword).FirstOrDefault();
+            UserAccountsModel userAccount = get(model.Username, hashedPassword);
 
             if (userAccount == null)
             {
@@ -82,7 +212,7 @@ namespace iSpeakWebApp.Controllers
                 if(Id == null)
                     return RedirectToAction(nameof(Login));
                 else
-                    model = db.UserAccounts.Where(x => x.Id == (Guid)Id).FirstOrDefault();
+                    model = get((Guid)Id);
             }
             return View(model);
         }
@@ -91,7 +221,7 @@ namespace iSpeakWebApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ChangePassword(Guid Id, string CurrentPassword, string NewPassword, string ConfirmPassword, string returnUrl)
         {
-            UserAccountsModel model = db.UserAccounts.Where(x => x.Id == Id).FirstOrDefault();
+            UserAccountsModel model = get((Guid)Id);
             string SanitizedNewPassword = Util.sanitizeString(NewPassword);
 
             if (HashPassword(CurrentPassword) != model.Password)
@@ -102,12 +232,12 @@ namespace iSpeakWebApp.Controllers
                 ModelState.AddModelError("", "Invalid confirm password");
             else
             {
+                setLoginSession(Session, model);
+
                 model.Password = HashPassword(SanitizedNewPassword);
                 model.ResetPassword = false;
-                db.Entry(model).State = EntityState.Modified;
-                db.SaveChanges();
+                updatePassword(model, "Password changed");
 
-                setLoginSession(Session, model);
                 return RedirectToLocal(returnUrl);
             }
 
@@ -218,13 +348,69 @@ namespace iSpeakWebApp.Controllers
             return RedirectToAction(nameof(Login));
         }
 
+        public string generateUsername(string Fullname, DateTime Birthday)
+        {
+            string Username;
+            int charCount = 3;
+
+            List<string> name = Fullname.Split().ToList();
+            if (name.Count == 1)
+                name.Add(name[0]); //name must consist of 2 words
+
+            Username = generateUsername(name, Birthday, charCount);
+
+            //verify username doesn't exist
+            while (isExists(null, Username) && charCount <= name[0].Length)
+                Username = generateUsername(name, Birthday, charCount++);
+
+            return Username;
+        }
+
+        public string generateUsername(List<string> nameArray, DateTime Birthday, int charCount)
+        {
+            return string.Format("{0}{1}{2:##00}{3:##00}",
+                nameArray[0].Substring(0, charCount),
+                nameArray[nameArray.Count - 1].Substring(0, charCount),
+                Birthday.Day,
+                Birthday.Month);
+        }
+
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public List<UserAccountsModel> getBirthdays(Guid Branches_Id, Guid? UserAccountRoles_Id, int BirthdayListMonth) { return get(Branches_Id, null, true, UserAccountRoles_Id, BirthdayListMonth); }
-        public UserAccountsModel get(Guid Id) { return get(null, Id, false, null, null).FirstOrDefault(); }
-        public List<UserAccountsModel> get(Guid? Branches_Id, Guid? Id, bool? isActiveOnly, Guid? UserAccountRoles_Id, int? BirthdayListMonth)
+        public bool isExists(Guid? Id, string Username)
         {
-            if (Branches_Id == null)
+            return db.Database.SqlQuery<UserAccountsModel>(@"
+                        SELECT UserAccounts.*
+                        FROM UserAccounts
+                        WHERE 1=1 
+							AND (@Id IS NOT NULL OR UserAccounts.Username = @Username)
+							AND (@Id IS NULL OR (UserAccounts.Username = @Username AND UserAccounts.Id <> @Id))
+                    ",
+                    DBConnection.getSqlParameter(UserAccountsModel.COL_Id.Name, Id),
+                    DBConnection.getSqlParameter(UserAccountsModel.COL_Username.Name, Username)
+                ).Count() > 0;
+        }
+
+        public bool isExists(string Fullname, DateTime Birthday) 
+        {
+            return db.Database.SqlQuery<UserAccountsModel>(@"
+                        SELECT UserAccounts.*
+                        FROM UserAccounts
+                        WHERE UserAccounts.Fullname = @Fullname
+							AND UserAccounts.Birthday = @Birthday
+                    ",
+                    DBConnection.getSqlParameter(UserAccountsModel.COL_Fullname.Name, Fullname),
+                    DBConnection.getSqlParameter(UserAccountsModel.COL_Birthday.Name, Birthday)
+                ).Count() > 0;
+        }
+
+        public UserAccountsModel get(string Username, string Password) { return get(null, null, Username, Password, null, null, null, null).FirstOrDefault(); }
+        public List<UserAccountsModel> getBirthdays(Guid Branches_Id, Guid? UserAccountRoles_Id, int BirthdayListMonth) { return get(Branches_Id, null, null, null, 1, UserAccountRoles_Id, BirthdayListMonth, null); }
+        public List<UserAccountsModel> get(string Keyword, int? Active) { return get(null, null, null, null, Active, null, null, Keyword); }
+        public UserAccountsModel get(Guid Id) { return get(null, Id, null, null, null, null, null, null).FirstOrDefault(); }
+        public List<UserAccountsModel> get(Guid? Branches_Id, Guid? Id, string Username, string Password, int? Active, Guid? UserAccountRoles_Id, int? BirthdayListMonth, string Keyword)
+        {
+            if (Branches_Id == null && Helper.isActiveBranchAvailable(Session))
                 Helper.getActiveBranchId(Session);
 
             List<UserAccountsModel> models = db.Database.SqlQuery<UserAccountsModel>(@"
@@ -232,8 +418,10 @@ namespace iSpeakWebApp.Controllers
                         FROM UserAccounts
                         WHERE 1=1
 							AND (@Id IS NULL OR UserAccounts.Id = @Id)
+							AND (@Username IS NULL OR UserAccounts.Username = @Username)
+							AND (@Password IS NULL OR UserAccounts.Password = @Password)
 							AND (@Branches_Id IS NULL OR UserAccounts.Branches_Id = @Branches_Id)
-							AND (@isActiveOnly = 0 OR UserAccounts.Active = 1)
+							AND (@Active IS NULL OR UserAccounts.Active = @Active)
 							AND (@UserAccountRoles_Id IS NULL OR UserAccounts.Id IN (
 								SELECT UserAccounts_Id 
 								FROM UserAccountRoleAssignments 
@@ -244,16 +432,108 @@ namespace iSpeakWebApp.Controllers
 									AND (MONTH(GETDATE()) <> @BirthdayListMonth OR DAY(UserAccounts.Birthday) >= DAY(GETDATE()))
 								)
 							)
+							AND (@Keyword IS NULL OR (UserAccounts.Fullname LIKE '%'+@Keyword+'%' OR UserAccounts.Username LIKE '%'+@Keyword+'%'))
 						ORDER BY UserAccounts.Fullname ASC
                     ",
                     DBConnection.getSqlParameter(UserAccountsModel.COL_Id.Name, Id),
+                    DBConnection.getSqlParameter(UserAccountsModel.COL_Username.Name, Username),
+                    DBConnection.getSqlParameter(UserAccountsModel.COL_Password.Name, Password),
+                    DBConnection.getSqlParameter(UserAccountsModel.COL_Active.Name, Active),
                     DBConnection.getSqlParameter("UserAccountRoles_Id", UserAccountRoles_Id),
                     DBConnection.getSqlParameter("Branches_Id", Branches_Id),
-                    DBConnection.getSqlParameter("isActiveOnly", isActiveOnly),
-                    DBConnection.getSqlParameter("BirthdayListMonth", BirthdayListMonth)
+                    DBConnection.getSqlParameter("BirthdayListMonth", BirthdayListMonth),
+                    DBConnection.getSqlParameter("Keyword", Keyword)
                 ).ToList();
 
+            foreach (UserAccountsModel model in models)
+            {
+                if(!string.IsNullOrEmpty(model.Roles)) model.Roles_List = model.Roles.Split(',').ToList();
+                if (!string.IsNullOrEmpty(model.Interest)) model.Interest_List = model.Interest.Split(',').ToList();
+            }
+
             return models;
+        }
+
+        public void updatePassword(UserAccountsModel model, string log)
+        {
+            db.Database.ExecuteSqlCommand(@"
+                UPDATE UserAccounts 
+                SET
+                    Password = @Password,
+                    ResetPassword = @ResetPassword
+                WHERE UserAccounts.Id = @Id;                
+            ",
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Id.Name, model.Id),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Password.Name, model.Password),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_ResetPassword.Name, model.ResetPassword)
+            );
+
+            ActivityLogsController.AddEditLog(db, Session, model.Id, log);
+            db.SaveChanges();
+        }
+
+        public void update(UserAccountsModel model, string log)
+        {
+            if(model.Roles_List != null) model.Roles = string.Join(",", model.Roles_List.ToArray());
+            if(model.Interest_List != null) model.Interest = string.Join(",", model.Interest_List.ToArray());
+
+            db.Database.ExecuteSqlCommand(@"
+                UPDATE UserAccounts 
+                SET
+                    Username = @Username,
+                    Password = @Password,
+                    Fullname = @Fullname,
+                    Birthday = @Birthday,
+                    Branches_Id = @Branches_Id,
+                    Active = @Active,
+                    ResetPassword = @ResetPassword,
+                    Email = @Email,
+                    Address = @Address,
+                    Phone1 = @Phone1,
+                    Phone2 = @Phone2,
+                    Notes = @Notes,
+                    Interest = @Interest,
+                    PromotionEvents_Id = @PromotionEvents_Id,
+                    Roles = @Roles
+                WHERE UserAccounts.Id = @Id;                
+            ",
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Id.Name, model.Id),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Username.Name, model.Username),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Password.Name, model.Password),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Fullname.Name, model.Fullname),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Birthday.Name, model.Birthday),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Branches_Id.Name, model.Branches_Id),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Active.Name, model.Active),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_ResetPassword.Name, model.ResetPassword),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Email.Name, model.Email),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Address.Name, model.Address),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Phone1.Name, model.Phone1),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Phone2.Name, model.Phone2),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Notes.Name, model.Notes),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Interest.Name, model.Interest),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_PromotionEvents_Id.Name, model.PromotionEvents_Id),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Roles.Name, model.Roles)
+            );
+
+            ActivityLogsController.AddEditLog(db, Session, model.Id, log);
+            db.SaveChanges();
+        }
+
+        public void add(UserAccountsModel model)
+        {
+            db.Database.ExecuteSqlCommand(@"
+                INSERT INTO UserAccounts (Id,Fullname,Username,Password,Birthday,Branches_Id,ResetPassword,Active) 
+                    VALUES(@Id,@Fullname,@Username,@Password,@Birthday,@Branches_Id,@ResetPassword,@Active);
+            ",
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Id.Name, model.Id),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Username.Name, model.Username),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Password.Name, model.Password),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Fullname.Name, model.Fullname),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Birthday.Name, model.Birthday),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_ResetPassword.Name, model.ResetPassword),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Active.Name, model.Active),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Branches_Id.Name, model.Branches_Id)
+            );
         }
 
         /******************************************************************************************************************************************************/

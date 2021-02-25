@@ -99,12 +99,12 @@ namespace iSpeakWebApp.Controllers
                     BranchesModel originalModel = db.Branches.AsNoTracking().Where(x => x.Id == modifiedModel.Id).FirstOrDefault();
 
                     string log = string.Empty;
-                    log = Helper.appendLog(log, originalModel.Name, modifiedModel.Name, BranchesModel.COL_Name.LogDisplay);
-                    log = Helper.appendLog(log, originalModel.Address, modifiedModel.Address, BranchesModel.COL_Address.LogDisplay);
-                    log = Helper.appendLog(log, originalModel.PhoneNumber, modifiedModel.PhoneNumber, BranchesModel.COL_PhoneNumber.LogDisplay);
-                    log = Helper.appendLog(log, originalModel.Notes, modifiedModel.Notes, BranchesModel.COL_Notes.LogDisplay);
-                    log = Helper.appendLog(log, originalModel.InvoiceHeaderText, modifiedModel.InvoiceHeaderText, BranchesModel.COL_InvoiceHeaderText.LogDisplay);
-                    log = Helper.appendLog(log, originalModel.Active, modifiedModel.Active, BranchesModel.COL_Active.LogDisplay);
+                    log = Helper.append(log, originalModel.Name, modifiedModel.Name, ActivityLogsController.editStringFormat(BranchesModel.COL_Name.LogDisplay));
+                    log = Helper.append(log, originalModel.Address, modifiedModel.Address, ActivityLogsController.editStringFormat(BranchesModel.COL_Address.LogDisplay));
+                    log = Helper.append(log, originalModel.PhoneNumber, modifiedModel.PhoneNumber, ActivityLogsController.editStringFormat(BranchesModel.COL_PhoneNumber.LogDisplay));
+                    log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, ActivityLogsController.editStringFormat(BranchesModel.COL_Notes.LogDisplay));
+                    log = Helper.append(log, originalModel.InvoiceHeaderText, modifiedModel.InvoiceHeaderText, ActivityLogsController.editStringFormat(BranchesModel.COL_InvoiceHeaderText.LogDisplay));
+                    log = Helper.append(log, originalModel.Active, modifiedModel.Active, ActivityLogsController.editStringFormat(BranchesModel.COL_Active.LogDisplay));
 
                     if (!string.IsNullOrEmpty(log))
                     {

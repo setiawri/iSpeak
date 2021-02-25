@@ -12,6 +12,7 @@ namespace iSpeakWebApp.Models
         public Guid UserAccounts_Id { get; set; }
         public static ModelMember COL_UserAccounts_Id = new ModelMember { Name = "UserAccounts_Id", Display = "", LogDisplay = "" };
         public Guid UserAccountRoles_Id { get; set; }
+        public static ModelMember COL_UserAccountRoles_Id = new ModelMember { Name = "UserAccountRoles_Id", Display = "", LogDisplay = "" };
 
     }
 }

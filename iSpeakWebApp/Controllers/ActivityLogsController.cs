@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using LIBUtil;
 
 namespace iSpeakWebApp.Controllers
 {
@@ -27,13 +28,8 @@ namespace iSpeakWebApp.Controllers
                                         </thead>
                                         <tbody>";
 
-            var items = (from ActivityLog in db.ActivityLogs
-                         join UserAccount in db.UserAccounts on ActivityLog.UserAccounts_Id equals UserAccount.Id
-                         where ActivityLog.ReffId == ReffId
-                         orderby ActivityLog.Timestamp descending
-                         select new { ActivityLog, UserAccount }).ToList();
-
-            foreach (var item in items)
+            string Fullname = UserAccountsController.getUserAccount(Session).Fullname;
+            foreach (ActivityLogsModel item in get(ReffId))
             {
                 message += string.Format(@"
                             <tr>
@@ -41,7 +37,7 @@ namespace iSpeakWebApp.Controllers
                                 <td>{1}</td>
                                 <td>{2}</td>
                             </tr>
-                    ", item.ActivityLog.Timestamp, item.ActivityLog.Description.Replace(Environment.NewLine, "<BR>"), item.UserAccount.Fullname);
+                    ", item.Timestamp, item.Description.Replace(Environment.NewLine, "<BR>"), Fullname);
             }
 
             message += "</tbody></table></div>";
@@ -64,11 +60,27 @@ namespace iSpeakWebApp.Controllers
             });
         }
 
+        public static string editListStringFormat(string fieldName) { return fieldName + ": {0}"; }
         public static string editStringFormat(string fieldName) { return fieldName + ": '{0}' to '{1}'"; }
         public static string editIntFormat(string fieldName) { return fieldName + ": '{0:N0}' to '{1:N0}'"; }
         public static string editDateFormat(string fieldName) { return fieldName + ": '{0:dd/MM/yyyy}' to '{1:dd/MM/yyyy}'"; }
         public static string editDateTimeFormat(string fieldName) { return fieldName + ": '{0:dd/MM/yyyy HH:mm}' to '{1:dd/MM/yyyy HH:mm}'"; }
         public static string editDecimalFormat(string fieldName) { return fieldName + ": '{0:G29}' to '{1:G29}'"; }
+        public static string editBooleanFormat(string fieldName) { return fieldName + ": {1}"; }
+
+        /* DATABASE METHODS ***********************************************************************************************************************************/
+
+        public List<ActivityLogsModel> get(Guid ReffId)
+        {
+            return db.Database.SqlQuery<ActivityLogsModel>(@"
+                        SELECT ActivityLogs.*
+                        FROM ActivityLogs
+                        WHERE ActivityLogs.ReffId = @ReffId
+						ORDER BY ActivityLogs.Timestamp DESC
+                    ",
+                    DBConnection.getSqlParameter(ActivityLogsModel.COL_ReffId.Name, ReffId)
+                ).ToList();
+        }
 
         /******************************************************************************************************************************************************/
     }

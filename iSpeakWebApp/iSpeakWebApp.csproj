@@ -129,6 +129,7 @@
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Controllers\ActivityLogsController.cs" />
     <Compile Include="Controllers\PettyCashRecordsCategoriesController.cs" />
+    <Compile Include="Controllers\LanguagesController.cs" />
     <Compile Include="Controllers\PromotionEventsController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -141,6 +142,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ActivityLogsModel.cs" />
+    <Compile Include="Models\LanguagesModel.cs" />
     <Compile Include="Models\PromotionEventsModel.cs" />
     <Compile Include="Models\PettyCashRecordsCategoriesModel.cs" />
     <Compile Include="Models\UserAccountRoleAssignmentsModel.cs" />
@@ -254,6 +256,9 @@
     <Content Include="Views\PettyCashRecordsCategories\Create.cshtml" />
     <Content Include="Views\PettyCashRecordsCategories\Edit.cshtml" />
     <Content Include="Views\PettyCashRecordsCategories\Index.cshtml" />
+    <Content Include="Views\UserAccounts\Index.cshtml" />
+    <Content Include="Views\UserAccounts\Edit.cshtml" />
+    <Content Include="Views\UserAccounts\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\LIBUtil\LIBUtil\LIBUtil\LIBUtil.csproj">

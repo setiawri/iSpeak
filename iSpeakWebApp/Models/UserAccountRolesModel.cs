@@ -34,7 +34,27 @@ namespace iSpeakWebApp.Models
         [Display(Name = "Edit")]
         public bool Reminders_Edit { get; set; }
         public static ModelMember COL_Reminders_Edit = new ModelMember { Name = "Reminders_Edit", Display = "Edit", LogDisplay = "Reminder Edit" };
-        
+
+
+        /* USER ACCOUNTS **************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string UserAccounts_Notes { get; set; }
+        public static ModelMember COL_UserAccounts_Notes = new ModelMember { Name = "UserAccounts_Notes", Display = "Notes", LogDisplay = "UserAccounts Notes" };
+
+        [Display(Name = "Add")]
+        public bool UserAccounts_Add { get; set; }
+        public static ModelMember COL_UserAccounts_Add = new ModelMember { Name = "UserAccounts_Add", Display = "Add", LogDisplay = "UserAccounts Add" };
+
+        [Display(Name = "View")]
+        public bool UserAccounts_View { get; set; }
+        public static ModelMember COL_UserAccounts_View = new ModelMember { Name = "UserAccounts_View", Display = "View", LogDisplay = "UserAccounts View" };
+
+        [Display(Name = "Edit")]
+        public bool UserAccounts_Edit { get; set; }
+        public static ModelMember COL_UserAccounts_Edit = new ModelMember { Name = "UserAccounts_Edit", Display = "Edit", LogDisplay = "UserAccounts Edit" };
+
+
         /* USER ACCOUNTS ROLES ********************************************************************************************************************************/
 
         [Display(Name = "Notes")]
@@ -52,6 +72,7 @@ namespace iSpeakWebApp.Models
         [Display(Name = "Edit")]
         public bool UserAccountRoles_Edit { get; set; }
         public static ModelMember COL_UserAccountRoles_Edit = new ModelMember { Name = "UserAccountRoles_Edit", Display = "Edit", LogDisplay = "Branches Edit" };
+
 
         /* APPLICATION SETTINGS *******************************************************************************************************************************/
 
@@ -105,7 +126,7 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_PromotionEvents_Edit = new ModelMember { Name = "PromotionEvents_Edit", Display = "Edit", LogDisplay = "PromotionEvents Edit" };
 
 
-        /* PROMOTION EVENTS ***********************************************************************************************************************************/
+        /* PETTY CASH RECORDS CATEGORIES **********************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string PettyCashRecordsCategories_Notes { get; set; }

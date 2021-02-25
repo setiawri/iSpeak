@@ -9,7 +9,7 @@
 <div class="content-wrapper">
     <!-- Content area -->
     <div class="content">
-        @using (Html.BeginForm("Index", "PettyCashRecordsCategories", FormMethod.Get))
+        @using (Html.BeginForm("Index", "Branches", FormMethod.Get))
         {
             <!-- Form inputs -->
             <div class="card animated bounceInLeft">
@@ -23,7 +23,7 @@
                             @if (access.Branches_Add)
                             {
                                 <label class="mb-0">&nbsp;</label>
-                                <div><a href="@Url.Action("Create", "Branches", new { Area = "" })" class="btn btn-sm btn-success">Create New <i class="icon-plus22 ml-2"></i></a></div>
+                                <div><a href="@Url.Action("Create", "Branches")" class="btn btn-sm btn-success">Create New <i class="icon-plus22 ml-2"></i></a></div>
                             }
                         </div>
                         <div class="row ml-3">

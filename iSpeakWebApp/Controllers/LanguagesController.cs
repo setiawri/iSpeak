@@ -9,42 +9,41 @@ using LIBUtil;
 
 namespace iSpeakWebApp.Controllers
 {
-    public class PromotionEventsController : Controller
+    public class LanguagesController : Controller
     {
         private readonly DBContext db = new DBContext();
 
         /* INDEX **********************************************************************************************************************************************/
 
-        // GET: PromotionEvents
+        // GET: Languages
         public ActionResult Index(int? rss)
         {
             ViewBag.RemoveDatatablesStateSave = rss;
 
-            return View(db.PromotionEvents);
+            return View(db.Languages);
         }
 
         /* CREATE *********************************************************************************************************************************************/
 
-        // GET: PromotionEvents/Create
+        // GET: Languages/Create
         public ActionResult Create()
         {
-            return View(new PromotionEventsModel());
+            return View(new LanguagesModel());
         }
 
-        // POST: PromotionEvents/Create
+        // POST: Languages/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(PromotionEventsModel model)
+        public ActionResult Create(LanguagesModel model)
         {
             if (ModelState.IsValid)
             {
                 if (isExists(EnumActions.Create, null, model.Name))
-                    ModelState.AddModelError(PromotionEventsModel.COL_Name.Name, $"{model.Name} sudah terdaftar");
+                    ModelState.AddModelError(LanguagesModel.COL_Name.Name, $"{model.Name} sudah terdaftar");
                 else
                 {
                     model.Id = Guid.NewGuid();
-                    model.Branches_Id = Helper.getActiveBranchId(Session);
-                    db.PromotionEvents.Add(model);
+                    db.Languages.Add(model);
                     ActivityLogsController.AddCreateLog(db, Session, model.Id);
                     db.SaveChanges();
                     return RedirectToAction(nameof(Index));
@@ -56,37 +55,31 @@ namespace iSpeakWebApp.Controllers
 
         /* EDIT ***********************************************************************************************************************************************/
 
-        // GET: PromotionEvents/Edit/{id}
+        // GET: Languages/Edit/{id}
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
                 return RedirectToAction(nameof(Index));
 
-            return View(db.PromotionEvents.Find(id));
+            return View(db.Languages.Find(id));
         }
 
-        // POST: PromotionEvents/Edit/{id}
+        // POST: Languages/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(PromotionEventsModel modifiedModel)
+        public ActionResult Edit(LanguagesModel modifiedModel)
         {
             if (ModelState.IsValid)
             {
                 if (isExists(EnumActions.Edit, modifiedModel.Id, modifiedModel.Name))
-                    ModelState.AddModelError(PromotionEventsModel.COL_Name.Name, $"{modifiedModel.Name} sudah terdaftar");
+                    ModelState.AddModelError(LanguagesModel.COL_Name.Name, $"{modifiedModel.Name} sudah terdaftar");
                 else
                 {
-                    PromotionEventsModel originalModel = db.PromotionEvents.AsNoTracking().Where(x => x.Id == modifiedModel.Id).FirstOrDefault();
+                    LanguagesModel originalModel = db.Languages.AsNoTracking().Where(x => x.Id == modifiedModel.Id).FirstOrDefault();
 
                     string log = string.Empty;
-                    log = Helper.append<BranchesModel>(log, originalModel.Branches_Id, modifiedModel.Branches_Id, ActivityLogsController.editStringFormat(PromotionEventsModel.COL_Branches_Id.LogDisplay));
-                    log = Helper.append(log, originalModel.Name, modifiedModel.Name, ActivityLogsController.editStringFormat(PromotionEventsModel.COL_Name.LogDisplay));
-                    log = Helper.append(log, originalModel.Location, modifiedModel.Location, ActivityLogsController.editStringFormat(PromotionEventsModel.COL_Location.LogDisplay));
-                    log = Helper.append(log, originalModel.TotalDays, modifiedModel.TotalDays, ActivityLogsController.editStringFormat(PromotionEventsModel.COL_TotalDays.LogDisplay));
-                    log = Helper.append(log, originalModel.EventFee, modifiedModel.EventFee, ActivityLogsController.editIntFormat(PromotionEventsModel.COL_EventFee.LogDisplay));
-                    log = Helper.append(log, originalModel.PersonnelCost, modifiedModel.PersonnelCost, ActivityLogsController.editIntFormat(PromotionEventsModel.COL_PersonnelCost.LogDisplay));
-                    log = Helper.append(log, originalModel.AdditionalCost, modifiedModel.AdditionalCost, ActivityLogsController.editIntFormat(PromotionEventsModel.COL_AdditionalCost.LogDisplay));
-                    log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, ActivityLogsController.editStringFormat(PromotionEventsModel.COL_Notes.LogDisplay));
+                    log = Helper.append(log, originalModel.Name, modifiedModel.Name, ActivityLogsController.editStringFormat(LanguagesModel.COL_Name.LogDisplay));
+                    log = Helper.append(log, originalModel.Active, modifiedModel.Active, ActivityLogsController.editStringFormat(LanguagesModel.COL_Active.LogDisplay));
 
                     if (!string.IsNullOrEmpty(log))
                     {
@@ -106,9 +99,9 @@ namespace iSpeakWebApp.Controllers
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public static List<PromotionEventsModel> get()
+        public static List<LanguagesModel> get()
         {
-            return new DBContext().PromotionEvents.AsNoTracking()
+            return new DBContext().Languages.AsNoTracking()
                 .OrderBy(x => x.Name)
                 .ToList();
         }
@@ -116,14 +109,14 @@ namespace iSpeakWebApp.Controllers
         public bool isExists(EnumActions action, Guid? id, object value)
         {
             var result = action == EnumActions.Create
-                ? db.PromotionEvents.AsNoTracking().Where(x => x.Name.ToLower() == value.ToString().ToLower()).FirstOrDefault()
-                : db.PromotionEvents.AsNoTracking().Where(x => x.Name.ToLower() == value.ToString().ToLower() && x.Id != id).FirstOrDefault();
+                ? db.Languages.AsNoTracking().Where(x => x.Name.ToLower() == value.ToString().ToLower()).FirstOrDefault()
+                : db.Languages.AsNoTracking().Where(x => x.Name.ToLower() == value.ToString().ToLower() && x.Id != id).FirstOrDefault();
             return result != null;
         }
 
         public static void setDropDownListViewBag(DBContext db, ControllerBase controller)
         {
-            controller.ViewBag.PromotionEvents = new SelectList(db.PromotionEvents.AsNoTracking().OrderBy(x => x.Name).ToList(), PromotionEventsModel.COL_Id.Name, PromotionEventsModel.COL_Name.Name);
+            controller.ViewBag.Languages = new SelectList(db.Languages.AsNoTracking().OrderBy(x => x.Name).ToList(), LanguagesModel.COL_Id.Name, LanguagesModel.COL_Name.Name);
         }
 
         /******************************************************************************************************************************************************/

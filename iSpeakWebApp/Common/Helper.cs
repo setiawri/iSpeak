@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 using iSpeakWebApp.Controllers;
 using iSpeakWebApp.Models;
 using LIBUtil;
@@ -57,6 +58,8 @@ namespace iSpeakWebApp
             return (Request.ApplicationPath + IMAGEFOLDERURL + filename).Replace("//", "/");
         }
 
+
+        public static bool isActiveBranchAvailable(HttpSessionStateBase Session) { return Session[UserAccountsController.SESSION_ActiveBranches_Id] != null; }
         public static Guid getActiveBranchId(HttpSessionStateBase Session) 
         {
             return (Guid)Session[UserAccountsController.SESSION_ActiveBranches_Id];
@@ -88,20 +91,84 @@ namespace iSpeakWebApp
             return payPeriod;
         }
 
-        public static string appendLog<T>(DBContext db, string originalText, object oldValue, object newValue, string logDisplay)
+        public static string append<T>(string log, string value, string delimiter)
         {
-            if (typeof(T) == typeof(BranchesModel))
-            {
-                oldValue = db.Branches.Where(x => x.Id == (Guid)oldValue).FirstOrDefault().Name;
-                newValue = db.Branches.Where(x => x.Id == (Guid)newValue).FirstOrDefault().Name;
-            }
+            value = getName<T>(value);
 
-            return appendLog(originalText, oldValue, newValue, logDisplay);
+            return Util.append(log, value, delimiter);
         }
 
-        public static string appendLog(string originalText, object oldValue, object newValue, string logDisplay)
+        public static string append(string log, object oldValue, object newValue, string format)
         {
-            return LIBUtil.Util.webAppendChange(originalText, oldValue, newValue, Controllers.ActivityLogsController.editStringFormat(logDisplay));
+            return Util.webAppendChange(log, oldValue, newValue, format);
+        }
+
+        public static string append<T>(string log, object oldValue, object newValue, string format)
+        {
+            if(oldValue != null) oldValue = getName<T>(oldValue);
+            if (newValue != null) newValue = getName<T>(newValue);
+
+            return Util.webAppendChange(log, oldValue, newValue, format);
+        }
+
+        public static string addLog(HttpSessionStateBase Session, string log, Guid reffId, object oldValue, object newValue, string format)
+        {
+            string newlog = string.Empty;
+            newlog = Util.appendChange(newlog, oldValue, newValue, format);
+            if (string.IsNullOrEmpty(newlog))
+                return log;
+            else
+            {
+                ActivityLogsController.Add(db, Session, reffId, newlog);
+                return Util.append(log, string.Format("UPDATE: {0} to {1}", oldValue, newValue), Environment.NewLine + Environment.NewLine);
+            }
+        }
+
+        public static string addLogForList<T>(string log, List<string> oldValue, List<string> newValue, string format)
+        {
+            string addedlog = string.Empty;
+            if (newValue != null)
+            {
+                foreach (string value in newValue)
+                {
+                    if (oldValue != null && oldValue.Contains(value))
+                        oldValue.Remove(value);
+                    else
+                        addedlog = append<T>(addedlog, value, ",");
+                }
+            }
+            if (!string.IsNullOrEmpty(addedlog)) addedlog = Environment.NewLine + "Added: " + addedlog;
+
+            string removedlog = string.Empty;
+            if (oldValue != null)
+            {
+                foreach (string value in oldValue)
+                    removedlog = append<T>(removedlog, value, ",");
+            }
+
+            if (!string.IsNullOrEmpty(removedlog)) removedlog = Environment.NewLine + "Removed: " + removedlog;
+
+            if (!string.IsNullOrEmpty(removedlog) || !string.IsNullOrEmpty(addedlog))
+            {
+                string newlog = string.Format(format, removedlog + addedlog);
+                return Util.append(log, newlog, Environment.NewLine + Environment.NewLine);
+            }
+            else
+                return log;
+        }
+
+        public static string getName<T>(object value)
+        {
+            if (typeof(T) == typeof(UserAccountRolesModel))
+                return db.UserAccountRoles.Where(x => x.Id.ToString() == value.ToString()).FirstOrDefault().Name;
+            else if (typeof(T) == typeof(BranchesModel))
+                return db.Branches.Where(x => x.Id.ToString() == value.ToString()).FirstOrDefault().Name;
+            else if (typeof(T) == typeof(PromotionEventsModel))
+                return db.PromotionEvents.Where(x => x.Id.ToString() == value.ToString()).FirstOrDefault().Name;
+            else if (typeof(T) == typeof(LanguagesModel))
+                return db.Languages.Where(x => x.Id.ToString() == value.ToString()).FirstOrDefault().Name;
+            else
+                return null;
         }
 
         /******************************************************************************************************************************************************/

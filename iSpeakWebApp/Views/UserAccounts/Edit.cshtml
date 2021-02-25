@@ -1,0 +1,174 @@
+﻿@model iSpeakWebApp.Models.UserAccountsModel
+
+@{
+    ViewBag.SelectedNavigationMenu = "Accounts";
+    ViewBag.Root = "ACCOUNT";
+    ViewBag.Title = "Edit";
+}
+
+<div class="content-wrapper">
+
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm(new { page = ViewBag.CurrentPage }))
+        {
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.ResetPassword)
+                <input type="hidden" name="FILTER_Keyword" value="@ViewBag.FILTER_Keyword" />
+                <input type="hidden" name="FILTER_Active" value="@ViewBag.FILTER_Active" />
+                <!-- Form inputs -->
+                <div class="card">
+                    <div class="card-header header-elements-inline">
+                        <h5 class="card-title">@ViewBag.Root</h5>
+                    </div>
+                    <div class="card-body">
+                        <fieldset class="mb-3">
+                            <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Title</legend>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
+                                <div class="col-lg-5">
+                                    @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-5"></div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Branches_Id, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
+                                <div class="col-lg-2">
+                                    @Html.DropDownListFor(model => model.Branches_Id, ViewBag.Branches as SelectList, "Pilih", new { @class = "form-control select2" })
+                                    @Html.ValidationMessageFor(model => model.Branches_Id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Fullname, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
+                                <div class="col-lg-5">
+                                    @Html.EditorFor(model => model.Fullname, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Fullname, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-5"></div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Birthday, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
+                                <div class="col-lg-2">
+                                    <div class="input-group">
+                                        @Html.EditorFor(model => model.Birthday, new { htmlAttributes = new { @class = "form-control daterange-picker" } })
+                                        <span class="input-group-append">
+                                            <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                        </span>
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.Birthday, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                                <div class="col-lg-5">
+                                    @Html.ListBoxFor(model => model.Roles_List, ViewBag.UserAccountRoles as SelectList, new { @class = "form-control select2", @multiple = "multiple" })
+                                    @Html.ValidationMessageFor(model => model.Roles_List, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-5"></div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                                <div class="col-lg-5">
+                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                                <div class="col-lg-5">
+                                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Phone1, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                                <div class="col-lg-5">
+                                    @Html.EditorFor(model => model.Phone1, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Phone1, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Phone2, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                                <div class="col-lg-5">
+                                    @Html.EditorFor(model => model.Phone2, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Phone2, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Interest, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                                <div class="col-lg-5">
+                                    @Html.ListBoxFor(model => model.Interest_List, ViewBag.Languages as SelectList, new { @class = "form-control select2", @multiple = "multiple" })
+                                    @Html.ValidationMessageFor(model => model.Interest_List, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-5"></div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.PromotionEvents_Id, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                                <div class="col-lg-2">
+                                    @Html.DropDownListFor(model => model.PromotionEvents_Id, ViewBag.PromotionEvents as SelectList, "Pilih", new { @class = "form-control select2" })
+                                    @Html.ValidationMessageFor(model => model.PromotionEvents_Id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                                <div class="col-lg-5">
+                                    @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                                <div class="col-lg-5">
+                                    <div class="form-check form-check-switchery">
+                                        <label class="form-check-label">
+                                            @Html.EditorFor(model => model.Active, new { htmlAttributes = new { @class = "form-check-input-switchery" } })
+                                        </label>
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </fieldset>
+
+                        @if (iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session).UserAccounts_Edit)
+                        {
+                            <div>
+                                <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
+                                <a href="@Url.Action("Index", "UserAccounts", new { FILTER_Keyword = ViewBag.FILTER_Keyword, FILTER_Active = ViewBag.FILTER_Active })" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <!-- /form inputs -->
+            }
+        }
+    </div>
+    <!-- /content area -->
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //set calendar values
+        $('#Birthday').data('daterangepicker').setStartDate('@string.Format("{0:yyyy/MM/dd}", Model.Birthday)');
+        $('#Birthday').data('daterangepicker').setEndDate('@string.Format("{0:yyyy/MM/dd}", Model.Birthday)');
+
+    });
+</script>

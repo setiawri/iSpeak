@@ -13,13 +13,6 @@ namespace iSpeakWebApp.Controllers
     {
         private readonly DBContext db = new DBContext();
 
-        /******************************************************************************************************************************************************/
-
-        public static SettingsModel getModel(DBContext db)
-        {
-            return get(db);
-        }
-
         /* EDIT ***********************************************************************************************************************************************/
 
         // GET: Settings/Edit
@@ -88,7 +81,7 @@ namespace iSpeakWebApp.Controllers
         {
             ViewBag.ResetPassword = model.ResetPassword;
             ViewBag.PettyCashRecordsCategories = new SelectList(db.PettyCashRecordsCategories.OrderBy(x => x.Name).ToList(), PettyCashRecordsCategoriesModel.COL_Id.Name, UserAccountRolesModel.COL_Name.Name);
-            ViewBag.UserAccountRoles = new SelectList(db.UserAccountRoles.OrderBy(x => x.Name).ToList(), UserAccountRolesModel.COL_Id.Name, UserAccountRolesModel.COL_Name.Name);
+            UserAccountRolesController.setDropDownListViewBag(db, this);
         }
 
         /* METHODS ********************************************************************************************************************************************/
@@ -121,21 +114,21 @@ namespace iSpeakWebApp.Controllers
                     LEFT JOIN Settings Settings_PayrollRatesRoles ON Settings_PayrollRatesRoles.Id = @PayrollRatesRolesId
                 WHERE Settings_AutoEntryForCashPayments.Id = @AutoEntryForCashPaymentsId
                 ",
-                    new SqlParameter(SettingsModel.COL_AutoEntryForCashPayments.Name + "Id", SettingsModel.COL_AutoEntryForCashPayments.Id),
-                    new SqlParameter(SettingsModel.COL_UserSetRoleAllowed.Name + "Id", SettingsModel.COL_UserSetRoleAllowed.Id),
-                    new SqlParameter(SettingsModel.COL_ResetPassword.Name + "Id", SettingsModel.COL_ResetPassword.Id),
-                    new SqlParameter(SettingsModel.COL_RolesToSeeReminders.Name + "Id", SettingsModel.COL_RolesToSeeReminders.Id),
-                    new SqlParameter(SettingsModel.COL_FullAccessForTutorSchedules.Name + "Id", SettingsModel.COL_FullAccessForTutorSchedules.Id),
-                    new SqlParameter(SettingsModel.COL_ShowOnlyOwnUserData.Name + "Id", SettingsModel.COL_ShowOnlyOwnUserData.Id),
-                    new SqlParameter(SettingsModel.COL_PayrollRatesRoles.Name + "Id", SettingsModel.COL_PayrollRatesRoles.Id)
+                    DBConnection.getSqlParameter(SettingsModel.COL_AutoEntryForCashPayments.Name + "Id", SettingsModel.COL_AutoEntryForCashPayments.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_UserSetRoleAllowed.Name + "Id", SettingsModel.COL_UserSetRoleAllowed.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_ResetPassword.Name + "Id", SettingsModel.COL_ResetPassword.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_RolesToSeeReminders.Name + "Id", SettingsModel.COL_RolesToSeeReminders.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_FullAccessForTutorSchedules.Name + "Id", SettingsModel.COL_FullAccessForTutorSchedules.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_ShowOnlyOwnUserData.Name + "Id", SettingsModel.COL_ShowOnlyOwnUserData.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_PayrollRatesRoles.Name + "Id", SettingsModel.COL_PayrollRatesRoles.Id)
                 ).ToList();
 
             foreach(SettingsModel model in models)
             {
-                model.RolesToSeeReminders_List = model.RolesToSeeReminders.Split(',').ToList();
-                model.FullAccessForTutorSchedules_List = model.FullAccessForTutorSchedules.Split(',').ToList();
-                model.ShowOnlyOwnUserData_List = model.ShowOnlyOwnUserData.Split(',').ToList();
-                model.PayrollRatesRoles_List = model.PayrollRatesRoles.Split(',').ToList();
+                if(!string.IsNullOrEmpty(model.RolesToSeeReminders)) model.RolesToSeeReminders_List = model.RolesToSeeReminders.Split(',').ToList();
+                if (!string.IsNullOrEmpty(model.FullAccessForTutorSchedules)) model.FullAccessForTutorSchedules_List = model.FullAccessForTutorSchedules.Split(',').ToList();
+                if (!string.IsNullOrEmpty(model.ShowOnlyOwnUserData)) model.ShowOnlyOwnUserData_List = model.ShowOnlyOwnUserData.Split(',').ToList();
+                if (!string.IsNullOrEmpty(model.PayrollRatesRoles)) model.PayrollRatesRoles_List = model.PayrollRatesRoles.Split(',').ToList();
             }
 
             return models.Count == 0 ? null : models[0];
@@ -143,10 +136,10 @@ namespace iSpeakWebApp.Controllers
 
         private void update(SettingsModel modifiedModel)
         {
-            modifiedModel.RolesToSeeReminders = string.Join(",", modifiedModel.RolesToSeeReminders_List.ToArray());
-            modifiedModel.FullAccessForTutorSchedules = string.Join(",", modifiedModel.FullAccessForTutorSchedules_List.ToArray());
-            modifiedModel.ShowOnlyOwnUserData = string.Join(",", modifiedModel.ShowOnlyOwnUserData_List.ToArray());
-            modifiedModel.PayrollRatesRoles = string.Join(",", modifiedModel.PayrollRatesRoles_List.ToArray());
+            if(modifiedModel.RolesToSeeReminders_List != null) modifiedModel.RolesToSeeReminders = string.Join(",", modifiedModel.RolesToSeeReminders_List.ToArray());
+            if (modifiedModel.FullAccessForTutorSchedules_List != null) modifiedModel.FullAccessForTutorSchedules = string.Join(",", modifiedModel.FullAccessForTutorSchedules_List.ToArray());
+            if (modifiedModel.ShowOnlyOwnUserData_List != null) modifiedModel.ShowOnlyOwnUserData = string.Join(",", modifiedModel.ShowOnlyOwnUserData_List.ToArray());
+            if (modifiedModel.PayrollRatesRoles_List != null) modifiedModel.PayrollRatesRoles = string.Join(",", modifiedModel.PayrollRatesRoles_List.ToArray());
 
             db.Database.ExecuteSqlCommand(@"
                     UPDATE Settings SET Value_Guid=@AutoEntryForCashPayments, Notes=@AutoEntryForCashPayments_Notes WHERE Id=@AutoEntryForCashPaymentsId;
@@ -157,27 +150,27 @@ namespace iSpeakWebApp.Controllers
                     UPDATE Settings SET Value_String=@ShowOnlyOwnUserData, Notes=@ShowOnlyOwnUserData_Notes WHERE Id=@ShowOnlyOwnUserDataId;
                     UPDATE Settings SET Value_String=@PayrollRatesRoles, Notes=@PayrollRatesRoles_Notes WHERE Id=@PayrollRatesRolesId;
                 ",
-                    new SqlParameter(SettingsModel.COL_AutoEntryForCashPayments.Name + "Id", SettingsModel.COL_AutoEntryForCashPayments.Id),
-                    new SqlParameter(SettingsModel.COL_AutoEntryForCashPayments.Name, Util.wrapNullable(modifiedModel.AutoEntryForCashPayments)),
-                    new SqlParameter(SettingsModel.COL_AutoEntryForCashPayments_Notes.Name, Util.wrapNullable(modifiedModel.AutoEntryForCashPayments_Notes)),
-                    new SqlParameter(SettingsModel.COL_UserSetRoleAllowed.Name + "Id", SettingsModel.COL_UserSetRoleAllowed.Id),
-                    new SqlParameter(SettingsModel.COL_UserSetRoleAllowed.Name, Util.wrapNullable(modifiedModel.UserSetRoleAllowed)),
-                    new SqlParameter(SettingsModel.COL_UserSetRoleAllowed_Notes.Name, Util.wrapNullable(modifiedModel.UserSetRoleAllowed_Notes)),
-                    new SqlParameter(SettingsModel.COL_ResetPassword.Name + "Id", SettingsModel.COL_ResetPassword.Id),
-                    new SqlParameter(SettingsModel.COL_ResetPassword.Name, Util.wrapNullable(modifiedModel.ResetPassword)),
-                    new SqlParameter(SettingsModel.COL_ResetPassword_Notes.Name, Util.wrapNullable(modifiedModel.ResetPassword_Notes)),
-                    new SqlParameter(SettingsModel.COL_RolesToSeeReminders.Name + "Id", SettingsModel.COL_RolesToSeeReminders.Id),
-                    new SqlParameter(SettingsModel.COL_RolesToSeeReminders.Name, Util.wrapNullable(modifiedModel.RolesToSeeReminders)),
-                    new SqlParameter(SettingsModel.COL_RolesToSeeReminders_Notes.Name, Util.wrapNullable(modifiedModel.RolesToSeeReminders_Notes)),
-                    new SqlParameter(SettingsModel.COL_FullAccessForTutorSchedules.Name + "Id", SettingsModel.COL_FullAccessForTutorSchedules.Id),
-                    new SqlParameter(SettingsModel.COL_FullAccessForTutorSchedules.Name, Util.wrapNullable(modifiedModel.FullAccessForTutorSchedules)),
-                    new SqlParameter(SettingsModel.COL_FullAccessForTutorSchedules_Notes.Name, Util.wrapNullable(modifiedModel.FullAccessForTutorSchedules_Notes)),
-                    new SqlParameter(SettingsModel.COL_ShowOnlyOwnUserData.Name + "Id", SettingsModel.COL_ShowOnlyOwnUserData.Id),
-                    new SqlParameter(SettingsModel.COL_ShowOnlyOwnUserData.Name, Util.wrapNullable(modifiedModel.ShowOnlyOwnUserData)),
-                    new SqlParameter(SettingsModel.COL_ShowOnlyOwnUserData_Notes.Name, Util.wrapNullable(modifiedModel.ShowOnlyOwnUserData_Notes)),
-                    new SqlParameter(SettingsModel.COL_PayrollRatesRoles.Name + "Id", SettingsModel.COL_PayrollRatesRoles.Id),
-                    new SqlParameter(SettingsModel.COL_PayrollRatesRoles.Name, Util.wrapNullable(modifiedModel.PayrollRatesRoles)),
-                    new SqlParameter(SettingsModel.COL_PayrollRatesRoles_Notes.Name, Util.wrapNullable(modifiedModel.PayrollRatesRoles_Notes))
+                    DBConnection.getSqlParameter(SettingsModel.COL_AutoEntryForCashPayments.Name + "Id", SettingsModel.COL_AutoEntryForCashPayments.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_AutoEntryForCashPayments.Name, Util.wrapNullable(modifiedModel.AutoEntryForCashPayments)),
+                    DBConnection.getSqlParameter(SettingsModel.COL_AutoEntryForCashPayments_Notes.Name, Util.wrapNullable(modifiedModel.AutoEntryForCashPayments_Notes)),
+                    DBConnection.getSqlParameter(SettingsModel.COL_UserSetRoleAllowed.Name + "Id", SettingsModel.COL_UserSetRoleAllowed.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_UserSetRoleAllowed.Name, Util.wrapNullable(modifiedModel.UserSetRoleAllowed)),
+                    DBConnection.getSqlParameter(SettingsModel.COL_UserSetRoleAllowed_Notes.Name, Util.wrapNullable(modifiedModel.UserSetRoleAllowed_Notes)),
+                    DBConnection.getSqlParameter(SettingsModel.COL_ResetPassword.Name + "Id", SettingsModel.COL_ResetPassword.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_ResetPassword.Name, Util.wrapNullable(modifiedModel.ResetPassword)),
+                    DBConnection.getSqlParameter(SettingsModel.COL_ResetPassword_Notes.Name, Util.wrapNullable(modifiedModel.ResetPassword_Notes)),
+                    DBConnection.getSqlParameter(SettingsModel.COL_RolesToSeeReminders.Name + "Id", SettingsModel.COL_RolesToSeeReminders.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_RolesToSeeReminders.Name, Util.wrapNullable(modifiedModel.RolesToSeeReminders)),
+                    DBConnection.getSqlParameter(SettingsModel.COL_RolesToSeeReminders_Notes.Name, Util.wrapNullable(modifiedModel.RolesToSeeReminders_Notes)),
+                    DBConnection.getSqlParameter(SettingsModel.COL_FullAccessForTutorSchedules.Name + "Id", SettingsModel.COL_FullAccessForTutorSchedules.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_FullAccessForTutorSchedules.Name, Util.wrapNullable(modifiedModel.FullAccessForTutorSchedules)),
+                    DBConnection.getSqlParameter(SettingsModel.COL_FullAccessForTutorSchedules_Notes.Name, Util.wrapNullable(modifiedModel.FullAccessForTutorSchedules_Notes)),
+                    DBConnection.getSqlParameter(SettingsModel.COL_ShowOnlyOwnUserData.Name + "Id", SettingsModel.COL_ShowOnlyOwnUserData.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_ShowOnlyOwnUserData.Name, Util.wrapNullable(modifiedModel.ShowOnlyOwnUserData)),
+                    DBConnection.getSqlParameter(SettingsModel.COL_ShowOnlyOwnUserData_Notes.Name, Util.wrapNullable(modifiedModel.ShowOnlyOwnUserData_Notes)),
+                    DBConnection.getSqlParameter(SettingsModel.COL_PayrollRatesRoles.Name + "Id", SettingsModel.COL_PayrollRatesRoles.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_PayrollRatesRoles.Name, Util.wrapNullable(modifiedModel.PayrollRatesRoles)),
+                    DBConnection.getSqlParameter(SettingsModel.COL_PayrollRatesRoles_Notes.Name, Util.wrapNullable(modifiedModel.PayrollRatesRoles_Notes))
             );
         }
 
@@ -197,19 +190,24 @@ namespace iSpeakWebApp.Controllers
         private string addLogForList<T>(string log, Guid reffId, List<string> oldValue, List<string> newValue)
         {
             string addedlog = string.Empty;
-            foreach (string value in newValue)
+
+            if (newValue != null)
             {
-                if (oldValue.Contains(value))
-                    oldValue.Remove(value);
-                else
-                    addedlog = append<T>(addedlog, value, ",");
+                foreach (string value in newValue)
+                {
+                    if (oldValue != null && oldValue.Contains(value))
+                        oldValue.Remove(value);
+                    else
+                        addedlog = append<T>(addedlog, value, ",");
+                }
             }
             if (!string.IsNullOrEmpty(addedlog)) addedlog = Environment.NewLine + "Added: " + addedlog;
 
             string removedlog = string.Empty;
-            foreach (string value in oldValue)
+            if (oldValue != null)
             {
-                removedlog = append<T>(removedlog, value, ",");
+                foreach (string value in oldValue)
+                    removedlog = append<T>(removedlog, value, ",");
             }
             if (!string.IsNullOrEmpty(removedlog)) removedlog = Environment.NewLine + "Removed: " + removedlog;
 
