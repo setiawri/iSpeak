@@ -9,3 +9,12 @@ Petty Cash Categories:
 - set defaultrow to apply to only one item. when an item is set to true, set all others to false
 	or remove defaultrow since default is set in settings
 
+
+
+What can be done to avoid the same student re-registered at different branch because the student is already in the system but cannot be viewed by admin at the new branch
+
+if user's password is the same as default reset password, prompt user to change password and show error that the password is not allowed
+
+on password reset, generate random password and send to user's Whatsapp number.
+
+create mailing list on whatsapp. create mechanism to allow user to unsubscribe

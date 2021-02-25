@@ -145,7 +145,6 @@
     <Compile Include="Models\LanguagesModel.cs" />
     <Compile Include="Models\PromotionEventsModel.cs" />
     <Compile Include="Models\PettyCashRecordsCategoriesModel.cs" />
-    <Compile Include="Models\UserAccountRoleAssignmentsModel.cs" />
     <Compile Include="Models\RemindersModel.cs" />
     <Compile Include="Models\BranchesModel.cs" />
     <Compile Include="Models\UserAccountRolesModel.cs" />

@@ -220,15 +220,15 @@ namespace iSpeakWebApp.Controllers
                         WHERE 1=1
 							AND (@Id IS NULL OR UserAccountRoles.Id = @Id)
 							AND (@UserAccounts_Id IS NULL OR UserAccountRoles.Id IN (
-									SELECT DISTINCT(UserAccountRoleAssignments.UserAccountRoles_Id) 
-									FROM UserAccountRoleAssignments 
-									WHERE UserAccountRoleAssignments.UserAccounts_Id=@UserAccounts_Id
+									SELECT UserAccounts.Roles
+									FROM UserAccounts 
+									WHERE UserAccounts.Id = @UserAccounts_Id
 								)
 							)
 						ORDER BY UserAccountRoles.Name ASC
                     ",
                     DBConnection.getSqlParameter(UserAccountRolesModel.COL_Id.Name, Id),
-                    DBConnection.getSqlParameter(UserAccountRoleAssignmentsModel.COL_UserAccounts_Id.Name, UserAccounts_Id)
+                    DBConnection.getSqlParameter("UserAccounts_Id", UserAccounts_Id)
                 ).ToList();
 
             return models;

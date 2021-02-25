@@ -159,14 +159,15 @@ namespace iSpeakWebApp
 
         public static string getName<T>(object value)
         {
+            value = value.ToString().ToLower();
             if (typeof(T) == typeof(UserAccountRolesModel))
-                return db.UserAccountRoles.Where(x => x.Id.ToString() == value.ToString()).FirstOrDefault().Name;
+                return db.UserAccountRoles.Where(x => x.Id.ToString().ToLower() == value).FirstOrDefault().Name;
             else if (typeof(T) == typeof(BranchesModel))
-                return db.Branches.Where(x => x.Id.ToString() == value.ToString()).FirstOrDefault().Name;
+                return db.Branches.Where(x => x.Id.ToString().ToLower() == value).FirstOrDefault().Name;
             else if (typeof(T) == typeof(PromotionEventsModel))
-                return db.PromotionEvents.Where(x => x.Id.ToString() == value.ToString()).FirstOrDefault().Name;
+                return db.PromotionEvents.Where(x => x.Id.ToString().ToLower() == value).FirstOrDefault().Name;
             else if (typeof(T) == typeof(LanguagesModel))
-                return db.Languages.Where(x => x.Id.ToString() == value.ToString()).FirstOrDefault().Name;
+                return db.Languages.Where(x => x.Id.ToString().ToLower() == value).FirstOrDefault().Name;
             else
                 return null;
         }

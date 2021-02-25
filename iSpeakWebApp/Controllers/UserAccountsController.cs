@@ -422,11 +422,7 @@ namespace iSpeakWebApp.Controllers
 							AND (@Password IS NULL OR UserAccounts.Password = @Password)
 							AND (@Branches_Id IS NULL OR UserAccounts.Branches_Id = @Branches_Id)
 							AND (@Active IS NULL OR UserAccounts.Active = @Active)
-							AND (@UserAccountRoles_Id IS NULL OR UserAccounts.Id IN (
-								SELECT UserAccounts_Id 
-								FROM UserAccountRoleAssignments 
-								WHERE UserAccountRoles_Id = @UserAccountRoles_Id
-							))
+							AND (@UserAccountRoles_Id IS NULL OR UserAccounts.Roles LIKE '%'+@UserAccountRoles_Id+'%')
 							AND (@BirthdayListMonth IS NULL OR (
 									MONTH(UserAccounts.Birthday) = @BirthdayListMonth
 									AND (MONTH(GETDATE()) <> @BirthdayListMonth OR DAY(UserAccounts.Birthday) >= DAY(GETDATE()))
