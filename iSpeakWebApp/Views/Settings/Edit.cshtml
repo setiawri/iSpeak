@@ -35,10 +35,12 @@
                         <div class="row pl-0">
                             <div>
                                 <button type="button" class="btn mb-1 ml-2 mr-1 px-1 icon-notebook" onclick="Log('@SettingsModel.COL_AutoEntryForCashPayments.Id')"></button>
+                                @*<button type="button" class="btn btn-sm btn-outline-info mb-1 ml-2 mr-1 px-1 py-0" onclick="Log('@SettingsModel.COL_AutoEntryForCashPayments.Id')"><i class="icon-notebook"></i></button>*@
                             </div>
                             <div id="AutoEntryForCashPayments_Div">
                                 <button id="AutoEntryForCashPayments" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
-                                <label id="AutoEntryForCashPayments_Label" class="col-form-label">@Model.AutoEntryForCashPayments_Notes</label>
+                                @*<button id="AutoEntryForCashPayments" type="button" class="btn btn-sm btn-outline-info mb-1 mr-1 px-1 py-0 notesbutton" onclick="toggleNotes()"><i class="icon-compose"></i></button>*@
+                                <label id="AutoEntryForCashPayments_Label" class="col-form-label py-0">@Model.AutoEntryForCashPayments_Notes</label>
                             </div>
                             <div class="col-lg-11 pl-0">
                                 <div id="AutoEntryForCashPayments_Edit" class="input-group d-none mb-1 ml-0 pl-0">

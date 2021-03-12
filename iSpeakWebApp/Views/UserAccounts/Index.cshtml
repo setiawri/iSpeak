@@ -2,6 +2,7 @@
 
 @{
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    string ControllerName = "UserAccounts";
     ViewBag.SelectedNavigationMenu = "Accounts";
     ViewBag.Root = "ACCOUNTS";
     ViewBag.Title = "Index";
@@ -24,10 +25,10 @@
                             @if (access.UserAccounts_Add)
                             {
                                 <label class="mb-0">&nbsp;</label>
-                                <div><a href="javascript:void(0)" onclick="Create()" class="btn btn-sm btn-success">Create New <i class="icon-plus22 ml-2"></i></a></div>
+                                <div><a href="javascript:void(0)" onclick="Action('Create', '@ControllerName')" class="btn btn-success">CREATE<i class="icon-plus22 ml-2"></i></a></div>
                             }
                         </div>
-                        <div class="row ml-3">
+                        <div class="row ml-3" style="width:100px;">
                             <label class="mb-0">Keyword</label>
                             <div class="input-group">
                                 <input type="text" name="FILTER_Keyword" id="FILTER_Keyword" class="form-control" />
@@ -45,7 +46,7 @@
                         </div>
                         <div class="ml-3">
                             <label class="mb-0">&nbsp;</label>
-                            <button type="submit" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>FILTER</button>
+                            <button type="submit" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>LOAD</button>
                         </div>
                     </div>
 
@@ -57,7 +58,7 @@
                                     <th>@Html.DisplayNameFor(model => model.Username)</th>
                                     <th>Phone</th>
                                     <th>@Html.DisplayNameFor(model => model.Email)</th>
-                                    <th class="non-searchable non-sortable"></th>
+                                    <th class="non-searchable non-sortable" style="width:100px;"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -82,7 +83,7 @@
                                         }
                                         @if (access.UserAccounts_Edit)
                                         {
-                                            <a href="javascript:void(0)" onclick="Edit('@item.Id')">Edit</a>@(" • ")
+                                            <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a>@(" • ")
                                         }
                                         <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                     </td>
@@ -98,27 +99,3 @@
     </div>
     <!-- /content area -->
 </div>
-
-<script type="text/javascript">
-
-    $(document).ready(function () {
-        $('#FILTER_Keyword').val('@ViewBag.FILTER_Keyword');
-        if('@ViewBag.FILTER_Active' != null)
-            $('#FILTER_Active').val('@ViewBag.FILTER_Active');
-    });
-
-    function Create() {
-        var url = '@Url.Action("Create", "UserAccounts",new { FILTER_Keyword = "__data" })';
-        window.location.href = url.replace("__data", getFilter());
-    }
-
-    function Edit(id) {
-        var url = '@Url.Action("Edit", "UserAccounts",new { id = "__data" })';
-        window.location.href = url.replace("__data", id + "?FILTER_Keyword=" + getFilter());
-    }
-
-    function getFilter() {
-        return $('#FILTER_Keyword').val() + "&FILTER_Active=" + $('#FILTER_Active').val();
-    }
-
-</script>

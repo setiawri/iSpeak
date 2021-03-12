@@ -1,4 +1,12 @@
-﻿IMPROVEMENTS:
+﻿
+TO DO:
+- create language master data pages
+- create user account info page
+- create lesson package pages
+- move button to scroll to bottom to javascripts file and set display to none. add javascript to display it on pages that requires it.
+- edit notes button in Settings > edit page is highlighted when cursor is hovering on the title.
+
+IMPROVEMENTS:
 
 Promotion Events:
 - model: add field StartDate
@@ -9,6 +17,9 @@ Petty Cash Categories:
 - set defaultrow to apply to only one item. when an item is set to true, set all others to false
 	or remove defaultrow since default is set in settings
 
+Home:
+- when login timeout, can still click on Birthdays tab and click load button which will display error
+- add Keyword filter on reminders
 
 
 What can be done to avoid the same student re-registered at different branch because the student is already in the system but cannot be viewed by admin at the new branch

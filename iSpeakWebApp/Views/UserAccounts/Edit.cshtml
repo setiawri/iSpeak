@@ -1,6 +1,7 @@
 ﻿@model iSpeakWebApp.Models.UserAccountsModel
 
 @{
+    string ControllerName = "UserAccounts";
     ViewBag.SelectedNavigationMenu = "Accounts";
     ViewBag.Root = "ACCOUNT";
     ViewBag.Title = "Edit";
@@ -10,14 +11,12 @@
 
     <!-- Content area -->
     <div class="content">
-        @using (Html.BeginForm(new { page = ViewBag.CurrentPage }))
+        @using (Html.BeginForm())
         {
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(model => model.Id)
                 @Html.HiddenFor(model => model.ResetPassword)
-                <input type="hidden" name="FILTER_Keyword" value="@ViewBag.FILTER_Keyword" />
-                <input type="hidden" name="FILTER_Active" value="@ViewBag.FILTER_Active" />
                 <!-- Form inputs -->
                 <div class="card">
                     <div class="card-header header-elements-inline">
@@ -150,7 +149,7 @@
                         {
                             <div>
                                 <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
-                                <a href="@Url.Action("Index", "UserAccounts", new { FILTER_Keyword = ViewBag.FILTER_Keyword, FILTER_Active = ViewBag.FILTER_Active })" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
+                                <a href="javascript:void(0)" onclick="Action('Index', '@ControllerName')" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
                             </div>
                         }
                     </div>

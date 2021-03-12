@@ -1,6 +1,83 @@
 ﻿<!-- hidden value to reset datatable state save -->
 <span id="removeDatatablesStateSave" class="d-none">@ViewBag.RemoveDatatablesStateSave</span>
 
+<!--================================================================================================================================================================
+FILTERING
+=================================================================================================================================================================-->
+
+<input type="hidden" id="FILTER_Keyword" name="FILTER_Keyword" value="@ViewBag.FILTER_Keyword" />
+<input type="hidden" id="FILTER_Active" name="FILTER_Active" value="@ViewBag.FILTER_Active" />
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        if ('@ViewBag.FILTER_Keyword' != null)
+            $('#FILTER_Keyword').val('@ViewBag.FILTER_Keyword');
+        if ('@ViewBag.FILTER_Active' != null)
+            $('#FILTER_Active').val('@ViewBag.FILTER_Active');
+        if ('@ViewBag.FILTER_Status' != null)
+            $('#FILTER_Status').val('@ViewBag.FILTER_Status');
+    });
+
+    function getAllFilter() { return getFilter(null, null); }
+    function getFilter(FILTER_Keyword, FILTER_Active) {
+        var filter = $('#FILTER_Keyword').val();
+
+        if ($('#FILTER_Active') != null)
+            FILTER_Active = $('#FILTER_Active').val();
+        filter += appendFilter(FILTER_Active, "FILTER_Active");
+
+        return filter;
+    }
+
+    function Action(action, controller) {
+        var url = '@Url.Action("__action", "__controller", new { FILTER_Keyword = "__data" })';
+        url = url.replace("__action", action).replace("__controller", controller);
+        url = url.replace("__data", getAllFilter());
+        OpenWindow(url, "false");
+    }
+
+    function ActionWithId(id, action, controller) {
+        var url = '@Url.Action("__action", "__controller", new { id = "__data" })';
+        url = url.replace("__action", action).replace("__controller", controller);
+        url = url.replace("__data", id + "?FILTER_Keyword=" + getAllFilter());
+        OpenWindow(url, "false");
+    }
+
+    function appendFilter(value, filterName) {
+        if (value != null && value.toString() != "") {
+            if (filterName == "")
+                return value;
+            else
+                return "&" + filterName + "=" + value;
+        }
+        return "";
+    }
+
+    function appendFilterIfNumber(value, filterName) {
+        if (isNaN(value) == true)
+            return ""
+        else
+            return appendFilter(value, filterName);
+    }
+
+    function getDatatableSearch() {
+        if ((search == null || search == "") && $('input[aria-controls=DataTables_Table_0]').val() != undefined)
+            return $('input[aria-controls=DataTables_Table_0]').val();
+        else
+            return "";
+    }
+
+    function setDatatableSearch(search) {
+        if ($('input[aria-controls=DataTables_Table_0]').val() != undefined)
+            $('input[aria-controls=DataTables_Table_0]').val(search).keyup();
+    }
+
+</script>
+
+<!--================================================================================================================================================================
+OTHER
+=================================================================================================================================================================-->
 <script type="text/javascript">
 
     // TEXTBOX =====================================================================================================================================================
@@ -100,7 +177,8 @@
     // DATE MANIPULATOR ============================================================================================================================================
 
     function parseJSONDate(value) {
-        return new Date(parseInt((value).match(/\d+/)[0]));
+        return new Date(parseInt(value.replace("/Date(", "").replace(")/", ""), 10));
+        //return new Date(parseInt((value).match(/\d+/)[0])); //returns incorrect date when json date value is negative. (negative when earlier than year 1970)
     }
 
     var monthNames = ["Jan", "Feb", "Mar", "Apr",
@@ -231,7 +309,7 @@
             '<"datatable-scroll"t>' +
             '<"datatable-footer"ilp>',
         language: {
-            emptyTable: "Gunakan filter dan tekan tombol search untuk menampilkan data",
+            emptyTable: "Gunakan filter dan tekan tombol LOAD untuk menampilkan data",
             search: '<span>Filter:</span> _INPUT_',
             searchPlaceholder: 'enter keyword',
             lengthMenu: '<span>Rows:</span> _MENU_',
@@ -272,7 +350,7 @@
 
         //on-off switch
         if (document.querySelector('.form-check-input-switchery') != null) {
-            var elems = Array.prototype.slice.call(document.querySelectorAll('.form-check-input-switchery'));            
+            var elems = Array.prototype.slice.call(document.querySelectorAll('.form-check-input-switchery'));
             elems.forEach(function (html) {
                 var switchery = new Switchery(html);
             });
@@ -337,6 +415,13 @@
         $('html, body').animate({
             scrollTop: $('#' + id).offset().top
         }, duration);
+    }
+
+    function OpenWindow(url, opennewwindow) {
+        if (opennewwindow == "true")
+            window.open(url, '_blank');
+        else
+            window.location.href = url;
     }
 
 </script>

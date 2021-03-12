@@ -2,7 +2,9 @@
 
 @{
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
-    ViewBag.Root = "Bank";
+    string ControllerName = "PromotionEvents";
+    ViewBag.SelectedNavigationMenu = "Settings";
+    ViewBag.Root = "PROMOTION EVENTS";
     ViewBag.Title = "Create";
 }
 
@@ -85,7 +87,7 @@
                     {
                         <div>
                             <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
-                            <a href="@Url.Action("Index", "PromotionEvents")" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
+                            <a href="javascript:void(0)" onclick="Action('Index', '@ControllerName')" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
                         </div>
                     }
                 </div>

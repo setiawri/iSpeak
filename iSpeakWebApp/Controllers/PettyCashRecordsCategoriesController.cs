@@ -12,29 +12,52 @@ namespace iSpeakWebApp.Controllers
     {
         private readonly DBContext db = new DBContext();
 
+        /* FILTER *********************************************************************************************************************************************/
+
+        public void setFilterViewBags(string FILTER_Keyword, int? FILTER_Active)
+        {
+            ViewBag.FILTER_Keyword = FILTER_Keyword;
+            ViewBag.FILTER_Active = FILTER_Active;
+        }
+
         /* INDEX **********************************************************************************************************************************************/
 
         // GET: PettyCashRecordsCategories
-        public ActionResult Index(int? rss, int? Active)
+        public ActionResult Index(int? rss, string FILTER_Keyword, int? FILTER_Active)
         {
-            ViewBag.RemoveDatatablesStateSave = rss;
-            ViewBag.Active = Active;
+            if (rss != null)
+            {
+                ViewBag.RemoveDatatablesStateSave = rss;
+                return View();
+            }
+            else
+            {
+                setFilterViewBags(FILTER_Keyword, FILTER_Active);
+                return View(get(FILTER_Keyword, FILTER_Active));
+            }
+        }
 
-            return View(get(null, Active));
+        // POST: PettyCashRecordsCategories
+        [HttpPost]
+        public ActionResult Index(string FILTER_Keyword, int? FILTER_Active)
+        {
+            setFilterViewBags(FILTER_Keyword, FILTER_Active);
+            return View(get(FILTER_Keyword, FILTER_Active));
         }
 
         /* CREATE *********************************************************************************************************************************************/
 
         // GET: PettyCashRecordsCategories/Create
-        public ActionResult Create()
+        public ActionResult Create(string FILTER_Keyword, int? FILTER_Active)
         {
+            setCreateViewBags(FILTER_Keyword, FILTER_Active);
             return View();
         }
 
         // POST: PettyCashRecordsCategories/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(PettyCashRecordsCategoriesModel model)
+        public ActionResult Create(PettyCashRecordsCategoriesModel model, string FILTER_Keyword, int? FILTER_Active)
         {
             if (ModelState.IsValid)
             {
@@ -47,28 +70,35 @@ namespace iSpeakWebApp.Controllers
                     db.PettyCashRecordsCategories.Add(model);
                     ActivityLogsController.AddCreateLog(db, Session, model.Id);
                     db.SaveChanges();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
                 }
             }
 
+            setCreateViewBags(FILTER_Keyword, FILTER_Active);
             return View(model);
+        }
+
+        private void setCreateViewBags(string FILTER_Keyword, int? FILTER_Active)
+        {
+            setFilterViewBags(FILTER_Keyword, FILTER_Active);
         }
 
         /* EDIT ***********************************************************************************************************************************************/
 
         // GET: PettyCashRecordsCategories/Edit/{id}
-        public ActionResult Edit(Guid? id)
+        public ActionResult Edit(Guid? id, string FILTER_Keyword, int? FILTER_Active)
         {
             if (id == null)
                 return RedirectToAction(nameof(Index));
 
-            return View(db.PettyCashRecordsCategories.Find(id));
+            setEditViewBags(FILTER_Keyword, FILTER_Active);
+            return View(get((Guid)id));
         }
 
         // POST: PettyCashRecordsCategories/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(PettyCashRecordsCategoriesModel modifiedModel)
+        public ActionResult Edit(PettyCashRecordsCategoriesModel modifiedModel, string FILTER_Keyword, int? FILTER_Active)
         {
             if (ModelState.IsValid)
             {
@@ -91,36 +121,55 @@ namespace iSpeakWebApp.Controllers
                         db.SaveChanges();
                     }
 
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
                 }
             }
 
+            setEditViewBags(FILTER_Keyword, FILTER_Active);
             return View(modifiedModel);
+        }
+
+        private void setEditViewBags(string FILTER_Keyword, int? FILTER_Active)
+        {
+            setFilterViewBags(FILTER_Keyword, FILTER_Active);
         }
 
         /* METHODS ********************************************************************************************************************************************/
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public bool isExists(Guid? id, object value)
+        public bool isExists(Guid? Id, string Name)
         {
-            return get(id, null).Count > 0;
+            return db.Database.SqlQuery<PettyCashRecordsCategoriesModel>(@"
+                        SELECT PettyCashRecordsCategories.*
+                        FROM PettyCashRecordsCategories
+                        WHERE 1=1 
+							AND (@Id IS NOT NULL OR PettyCashRecordsCategories.Name = @Name)
+							AND (@Id IS NULL OR (PettyCashRecordsCategories.Name = @Name AND PettyCashRecordsCategories.Id <> @Id))
+                    ",
+                    DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Id.Name, Id),
+                    DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Name.Name, Name)
+                ).Count() > 0;
         }
 
-        public List<PettyCashRecordsCategoriesModel> get(Guid? Id, int? Active)
+        public List<PettyCashRecordsCategoriesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Active, FILTER_Keyword); }
+        public PettyCashRecordsCategoriesModel get(Guid Id) { return get(Id, null, null).FirstOrDefault(); }
+        public static List<PettyCashRecordsCategoriesModel> get(Guid? Id, int? FILTER_Active, string FILTER_Keyword)
         {
-            List<PettyCashRecordsCategoriesModel> models = db.Database.SqlQuery<PettyCashRecordsCategoriesModel>(@"
+            List<PettyCashRecordsCategoriesModel> models = new DBContext().Database.SqlQuery<PettyCashRecordsCategoriesModel>(@"
                         SELECT PettyCashRecordsCategories.*
                         FROM PettyCashRecordsCategories
                         WHERE 1=1
 							AND (@Id IS NULL OR PettyCashRecordsCategories.Id = @Id)
 							AND (@Id IS NOT NULL OR (
                                 (@Active IS NULL OR PettyCashRecordsCategories.Active = @Active)
+    							AND (@FILTER_Keyword IS NULL OR (PettyCashRecordsCategories.Name LIKE '%'+@FILTER_Keyword+'%'))
                             ))
 						ORDER BY PettyCashRecordsCategories.Name ASC
                     ",
                     DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Id.Name, Id),
-                    DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Active.Name, Active)
+                    DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Active.Name, FILTER_Active),
+                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
 
             return models;

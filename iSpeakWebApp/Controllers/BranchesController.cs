@@ -23,7 +23,7 @@ namespace iSpeakWebApp.Controllers
         //always call this method when branches table change so global branch ddl is updated
         public static void update()
         {
-            BranchList = new SelectList(BranchesController.get(new DBContext(), null, 1).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Name.ToString() }), "Value", "Text");
+            BranchList = new SelectList(BranchesController.get(null, 1, null).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Name.ToString() }), "Value", "Text");
         }
     }
 
@@ -31,29 +31,52 @@ namespace iSpeakWebApp.Controllers
     {
         private readonly DBContext db = new DBContext();
 
+        /* FILTER *********************************************************************************************************************************************/
+
+        public void setFilterViewBags(string FILTER_Keyword, int? FILTER_Active)
+        {
+            ViewBag.FILTER_Keyword = FILTER_Keyword;
+            ViewBag.FILTER_Active = FILTER_Active;
+        }
+
         /* INDEX **********************************************************************************************************************************************/
 
         // GET: Branches
-        public ActionResult Index(int? rss, int? Active)
+        public ActionResult Index(int? rss, string FILTER_Keyword, int? FILTER_Active)
         {
-            ViewBag.RemoveDatatablesStateSave = rss;
-            ViewBag.Active = Active;
+            if(rss != null)
+            {
+                ViewBag.RemoveDatatablesStateSave = rss;
+                return View();
+            }
+            else
+            {
+                setFilterViewBags(FILTER_Keyword, FILTER_Active);
+                return View(get(FILTER_Keyword, FILTER_Active));
+            }
+        }
 
-            return View(get(db, null, Active));
+        // POST: Branches
+        [HttpPost]
+        public ActionResult Index(string FILTER_Keyword, int? FILTER_Active)
+        {
+            setFilterViewBags(FILTER_Keyword, FILTER_Active);
+            return View(get(FILTER_Keyword, FILTER_Active));
         }
 
         /* CREATE *********************************************************************************************************************************************/
 
         // GET: Branches/Create
-        public ActionResult Create()
+        public ActionResult Create(string FILTER_Keyword, int? FILTER_Active)
         {
+            setCreateViewBags(FILTER_Keyword, FILTER_Active);
             return View();
         }
 
         // POST: Branches/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(BranchesModel model)
+        public ActionResult Create(BranchesModel model, string FILTER_Keyword, int? FILTER_Active)
         {
             if (ModelState.IsValid)
             {
@@ -67,28 +90,35 @@ namespace iSpeakWebApp.Controllers
                     ActivityLogsController.AddCreateLog(db, Session, model.Id);
                     db.SaveChanges();
                     BranchSelectLists.update();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
                 }
             }
 
+            setCreateViewBags(FILTER_Keyword, FILTER_Active);
             return View(model);
+        }
+
+        private void setCreateViewBags(string FILTER_Keyword, int? FILTER_Active)
+        {
+            setFilterViewBags(FILTER_Keyword, FILTER_Active);
         }
 
         /* EDIT ***********************************************************************************************************************************************/
 
         // GET: Branches/Edit/{id}
-        public ActionResult Edit(Guid? id)
+        public ActionResult Edit(Guid? id, string FILTER_Keyword, int? FILTER_Active)
         {
             if (id == null)
                 return RedirectToAction(nameof(Index));
 
-            return View(db.Branches.Find(id));
+            setEditViewBags(FILTER_Keyword, FILTER_Active);
+            return View(get((Guid)id));
         }
 
         // POST: Branches/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(BranchesModel modifiedModel)
+        public ActionResult Edit(BranchesModel modifiedModel, string FILTER_Keyword, int? FILTER_Active)
         {
             if (ModelState.IsValid)
             {
@@ -114,11 +144,17 @@ namespace iSpeakWebApp.Controllers
                         BranchSelectLists.update();
                     }
 
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
                 }
             }
 
+            setEditViewBags(FILTER_Keyword, FILTER_Active);
             return View(modifiedModel);
+        }
+
+        private void setEditViewBags(string FILTER_Keyword, int? FILTER_Active)
+        {
+            setFilterViewBags(FILTER_Keyword, FILTER_Active);
         }
 
         /* METHODS ********************************************************************************************************************************************/
@@ -139,20 +175,24 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public static List<BranchesModel> get(DBContext db, Guid? Id, int? Active)
+        public List<BranchesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Active, FILTER_Keyword); }
+        public BranchesModel get(Guid Id) { return get(Id, null, null).FirstOrDefault(); }
+        public static List<BranchesModel> get(Guid? Id, int? FILTER_Active, string FILTER_Keyword)
         {
-            List<BranchesModel> models = db.Database.SqlQuery<BranchesModel>(@"
+            List<BranchesModel> models = new DBContext().Database.SqlQuery<BranchesModel>(@"
                         SELECT Branches.*
                         FROM Branches
                         WHERE 1=1
 							AND (@Id IS NULL OR Branches.Id = @Id)
 							AND (@Id IS NOT NULL OR (
                                 (@Active IS NULL OR Branches.Active = @Active)
+    							AND (@FILTER_Keyword IS NULL OR (Branches.Name LIKE '%'+@FILTER_Keyword+'%'))
                             ))
 						ORDER BY Branches.Name ASC
                     ",
                     DBConnection.getSqlParameter(BranchesModel.COL_Id.Name, Id),
-                    DBConnection.getSqlParameter(BranchesModel.COL_Active.Name, Active)
+                    DBConnection.getSqlParameter(BranchesModel.COL_Active.Name, FILTER_Active),
+                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
 
             return models;

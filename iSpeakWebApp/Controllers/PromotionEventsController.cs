@@ -13,32 +13,55 @@ namespace iSpeakWebApp.Controllers
     {
         private readonly DBContext db = new DBContext();
 
+        /* FILTER *********************************************************************************************************************************************/
+
+        public void setFilterViewBags(string FILTER_Keyword)
+        {
+            ViewBag.FILTER_Keyword = FILTER_Keyword;
+        }
+
         /* INDEX **********************************************************************************************************************************************/
 
         // GET: PromotionEvents
-        public ActionResult Index(int? rss)
+        public ActionResult Index(int? rss, string FILTER_Keyword)
         {
-            ViewBag.RemoveDatatablesStateSave = rss;
+            if (rss != null)
+            {
+                ViewBag.RemoveDatatablesStateSave = rss;
+                return View();
+            }
+            else
+            {
+                setFilterViewBags(FILTER_Keyword);
+                return View(get(FILTER_Keyword));
+            }
+        }
 
-            return View(db.PromotionEvents);
+        // POST: PromotionEvents
+        [HttpPost]
+        public ActionResult Index(string FILTER_Keyword)
+        {
+            setFilterViewBags(FILTER_Keyword);
+            return View(get(FILTER_Keyword));
         }
 
         /* CREATE *********************************************************************************************************************************************/
 
         // GET: PromotionEvents/Create
-        public ActionResult Create()
+        public ActionResult Create(string FILTER_Keyword)
         {
+            setCreateViewBags(FILTER_Keyword);
             return View(new PromotionEventsModel());
         }
 
         // POST: PromotionEvents/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(PromotionEventsModel model)
+        public ActionResult Create(PromotionEventsModel model, string FILTER_Keyword)
         {
             if (ModelState.IsValid)
             {
-                if (isExists(EnumActions.Create, null, model.Name))
+                if (isExists(null, model.Name))
                     ModelState.AddModelError(PromotionEventsModel.COL_Name.Name, $"{model.Name} sudah terdaftar");
                 else
                 {
@@ -47,32 +70,39 @@ namespace iSpeakWebApp.Controllers
                     db.PromotionEvents.Add(model);
                     ActivityLogsController.AddCreateLog(db, Session, model.Id);
                     db.SaveChanges();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index), new { id = model.Id, FILTER_Keyword = FILTER_Keyword });
                 }
             }
 
+            setCreateViewBags(FILTER_Keyword);
             return View(model);
+        }
+
+        private void setCreateViewBags(string FILTER_Keyword)
+        {
+            setFilterViewBags(FILTER_Keyword);
         }
 
         /* EDIT ***********************************************************************************************************************************************/
 
         // GET: PromotionEvents/Edit/{id}
-        public ActionResult Edit(Guid? id)
+        public ActionResult Edit(Guid? id, string FILTER_Keyword)
         {
             if (id == null)
                 return RedirectToAction(nameof(Index));
 
-            return View(db.PromotionEvents.Find(id));
+            setEditViewBags(FILTER_Keyword);
+            return View(get((Guid)id));
         }
 
         // POST: PromotionEvents/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(PromotionEventsModel modifiedModel)
+        public ActionResult Edit(PromotionEventsModel modifiedModel, string FILTER_Keyword)
         {
             if (ModelState.IsValid)
             {
-                if (isExists(EnumActions.Edit, modifiedModel.Id, modifiedModel.Name))
+                if (isExists(modifiedModel.Id, modifiedModel.Name))
                     ModelState.AddModelError(PromotionEventsModel.COL_Name.Name, $"{modifiedModel.Name} sudah terdaftar");
                 else
                 {
@@ -95,30 +125,56 @@ namespace iSpeakWebApp.Controllers
                         db.SaveChanges();
                     }
 
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword });
                 }
             }
 
+            setEditViewBags(FILTER_Keyword);
             return View(modifiedModel);
+        }
+
+        private void setEditViewBags(string FILTER_Keyword)
+        {
+            setFilterViewBags(FILTER_Keyword);
         }
 
         /* METHODS ********************************************************************************************************************************************/
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public static List<PromotionEventsModel> get()
+        public bool isExists(Guid? Id, string Name)
         {
-            return new DBContext().PromotionEvents.AsNoTracking()
-                .OrderBy(x => x.Name)
-                .ToList();
+            return db.Database.SqlQuery<PromotionEventsModel>(@"
+                        SELECT PromotionEvents.*
+                        FROM PromotionEvents
+                        WHERE 1=1 
+							AND (@Id IS NOT NULL OR PromotionEvents.Name = @Name)
+							AND (@Id IS NULL OR (PromotionEvents.Name = @Name AND PromotionEvents.Id <> @Id))
+                    ",
+                    DBConnection.getSqlParameter(PromotionEventsModel.COL_Id.Name, Id),
+                    DBConnection.getSqlParameter(PromotionEventsModel.COL_Name.Name, Name)
+                ).Count() > 0;
         }
 
-        public bool isExists(EnumActions action, Guid? id, object value)
+        public List<PromotionEventsModel> get(string FILTER_Keyword) { return get(null, FILTER_Keyword); }
+        public PromotionEventsModel get(Guid Id) { return get(Id, null).FirstOrDefault(); }
+        public static List<PromotionEventsModel> get(Guid? Id, string FILTER_Keyword)
         {
-            var result = action == EnumActions.Create
-                ? db.PromotionEvents.AsNoTracking().Where(x => x.Name.ToLower() == value.ToString().ToLower()).FirstOrDefault()
-                : db.PromotionEvents.AsNoTracking().Where(x => x.Name.ToLower() == value.ToString().ToLower() && x.Id != id).FirstOrDefault();
-            return result != null;
+            List<PromotionEventsModel> models = new DBContext().Database.SqlQuery<PromotionEventsModel>(@"
+                        SELECT PromotionEvents.*
+                        FROM PromotionEvents
+                        WHERE 1=1
+							AND (@Id IS NULL OR PromotionEvents.Id = @Id)
+							AND (@Id IS NOT NULL OR (
+    							(@FILTER_Keyword IS NULL OR (PromotionEvents.Name LIKE '%'+@FILTER_Keyword+'%'))
+                            ))
+						ORDER BY PromotionEvents.Name ASC
+                    ",
+                    DBConnection.getSqlParameter(PromotionEventsModel.COL_Id.Name, Id),
+                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
+                ).ToList();
+
+            return models;
         }
 
         public static void setDropDownListViewBag(DBContext db, ControllerBase controller)
