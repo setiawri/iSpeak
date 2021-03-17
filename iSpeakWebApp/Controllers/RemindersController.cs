@@ -97,7 +97,7 @@ namespace iSpeakWebApp.Controllers
         public List<RemindersModel> getReminders(Guid Branches_Id, EnumReminderStatuses? status) { return get(Branches_Id, null, status); }
         public List<RemindersModel> get(Guid? Branches_Id, Guid? Id, EnumReminderStatuses? status)
         {
-            List<RemindersModel> models = new DBContext().Reminders.AsNoTracking()
+            return new DBContext().Reminders.AsNoTracking()
                 .Where(x => x.Branches_Id == Branches_Id
                     && (status == null || x.Status_enumid == status)
                     && (status != null || (
@@ -105,8 +105,6 @@ namespace iSpeakWebApp.Controllers
                         && x.Status_enumid != EnumReminderStatuses.Cancel
                     ))
                 ).ToList();
-
-            return models;
         }
 
         /******************************************************************************************************************************************************/

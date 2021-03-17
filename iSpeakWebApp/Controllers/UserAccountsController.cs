@@ -150,10 +150,10 @@ namespace iSpeakWebApp.Controllers
         private void setEditViewBags(string FILTER_Keyword, int? FILTER_Active)
         {
             setFilterViewBags(FILTER_Keyword, FILTER_Active);
-            UserAccountRolesController.setDropDownListViewBag(db, this);
-            BranchesController.setDropDownListViewBag(db, this);
-            LanguagesController.setDropDownListViewBag(db, this);
-            PromotionEventsController.setDropDownListViewBag(db, this);
+            UserAccountRolesController.setDropDownListViewBag(this);
+            BranchesController.setDropDownListViewBag(this);
+            LanguagesController.setDropDownListViewBag(this);
+            PromotionEventsController.setDropDownListViewBag(this);
         }
 
         /* LOGIN PAGE *****************************************************************************************************************************************/
@@ -259,7 +259,7 @@ namespace iSpeakWebApp.Controllers
             List<UserAccountsModel> models = getBirthdays(Helper.getActiveBranchId(Session), null, DateTime.Now.Month);
 
             ViewBag.BirthdayCount = models.Count;
-            UserAccountRolesController.setDropDownListViewBag(db, this);
+            UserAccountRolesController.setDropDownListViewBag(this);
 
             return PartialView("BirthdaysPartial");
         }
@@ -336,7 +336,7 @@ namespace iSpeakWebApp.Controllers
             {
                 Session[SESSION_UserAccount] = model;
                 Session[SESSION_ActiveBranches_Id] = model.Branches_Id;
-                Session[SESSION_UserAccountAccess] = UserAccountRolesController.getAccesses(new DBContext(), model.Id);
+                Session[SESSION_UserAccountAccess] = UserAccountRolesController.getAccesses(model.Id);
             }
         }
 

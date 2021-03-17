@@ -140,6 +140,11 @@ namespace iSpeakWebApp.Controllers
 
         /* METHODS ********************************************************************************************************************************************/
 
+        public static void setDropDownListViewBag(ControllerBase controller)
+        {
+            controller.ViewBag.PromotionEvents = new SelectList(get(), PromotionEventsModel.COL_Id.Name, PromotionEventsModel.COL_Name.Name);
+        }
+
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
         public bool isExists(Guid? Id, string Name)
@@ -158,9 +163,10 @@ namespace iSpeakWebApp.Controllers
 
         public List<PromotionEventsModel> get(string FILTER_Keyword) { return get(null, FILTER_Keyword); }
         public PromotionEventsModel get(Guid Id) { return get(Id, null).FirstOrDefault(); }
+        public static List<PromotionEventsModel> get() { return get(null, null); }
         public static List<PromotionEventsModel> get(Guid? Id, string FILTER_Keyword)
         {
-            List<PromotionEventsModel> models = new DBContext().Database.SqlQuery<PromotionEventsModel>(@"
+            return new DBContext().Database.SqlQuery<PromotionEventsModel>(@"
                         SELECT PromotionEvents.*
                         FROM PromotionEvents
                         WHERE 1=1
@@ -173,13 +179,6 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(PromotionEventsModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
-
-            return models;
-        }
-
-        public static void setDropDownListViewBag(DBContext db, ControllerBase controller)
-        {
-            controller.ViewBag.PromotionEvents = new SelectList(db.PromotionEvents.AsNoTracking().OrderBy(x => x.Name).ToList(), PromotionEventsModel.COL_Id.Name, PromotionEventsModel.COL_Name.Name);
         }
 
         /******************************************************************************************************************************************************/

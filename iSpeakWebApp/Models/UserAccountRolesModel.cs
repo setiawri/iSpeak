@@ -145,6 +145,24 @@ namespace iSpeakWebApp.Models
         public bool PettyCashRecordsCategories_Edit { get; set; }
         public static ModelMember COL_PettyCashRecordsCategories_Edit = new ModelMember { Name = "PettyCashRecordsCategories_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("PettyCashRecordsCategories Edit") };
 
+        /* LANGUAGES ******************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string Languages_Notes { get; set; }
+        public static ModelMember COL_Languages_Notes = new ModelMember { Name = "Languages_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Languages Notes") };
+
+        [Display(Name = "Add")]
+        public bool Languages_Add { get; set; }
+        public static ModelMember COL_Languages_Add = new ModelMember { Name = "Languages_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("Languages Add") };
+
+        [Display(Name = "View")]
+        public bool Languages_View { get; set; }
+        public static ModelMember COL_Languages_View = new ModelMember { Name = "Languages_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("Languages View") };
+
+        [Display(Name = "Edit")]
+        public bool Languages_Edit { get; set; }
+        public static ModelMember COL_Languages_Edit = new ModelMember { Name = "Languages_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Languages Edit") };
+
         /******************************************************************************************************************************************************/
 
     }

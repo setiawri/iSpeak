@@ -258,6 +258,9 @@
     <Content Include="Views\UserAccounts\Index.cshtml" />
     <Content Include="Views\UserAccounts\Edit.cshtml" />
     <Content Include="Views\UserAccounts\Create.cshtml" />
+    <Content Include="Views\Languages\Create.cshtml" />
+    <Content Include="Views\Languages\Edit.cshtml" />
+    <Content Include="Views\Languages\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\LIBUtil\LIBUtil\LIBUtil\LIBUtil.csproj">

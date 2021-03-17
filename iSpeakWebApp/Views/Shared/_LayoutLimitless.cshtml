@@ -132,7 +132,10 @@
                         <div class="dropdown-submenu">
                             <a href="#" class="dropdown-item dropdown-toggle">Lessons</a>
                             <div class="dropdown-menu">
-                                <a href="@Url.Action("Index", "Languages", new { rss=1 })" class="dropdown-item">Languages</a>
+                                @if (access.Languages_View)
+                                {
+                                    <a href="@Url.Action("Index", "Languages", new { rss = 1 })" class="dropdown-item">Languages</a>
+                                }
                                 <a href="@Url.Action("Index", "LessonTypes", new { rss=1 })" class="dropdown-item">Lesson Types</a>
                                 <a href="@Url.Action("Index", "LessonPackages", new { rss=1 })" class="dropdown-item">Lesson Packages</a>
                             </div>

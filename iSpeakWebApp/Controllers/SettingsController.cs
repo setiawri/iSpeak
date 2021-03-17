@@ -81,7 +81,7 @@ namespace iSpeakWebApp.Controllers
         {
             ViewBag.ResetPassword = model.ResetPassword;
             ViewBag.PettyCashRecordsCategories = new SelectList(db.PettyCashRecordsCategories.OrderBy(x => x.Name).ToList(), PettyCashRecordsCategoriesModel.COL_Id.Name, UserAccountRolesModel.COL_Name.Name);
-            UserAccountRolesController.setDropDownListViewBag(db, this);
+            UserAccountRolesController.setDropDownListViewBag(this);
         }
 
         /* METHODS ********************************************************************************************************************************************/

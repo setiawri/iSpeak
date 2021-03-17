@@ -136,6 +136,11 @@ namespace iSpeakWebApp.Controllers
 
         /* METHODS ********************************************************************************************************************************************/
 
+        public static void setDropDownListViewBag(ControllerBase controller)
+        {
+            controller.ViewBag.PettyCashRecordsCategories = new SelectList(get(), PettyCashRecordsCategoriesModel.COL_Id.Name, PettyCashRecordsCategoriesModel.COL_Name.Name);
+        }
+
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
         public bool isExists(Guid? Id, string Name)
@@ -154,9 +159,10 @@ namespace iSpeakWebApp.Controllers
 
         public List<PettyCashRecordsCategoriesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Active, FILTER_Keyword); }
         public PettyCashRecordsCategoriesModel get(Guid Id) { return get(Id, null, null).FirstOrDefault(); }
+        public static List<PettyCashRecordsCategoriesModel> get() { return get(null, null, null); }
         public static List<PettyCashRecordsCategoriesModel> get(Guid? Id, int? FILTER_Active, string FILTER_Keyword)
         {
-            List<PettyCashRecordsCategoriesModel> models = new DBContext().Database.SqlQuery<PettyCashRecordsCategoriesModel>(@"
+            return new DBContext().Database.SqlQuery<PettyCashRecordsCategoriesModel>(@"
                         SELECT PettyCashRecordsCategories.*
                         FROM PettyCashRecordsCategories
                         WHERE 1=1
@@ -171,13 +177,6 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Active.Name, FILTER_Active),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
-
-            return models;
-        }
-
-        public static void setDropDownListViewBag(DBContext db, ControllerBase controller)
-        {
-            controller.ViewBag.PettyCashRecordsCategories = new SelectList(db.PettyCashRecordsCategories.AsNoTracking().OrderBy(x => x.Name).ToList(), PettyCashRecordsCategoriesModel.COL_Id.Name, PettyCashRecordsCategoriesModel.COL_Name.Name);
         }
 
         /******************************************************************************************************************************************************/

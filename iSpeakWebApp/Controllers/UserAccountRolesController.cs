@@ -9,8 +9,8 @@ using LIBUtil;
 
 /*
  * To add new user access:
- * - add items in UserAccountRolesModel
  * - add items to database table UserAccountRoles
+ * - add items in UserAccountRolesModel
  * - add items in Post UserAccountRolesController.Edit() 
  * - add items in UserAccountRolesController.getAccesses() 
  * - add items in UserAccountRoles > Edit.cshtml
@@ -31,7 +31,7 @@ namespace iSpeakWebApp.Controllers
         {
             ViewBag.RemoveDatatablesStateSave = rss;
 
-            return View(get(db));
+            return View(get());
         }
 
         /* CREATE *********************************************************************************************************************************************/
@@ -72,7 +72,7 @@ namespace iSpeakWebApp.Controllers
             if (id == null)
                 return RedirectToAction(nameof(Index));
 
-            var model = get(db, id);
+            var model = get(id);
             return View(model);
         }
 
@@ -87,7 +87,7 @@ namespace iSpeakWebApp.Controllers
                     ModelState.AddModelError(UserAccountRolesModel.COL_Name.Name, $"{model.Name} sudah terdaftar");
                 else
                 {
-                    UserAccountRolesModel originalModel = get(db, model.Id);
+                    UserAccountRolesModel originalModel = get(model.Id);
 
                     string log = string.Empty;
                     log = Helper.append(log, originalModel.Name, model.Name, UserAccountRolesModel.COL_Name.LogDisplay);
@@ -133,6 +133,12 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.PettyCashRecordsCategories_Edit, model.PettyCashRecordsCategories_Edit, UserAccountRolesModel.COL_PettyCashRecordsCategories_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.PettyCashRecordsCategories_View, model.PettyCashRecordsCategories_View, UserAccountRolesModel.COL_PettyCashRecordsCategories_View.LogDisplay);
 
+                    //Languages
+                    log = Helper.append(log, originalModel.Languages_Notes, model.Languages_Notes, UserAccountRolesModel.COL_Languages_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.Languages_Add, model.Languages_Add, UserAccountRolesModel.COL_Languages_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.Languages_Edit, model.Languages_Edit, UserAccountRolesModel.COL_Languages_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.Languages_View, model.Languages_View, UserAccountRolesModel.COL_Languages_View.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -151,15 +157,15 @@ namespace iSpeakWebApp.Controllers
 
         /* METHODS ********************************************************************************************************************************************/
 
-        public static void setDropDownListViewBag(DBContext db, ControllerBase controller)
+        public static void setDropDownListViewBag(ControllerBase controller)
         {
-            controller.ViewBag.UserAccountRoles = new SelectList(get(db), UserAccountRolesModel.COL_Id.Name, UserAccountRolesModel.COL_Name.Name);
+            controller.ViewBag.UserAccountRoles = new SelectList(get(), UserAccountRolesModel.COL_Id.Name, UserAccountRolesModel.COL_Name.Name);
         }
 
-        public static UserAccountRolesModel getAccesses(DBContext db, Guid? UserAccounts_Id) 
+        public static UserAccountRolesModel getAccesses(Guid? UserAccounts_Id) 
         {
             UserAccountRolesModel model = new UserAccountRolesModel();
-            foreach( UserAccountRolesModel item in get(db, null, UserAccounts_Id))
+            foreach( UserAccountRolesModel item in get(null, UserAccounts_Id))
             {
                 //Reminders
                 if (item.Reminders_Add) model.Reminders_Add = true;
@@ -195,6 +201,11 @@ namespace iSpeakWebApp.Controllers
                 if (item.PettyCashRecordsCategories_Edit) model.PettyCashRecordsCategories_Edit = true;
                 if (item.PettyCashRecordsCategories_View) model.PettyCashRecordsCategories_View = true;
 
+                //Languages
+                if (item.Languages_Add) model.Languages_Add = true;
+                if (item.Languages_Edit) model.Languages_Edit = true;
+                if (item.Languages_View) model.Languages_View = true;
+
             }
 
             return model;
@@ -210,11 +221,11 @@ namespace iSpeakWebApp.Controllers
             return result != null;
         }
 
-        public static List<UserAccountRolesModel> get(DBContext db) { return get(db, null, null); }
-        public static UserAccountRolesModel get(DBContext db, Guid? Id) { return get(db, Id, null).FirstOrDefault(); }
-        public static List<UserAccountRolesModel> get(DBContext db, Guid? Id, Guid? UserAccounts_Id)
+        public static List<UserAccountRolesModel> get() { return get(null, null); }
+        public static UserAccountRolesModel get(Guid? Id) { return get(Id, null).FirstOrDefault(); }
+        public static List<UserAccountRolesModel> get(Guid? Id, Guid? UserAccounts_Id)
         {
-            List<UserAccountRolesModel> models = db.Database.SqlQuery<UserAccountRolesModel>(@"
+            return new DBContext().Database.SqlQuery<UserAccountRolesModel>(@"
                         SELECT UserAccountRoles.*
                         FROM UserAccountRoles
                         WHERE 1=1
@@ -230,8 +241,6 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(UserAccountRolesModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter("UserAccounts_Id", UserAccounts_Id)
                 ).ToList();
-
-            return models;
         }
 
         /******************************************************************************************************************************************************/

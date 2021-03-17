@@ -159,6 +159,11 @@ namespace iSpeakWebApp.Controllers
 
         /* METHODS ********************************************************************************************************************************************/
 
+        public static void setDropDownListViewBag(ControllerBase controller)
+        {
+            controller.ViewBag.Branches = new SelectList(get(), BranchesModel.COL_Id.Name, BranchesModel.COL_Name.Name);
+        }
+
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
         public bool isExists(Guid? Id, string Name)
@@ -177,9 +182,10 @@ namespace iSpeakWebApp.Controllers
 
         public List<BranchesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Active, FILTER_Keyword); }
         public BranchesModel get(Guid Id) { return get(Id, null, null).FirstOrDefault(); }
+        public static List<BranchesModel> get() { return get(null, null, null); }
         public static List<BranchesModel> get(Guid? Id, int? FILTER_Active, string FILTER_Keyword)
         {
-            List<BranchesModel> models = new DBContext().Database.SqlQuery<BranchesModel>(@"
+            return new DBContext().Database.SqlQuery<BranchesModel>(@"
                         SELECT Branches.*
                         FROM Branches
                         WHERE 1=1
@@ -194,13 +200,6 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(BranchesModel.COL_Active.Name, FILTER_Active),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
-
-            return models;
-        }
-
-        public static void setDropDownListViewBag(DBContext db, ControllerBase controller)
-        {
-            controller.ViewBag.Branches = new SelectList(db.Branches.AsNoTracking().OrderBy(x => x.Name).ToList(), BranchesModel.COL_Id.Name, BranchesModel.COL_Name.Name);
         }
 
         /******************************************************************************************************************************************************/
