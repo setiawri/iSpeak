@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System;
-using System.Web;
 using System.Web.Mvc;
 using LIBUtil;
 
@@ -14,7 +13,7 @@ using LIBUtil;
  * - add items in Post UserAccountRolesController.Edit() 
  * - add items in UserAccountRolesController.getAccesses() 
  * - add items in UserAccountRoles > Edit.cshtml
- * - update views that use the items
+ * - update views that use the items including main layout file
  */
 
 namespace iSpeakWebApp.Controllers
@@ -139,6 +138,12 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.Languages_Edit, model.Languages_Edit, UserAccountRolesModel.COL_Languages_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.Languages_View, model.Languages_View, UserAccountRolesModel.COL_Languages_View.LogDisplay);
 
+                    //LessonTypes
+                    log = Helper.append(log, originalModel.LessonTypes_Notes, model.LessonTypes_Notes, UserAccountRolesModel.COL_LessonTypes_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.LessonTypes_Add, model.LessonTypes_Add, UserAccountRolesModel.COL_LessonTypes_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.LessonTypes_Edit, model.LessonTypes_Edit, UserAccountRolesModel.COL_LessonTypes_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.LessonTypes_View, model.LessonTypes_View, UserAccountRolesModel.COL_LessonTypes_View.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -205,6 +210,11 @@ namespace iSpeakWebApp.Controllers
                 if (item.Languages_Add) model.Languages_Add = true;
                 if (item.Languages_Edit) model.Languages_Edit = true;
                 if (item.Languages_View) model.Languages_View = true;
+
+                //LessonTypes
+                if (item.LessonTypes_Add) model.LessonTypes_Add = true;
+                if (item.LessonTypes_Edit) model.LessonTypes_Edit = true;
+                if (item.LessonTypes_View) model.LessonTypes_View = true;
 
             }
 

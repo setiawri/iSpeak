@@ -163,6 +163,24 @@ namespace iSpeakWebApp.Models
         public bool Languages_Edit { get; set; }
         public static ModelMember COL_Languages_Edit = new ModelMember { Name = "Languages_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Languages Edit") };
 
+        /* LESSON TYPES ***************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string LessonTypes_Notes { get; set; }
+        public static ModelMember COL_LessonTypes_Notes = new ModelMember { Name = "LessonTypes_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("LessonTypes Notes") };
+
+        [Display(Name = "Add")]
+        public bool LessonTypes_Add { get; set; }
+        public static ModelMember COL_LessonTypes_Add = new ModelMember { Name = "LessonTypes_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("LessonTypes Add") };
+
+        [Display(Name = "View")]
+        public bool LessonTypes_View { get; set; }
+        public static ModelMember COL_LessonTypes_View = new ModelMember { Name = "LessonTypes_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("LessonTypes View") };
+
+        [Display(Name = "Edit")]
+        public bool LessonTypes_Edit { get; set; }
+        public static ModelMember COL_LessonTypes_Edit = new ModelMember { Name = "LessonTypes_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("LessonTypes Edit") };
+
         /******************************************************************************************************************************************************/
 
     }

@@ -270,6 +270,36 @@
 
                             <hr />
 
+                            <label class="h5 mb-0">LESSON TYPES</label>
+                            <div class="pl-0">
+                                <div id="LessonTypes_Div">
+                                    <button id="LessonTypes" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                    <label id="LessonTypes_Label" class="col-form-label">@Model.LessonTypes_Notes</label>
+                                </div>
+                                <div id="LessonTypes_Edit" class="input-group d-none mb-1">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.LessonTypes_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes" } })
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    @Html.CheckBoxFor(model => model.LessonTypes_View)
+                                </div>
+                                <div class="input-group-append">
+                                    @Html.LabelFor(model => model.LessonTypes_View, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.LessonTypes_Add)
+                                    </div>
+                                    @Html.LabelFor(model => model.LessonTypes_Add, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.LessonTypes_Edit)
+                                    </div>
+                                    @Html.LabelFor(model => model.LessonTypes_Edit, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                </div>
+                            </div>
+
+                            <hr />
+
                         </fieldset>
 
                         @if (access.UserAccountRoles_Edit)
