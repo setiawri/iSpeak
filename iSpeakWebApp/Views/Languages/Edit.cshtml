@@ -13,52 +13,50 @@
     <div class="content">
         @using (Html.BeginForm())
         {
-            {
-                @Html.AntiForgeryToken()
-                @Html.HiddenFor(model => model.Id)
-                <!-- Form inputs -->
-                <div class="card">
-                    <div class="card-header header-elements-inline">
-                        <h5 class="card-title">@ViewBag.Root</h5>
-                    </div>
-                    <div class="card-body">
-                        <fieldset class="mb-3">
-                            <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Title</legend>
-
-                            <div class="form-group row">
-                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label col-lg-2 required" })
-                                <div class="col-lg-5">
-                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-                                </div>
-                                <div class="col-lg-5"></div>
-                            </div>
-
-                            <div class="form-group row">
-                                @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "col-form-label col-lg-2" })
-                                <div class="col-lg-5">
-                                    <div class="form-check form-check-switchery">
-                                        <label class="form-check-label">
-                                            @Html.EditorFor(model => model.Active, new { htmlAttributes = new { @class = "form-check-input-switchery" } })
-                                        </label>
-                                    </div>
-                                    @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-                        </fieldset>
-
-                        @if (iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session).Languages_Edit)
-                        {
-                            <div>
-                                <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
-                                <a href="javascript:void(0)" onclick="Action('Index', '@ControllerName')" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
-                            </div>
-                        }
-                    </div>
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.Id)
+            <!-- Form inputs -->
+            <div class="card">
+                <div class="card-header header-elements-inline">
+                    <h5 class="card-title">@ViewBag.Root</h5>
                 </div>
-                <!-- /form inputs -->
-            }
+                <div class="card-body">
+                    <fieldset class="mb-3">
+                        <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Title</legend>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label col-lg-2 required" })
+                            <div class="col-lg-5">
+                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-lg-5"></div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "col-form-label col-lg-2" })
+                            <div class="col-lg-5">
+                                <div class="form-check form-check-switchery">
+                                    <label class="form-check-label">
+                                        @Html.EditorFor(model => model.Active, new { htmlAttributes = new { @class = "form-check-input-switchery" } })
+                                    </label>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    </fieldset>
+
+                    @if (iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session).Languages_Edit)
+                    {
+                        <div>
+                            <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
+                            <a href="javascript:void(0)" onclick="Action('Index', '@ControllerName')" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
+                        </div>
+                    }
+                </div>
+            </div>
+            <!-- /form inputs -->
         }
     </div>
     <!-- /content area -->
