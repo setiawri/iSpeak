@@ -1,0 +1,264 @@
+﻿using System;
+using System.Data.Entity;
+using System.Linq;
+using System.Collections.Generic;
+using System.Web;
+using System.Web.Mvc;
+using iSpeakWebApp.Models;
+using LIBUtil;
+
+namespace iSpeakWebApp.Controllers
+{
+    public class LessonPackagesController : Controller
+    {
+        private readonly DBContext db = new DBContext();
+
+        /* FILTER *********************************************************************************************************************************************/
+
+        public void setFilterViewBags(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id)
+        {
+            ViewBag.FILTER_Keyword = FILTER_Keyword;
+            ViewBag.FILTER_Active = FILTER_Active;
+            ViewBag.FILTER_Languages_Id = FILTER_Languages_Id;
+            ViewBag.FILTER_LessonTypes_Id = FILTER_LessonTypes_Id;
+        }
+
+        /* INDEX **********************************************************************************************************************************************/
+
+        // GET: LessonPackages
+        public ActionResult Index(int? rss, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id)
+        {
+            if (!UserAccountsController.getUserAccess(Session).LessonPackages_View)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
+            if (rss != null)
+            {
+                ViewBag.RemoveDatatablesStateSave = rss;
+                setIndexViewBags(null, null, null, null);
+                return View();
+            }
+            else
+            {
+                setIndexViewBags(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
+                return View(get(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id));
+            }
+        }
+
+        // POST: LessonPackages
+        [HttpPost]
+        public ActionResult Index(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id)
+        {
+            setIndexViewBags(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
+            return View(get(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id));
+        }
+
+        private void setIndexViewBags(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id)
+        {
+            setFilterViewBags(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
+            LanguagesController.setDropDownListViewBag(this);
+            LessonTypesController.setDropDownListViewBag(this);
+        }
+
+        /* CREATE *********************************************************************************************************************************************/
+
+        // GET: LessonPackages/Create
+        public ActionResult Create(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id)
+        {
+            if (!UserAccountsController.getUserAccess(Session).LessonPackages_View)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
+            setCreateViewBags(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
+            return View(new LessonPackagesModel());
+        }
+
+        // POST: LessonPackages/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(LessonPackagesModel model, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id)
+        {
+            if (ModelState.IsValid)
+            {
+                if (isExists(null, model.Name))
+                    ModelState.AddModelError(LessonPackagesModel.COL_Name.Name, $"{model.Name} sudah terdaftar");
+                else
+                {
+                    add(model);
+                    return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active, FILTER_Languages_Id = FILTER_Languages_Id, FILTER_LessonTypes_Id = FILTER_LessonTypes_Id });
+                }
+            }
+
+            setCreateViewBags(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
+            return View(model);
+        }
+
+        private void setCreateViewBags(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id)
+        {
+            setFilterViewBags(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
+            LanguagesController.setDropDownListViewBag(this);
+            LessonTypesController.setDropDownListViewBag(this);
+        }
+
+        /* EDIT ***********************************************************************************************************************************************/
+
+        // GET: LessonPackages/Edit/{id}
+        public ActionResult Edit(Guid? id, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id)
+        {
+            if (!UserAccountsController.getUserAccess(Session).LessonPackages_View)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
+            if (id == null)
+                return RedirectToAction(nameof(Index));
+
+            setEditViewBags(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
+            return View(get((Guid)id));
+        }
+
+        // POST: LessonPackages/Edit/{id}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(LessonPackagesModel modifiedModel, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id)
+        {
+            if (ModelState.IsValid)
+            {
+                if (isExists(modifiedModel.Id, modifiedModel.Name))
+                    ModelState.AddModelError(LessonPackagesModel.COL_Name.Name, $"{modifiedModel.Name} sudah terdaftar");
+                else
+                {
+                    LessonPackagesModel originalModel = get(modifiedModel.Id);
+
+                    string log = string.Empty;
+                    log = Helper.append(log, originalModel.Name, modifiedModel.Name, LessonPackagesModel.COL_Name.LogDisplay);
+                    log = Helper.append(log, originalModel.Active, modifiedModel.Active, LessonPackagesModel.COL_Active.LogDisplay);
+                    log = Helper.append<LanguagesModel>(log, originalModel.Languages_Id, modifiedModel.Languages_Id, LessonPackagesModel.COL_Languages_Id.LogDisplay);
+                    log = Helper.append<LessonTypesModel>(log, originalModel.LessonTypes_Id, modifiedModel.LessonTypes_Id, LessonPackagesModel.COL_LessonTypes_Id.LogDisplay);
+                    log = Helper.append(log, originalModel.SessionHours, modifiedModel.SessionHours, LessonPackagesModel.COL_SessionHours.LogDisplay);
+                    log = Helper.append(log, originalModel.Price, modifiedModel.Price, LessonPackagesModel.COL_Price.LogDisplay);
+                    log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, LessonPackagesModel.COL_Notes.LogDisplay);
+
+                    if (!string.IsNullOrEmpty(log))
+                        update(modifiedModel, log);
+
+                    return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active, FILTER_Languages_Id = FILTER_Languages_Id, FILTER_LessonTypes_Id = FILTER_LessonTypes_Id });
+                }
+            }
+
+            setEditViewBags(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
+            return View(modifiedModel);
+        }
+
+        private void setEditViewBags(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id)
+        {
+            setFilterViewBags(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
+            LanguagesController.setDropDownListViewBag(this);
+            LessonTypesController.setDropDownListViewBag(this);
+        }
+
+        /* METHODS ********************************************************************************************************************************************/
+
+        public static void setDropDownListViewBag(ControllerBase controller)
+        {
+            controller.ViewBag.LessonPackages = new SelectList(get(), LessonPackagesModel.COL_Id.Name, LessonPackagesModel.COL_Name.Name);
+        }
+
+        /* DATABASE METHODS ***********************************************************************************************************************************/
+
+        public bool isExists(Guid? Id, string Name)
+        {
+            return db.Database.SqlQuery<LessonPackagesModel>(@"
+                        SELECT LessonPackages.*,
+                            NULL AS Languages_Name,
+                            NULL AS LessonTypes_Name
+                        FROM LessonPackages
+                        WHERE 1=1 
+							AND (@Id IS NOT NULL OR LessonPackages.Name = @Name)
+							AND (@Id IS NULL OR (LessonPackages.Name = @Name AND LessonPackages.Id <> @Id))
+                    ",
+                    DBConnection.getSqlParameter(LessonPackagesModel.COL_Id.Name, Id),
+                    DBConnection.getSqlParameter(LessonPackagesModel.COL_Name.Name, Name)
+                ).Count() > 0;
+        }
+
+        public List<LessonPackagesModel> get(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id) { return get(null, FILTER_Active, FILTER_Keyword, FILTER_Languages_Id, FILTER_LessonTypes_Id); }
+        public LessonPackagesModel get(Guid Id) { return get(Id, null, null, null, null).FirstOrDefault(); }
+        public static List<LessonPackagesModel> get() { return get(null, null, null, null, null); }
+        public static List<LessonPackagesModel> get(Guid? Id, int? Active, string FILTER_Keyword, Guid? Languages_Id, Guid? LessonTypes_Id)
+        {
+            return new DBContext().Database.SqlQuery<LessonPackagesModel>(@"
+                        SELECT LessonPackages.*,
+                            Languages.Name AS Languages_Name,
+                            LessonTypes.Name AS LessonTypes_Name
+                        FROM LessonPackages
+                            LEFT JOIN Languages ON Languages.Id = LessonPackages.Languages_Id
+                            LEFT JOIN LessonTypes ON LessonTypes.Id = LessonPackages.LessonTypes_Id
+                        WHERE 1=1
+							AND (@Id IS NULL OR LessonPackages.Id = @Id)
+							AND (@Id IS NOT NULL OR (
+                                (@Active IS NULL OR LessonPackages.Active = @Active)
+    							AND (@FILTER_Keyword IS NULL OR (LessonPackages.Name LIKE '%'+@FILTER_Keyword+'%'))
+                                AND (@Languages_Id IS NULL OR LessonPackages.Languages_Id = @Languages_Id)
+                                AND (@LessonTypes_Id IS NULL OR LessonPackages.LessonTypes_Id = @LessonTypes_Id)
+                            ))
+						ORDER BY LessonPackages.Name ASC
+                    ",
+                    DBConnection.getSqlParameter(LessonPackagesModel.COL_Id.Name, Id),
+                    DBConnection.getSqlParameter(LessonPackagesModel.COL_Active.Name, Active),
+                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
+                    DBConnection.getSqlParameter(LessonPackagesModel.COL_Languages_Id.Name, Languages_Id),
+                    DBConnection.getSqlParameter(LessonPackagesModel.COL_LessonTypes_Id.Name, LessonTypes_Id)
+                ).ToList();
+        }
+
+        public void update(LessonPackagesModel model, string log)
+        {
+            db.Database.ExecuteSqlCommand(@"
+                UPDATE LessonPackages 
+                SET
+                    Name = @Name,
+                    Active = @Active,
+                    Notes = @Notes,
+                    Languages_Id = @Languages_Id,
+                    LessonTypes_Id = @LessonTypes_Id,
+                    SessionHours = @SessionHours,
+                    ExpirationDay = @ExpirationDay,
+                    Price = @Price
+                WHERE LessonPackages.Id = @Id;                
+            ",
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_Id.Name, model.Id),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_Name.Name, model.Name),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_Active.Name, model.Active),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_Notes.Name, model.Notes),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_Languages_Id.Name, model.Languages_Id),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_LessonTypes_Id.Name, model.LessonTypes_Id),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_SessionHours.Name, model.SessionHours),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_ExpirationDay.Name, model.ExpirationDay),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_Price.Name, model.Price)
+            );
+
+            ActivityLogsController.AddEditLog(db, Session, model.Id, log);
+            db.SaveChanges();
+        }
+
+        public void add(LessonPackagesModel model)
+        {
+            db.Database.ExecuteSqlCommand(@"
+                INSERT INTO LessonPackages (Id, Name, Active, Notes, Languages_Id, LessonTypes_Id, SessionHours, ExpirationDay, Price) 
+                                    VALUES(@Id,@Name,@Active,@Notes,@Languages_Id,@LessonTypes_Id,@SessionHours,@ExpirationDay,@Price);
+            ",
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_Id.Name, model.Id),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_Name.Name, model.Name),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_Active.Name, model.Active),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_Notes.Name, model.Notes),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_Languages_Id.Name, model.Languages_Id),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_LessonTypes_Id.Name, model.LessonTypes_Id),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_SessionHours.Name, model.SessionHours),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_ExpirationDay.Name, model.ExpirationDay),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_Price.Name, model.Price)
+            );
+
+            ActivityLogsController.AddCreateLog(db, Session, model.Id);
+            db.SaveChanges();
+        }
+
+        /******************************************************************************************************************************************************/
+    }
+}

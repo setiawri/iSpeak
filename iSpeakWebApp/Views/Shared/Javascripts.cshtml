@@ -7,6 +7,8 @@ FILTERING
 
 <input type="hidden" id="FILTER_Keyword" name="FILTER_Keyword" value="@ViewBag.FILTER_Keyword" />
 <input type="hidden" id="FILTER_Active" name="FILTER_Active" value="@ViewBag.FILTER_Active" />
+<input type="hidden" id="FILTER_Languages_Id" name="FILTER_Active" value="@ViewBag.FILTER_Languages_Id" />
+<input type="hidden" id="FILTER_LessonTypes_Id" name="FILTER_Active" value="@ViewBag.FILTER_LessonTypes_Id" />
 
 <script type="text/javascript">
 
@@ -17,15 +19,27 @@ FILTERING
             $('#FILTER_Active').val('@ViewBag.FILTER_Active');
         if ('@ViewBag.FILTER_Status' != null)
             $('#FILTER_Status').val('@ViewBag.FILTER_Status');
+        if ('@ViewBag.FILTER_Languages_Id' != null)
+            $('#FILTER_Languages_Id').val('@ViewBag.FILTER_Languages_Id');
+        if ('@ViewBag.FILTER_LessonTypes_Id' != null)
+            $('#FILTER_LessonTypes_Id').val('@ViewBag.FILTER_LessonTypes_Id');
     });
 
-    function getAllFilter() { return getFilter(null, null); }
-    function getFilter(FILTER_Keyword, FILTER_Active) {
+    function getAllFilter() { return getFilter(null, null, null, null); }
+    function getFilter(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id) {
         var filter = $('#FILTER_Keyword').val();
 
         if ($('#FILTER_Active') != null)
             FILTER_Active = $('#FILTER_Active').val();
         filter += appendFilter(FILTER_Active, "FILTER_Active");
+
+        if ($('#FILTER_Languages_Id') != null)
+            FILTER_Languages_Id = $('#FILTER_Languages_Id').val();
+        filter += appendFilter(FILTER_Languages_Id, "FILTER_Languages_Id");
+
+        if ($('#FILTER_LessonTypes_Id') != null)
+            FILTER_LessonTypes_Id = $('#FILTER_LessonTypes_Id').val();
+        filter += appendFilter(FILTER_LessonTypes_Id, "FILTER_LessonTypes_Id");
 
         return filter;
     }
