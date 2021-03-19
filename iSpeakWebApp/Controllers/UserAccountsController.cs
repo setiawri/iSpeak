@@ -23,10 +23,14 @@ namespace iSpeakWebApp.Controllers
 
         /* FILTER *********************************************************************************************************************************************/
 
-        public void setFilterViewBags(string FILTER_Keyword, int? FILTER_Active)
+        public void setViewBag(string FILTER_Keyword, int? FILTER_Active)
         {
             ViewBag.FILTER_Keyword = FILTER_Keyword;
             ViewBag.FILTER_Active = FILTER_Active;
+            UserAccountRolesController.setDropDownListViewBag(this);
+            BranchesController.setDropDownListViewBag(this);
+            LanguagesController.setDropDownListViewBag(this);
+            PromotionEventsController.setDropDownListViewBag(this);
         }
 
         /* INDEX **********************************************************************************************************************************************/
@@ -41,7 +45,7 @@ namespace iSpeakWebApp.Controllers
             }
             else
             {
-                setFilterViewBags(FILTER_Keyword, FILTER_Active);
+                setViewBag(FILTER_Keyword, FILTER_Active);
                 return View(get(FILTER_Keyword, FILTER_Active));
             }
         }
@@ -50,7 +54,7 @@ namespace iSpeakWebApp.Controllers
         [HttpPost]
         public ActionResult Index(string FILTER_Keyword, int? FILTER_Active)
         {
-            setFilterViewBags(FILTER_Keyword, FILTER_Active);
+            setViewBag(FILTER_Keyword, FILTER_Active);
             return View(get(FILTER_Keyword, FILTER_Active));
         }
 
@@ -59,7 +63,7 @@ namespace iSpeakWebApp.Controllers
         // GET: UserAccounts/Create
         public ActionResult Create(string FILTER_Keyword, int? FILTER_Active)
         {
-            setCreateViewBags(FILTER_Keyword, FILTER_Active);
+            setViewBag(FILTER_Keyword, FILTER_Active);
             return View(new UserAccountsModel());
         }
 
@@ -85,13 +89,8 @@ namespace iSpeakWebApp.Controllers
                 }
             }
 
-            setCreateViewBags(FILTER_Keyword, FILTER_Active);
+            setViewBag(FILTER_Keyword, FILTER_Active);
             return View(model);
-        }
-
-        private void setCreateViewBags(string FILTER_Keyword, int? FILTER_Active)
-        {
-            setFilterViewBags(FILTER_Keyword, FILTER_Active);
         }
 
         /* EDIT ***********************************************************************************************************************************************/
@@ -102,7 +101,7 @@ namespace iSpeakWebApp.Controllers
             if (id == null)
                 return RedirectToAction(nameof(Index));
 
-            setEditViewBags(FILTER_Keyword, FILTER_Active);
+            setViewBag(FILTER_Keyword, FILTER_Active);
             return View(get((Guid)id));
         }
 
@@ -143,17 +142,8 @@ namespace iSpeakWebApp.Controllers
                 }
             }
 
-            setEditViewBags(FILTER_Keyword, FILTER_Active);
+            setViewBag(FILTER_Keyword, FILTER_Active);
             return View(modifiedModel);
-        }
-
-        private void setEditViewBags(string FILTER_Keyword, int? FILTER_Active)
-        {
-            setFilterViewBags(FILTER_Keyword, FILTER_Active);
-            UserAccountRolesController.setDropDownListViewBag(this);
-            BranchesController.setDropDownListViewBag(this);
-            LanguagesController.setDropDownListViewBag(this);
-            PromotionEventsController.setDropDownListViewBag(this);
         }
 
         /* LOGIN PAGE *****************************************************************************************************************************************/

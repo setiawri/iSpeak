@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Data.Entity;
 using System.Linq;
 using System.Collections.Generic;
-using System.Web;
 using System.Web.Mvc;
 using iSpeakWebApp.Models;
 using LIBUtil;
@@ -15,12 +13,14 @@ namespace iSpeakWebApp.Controllers
 
         /* FILTER *********************************************************************************************************************************************/
 
-        public void setFilterViewBags(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id)
+        public void setViewBag(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id)
         {
             ViewBag.FILTER_Keyword = FILTER_Keyword;
             ViewBag.FILTER_Active = FILTER_Active;
             ViewBag.FILTER_Languages_Id = FILTER_Languages_Id;
             ViewBag.FILTER_LessonTypes_Id = FILTER_LessonTypes_Id;
+            LanguagesController.setDropDownListViewBag(this);
+            LessonTypesController.setDropDownListViewBag(this);
         }
 
         /* INDEX **********************************************************************************************************************************************/
@@ -34,12 +34,12 @@ namespace iSpeakWebApp.Controllers
             if (rss != null)
             {
                 ViewBag.RemoveDatatablesStateSave = rss;
-                setIndexViewBags(null, null, null, null);
+                setViewBag(null, null, null, null);
                 return View();
             }
             else
             {
-                setIndexViewBags(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
+                setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
                 return View(get(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id));
             }
         }
@@ -48,15 +48,8 @@ namespace iSpeakWebApp.Controllers
         [HttpPost]
         public ActionResult Index(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id)
         {
-            setIndexViewBags(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
             return View(get(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id));
-        }
-
-        private void setIndexViewBags(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id)
-        {
-            setFilterViewBags(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
-            LanguagesController.setDropDownListViewBag(this);
-            LessonTypesController.setDropDownListViewBag(this);
         }
 
         /* CREATE *********************************************************************************************************************************************/
@@ -64,10 +57,10 @@ namespace iSpeakWebApp.Controllers
         // GET: LessonPackages/Create
         public ActionResult Create(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id)
         {
-            if (!UserAccountsController.getUserAccess(Session).LessonPackages_View)
+            if (!UserAccountsController.getUserAccess(Session).LessonPackages_Add)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            setCreateViewBags(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
             return View(new LessonPackagesModel());
         }
 
@@ -87,15 +80,8 @@ namespace iSpeakWebApp.Controllers
                 }
             }
 
-            setCreateViewBags(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
             return View(model);
-        }
-
-        private void setCreateViewBags(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id)
-        {
-            setFilterViewBags(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
-            LanguagesController.setDropDownListViewBag(this);
-            LessonTypesController.setDropDownListViewBag(this);
         }
 
         /* EDIT ***********************************************************************************************************************************************/
@@ -103,13 +89,13 @@ namespace iSpeakWebApp.Controllers
         // GET: LessonPackages/Edit/{id}
         public ActionResult Edit(Guid? id, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id)
         {
-            if (!UserAccountsController.getUserAccess(Session).LessonPackages_View)
+            if (!UserAccountsController.getUserAccess(Session).LessonPackages_Edit)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
             if (id == null)
                 return RedirectToAction(nameof(Index));
 
-            setEditViewBags(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
             return View(get((Guid)id));
         }
 
@@ -142,15 +128,8 @@ namespace iSpeakWebApp.Controllers
                 }
             }
 
-            setEditViewBags(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
             return View(modifiedModel);
-        }
-
-        private void setEditViewBags(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id)
-        {
-            setFilterViewBags(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
-            LanguagesController.setDropDownListViewBag(this);
-            LessonTypesController.setDropDownListViewBag(this);
         }
 
         /* METHODS ********************************************************************************************************************************************/

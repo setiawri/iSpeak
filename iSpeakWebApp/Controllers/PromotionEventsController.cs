@@ -15,7 +15,7 @@ namespace iSpeakWebApp.Controllers
 
         /* FILTER *********************************************************************************************************************************************/
 
-        public void setFilterViewBags(string FILTER_Keyword)
+        public void setViewBag(string FILTER_Keyword)
         {
             ViewBag.FILTER_Keyword = FILTER_Keyword;
         }
@@ -32,7 +32,7 @@ namespace iSpeakWebApp.Controllers
             }
             else
             {
-                setFilterViewBags(FILTER_Keyword);
+                setViewBag(FILTER_Keyword);
                 return View(get(FILTER_Keyword));
             }
         }
@@ -41,7 +41,7 @@ namespace iSpeakWebApp.Controllers
         [HttpPost]
         public ActionResult Index(string FILTER_Keyword)
         {
-            setFilterViewBags(FILTER_Keyword);
+            setViewBag(FILTER_Keyword);
             return View(get(FILTER_Keyword));
         }
 
@@ -50,7 +50,7 @@ namespace iSpeakWebApp.Controllers
         // GET: PromotionEvents/Create
         public ActionResult Create(string FILTER_Keyword)
         {
-            setCreateViewBags(FILTER_Keyword);
+            setViewBag(FILTER_Keyword);
             return View(new PromotionEventsModel());
         }
 
@@ -74,13 +74,8 @@ namespace iSpeakWebApp.Controllers
                 }
             }
 
-            setCreateViewBags(FILTER_Keyword);
+            setViewBag(FILTER_Keyword);
             return View(model);
-        }
-
-        private void setCreateViewBags(string FILTER_Keyword)
-        {
-            setFilterViewBags(FILTER_Keyword);
         }
 
         /* EDIT ***********************************************************************************************************************************************/
@@ -91,7 +86,7 @@ namespace iSpeakWebApp.Controllers
             if (id == null)
                 return RedirectToAction(nameof(Index));
 
-            setEditViewBags(FILTER_Keyword);
+            setViewBag(FILTER_Keyword);
             return View(get((Guid)id));
         }
 
@@ -129,13 +124,8 @@ namespace iSpeakWebApp.Controllers
                 }
             }
 
-            setEditViewBags(FILTER_Keyword);
+            setViewBag(FILTER_Keyword);
             return View(modifiedModel);
-        }
-
-        private void setEditViewBags(string FILTER_Keyword)
-        {
-            setFilterViewBags(FILTER_Keyword);
         }
 
         /* METHODS ********************************************************************************************************************************************/

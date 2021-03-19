@@ -68,16 +68,14 @@
                                     <tr>
                                         <td class="align-top">@Html.DisplayFor(modelItem => item.Name)</td>
                                         <td>
-                                            <div class="row">
-                                                @if (item.Active)
-                                                {
-                                                    <div><span class="badge badge-success d-block mr-1" style="width:100px;">ACTIVE</span></div>
-                                                }
-                                                else
-                                                {
-                                                    <div><span class="badge badge-dark d-block mr-1" style="width:100px;">NOT ACTIVE</span></div>
-                                                }
-                                            </div>
+                                            @if (item.Active)
+                                            {
+                                                <div><span class="badge badge-success d-block mr-1" style="width:100px;">ACTIVE</span></div>
+                                            }
+                                            else
+                                            {
+                                                <div><span class="badge badge-dark d-block mr-1" style="width:100px;">NOT ACTIVE</span></div>
+                                            }
                                         </td>
                                         <td>
                                             @if (access.Languages_Edit)
