@@ -128,6 +128,7 @@
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Controllers\ActivityLogsController.cs" />
+    <Compile Include="Controllers\ConsignmentsController.cs" />
     <Compile Include="Controllers\LessonPackagesController.cs" />
     <Compile Include="Controllers\LessonTypesController.cs" />
     <Compile Include="Controllers\LanguagesController.cs" />
@@ -144,6 +145,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ActivityLogsModel.cs" />
+    <Compile Include="Models\ConsignmentsModel.cs" />
     <Compile Include="Models\LessonPackagesModel.cs" />
     <Compile Include="Models\LessonTypesModel.cs" />
     <Compile Include="Models\LanguagesModel.cs" />
@@ -271,6 +273,9 @@
     <Content Include="Views\LessonPackages\Create.cshtml" />
     <Content Include="Views\LessonPackages\Edit.cshtml" />
     <Content Include="Views\LessonPackages\Index.cshtml" />
+    <Content Include="Views\Consignments\Create.cshtml" />
+    <Content Include="Views\Consignments\Edit.cshtml" />
+    <Content Include="Views\Consignments\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\LIBUtil\LIBUtil\LIBUtil\LIBUtil.csproj">

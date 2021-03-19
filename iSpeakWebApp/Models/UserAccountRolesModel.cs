@@ -199,6 +199,24 @@ namespace iSpeakWebApp.Models
         public bool LessonPackages_Edit { get; set; }
         public static ModelMember COL_LessonPackages_Edit = new ModelMember { Name = "LessonPackages_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("LessonPackages Edit") };
 
+        /* CONSIGNMENTS ***************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string Consignments_Notes { get; set; }
+        public static ModelMember COL_Consignments_Notes = new ModelMember { Name = "Consignments_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Consignments Notes") };
+
+        [Display(Name = "Add")]
+        public bool Consignments_Add { get; set; }
+        public static ModelMember COL_Consignments_Add = new ModelMember { Name = "Consignments_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("Consignments Add") };
+
+        [Display(Name = "View")]
+        public bool Consignments_View { get; set; }
+        public static ModelMember COL_Consignments_View = new ModelMember { Name = "Consignments_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("Consignments View") };
+
+        [Display(Name = "Edit")]
+        public bool Consignments_Edit { get; set; }
+        public static ModelMember COL_Consignments_Edit = new ModelMember { Name = "Consignments_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Consignments Edit") };
+
         /******************************************************************************************************************************************************/
 
     }

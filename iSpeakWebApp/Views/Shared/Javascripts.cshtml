@@ -7,8 +7,9 @@ FILTERING
 
 <input type="hidden" id="FILTER_Keyword" name="FILTER_Keyword" value="@ViewBag.FILTER_Keyword" />
 <input type="hidden" id="FILTER_Active" name="FILTER_Active" value="@ViewBag.FILTER_Active" />
-<input type="hidden" id="FILTER_Languages_Id" name="FILTER_Active" value="@ViewBag.FILTER_Languages_Id" />
-<input type="hidden" id="FILTER_LessonTypes_Id" name="FILTER_Active" value="@ViewBag.FILTER_LessonTypes_Id" />
+<input type="hidden" id="FILTER_Languages_Id" name="FILTER_Languages_Id" value="@ViewBag.FILTER_Languages_Id" />
+<input type="hidden" id="FILTER_LessonTypes_Id" name="FILTER_LessonTypes_Id" value="@ViewBag.FILTER_LessonTypes_Id" />
+<input type="hidden" id="FILTER_Branches_Id" name="FILTER_Branches_Id" value="@ViewBag.FILTER_Branches_Id" />
 
 <script type="text/javascript">
 
@@ -23,6 +24,8 @@ FILTERING
             $('#FILTER_Languages_Id').val('@ViewBag.FILTER_Languages_Id');
         if ('@ViewBag.FILTER_LessonTypes_Id' != null)
             $('#FILTER_LessonTypes_Id').val('@ViewBag.FILTER_LessonTypes_Id');
+        if ('@ViewBag.FILTER_Branches_Id' != null)
+            $('#FILTER_Branches_Id').val('@ViewBag.FILTER_Branches_Id');
     });
 
     function getAllFilter() { return getFilter(null, null, null, null); }
@@ -40,6 +43,10 @@ FILTERING
         if ($('#FILTER_LessonTypes_Id') != null)
             FILTER_LessonTypes_Id = $('#FILTER_LessonTypes_Id').val();
         filter += appendFilter(FILTER_LessonTypes_Id, "FILTER_LessonTypes_Id");
+
+        if ($('#FILTER_Branches_Id') != null)
+            FILTER_Branches_Id = $('#FILTER_Branches_Id').val();
+        filter += appendFilter(FILTER_Branches_Id, "FILTER_Branches_Id");
 
         return filter;
     }

@@ -150,6 +150,12 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.LessonPackages_Edit, model.LessonPackages_Edit, UserAccountRolesModel.COL_LessonPackages_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.LessonPackages_View, model.LessonPackages_View, UserAccountRolesModel.COL_LessonPackages_View.LogDisplay);
 
+                    //Consignments
+                    log = Helper.append(log, originalModel.Consignments_Notes, model.Consignments_Notes, UserAccountRolesModel.COL_Consignments_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.Consignments_Add, model.Consignments_Add, UserAccountRolesModel.COL_Consignments_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.Consignments_Edit, model.Consignments_Edit, UserAccountRolesModel.COL_Consignments_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.Consignments_View, model.Consignments_View, UserAccountRolesModel.COL_Consignments_View.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -226,6 +232,11 @@ namespace iSpeakWebApp.Controllers
                 if (item.LessonPackages_Add) model.LessonPackages_Add = true;
                 if (item.LessonPackages_Edit) model.LessonPackages_Edit = true;
                 if (item.LessonPackages_View) model.LessonPackages_View = true;
+
+                //Consignments
+                if (item.Consignments_Add) model.Consignments_Add = true;
+                if (item.Consignments_Edit) model.Consignments_Edit = true;
+                if (item.Consignments_View) model.Consignments_View = true;
 
             }
 
