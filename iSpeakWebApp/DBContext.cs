@@ -26,6 +26,7 @@ namespace iSpeakWebApp
         public DbSet<LessonPackagesModel> LessonPackages { get; set; }
         public DbSet<VouchersModel> Vouchers { get; set; }
         public DbSet<SuppliersModel> Suppliers { get; set; }
+        public DbSet<UnitsModel> Units { get; set; }
 
         /******************************************************************************************************************************************************/
 
