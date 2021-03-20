@@ -27,12 +27,21 @@
                                 <div><a href="javascript:void(0)" onclick="Action('Create', '@ControllerName')" class="btn btn-success">CREATE<i class="icon-plus22 ml-2"></i></a></div>
                             </div>
                         }
+
                         <div class="row ml-0 mr-2" style="width:100px;">
                             <label class="mb-0">Keyword</label>
                             <div class="input-group">
                                 <input type="text" name="FILTER_Keyword" id="FILTER_Keyword" class="form-control" />
                             </div>
                         </div>
+
+                        <div class="row ml-0 mr-2">
+                            <label class="mb-0">Interest</label>
+                            <div class="input-group">
+                                @Html.DropDownList("FILTER_Languages_Id", ViewBag.Languages as SelectList, "ALL", new { @class = "select2", @style = "height:auto;" })
+                            </div>
+                        </div>
+
                         <div class="row ml-0 mr-2">
                             <label class="mb-0">Active</label>
                             <div class="input-group">
@@ -57,37 +66,41 @@
                                     <th>@Html.DisplayNameFor(model => model.Username)</th>
                                     <th>Phone</th>
                                     <th>@Html.DisplayNameFor(model => model.Email)</th>
-                                    <th class="non-searchable non-sortable" style="width:100px;"></th>
+                                    <th class="non-searchable non-sortable" style="width:200px;"></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (Model != null) { foreach (var item in Model)
+                                @if (Model != null)
                                 {
-                                <tr>
-                                    <td class="align-top">@Html.DisplayFor(modelItem => item.Fullname)</td>
-                                    <td class="align-top">@Html.DisplayFor(modelItem => item.Username)</td>
-                                    <td class="align-top">
-                                        <div>@Html.DisplayFor(modelItem => item.Phone1)</div>
-                                        <div>@Html.DisplayFor(modelItem => item.Phone2)</div>
-                                    </td>
-                                    <td class="align-top">@Html.DisplayFor(modelItem => item.Email)</td>
-                                    <td class="align-top">
-                                        @if (item.Active)
-                                        {
-                                            <span class="badge badge-success d-block" style="width:100px;">ACTIVE</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge badge-dark d-block" style="width:100px;">NOT ACTIVE</span>
-                                        }
-                                        @if (access.UserAccounts_Edit)
-                                        {
-                                            <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a>@(" • ")
-                                        }
-                                        <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
-                                    </td>
-                                </tr>
-                                }}
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Fullname)</td>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Username)</td>
+                                            <td class="align-top">
+                                                <div>@Html.DisplayFor(modelItem => item.Phone1)</div>
+                                                <div>@Html.DisplayFor(modelItem => item.Phone2)</div>
+                                            </td>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Email)</td>
+                                            <td class="align-top">
+                                                @if (item.Active)
+                                                {
+                                                    <span class="badge badge-success d-block" style="width:100px;">ACTIVE</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-dark d-block" style="width:100px;">NOT ACTIVE</span>
+                                                }
+                                                @if (access.UserAccounts_Edit)
+                                                {
+                                                    <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a> @:•
+                                                }
+                                                <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                                • <a href="javascript:void(0)" onclick="ResetPassword('@item.Id')">Reset Password</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -98,3 +111,23 @@
     </div>
     <!-- /content area -->
 </div>
+
+<script type="text/javascript">
+
+    function ResetPassword(id) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("ResetPassword", "UserAccounts")',
+            data: {
+                UserAccounts_Id: id
+            },
+            success: function (data) {
+                bootbox.alert({ backdrop: true, message: "Password has been reset." });
+            }, //end success
+            error: function (result) {
+                bootbox.alert({ backdrop: true, message: "Error " + result });
+            } //end error
+        }); //end ajax
+    }
+
+</script>

@@ -18,7 +18,7 @@ namespace iSpeakWebApp.Controllers
         // GET: Settings/Edit
         public ActionResult Edit()
         {
-            SettingsModel model = get(db);
+            SettingsModel model = get();
             setEditViewBags(model);
             return View(model);
         }
@@ -31,7 +31,7 @@ namespace iSpeakWebApp.Controllers
             if (ModelState.IsValid)
             {
                 //Prepare changes
-                SettingsModel originalModel = get(db);
+                SettingsModel originalModel = get();
                 string log = string.Empty;
 
                 log = addLog(log, SettingsModel.COL_AutoEntryForCashPayments.Id,
@@ -87,9 +87,9 @@ namespace iSpeakWebApp.Controllers
         /* METHODS ********************************************************************************************************************************************/
         #region METHODS
 
-        public static SettingsModel get(DBContext db)
+        public static SettingsModel get()
         {
-            List<SettingsModel> models = db.Database.SqlQuery<SettingsModel>(@"
+            List<SettingsModel> models = new DBContext().Database.SqlQuery<SettingsModel>(@"
                 SELECT
                     ISNULL(Settings_AutoEntryForCashPayments.Value_Guid,'') AS AutoEntryForCashPayments,
                     ISNULL(Settings_AutoEntryForCashPayments.Notes,'') AS AutoEntryForCashPayments_Notes,

@@ -23,10 +23,11 @@ namespace iSpeakWebApp.Controllers
 
         /* FILTER *********************************************************************************************************************************************/
 
-        public void setViewBag(string FILTER_Keyword, int? FILTER_Active)
+        public void setViewBag(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
         {
             ViewBag.FILTER_Keyword = FILTER_Keyword;
             ViewBag.FILTER_Active = FILTER_Active;
+            ViewBag.FILTER_Languages_Id = FILTER_Languages_Id;
             UserAccountRolesController.setDropDownListViewBag(this);
             BranchesController.setDropDownListViewBag(this);
             LanguagesController.setDropDownListViewBag(this);
@@ -36,8 +37,9 @@ namespace iSpeakWebApp.Controllers
         /* INDEX **********************************************************************************************************************************************/
 
         // GET: UserAccounts
-        public ActionResult Index(int? rss, string FILTER_Keyword, int? FILTER_Active)
+        public ActionResult Index(int? rss, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
         {
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id);
             if (rss != null)
             {
                 ViewBag.RemoveDatatablesStateSave = rss;
@@ -45,32 +47,31 @@ namespace iSpeakWebApp.Controllers
             }
             else
             {
-                setViewBag(FILTER_Keyword, FILTER_Active);
-                return View(get(FILTER_Keyword, FILTER_Active));
+                return View(get(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id));
             }
         }
 
         // POST: UserAccounts
         [HttpPost]
-        public ActionResult Index(string FILTER_Keyword, int? FILTER_Active)
+        public ActionResult Index(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
         {
-            setViewBag(FILTER_Keyword, FILTER_Active);
-            return View(get(FILTER_Keyword, FILTER_Active));
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id);
+            return View(get(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id));
         }
 
         /* CREATE *********************************************************************************************************************************************/
 
         // GET: UserAccounts/Create
-        public ActionResult Create(string FILTER_Keyword, int? FILTER_Active)
+        public ActionResult Create(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
         {
-            setViewBag(FILTER_Keyword, FILTER_Active);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id);
             return View(new UserAccountsModel());
         }
 
         // POST: UserAccounts/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(UserAccountsModel model, string FILTER_Keyword, int? FILTER_Active)
+        public ActionResult Create(UserAccountsModel model, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
         {
             if (ModelState.IsValid)
             {
@@ -78,37 +79,36 @@ namespace iSpeakWebApp.Controllers
                     ModelState.AddModelError(UserAccountsModel.COL_Fullname.Name, $"{model.Fullname} dengan tanggal lahir yang sama sudah terdaftar");
                 else
                 {
-                    model.Password = SettingsController.get(db).ResetPassword;
+                    model.Password = HashPassword(SettingsController.get().ResetPassword);
                     model.Branches_Id = Helper.getActiveBranchId(Session);
                     model.Username = generateUsername(model.Fullname, model.Birthday);
 
                     add(model);
-                    ActivityLogsController.AddCreateLog(db, Session, model.Id);
                     db.SaveChanges();
-                    return RedirectToAction(nameof(Edit), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
+                    return RedirectToAction(nameof(Edit), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active, FILTER_Languages_Id = FILTER_Languages_Id });
                 }
             }
 
-            setViewBag(FILTER_Keyword, FILTER_Active);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id);
             return View(model);
         }
 
         /* EDIT ***********************************************************************************************************************************************/
 
         // GET: UserAccounts/Edit/{id}
-        public ActionResult Edit(Guid? id, string FILTER_Keyword, int? FILTER_Active)
+        public ActionResult Edit(Guid? id, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
         {
             if (id == null)
                 return RedirectToAction(nameof(Index));
 
-            setViewBag(FILTER_Keyword, FILTER_Active);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id);
             return View(get((Guid)id));
         }
 
         // POST: UserAccounts/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(UserAccountsModel modifiedModel, string FILTER_Keyword, int? FILTER_Active)
+        public ActionResult Edit(UserAccountsModel modifiedModel, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
         {
             if (ModelState.IsValid)
             {
@@ -138,12 +138,25 @@ namespace iSpeakWebApp.Controllers
                     if (!string.IsNullOrEmpty(log))
                         update(modifiedModel, log);
 
-                    return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
+                    return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active, FILTER_Languages_Id = FILTER_Languages_Id });
                 }
             }
 
-            setViewBag(FILTER_Keyword, FILTER_Active);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id);
             return View(modifiedModel);
+        }
+
+        /* RESET PASSWORD *************************************************************************************************************************************/
+
+        public JsonResult ResetPassword(Guid UserAccounts_Id)
+        {
+            UserAccountsModel model = new UserAccountsModel();
+            model.Id = UserAccounts_Id;
+            model.Password = HashPassword(SettingsController.get().ResetPassword);
+            model.ResetPassword = true;
+            updatePassword(model, "Password reset by admin");
+
+            return Json(new { Error = "" });
         }
 
         /* LOGIN PAGE *****************************************************************************************************************************************/
@@ -397,11 +410,11 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public UserAccountsModel get(string Username, string Password) { return get(null, null, Username, Password, null, null, null, null).FirstOrDefault(); }
-        public List<UserAccountsModel> getBirthdays(Guid Branches_Id, Guid? UserAccountRoles_Id, int BirthdayListMonth) { return get(Branches_Id, null, null, null, 1, UserAccountRoles_Id, BirthdayListMonth, null); }
-        public List<UserAccountsModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, null, null, null, FILTER_Active, null, null, FILTER_Keyword); }
-        public UserAccountsModel get(Guid Id) { return get(null, Id, null, null, null, null, null, null).FirstOrDefault(); }
-        public List<UserAccountsModel> get(Guid? Branches_Id, Guid? Id, string Username, string Password, int? Active, Guid? UserAccountRoles_Id, int? BirthdayListMonth, string FILTER_Keyword)
+        public UserAccountsModel get(string Username, string Password) { return get(null, null, Username, Password, null, null, null, null, null).FirstOrDefault(); }
+        public List<UserAccountsModel> getBirthdays(Guid Branches_Id, Guid? UserAccountRoles_Id, int BirthdayListMonth) { return get(Branches_Id, null, null, null, 1, UserAccountRoles_Id, BirthdayListMonth, null, null); }
+        public List<UserAccountsModel> get(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id) { return get(null, null, null, null, FILTER_Active, null, null, FILTER_Keyword, FILTER_Languages_Id); }
+        public UserAccountsModel get(Guid Id) { return get(null, Id, null, null, null, null, null, null, null).FirstOrDefault(); }
+        public List<UserAccountsModel> get(Guid? Branches_Id, Guid? Id, string Username, string Password, int? Active, Guid? UserAccountRoles_Id, int? BirthdayListMonth, string FILTER_Keyword, Guid? Language_Id)
         {
             if (Branches_Id == null && Helper.isActiveBranchAvailable(Session))
                 Helper.getActiveBranchId(Session);
@@ -414,8 +427,9 @@ namespace iSpeakWebApp.Controllers
 							AND (@Username IS NULL OR UserAccounts.Username = @Username)
 							AND (@Password IS NULL OR UserAccounts.Password = @Password)
 							AND (@Branches_Id IS NULL OR UserAccounts.Branches_Id = @Branches_Id)
+							AND (@Languages_Id IS NULL OR UserAccounts.Interest LIKE '%'+CONVERT(varchar(MAX),@Languages_Id)+'%')
 							AND (@Active IS NULL OR UserAccounts.Active = @Active)
-							AND (@UserAccountRoles_Id IS NULL OR UserAccounts.Roles = @UserAccountRoles_Id)
+							AND (@UserAccountRoles_Id IS NULL OR UserAccounts.Roles LIKE '%'+CONVERT(varchar(MAX),@UserAccountRoles_Id)+'%')
 							AND (@BirthdayListMonth IS NULL OR (
 									MONTH(UserAccounts.Birthday) = @BirthdayListMonth
 									AND (MONTH(GETDATE()) <> @BirthdayListMonth OR DAY(UserAccounts.Birthday) >= DAY(GETDATE()))
@@ -428,9 +442,11 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(UserAccountsModel.COL_Username.Name, Username),
                     DBConnection.getSqlParameter(UserAccountsModel.COL_Password.Name, Password),
                     DBConnection.getSqlParameter(UserAccountsModel.COL_Active.Name, Active),
-                    DBConnection.getSqlParameter("UserAccountRoles_Id", UserAccountRoles_Id),
-                    DBConnection.getSqlParameter("Branches_Id", Branches_Id),
+                    DBConnection.getSqlParameter(UserAccountsModel.COL_Branches_Id.Name, Branches_Id),
+                    DBConnection.getSqlParameter(UserAccountsModel.COL_Roles.Name, Branches_Id),
                     DBConnection.getSqlParameter("BirthdayListMonth", BirthdayListMonth),
+                    DBConnection.getSqlParameter("UserAccountRoles_Id", UserAccountRoles_Id),
+                    DBConnection.getSqlParameter("Languages_Id", Language_Id),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
 
@@ -523,6 +539,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Active.Name, model.Active),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Branches_Id.Name, model.Branches_Id)
             );
+
+            ActivityLogsController.AddCreateLog(db, Session, model.Id);
         }
 
         /******************************************************************************************************************************************************/
