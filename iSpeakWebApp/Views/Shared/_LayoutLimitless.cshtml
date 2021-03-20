@@ -170,7 +170,10 @@
                         {
                             <a href="@Url.Action("Index", "Vouchers", new { rss=1 })" class="dropdown-item">Vouchers</a>
                         }
-                        <a href="@Url.Action("Index", "Services", new { rss=1 })" class="dropdown-item">Services</a>
+                        @if (access.Services_View)
+                        {
+                            <a href="@Url.Action("Index", "Services", new { rss=1 })" class="dropdown-item">Services</a>
+                        }
                         @if (access.PettyCashRecordsCategories_View)
                         {
                             <a href="@Url.Action("Index", "PettyCashRecordsCategories", new { rss=1 })" class="dropdown-item">Petty Cash Categories</a>

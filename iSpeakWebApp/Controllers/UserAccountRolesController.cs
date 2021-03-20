@@ -189,6 +189,12 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.ExpenseCategories_Edit, model.ExpenseCategories_Edit, UserAccountRolesModel.COL_ExpenseCategories_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.ExpenseCategories_View, model.ExpenseCategories_View, UserAccountRolesModel.COL_ExpenseCategories_View.LogDisplay);
 
+                    //Services
+                    log = Helper.append(log, originalModel.Services_Notes, model.Services_Notes, UserAccountRolesModel.COL_Services_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.Services_Add, model.Services_Add, UserAccountRolesModel.COL_Services_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.Services_Edit, model.Services_Edit, UserAccountRolesModel.COL_Services_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.Services_View, model.Services_View, UserAccountRolesModel.COL_Services_View.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -290,6 +296,11 @@ namespace iSpeakWebApp.Controllers
                 if (item.ExpenseCategories_Add) model.ExpenseCategories_Add = true;
                 if (item.ExpenseCategories_Edit) model.ExpenseCategories_Edit = true;
                 if (item.ExpenseCategories_View) model.ExpenseCategories_View = true;
+
+                //Services
+                if (item.Services_Add) model.Services_Add = true;
+                if (item.Services_Edit) model.Services_Edit = true;
+                if (item.Services_View) model.Services_View = true;
 
             }
 

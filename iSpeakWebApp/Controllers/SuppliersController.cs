@@ -12,14 +12,6 @@ namespace iSpeakWebApp.Controllers
     {
         private readonly DBContext db = new DBContext();
 
-        /* FILTER *********************************************************************************************************************************************/
-
-        public void setViewBag(string FILTER_Keyword, int? FILTER_Active)
-        {
-            ViewBag.FILTER_Keyword = FILTER_Keyword;
-            ViewBag.FILTER_Active = FILTER_Active;
-        }
-
         /* INDEX **********************************************************************************************************************************************/
 
         // GET: Suppliers
@@ -133,6 +125,12 @@ namespace iSpeakWebApp.Controllers
         }
 
         /* METHODS ********************************************************************************************************************************************/
+
+        public void setViewBag(string FILTER_Keyword, int? FILTER_Active)
+        {
+            ViewBag.FILTER_Keyword = FILTER_Keyword;
+            ViewBag.FILTER_Active = FILTER_Active;
+        }
 
         public static void setDropDownListViewBag(ControllerBase controller)
         {
