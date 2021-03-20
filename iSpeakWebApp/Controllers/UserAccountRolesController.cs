@@ -156,6 +156,12 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.Consignments_Edit, model.Consignments_Edit, UserAccountRolesModel.COL_Consignments_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.Consignments_View, model.Consignments_View, UserAccountRolesModel.COL_Consignments_View.LogDisplay);
 
+                    //Vouchers
+                    log = Helper.append(log, originalModel.Vouchers_Notes, model.Vouchers_Notes, UserAccountRolesModel.COL_Vouchers_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.Vouchers_Add, model.Vouchers_Add, UserAccountRolesModel.COL_Vouchers_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.Vouchers_Edit, model.Vouchers_Edit, UserAccountRolesModel.COL_Vouchers_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.Vouchers_View, model.Vouchers_View, UserAccountRolesModel.COL_Vouchers_View.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -237,6 +243,11 @@ namespace iSpeakWebApp.Controllers
                 if (item.Consignments_Add) model.Consignments_Add = true;
                 if (item.Consignments_Edit) model.Consignments_Edit = true;
                 if (item.Consignments_View) model.Consignments_View = true;
+
+                //Vouchers
+                if (item.Vouchers_Add) model.Vouchers_Add = true;
+                if (item.Vouchers_Edit) model.Vouchers_Edit = true;
+                if (item.Vouchers_View) model.Vouchers_View = true;
 
             }
 

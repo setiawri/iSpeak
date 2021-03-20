@@ -129,6 +129,7 @@
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Controllers\ActivityLogsController.cs" />
     <Compile Include="Controllers\ConsignmentsController.cs" />
+    <Compile Include="Controllers\VouchersController.cs" />
     <Compile Include="Controllers\LessonPackagesController.cs" />
     <Compile Include="Controllers\LessonTypesController.cs" />
     <Compile Include="Controllers\LanguagesController.cs" />
@@ -146,6 +147,7 @@
     </Compile>
     <Compile Include="Models\ActivityLogsModel.cs" />
     <Compile Include="Models\ConsignmentsModel.cs" />
+    <Compile Include="Models\VouchersModel.cs" />
     <Compile Include="Models\LessonPackagesModel.cs" />
     <Compile Include="Models\LessonTypesModel.cs" />
     <Compile Include="Models\LanguagesModel.cs" />
@@ -276,6 +278,9 @@
     <Content Include="Views\Consignments\Create.cshtml" />
     <Content Include="Views\Consignments\Edit.cshtml" />
     <Content Include="Views\Consignments\Index.cshtml" />
+    <Content Include="Views\Vouchers\Create.cshtml" />
+    <Content Include="Views\Vouchers\Edit.cshtml" />
+    <Content Include="Views\Vouchers\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\LIBUtil\LIBUtil\LIBUtil\LIBUtil.csproj">

@@ -157,7 +157,10 @@
                         {
                             <a href="@Url.Action("Index", "Consignments", new { rss=1 })" class="dropdown-item">Consignments</a>
                         }
-                        <a href="@Url.Action("Index", "Vouchers", new { rss=1 })" class="dropdown-item">Vouchers</a>
+                        @if (access.Vouchers_View)
+                        {
+                            <a href="@Url.Action("Index", "Vouchers", new { rss=1 })" class="dropdown-item">Vouchers</a>
+                        }
                         <a href="@Url.Action("Index", "Services", new { rss=1 })" class="dropdown-item">Services</a>
                         @if (access.PettyCashRecordsCategories_View)
                         {
