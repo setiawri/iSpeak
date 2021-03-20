@@ -96,7 +96,7 @@
                                                     <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a> @:•
                                                 }
                                                 <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
-                                                • <a href="javascript:void(0)" onclick="ResetPassword('@item.Id')">Reset Password</a>
+                                                • <a href="javascript:void(0)" onclick="AjaxUpdate('@item.Id', 'ResetPassword', '@ControllerName')">Reset Password</a>
                                             </td>
                                         </tr>
                                     }
@@ -111,23 +111,3 @@
     </div>
     <!-- /content area -->
 </div>
-
-<script type="text/javascript">
-
-    function ResetPassword(id) {
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("ResetPassword", "UserAccounts")',
-            data: {
-                UserAccounts_Id: id
-            },
-            success: function (data) {
-                bootbox.alert({ backdrop: true, message: "Password has been reset." });
-            }, //end success
-            error: function (result) {
-                bootbox.alert({ backdrop: true, message: "Error " + result });
-            } //end error
-        }); //end ajax
-    }
-
-</script>

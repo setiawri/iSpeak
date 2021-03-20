@@ -157,15 +157,15 @@ namespace iSpeakWebApp.Controllers
 
         /* RESET PASSWORD *************************************************************************************************************************************/
 
-        public JsonResult ResetPassword(Guid UserAccounts_Id)
+        public JsonResult ResetPassword(Guid id)
         {
             UserAccountsModel model = new UserAccountsModel();
-            model.Id = UserAccounts_Id;
+            model.Id = id;
             model.Password = HashPassword(SettingsController.get().ResetPassword);
             model.ResetPassword = true;
             updatePassword(model, "Password reset by admin");
 
-            return Json(new { Error = "" });
+            return Json(new { Message = "Password has been reset" });
         }
 
         /* LOGIN PAGE *****************************************************************************************************************************************/

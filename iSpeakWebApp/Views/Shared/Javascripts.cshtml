@@ -303,6 +303,27 @@ OTHER
         }); //end ajax
     }
 
+    // AJAX ========================================================================================================================================================
+
+    function AjaxUpdate(id, action, controller) {
+        var url = '@Url.Action("__action", "__controller")';
+        url = url.replace("__action", action).replace("__controller", controller);
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                id: id
+            },
+            success: function (data) {
+                if(data.Message != '')
+                    bootbox.alert({ backdrop: true, message: data.Message });
+            }, //end success
+            error: function (result) {
+                bootbox.alert({ backdrop: true, message: "Error " + result });
+            } //end error
+        }); //end ajax
+    }
+
     // DATATABLES PLUGIN ===========================================================================================================================================
 
     var datatable = $('.datatable').DataTable({
