@@ -29,3 +29,13 @@ on password reset, generate random password and send to user's Whatsapp number.
 create mailing list on whatsapp. create mechanism to allow user to unsubscribe
 
 happy birthday greetings on home page on user birthday date
+
+
+=====================================================================================================================================================================
+SOP
+=====================================================================================================================================================================
+
+Products pages is managed by managers only. Admin only input inventory based on available product and admin cannot see buy price listed in the product page.
+
+
+

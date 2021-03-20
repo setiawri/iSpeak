@@ -307,6 +307,24 @@ namespace iSpeakWebApp.Models
         public bool Services_Edit { get; set; }
         public static ModelMember COL_Services_Edit = new ModelMember { Name = "Services_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Services Edit") };
 
+        /* PRODUCTS *******************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string Products_Notes { get; set; }
+        public static ModelMember COL_Products_Notes = new ModelMember { Name = "Products_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Products Notes") };
+
+        [Display(Name = "Add")]
+        public bool Products_Add { get; set; }
+        public static ModelMember COL_Products_Add = new ModelMember { Name = "Products_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("Products Add") };
+
+        [Display(Name = "View")]
+        public bool Products_View { get; set; }
+        public static ModelMember COL_Products_View = new ModelMember { Name = "Products_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("Products View") };
+
+        [Display(Name = "Edit")]
+        public bool Products_Edit { get; set; }
+        public static ModelMember COL_Products_Edit = new ModelMember { Name = "Products_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Products Edit") };
+
         /******************************************************************************************************************************************************/
 
     }

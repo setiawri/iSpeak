@@ -63,7 +63,7 @@
                         Sale
                     </a>
                     <div class="dropdown-menu">
-                        <a href="@Url.Action("Index", "Sale", new { rss=1 })" class="dropdown-item">Sale Invoices</a>
+                        <a href="@Url.Action("Index", "Sale", new { rss=1 })" class="dropdown-item">Invoices</a>
                         <a href="@Url.Action("Print", "Payments", new { rss=1 })" class="dropdown-item">Payments</a>
                         <a href="@Url.Action("Index", "Return", new { rss=1 })" class="dropdown-item">Returns</a>
                     </div>
@@ -74,9 +74,9 @@
                         Schedules
                     </a>
                     <div class="dropdown-menu">
+                        <a href="@Url.Action("Search", "Schedules", new { rss=1 })" class="dropdown-item">Search</a>
                         <a href="@Url.Action("TutorIndex", "Schedules", new { rss=1 })" class="dropdown-item">Tutor</a>
                         <a href="@Url.Action("StudentIndex", "Schedules", new { rss=1 })" class="dropdown-item">Student</a>
-                        <a href="@Url.Action("Search", "Schedules", new { rss=1 })" class="dropdown-item">Search</a>
                     </div>
                 </li>
                 <li class="nav-item">
@@ -103,17 +103,18 @@
                         Internal
                     </a>
                     <div class="dropdown-menu">
+                        <div class="dropdown-submenu">
+                            <a href="#" class="dropdown-item dropdown-toggle">Payroll</a>
+                            <div class="dropdown-menu">
+                                <a href="@Url.Action("Index", "HourlyRates", new { rss=1 })" class="dropdown-item">Rates</a>
+                                <a href="@Url.Action("Payroll", "Reports", new { rss=1 })" class="dropdown-item">Payroll</a>
+                                <a href="@Url.Action("PayrollPayments", "Reports", new { rss=1 })" class="dropdown-item">Payments</a>
+                            </div>
+                        </div>
+                        <a href="@Url.Action("Index", "Expenses", new { rss=1 })" class="dropdown-item">Expenses</a>
                         <a href="@Url.Action("NewStudent", "Reports", new { rss=1 })" class="dropdown-item">New Student</a>
-                        <a href="@Url.Action("Index", "HourlyRates", new { rss=1 })" class="dropdown-item">Payroll Rates</a>
-                        <a href="@Url.Action("Index", "Payrolls", new { rss=1 })" class="dropdown-item">New Payroll</a>
-                        <a href="@Url.Action("Payroll", "Reports", new { rss=1 })" class="dropdown-item">Payroll</a>
-                        <a href="@Url.Action("PayrollPayments", "Reports", new { rss=1 })" class="dropdown-item">Payroll Payments</a>
                         <a href="@Url.Action("ProfitLoss", "Reports", new { rss=1 })" class="dropdown-item">Profit &amp; Loss</a>
                         <a href="@Url.Action("SendEmails", "Reports", new { rss=1 })" class="dropdown-item">Send Emails</a>
-                        @if (access.Settings_View)
-                        {
-                            <a href="@Url.Action("Edit", "Settings", new { rss = 1 })" class="dropdown-item">Application Settings</a>
-                        }
                     </div>
                 </li>
                 <li id="Menu_Settings" class="nav-item dropdown">
@@ -128,7 +129,10 @@
                                 {
                                     <a href="@Url.Action("Index", "Suppliers", new { rss=1 })" class="dropdown-item">Suppliers</a>
                                 }
-                                <a href="@Url.Action("Index", "Products", new { rss=1 })" class="dropdown-item">Products</a>
+                                @if (access.Products_View)
+                                {
+                                    <a href="@Url.Action("Index", "Products", new { rss=1 })" class="dropdown-item">Products</a>
+                                }
                                 @if (access.Units_View)
                                 {
                                     <a href="@Url.Action("Index", "Units", new { rss=1 })" class="dropdown-item">Units</a>
@@ -152,16 +156,10 @@
                                 }
                             </div>
                         </div>
-                        <div class="dropdown-submenu">
-                            <a href="#" class="dropdown-item dropdown-toggle">Expenses</a>
-                            <div class="dropdown-menu">
-                                @if (access.ExpenseCategories_View)
-                                {
-                                    <a href="@Url.Action("Index", "ExpenseCategories", new { rss=1 })" class="dropdown-item">Categories</a>
-                                }
-                                <a href="@Url.Action("Index", "Expenses", new { rss=1 })" class="dropdown-item">Expenses</a>
-                            </div>
-                        </div>
+                        @if (access.ExpenseCategories_View)
+                        {
+                            <a href="@Url.Action("Index", "ExpenseCategories", new { rss=1 })" class="dropdown-item">Expense Categories</a>
+                        }
                         @if (access.Consignments_View)
                         {
                             <a href="@Url.Action("Index", "Consignments", new { rss=1 })" class="dropdown-item">Consignments</a>
@@ -189,6 +187,10 @@
                         @if (access.Branches_View)
                         {
                             <a href="@Url.Action("Index", "Branches", new { rss=1 })" class="dropdown-item">Branches</a>
+                        }
+                        @if (access.Settings_View)
+                        {
+                            <a href="@Url.Action("Edit", "Settings", new { rss = 1 })" class="dropdown-item">Application Settings</a>
                         }
                     </div>
                 </li>
