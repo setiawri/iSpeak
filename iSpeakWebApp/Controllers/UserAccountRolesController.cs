@@ -162,6 +162,12 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.Vouchers_Edit, model.Vouchers_Edit, UserAccountRolesModel.COL_Vouchers_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.Vouchers_View, model.Vouchers_View, UserAccountRolesModel.COL_Vouchers_View.LogDisplay);
 
+                    //Suppliers
+                    log = Helper.append(log, originalModel.Suppliers_Notes, model.Suppliers_Notes, UserAccountRolesModel.COL_Suppliers_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.Suppliers_Add, model.Suppliers_Add, UserAccountRolesModel.COL_Suppliers_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.Suppliers_Edit, model.Suppliers_Edit, UserAccountRolesModel.COL_Suppliers_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.Suppliers_View, model.Suppliers_View, UserAccountRolesModel.COL_Suppliers_View.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -248,6 +254,11 @@ namespace iSpeakWebApp.Controllers
                 if (item.Vouchers_Add) model.Vouchers_Add = true;
                 if (item.Vouchers_Edit) model.Vouchers_Edit = true;
                 if (item.Vouchers_View) model.Vouchers_View = true;
+
+                //Suppliers
+                if (item.Suppliers_Add) model.Suppliers_Add = true;
+                if (item.Suppliers_Edit) model.Suppliers_Edit = true;
+                if (item.Suppliers_View) model.Suppliers_View = true;
 
             }
 

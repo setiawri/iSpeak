@@ -124,7 +124,10 @@
                         <div class="dropdown-submenu">
                             <a href="#" class="dropdown-item dropdown-toggle">Inventory</a>
                             <div class="dropdown-menu">
-                                <a href="@Url.Action("Index", "Suppliers", new { rss=1 })" class="dropdown-item">Suppliers</a>
+                                @if (access.Suppliers_View)
+                                {
+                                    <a href="@Url.Action("Index", "Suppliers", new { rss=1 })" class="dropdown-item">Suppliers</a>
+                                }
                                 <a href="@Url.Action("Index", "Products", new { rss=1 })" class="dropdown-item">Products</a>
                                 <a href="@Url.Action("Index", "Units", new { rss=1 })" class="dropdown-item">Units</a>
                             </div>
