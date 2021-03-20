@@ -271,6 +271,24 @@ namespace iSpeakWebApp.Models
         public bool Units_Edit { get; set; }
         public static ModelMember COL_Units_Edit = new ModelMember { Name = "Units_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Units Edit") };
 
+        /* EXPENSE CATEGORIES *********************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string ExpenseCategories_Notes { get; set; }
+        public static ModelMember COL_ExpenseCategories_Notes = new ModelMember { Name = "ExpenseCategories_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("ExpenseCategories Notes") };
+
+        [Display(Name = "Add")]
+        public bool ExpenseCategories_Add { get; set; }
+        public static ModelMember COL_ExpenseCategories_Add = new ModelMember { Name = "ExpenseCategories_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("ExpenseCategories Add") };
+
+        [Display(Name = "View")]
+        public bool ExpenseCategories_View { get; set; }
+        public static ModelMember COL_ExpenseCategories_View = new ModelMember { Name = "ExpenseCategories_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("ExpenseCategories View") };
+
+        [Display(Name = "Edit")]
+        public bool ExpenseCategories_Edit { get; set; }
+        public static ModelMember COL_ExpenseCategories_Edit = new ModelMember { Name = "ExpenseCategories_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("ExpenseCategories Edit") };
+
         /******************************************************************************************************************************************************/
 
     }

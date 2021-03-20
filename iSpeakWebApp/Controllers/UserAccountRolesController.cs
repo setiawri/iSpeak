@@ -8,8 +8,8 @@ using LIBUtil;
 
 /*
  * To add new user access:
- * - add items to database table UserAccountRoles
  * - add items in UserAccountRolesModel
+ * - add items to database table UserAccountRoles
  * - add items in Post UserAccountRolesController.Edit() 
  * - add items in UserAccountRolesController.getAccesses() 
  * - add items in UserAccountRoles > Edit.cshtml
@@ -183,6 +183,12 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.Units_Edit, model.Units_Edit, UserAccountRolesModel.COL_Units_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.Units_View, model.Units_View, UserAccountRolesModel.COL_Units_View.LogDisplay);
 
+                    //ExpenseCategories
+                    log = Helper.append(log, originalModel.ExpenseCategories_Notes, model.ExpenseCategories_Notes, UserAccountRolesModel.COL_ExpenseCategories_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.ExpenseCategories_Add, model.ExpenseCategories_Add, UserAccountRolesModel.COL_ExpenseCategories_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.ExpenseCategories_Edit, model.ExpenseCategories_Edit, UserAccountRolesModel.COL_ExpenseCategories_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.ExpenseCategories_View, model.ExpenseCategories_View, UserAccountRolesModel.COL_ExpenseCategories_View.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -279,6 +285,11 @@ namespace iSpeakWebApp.Controllers
                 if (item.Units_Add) model.Units_Add = true;
                 if (item.Units_Edit) model.Units_Edit = true;
                 if (item.Units_View) model.Units_View = true;
+
+                //ExpenseCategories
+                if (item.ExpenseCategories_Add) model.ExpenseCategories_Add = true;
+                if (item.ExpenseCategories_Edit) model.ExpenseCategories_Edit = true;
+                if (item.ExpenseCategories_View) model.ExpenseCategories_View = true;
 
             }
 

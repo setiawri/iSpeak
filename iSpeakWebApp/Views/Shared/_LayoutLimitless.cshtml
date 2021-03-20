@@ -144,18 +144,21 @@
                                 }
                                 @if (access.LessonTypes_View)
                                 {
-                                    <a href="@Url.Action("Index", "LessonTypes", new { rss=1 })" class="dropdown-item">Lesson Types</a>
+                                    <a href="@Url.Action("Index", "LessonTypes", new { rss=1 })" class="dropdown-item">Types</a>
                                 }
                                 @if (access.LessonPackages_View)
                                 {
-                                    <a href="@Url.Action("Index", "LessonPackages", new { rss=1 })" class="dropdown-item">Lesson Packages</a>
+                                    <a href="@Url.Action("Index", "LessonPackages", new { rss=1 })" class="dropdown-item">Packages</a>
                                 }
                             </div>
                         </div>
                         <div class="dropdown-submenu">
                             <a href="#" class="dropdown-item dropdown-toggle">Expenses</a>
                             <div class="dropdown-menu">
-                                <a href="@Url.Action("Index", "ExpenseCategories", new { rss=1 })" class="dropdown-item">Expense Categories</a>
+                                @if (access.ExpenseCategories_View)
+                                {
+                                    <a href="@Url.Action("Index", "ExpenseCategories", new { rss=1 })" class="dropdown-item">Categories</a>
+                                }
                                 <a href="@Url.Action("Index", "Expenses", new { rss=1 })" class="dropdown-item">Expenses</a>
                             </div>
                         </div>
