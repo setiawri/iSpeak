@@ -1,6 +1,7 @@
 ﻿@model iSpeakWebApp.Models.PettyCashRecordsCategoriesModel
 
 @{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     string ControllerName = "PettyCashRecordsCategories";
     ViewBag.SelectedNavigationMenu = "Settings";
     ViewBag.Root = "PETTY CASH CATEGORIES";
@@ -65,7 +66,7 @@
 
                     </fieldset>
 
-                    @if (iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session).PettyCashRecordsCategories_Edit)
+                    @if (access.PettyCashRecordsCategories_Edit)
                     {
                         <div>
                             <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>

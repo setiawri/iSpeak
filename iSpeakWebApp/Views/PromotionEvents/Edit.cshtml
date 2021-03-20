@@ -1,6 +1,7 @@
 ﻿@model iSpeakWebApp.Models.PromotionEventsModel
 
 @{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     string ControllerName = "PromotionEvents";
     ViewBag.SelectedNavigationMenu = "Settings";
     ViewBag.Root = "PROMOTION EVENTS";
@@ -84,7 +85,7 @@
 
                         </fieldset>
 
-                        @if (iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session).PromotionEvents_Edit)
+                        @if (access.PromotionEvents_Edit)
                         {
                             <div>
                                 <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>

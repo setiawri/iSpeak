@@ -1,6 +1,7 @@
 ﻿@model iSpeakWebApp.Models.UserAccountsModel
 
 @{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     string ControllerName = "UserAccounts";
     ViewBag.SelectedNavigationMenu = "Accounts";
     ViewBag.Root = "ACCOUNT";
@@ -141,7 +142,7 @@
 
                         </fieldset>
 
-                        @if (iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session).UserAccounts_Edit)
+                        @if (access.UserAccounts_Edit)
                         {
                             <div>
                                 <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>

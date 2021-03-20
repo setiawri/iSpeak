@@ -1,6 +1,7 @@
 ﻿@model iSpeakWebApp.Models.BranchesModel
 
 @{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     string ControllerName = "Branches";
     ViewBag.SelectedNavigationMenu = "Settings";
     ViewBag.Root = "BRANCHES";
@@ -79,7 +80,7 @@
 
                         </fieldset>
 
-                        @if (iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session).Branches_Edit)
+                        @if (access.Branches_Edit)
                         {
                             <div>
                                 <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>

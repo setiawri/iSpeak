@@ -1,6 +1,7 @@
 ﻿@model iSpeakWebApp.Models.LanguagesModel
 
 @{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     string ControllerName = "Languages";
     ViewBag.SelectedNavigationMenu = "Settings";
     ViewBag.Root = "LANGUAGES";
@@ -46,7 +47,7 @@
 
                     </fieldset>
 
-                    @if (iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session).Languages_Edit)
+                    @if (access.Languages_Edit)
                     {
                         <div>
                             <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>

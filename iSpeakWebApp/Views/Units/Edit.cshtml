@@ -1,6 +1,7 @@
 ﻿@model iSpeakWebApp.Models.UnitsModel
 
 @{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     string ControllerName = "Units";
     ViewBag.SelectedNavigationMenu = "Settings";
     ViewBag.Root = "UNITS";
@@ -46,7 +47,7 @@
 
                     </fieldset>
 
-                    @if (iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session).Units_Edit)
+                    @if (access.Units_Edit)
                     {
                         <div>
                             <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
