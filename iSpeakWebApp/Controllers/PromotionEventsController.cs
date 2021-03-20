@@ -25,6 +25,10 @@ namespace iSpeakWebApp.Controllers
         // GET: PromotionEvents
         public ActionResult Index(int? rss, string FILTER_Keyword)
         {
+            if (!UserAccountsController.getUserAccess(Session).PromotionEvents_View)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
+            setViewBag(FILTER_Keyword);
             if (rss != null)
             {
                 ViewBag.RemoveDatatablesStateSave = rss;
@@ -32,7 +36,6 @@ namespace iSpeakWebApp.Controllers
             }
             else
             {
-                setViewBag(FILTER_Keyword);
                 return View(get(FILTER_Keyword));
             }
         }
@@ -50,6 +53,9 @@ namespace iSpeakWebApp.Controllers
         // GET: PromotionEvents/Create
         public ActionResult Create(string FILTER_Keyword)
         {
+            if (!UserAccountsController.getUserAccess(Session).PromotionEvents_Add)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
             setViewBag(FILTER_Keyword);
             return View(new PromotionEventsModel());
         }
@@ -83,6 +89,9 @@ namespace iSpeakWebApp.Controllers
         // GET: PromotionEvents/Edit/{id}
         public ActionResult Edit(Guid? id, string FILTER_Keyword)
         {
+            if (!UserAccountsController.getUserAccess(Session).PromotionEvents_Edit)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
             if (id == null)
                 return RedirectToAction(nameof(Index));
 

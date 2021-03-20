@@ -28,6 +28,7 @@ namespace iSpeakWebApp.Controllers
             if (!UserAccountsController.getUserAccess(Session).LessonTypes_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
+            setViewBag(FILTER_Keyword, FILTER_Active);
             if (rss != null)
             {
                 ViewBag.RemoveDatatablesStateSave = rss;
@@ -35,7 +36,6 @@ namespace iSpeakWebApp.Controllers
             }
             else
             {
-                setViewBag(FILTER_Keyword, FILTER_Active);
                 return View(get(FILTER_Keyword, FILTER_Active));
             }
         }

@@ -19,15 +19,14 @@ namespace iSpeakWebApp.Controllers
             if (!UserAccountsController.getUserAccess(Session).Consignments_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Branches_Id);
             if (rss != null)
             {
                 ViewBag.RemoveDatatablesStateSave = rss;
-                setViewBag(null, null, null);
                 return View();
             }
             else
             {
-                setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Branches_Id);
                 return View(get(FILTER_Keyword, FILTER_Active, FILTER_Branches_Id));
             }
         }

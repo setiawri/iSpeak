@@ -25,6 +25,10 @@ namespace iSpeakWebApp.Controllers
         // GET: PettyCashRecordsCategories
         public ActionResult Index(int? rss, string FILTER_Keyword, int? FILTER_Active)
         {
+            if (!UserAccountsController.getUserAccess(Session).PettyCashRecordsCategories_View)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
+            setViewBag(FILTER_Keyword, FILTER_Active);
             if (rss != null)
             {
                 ViewBag.RemoveDatatablesStateSave = rss;
@@ -32,7 +36,6 @@ namespace iSpeakWebApp.Controllers
             }
             else
             {
-                setViewBag(FILTER_Keyword, FILTER_Active);
                 return View(get(FILTER_Keyword, FILTER_Active));
             }
         }
@@ -50,6 +53,9 @@ namespace iSpeakWebApp.Controllers
         // GET: PettyCashRecordsCategories/Create
         public ActionResult Create(string FILTER_Keyword, int? FILTER_Active)
         {
+            if (!UserAccountsController.getUserAccess(Session).PettyCashRecordsCategories_Add)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
             setViewBag(FILTER_Keyword, FILTER_Active);
             return View();
         }
@@ -83,6 +89,9 @@ namespace iSpeakWebApp.Controllers
         // GET: PettyCashRecordsCategories/Edit/{id}
         public ActionResult Edit(Guid? id, string FILTER_Keyword, int? FILTER_Active)
         {
+            if (!UserAccountsController.getUserAccess(Session).PettyCashRecordsCategories_Edit)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
             if (id == null)
                 return RedirectToAction(nameof(Index));
 

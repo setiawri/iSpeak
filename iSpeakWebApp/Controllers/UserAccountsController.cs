@@ -39,6 +39,9 @@ namespace iSpeakWebApp.Controllers
         // GET: UserAccounts
         public ActionResult Index(int? rss, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
         {
+            if (!UserAccountsController.getUserAccess(Session).UserAccounts_View)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
             setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id);
             if (rss != null)
             {
@@ -64,6 +67,9 @@ namespace iSpeakWebApp.Controllers
         // GET: UserAccounts/Create
         public ActionResult Create(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
         {
+            if (!UserAccountsController.getUserAccess(Session).UserAccounts_Add)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
             setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id);
             return View(new UserAccountsModel());
         }
@@ -98,6 +104,9 @@ namespace iSpeakWebApp.Controllers
         // GET: UserAccounts/Edit/{id}
         public ActionResult Edit(Guid? id, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
         {
+            if (!UserAccountsController.getUserAccess(Session).UserAccounts_Edit)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
             if (id == null)
                 return RedirectToAction(nameof(Index));
 

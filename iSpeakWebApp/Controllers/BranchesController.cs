@@ -44,14 +44,17 @@ namespace iSpeakWebApp.Controllers
         // GET: Branches
         public ActionResult Index(int? rss, string FILTER_Keyword, int? FILTER_Active)
         {
-            if(rss != null)
+            if (!UserAccountsController.getUserAccess(Session).Branches_View)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
+            setViewBag(FILTER_Keyword, FILTER_Active);
+            if (rss != null)
             {
                 ViewBag.RemoveDatatablesStateSave = rss;
                 return View();
             }
             else
             {
-                setViewBag(FILTER_Keyword, FILTER_Active);
                 return View(get(FILTER_Keyword, FILTER_Active));
             }
         }
@@ -69,6 +72,9 @@ namespace iSpeakWebApp.Controllers
         // GET: Branches/Create
         public ActionResult Create(string FILTER_Keyword, int? FILTER_Active)
         {
+            if (!UserAccountsController.getUserAccess(Session).Branches_Add)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
             setViewBag(FILTER_Keyword, FILTER_Active);
             return View();
         }
@@ -103,6 +109,9 @@ namespace iSpeakWebApp.Controllers
         // GET: Branches/Edit/{id}
         public ActionResult Edit(Guid? id, string FILTER_Keyword, int? FILTER_Active)
         {
+            if (!UserAccountsController.getUserAccess(Session).Branches_Edit)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
             if (id == null)
                 return RedirectToAction(nameof(Index));
 

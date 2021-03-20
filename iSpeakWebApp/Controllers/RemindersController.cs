@@ -29,6 +29,9 @@ namespace iSpeakWebApp.Controllers
 
         public ActionResult Create()
         {
+            if (!UserAccountsController.getUserAccess(Session).Reminders_Add)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
             return View();
         }
 
@@ -53,6 +56,9 @@ namespace iSpeakWebApp.Controllers
 
         public ActionResult Edit(Guid? Id)
         {
+            if (!UserAccountsController.getUserAccess(Session).Reminders_Edit)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
             if (Id == null)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 

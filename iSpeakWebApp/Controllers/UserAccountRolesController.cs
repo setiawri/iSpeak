@@ -28,6 +28,9 @@ namespace iSpeakWebApp.Controllers
         // GET: UserAccountRoles
         public ActionResult Index(int? rss)
         {
+            if (!UserAccountsController.getUserAccess(Session).UserAccountRoles_View)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
             ViewBag.RemoveDatatablesStateSave = rss;
 
             return View(get());
@@ -38,6 +41,9 @@ namespace iSpeakWebApp.Controllers
         // GET: UserAccountRoles/Create
         public ActionResult Create()
         {
+            if (!UserAccountsController.getUserAccess(Session).UserAccountRoles_Add)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
             return View();
         }
 
@@ -68,6 +74,9 @@ namespace iSpeakWebApp.Controllers
         // GET: UserAccountRoles/Edit/{id}
         public ActionResult Edit(Guid? id)
         {
+            if (!UserAccountsController.getUserAccess(Session).UserAccountRoles_Edit)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
             if (id == null)
                 return RedirectToAction(nameof(Index));
 

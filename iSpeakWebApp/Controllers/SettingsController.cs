@@ -13,13 +13,23 @@ namespace iSpeakWebApp.Controllers
     {
         private readonly DBContext db = new DBContext();
 
+        private void setViewBag(SettingsModel model)
+        {
+            ViewBag.ResetPassword = model.ResetPassword;
+            ViewBag.PettyCashRecordsCategories = new SelectList(db.PettyCashRecordsCategories.OrderBy(x => x.Name).ToList(), PettyCashRecordsCategoriesModel.COL_Id.Name, UserAccountRolesModel.COL_Name.Name);
+            UserAccountRolesController.setDropDownListViewBag(this);
+        }
+
         /* EDIT ***********************************************************************************************************************************************/
 
         // GET: Settings/Edit
         public ActionResult Edit()
         {
+            if (!UserAccountsController.getUserAccess(Session).Settings_View)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
             SettingsModel model = get();
-            setEditViewBags(model);
+            setViewBag(model);
             return View(model);
         }
 
@@ -28,6 +38,9 @@ namespace iSpeakWebApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(SettingsModel modifiedModel, List<HttpPostedFileBase> uploadFiles)
         {
+            if (!UserAccountsController.getUserAccess(Session).Settings_Edit)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
             if (ModelState.IsValid)
             {
                 //Prepare changes
@@ -73,15 +86,8 @@ namespace iSpeakWebApp.Controllers
                 }
             }
 
-            setEditViewBags(modifiedModel);
+            setViewBag(modifiedModel);
             return View(modifiedModel);
-        }
-
-        private void setEditViewBags(SettingsModel model)
-        {
-            ViewBag.ResetPassword = model.ResetPassword;
-            ViewBag.PettyCashRecordsCategories = new SelectList(db.PettyCashRecordsCategories.OrderBy(x => x.Name).ToList(), PettyCashRecordsCategoriesModel.COL_Id.Name, UserAccountRolesModel.COL_Name.Name);
-            UserAccountRolesController.setDropDownListViewBag(this);
         }
 
         /* METHODS ********************************************************************************************************************************************/

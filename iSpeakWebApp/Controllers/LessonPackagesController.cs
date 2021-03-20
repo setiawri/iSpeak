@@ -31,15 +31,14 @@ namespace iSpeakWebApp.Controllers
             if (!UserAccountsController.getUserAccess(Session).LessonPackages_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
             if (rss != null)
             {
                 ViewBag.RemoveDatatablesStateSave = rss;
-                setViewBag(null, null, null, null);
                 return View();
             }
             else
             {
-                setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
                 return View(get(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id));
             }
         }
