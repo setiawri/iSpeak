@@ -15,7 +15,8 @@ namespace iSpeakWebApp.Controllers
         /* INDEX **********************************************************************************************************************************************/
 
         // GET: SaleInvoices
-        public ActionResult Index(int? rss, string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
+        public ActionResult Index(int? rss, string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, 
+            bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
             if (!UserAccountsController.getUserAccess(Session).SaleInvoices_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
@@ -40,7 +41,8 @@ namespace iSpeakWebApp.Controllers
 
         // POST: SaleInvoices
         [HttpPost]
-        public ActionResult Index(string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
+        public ActionResult Index(string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, 
+            bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
             setViewBag(FILTER_Keyword, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
             return View(get(FILTER_Keyword, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo));
@@ -49,7 +51,8 @@ namespace iSpeakWebApp.Controllers
         /* CREATE *********************************************************************************************************************************************/
 
         // GET: SaleInvoices/Create
-        public ActionResult Create(string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, bool? FILTER_chkDateFrom, DateTime FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
+        public ActionResult Create(string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, 
+            bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
             if (!UserAccountsController.getUserAccess(Session).SaleInvoices_Add)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
@@ -61,12 +64,21 @@ namespace iSpeakWebApp.Controllers
         // POST: SaleInvoices/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(SaleInvoicesModel model, string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, bool? FILTER_chkDateFrom, DateTime FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
+        public ActionResult Create(SaleInvoicesModel model, string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, 
+            bool? FILTER_chkDateFrom, DateTime FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
             if (ModelState.IsValid)
             {
                 add(model);
-                return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword });
+                return RedirectToAction(nameof(Index), new { 
+                    FILTER_Keyword = FILTER_Keyword,
+                    FILTER_Cancelled = FILTER_Cancelled,
+                    FILTER_Approved = FILTER_Approved,
+                    FILTER_chkDateFrom = FILTER_chkDateFrom,
+                    FILTER_DateFrom = FILTER_DateFrom,
+                    FILTER_chkDateTo = FILTER_chkDateTo,
+                    FILTER_DateTo = FILTER_DateTo
+                });
             }
 
             setViewBag(FILTER_Keyword, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
@@ -75,7 +87,8 @@ namespace iSpeakWebApp.Controllers
 
         /* METHODS ********************************************************************************************************************************************/
 
-        public void setViewBag(string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
+        public void setViewBag(string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, 
+            bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
             ViewBag.FILTER_Keyword = FILTER_Keyword;
             ViewBag.FILTER_Cancelled = FILTER_Cancelled;
@@ -169,10 +182,12 @@ namespace iSpeakWebApp.Controllers
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public List<SaleInvoicesModel> get(string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo) 
+        public List<SaleInvoicesModel> get(string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved,
+            bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo) 
         { return get(Session, null, FILTER_Keyword, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo, FILTER_Cancelled, FILTER_Approved); }
         public SaleInvoicesModel get(Guid Id) { return get(Session, Id, null, false, null, false, null, null, null).FirstOrDefault(); }
-        public static List<SaleInvoicesModel> get(HttpSessionStateBase Session, Guid? Id, string FILTER_Keyword, bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo, 
+        public static List<SaleInvoicesModel> get(HttpSessionStateBase Session, Guid? Id, string FILTER_Keyword, 
+            bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo, 
             int? Cancelled, int? IsChecked)
         {
             Guid Branches_Id = Helper.getActiveBranchId(Session);

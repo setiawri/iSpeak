@@ -4,8 +4,8 @@
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     string ControllerName = "Services";
     ViewBag.SelectedNavigationMenu = "Settings";
-    ViewBag.Root = "SERVICES";
-    ViewBag.Title = "Index";
+    ViewBag.Title = "SERVICES";
+    ViewBag.Subtitle = "Index";
 }
 
 <div class="content-wrapper">
@@ -16,7 +16,7 @@
             <!-- Form inputs -->
             <div class="card animated bounceInLeft">
                 <div class="card-header header-elements-inline pb-1">
-                    <h5 class="card-title">@ViewBag.Root</h5>
+                    <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
                 </div>
                 <div class="card-body">
 

@@ -1,10 +1,10 @@
-﻿@model iSpeakWebApp.Models.ServicesModel
+﻿@model iSpeakWebApp.Models.SaleInvoicesModel
 
 @{
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
-    string ControllerName = "Services";
+    string ControllerName = "SaleInvoices";
     ViewBag.SelectedNavigationMenu = "Settings";
-    ViewBag.Title = "SERVICES";
+    ViewBag.Title = "SALE INVOICES";
     ViewBag.Subtitle = "Create";
 }
 
@@ -24,25 +24,9 @@
                     <fieldset class="mb-3">
                         <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Subtitle</legend>
 
-                        <div class="form-group row">
-                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label col-lg-2 required" })
-                            <div class="col-lg-2">
-                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            @Html.LabelFor(model => model.Units_Id, htmlAttributes: new { @class = "col-form-label col-lg-2 required" })
-                            <div class="col-lg-2">
-                                @Html.DropDownListFor(model => model.Units_Id, ViewBag.Units as SelectList, "Pilih", new { @class = "form-control select2" })
-                                @Html.ValidationMessageFor(model => model.Units_Id, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
                     </fieldset>
 
-                    @if (access.Services_Add)
+                    @if (access.SaleInvoices_Add)
                     {
                         <div>
                             <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>

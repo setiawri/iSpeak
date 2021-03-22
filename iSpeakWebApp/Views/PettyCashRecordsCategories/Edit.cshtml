@@ -4,8 +4,8 @@
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     string ControllerName = "PettyCashRecordsCategories";
     ViewBag.SelectedNavigationMenu = "Settings";
-    ViewBag.Root = "PETTY CASH CATEGORIES";
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "PETTY CASH CATEGORIES";
+    ViewBag.Subtitle = "Edit";
 }
 
 <div class="content-wrapper">
@@ -18,11 +18,11 @@
             <!-- Form inputs -->
             <div class="card">
                 <div class="card-header header-elements-inline">
-                    <h5 class="card-title">@ViewBag.Root</h5>
+                    <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
                 </div>
                 <div class="card-body">
                     <fieldset class="mb-3">
-                        <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Title</legend>
+                        <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Subtitle</legend>
 
                         <div class="form-group row">
                             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label col-lg-2 required" })
