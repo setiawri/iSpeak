@@ -206,6 +206,7 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.SaleInvoices_Add, model.SaleInvoices_Add, UserAccountRolesModel.COL_SaleInvoices_Add.LogDisplay);
                     log = Helper.append(log, originalModel.SaleInvoices_Edit, model.SaleInvoices_Edit, UserAccountRolesModel.COL_SaleInvoices_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.SaleInvoices_View, model.SaleInvoices_View, UserAccountRolesModel.COL_SaleInvoices_View.LogDisplay);
+                    log = Helper.append(log, originalModel.SaleInvoices_Approve, model.SaleInvoices_Approve, UserAccountRolesModel.COL_SaleInvoices_Approve.LogDisplay);
                     log = Helper.append(log, originalModel.SaleInvoices_TutorTravelCost_View, model.SaleInvoices_TutorTravelCost_View, UserAccountRolesModel.COL_SaleInvoices_TutorTravelCost_View.LogDisplay);
 
                     if (!string.IsNullOrEmpty(log))
@@ -324,6 +325,7 @@ namespace iSpeakWebApp.Controllers
                 if (item.SaleInvoices_Add) model.SaleInvoices_Add = true;
                 if (item.SaleInvoices_Edit) model.SaleInvoices_Edit = true;
                 if (item.SaleInvoices_View) model.SaleInvoices_View = true;
+                if (item.SaleInvoices_Approve) model.SaleInvoices_Approve = true;
                 if (item.SaleInvoices_TutorTravelCost_View) model.SaleInvoices_TutorTravelCost_View = true;
 
             }

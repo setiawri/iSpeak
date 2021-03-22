@@ -19,6 +19,8 @@ Home:
 - when login timeout, can still click on Birthdays tab and click load button which will display error
 - add Keyword filter on reminders
 
+ActivityLogs:
+- add feature to input new log on pop up activity log
 
 What can be done to avoid the same student re-registered at different branch because the student is already in the system but cannot be viewed by admin at the new branch
 

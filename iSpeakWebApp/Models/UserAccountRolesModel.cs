@@ -343,6 +343,10 @@ namespace iSpeakWebApp.Models
         public bool SaleInvoices_Edit { get; set; }
         public static ModelMember COL_SaleInvoices_Edit = new ModelMember { Name = "SaleInvoices_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("SaleInvoices Edit") };
 
+        [Display(Name = "Approve")]
+        public bool SaleInvoices_Approve { get; set; }
+        public static ModelMember COL_SaleInvoices_Approve = new ModelMember { Name = "SaleInvoices_Approve", Display = "Approve", LogDisplay = ActivityLogsController.editBooleanFormat("SaleInvoices Approve") };
+
         [Display(Name = "View Tutor Travel Cost")]
         public bool SaleInvoices_TutorTravelCost_View { get; set; }
         public static ModelMember COL_SaleInvoices_TutorTravelCost_View = new ModelMember { Name = "SaleInvoices_TutorTravelCost_View", Display = "View Tutor Travel Cost", LogDisplay = ActivityLogsController.editBooleanFormat("SaleInvoices Tutor Travel Cost View") };

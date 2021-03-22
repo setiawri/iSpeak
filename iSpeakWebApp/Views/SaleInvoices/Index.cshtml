@@ -97,7 +97,10 @@
                                     <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Amount)</th>
                                     <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Due)</th>
                                     <th class="non-searchable non-sortable" style="width:0px;"></th>
-                                    <th class="non-searchable non-sortable" style="width:0px;">Approval</th>
+                                    @if (access.SaleInvoices_Approve)
+                                    {
+                                        <th class="non-searchable non-sortable" style="width:0px;">Approval</th>
+                                    }
                                     <th class="non-searchable non-sortable" style="width:70px;"></th>
                                     <th class="non-searchable non-sortable" style="width:180px;"></th>
                                 </tr>
@@ -128,9 +131,12 @@
                                                 <input type="checkbox" class="check-styled" id="@item.Id" />
                                             }
                                         </td>
-                                        <td class="align-top" style="text-align:center;">
-                                            @Html.CheckBoxFor(modelItem => item.IsChecked, new { @class = "check-styled", onclick=string.Format("UpdateApproval(this, '{0}')", item.Id) })
-                                        </td>
+                                        @if (access.SaleInvoices_Approve)
+                                        {
+                                            <td class="align-top" style="text-align:center;">
+                                                @Html.CheckBoxFor(modelItem => item.IsChecked, new { @class = "check-styled", onclick=string.Format("UpdateApproval(this, '{0}')", item.Id) })
+                                            </td>
+                                        }
                                         <td class="align-top">
                                             @if (!item.Cancelled)
                                             {

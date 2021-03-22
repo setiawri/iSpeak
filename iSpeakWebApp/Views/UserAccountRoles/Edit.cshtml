@@ -565,6 +565,10 @@
                                     </div>
                                     @Html.LabelFor(model => model.SaleInvoices_Edit, htmlAttributes: new { @class = "input-group-text mr-2" })
                                     <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.SaleInvoices_Approve)
+                                    </div>
+                                    @Html.LabelFor(model => model.SaleInvoices_Approve, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
                                         @Html.CheckBoxFor(model => model.SaleInvoices_TutorTravelCost_View)
                                     </div>
                                     @Html.LabelFor(model => model.SaleInvoices_TutorTravelCost_View, htmlAttributes: new { @class = "input-group-text mr-2" })
