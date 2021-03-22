@@ -30,12 +30,19 @@ create mailing list on whatsapp. create mechanism to allow user to unsubscribe
 
 happy birthday greetings on home page on user birthday date
 
+Table SaleInvoiceItems COLUMN SaleInvoiceItems_Vouchers_Id: can this be removed and replaced with columns from table SaleInvoiceItems_Vouchers: Voucher_Ids (rename to Vouchers) and Amount (rename to VouchersAmount)?
 
 =====================================================================================================================================================================
 SOP
 =====================================================================================================================================================================
 
 Products pages is managed by managers only. Admin only input inventory based on available product and admin cannot see buy price listed in the product page.
+
+SALES
+=====
+- cancel button available if: 
+	> all payments are cancelled
+	> 
 
 
 

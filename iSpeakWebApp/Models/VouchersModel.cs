@@ -24,7 +24,7 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Description = new ModelMember { Name = "Description", Display = "Description", LogDisplay = ActivityLogsController.editStringFormat("Description") };
 
         [DisplayFormat(DataFormatString = "{0:N0}")]
-        public decimal Amount { get; set; } = 0;
+        public int Amount { get; set; } = 0;
         public static ModelMember COL_Amount = new ModelMember { Name = "Amount", Display = "Amount", LogDisplay = ActivityLogsController.editIntFormat("Amount") };
     }
 }

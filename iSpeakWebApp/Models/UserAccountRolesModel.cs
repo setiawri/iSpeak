@@ -325,6 +325,28 @@ namespace iSpeakWebApp.Models
         public bool Products_Edit { get; set; }
         public static ModelMember COL_Products_Edit = new ModelMember { Name = "Products_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Products Edit") };
 
+        /* SALE INVOICES **************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string SaleInvoices_Notes { get; set; }
+        public static ModelMember COL_SaleInvoices_Notes = new ModelMember { Name = "SaleInvoices_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("SaleInvoices Notes") };
+
+        [Display(Name = "Add")]
+        public bool SaleInvoices_Add { get; set; }
+        public static ModelMember COL_SaleInvoices_Add = new ModelMember { Name = "SaleInvoices_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("SaleInvoices Add") };
+
+        [Display(Name = "View")]
+        public bool SaleInvoices_View { get; set; }
+        public static ModelMember COL_SaleInvoices_View = new ModelMember { Name = "SaleInvoices_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("SaleInvoices View") };
+
+        [Display(Name = "Edit")]
+        public bool SaleInvoices_Edit { get; set; }
+        public static ModelMember COL_SaleInvoices_Edit = new ModelMember { Name = "SaleInvoices_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("SaleInvoices Edit") };
+
+        [Display(Name = "View Tutor Travel Cost")]
+        public bool SaleInvoices_TutorTravelCost_View { get; set; }
+        public static ModelMember COL_SaleInvoices_TutorTravelCost_View = new ModelMember { Name = "SaleInvoices_TutorTravelCost_View", Display = "View Tutor Travel Cost", LogDisplay = ActivityLogsController.editBooleanFormat("SaleInvoices Tutor Travel Cost View") };
+
         /******************************************************************************************************************************************************/
 
     }

@@ -63,7 +63,10 @@
                         Sale
                     </a>
                     <div class="dropdown-menu">
-                        <a href="@Url.Action("Index", "Sale", new { rss=1 })" class="dropdown-item">Invoices</a>
+                        @if (access.SaleInvoices_View)
+                        {
+                            <a href="@Url.Action("Index", "SaleInvoices", new { rss=1 })" class="dropdown-item">Invoices</a>
+                        }
                         <a href="@Url.Action("Print", "Payments", new { rss=1 })" class="dropdown-item">Payments</a>
                         <a href="@Url.Action("Index", "Return", new { rss=1 })" class="dropdown-item">Returns</a>
                     </div>

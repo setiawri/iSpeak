@@ -52,6 +52,7 @@
                                 </select>
                             </div>
                         </div>
+
                         <div class="ml-0 mr-2">
                             <label class="mb-0">&nbsp;</label>
                             <button type="submit" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>LOAD</button>
@@ -91,7 +92,7 @@
                                             <td>
                                                 @if (access.Consignments_Edit)
                                                 {
-                                                    <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a>@(" • ")
+                                                    <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a>@:•
                                                 }
                                                 <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                             </td>

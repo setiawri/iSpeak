@@ -201,6 +201,13 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.Products_Edit, model.Products_Edit, UserAccountRolesModel.COL_Products_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.Products_View, model.Products_View, UserAccountRolesModel.COL_Products_View.LogDisplay);
 
+                    //SaleInvoices
+                    log = Helper.append(log, originalModel.SaleInvoices_Notes, model.SaleInvoices_Notes, UserAccountRolesModel.COL_SaleInvoices_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.SaleInvoices_Add, model.SaleInvoices_Add, UserAccountRolesModel.COL_SaleInvoices_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.SaleInvoices_Edit, model.SaleInvoices_Edit, UserAccountRolesModel.COL_SaleInvoices_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.SaleInvoices_View, model.SaleInvoices_View, UserAccountRolesModel.COL_SaleInvoices_View.LogDisplay);
+                    log = Helper.append(log, originalModel.SaleInvoices_TutorTravelCost_View, model.SaleInvoices_TutorTravelCost_View, UserAccountRolesModel.COL_SaleInvoices_TutorTravelCost_View.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -312,6 +319,12 @@ namespace iSpeakWebApp.Controllers
                 if (item.Products_Add) model.Products_Add = true;
                 if (item.Products_Edit) model.Products_Edit = true;
                 if (item.Products_View) model.Products_View = true;
+
+                //SaleInvoices
+                if (item.SaleInvoices_Add) model.SaleInvoices_Add = true;
+                if (item.SaleInvoices_Edit) model.SaleInvoices_Edit = true;
+                if (item.SaleInvoices_View) model.SaleInvoices_View = true;
+                if (item.SaleInvoices_TutorTravelCost_View) model.SaleInvoices_TutorTravelCost_View = true;
 
             }
 

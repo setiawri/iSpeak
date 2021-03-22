@@ -426,7 +426,7 @@ namespace iSpeakWebApp.Controllers
         public List<UserAccountsModel> get(Guid? Branches_Id, Guid? Id, string Username, string Password, int? Active, Guid? UserAccountRoles_Id, int? BirthdayListMonth, string FILTER_Keyword, Guid? Language_Id)
         {
             if (Branches_Id == null && Helper.isActiveBranchAvailable(Session))
-                Helper.getActiveBranchId(Session);
+                Branches_Id = Helper.getActiveBranchId(Session);
 
             List<UserAccountsModel> models = db.Database.SqlQuery<UserAccountsModel>(@"
                         SELECT UserAccounts.*

@@ -1,0 +1,173 @@
+﻿@model IEnumerable<iSpeakWebApp.Models.SaleInvoicesModel>
+
+@{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    string ControllerName = "SaleInvoices";
+    ViewBag.SelectedNavigationMenu = "Settings";
+    ViewBag.Root = "SALE INVOICES";
+    ViewBag.Title = "Index";
+}
+
+<div class="content-wrapper">
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm("Index", ControllerName, FormMethod.Post))
+        {
+            <!-- Form inputs -->
+            <div class="card animated bounceInLeft">
+                <div class="card-header header-elements-inline pb-1">
+                    <h5 class="card-title">@ViewBag.Root</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row mx-0">
+                        @if (access.SaleInvoices_Add)
+                        {
+                            <div class="mr-2">
+                                <label class="mb-0">&nbsp;</label>
+                                <div><a href="javascript:void(0)" onclick="Action('Create', '@ControllerName')" class="btn btn-success">CREATE<i class="icon-plus22 ml-2"></i></a></div>
+                            </div>
+                        }
+                        <div class="row ml-0 mr-2" style="width:100px;">
+                            <label class="mb-0">No</label>
+                            <div class="input-group">
+                                <input type="text" name="FILTER_Keyword" id="FILTER_Keyword" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:150px;">
+                            <label class="mb-0">Date From</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        @Html.CheckBox("FILTER_chkDateFrom", true, new { @class = "form-check-input check-styled" })
+                                    </div>
+                                </div>
+                                @Html.Editor("FILTER_DateFrom", new { htmlAttributes = new { @class = "form-control daterange-picker" } })
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:150px;">
+                            <label class="mb-0">Date To</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        @Html.CheckBox("FILTER_chkDateTo", true, new { @class = "form-check-input check-styled" })
+                                    </div>
+                                </div>
+                                @Html.Editor("FILTER_DateTo", new { htmlAttributes = new { @class = "form-control daterange-picker" } })
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2">
+                            <label class="mb-0">Cancelled</label>
+                            <div class="input-group">
+                                <select id="FILTER_Cancelled" name="FILTER_Cancelled" class="custom-select">
+                                    <option value="" selected>ALL</option>
+                                    <option value="1">YES</option>
+                                    <option value="0">NO</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2">
+                            <label class="mb-0">Approved</label>
+                            <div class="input-group">
+                                <select id="FILTER_Approved" name="FILTER_Approved" class="custom-select">
+                                    <option value="" selected>ALL</option>
+                                    <option value="1">YES</option>
+                                    <option value="0">NO</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="ml-0 mr-2">
+                            <label class="mb-0">&nbsp;</label>
+                            <button type="submit" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>LOAD</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover datatable">
+                            <thead>
+                                <tr>
+                                    <th style="width:50px;">@Html.DisplayNameFor(model => model.No)</th>
+                                    <th style="width:150px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Customer_UserAccounts_Id)</th>
+                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Amount)</th>
+                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Due)</th>
+                                    <th class="non-searchable non-sortable" style="width:0px;"></th>
+                                    <th class="non-searchable non-sortable" style="width:0px;">Approval</th>
+                                    <th class="non-searchable non-sortable" style="width:70px;"></th>
+                                    <th class="non-searchable non-sortable" style="width:180px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null) { foreach (var item in Model)
+                                    {
+                                    <tr>
+                                        <td class="align-top">@Html.DisplayFor(modelItem => item.No)</td>
+                                        <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
+                                        <td class="align-top">
+                                            <div>@Html.DisplayFor(modelItem => item.Customer_UserAccounts_Name)</div>
+                                            @if (!string.IsNullOrEmpty(item.Notes))
+                                            {
+                                                <div><strong>Notes: </strong>@Html.DisplayFor(modelItem => item.Notes)</div>
+                                            }
+                                        </td>
+                                        <td class="align-top text-right">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                        <td class="align-top text-right pr-1">
+                                            @if (item.Due > 0)
+                                            {
+                                                @Html.DisplayFor(modelItem => item.Due)
+                                            }
+                                        </td>
+                                        <td class="align-top pl-0">
+                                            @if (item.Due > 0)
+                                            {
+                                                <input type="checkbox" class="check-styled" id="@item.Id" />
+                                            }
+                                        </td>
+                                        <td class="align-top" style="text-align:center;">
+                                            @Html.CheckBoxFor(modelItem => item.IsChecked, new { @class = "check-styled" })
+                                        </td>
+                                        <td class="align-top">
+                                            @if (!item.Cancelled)
+                                            {
+                                                <div><span class="badge badge-warning d-block mr-1" style="width:50px;">CANCEL</span></div>
+                                            }
+                                        </td>
+                                        <td class="align-top">
+                                            @if (item.Cancelled)
+                                            {
+                                                <div><span class="badge badge-danger d-block mr-1">CANCELLED</span></div>
+                                            }
+                                            @if (access.SaleInvoices_Edit)
+                                            {
+                                                <a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Invoice @item.No', 'large', 'GetDetails', '@ControllerName')">View</a> @:•
+                                            }
+                                            <a href="javascript:void(0)" onclick="Log('@item.Id')">Payments</a> •
+                                            <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                        </td>
+                                    </tr>
+                                }}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- /form inputs -->
+        }
+    </div>
+    <!-- /content area -->
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        setDateRangePicker('FILTER_DateFrom', '@string.Format("{0:yyyy/MM/dd}", DateTime.Today.AddMonths(-2))');
+        setDateRangePicker('FILTER_DateTo', '@string.Format("{0:yyyy/MM/dd}", DateTime.Today)');
+    });
+
+</script>

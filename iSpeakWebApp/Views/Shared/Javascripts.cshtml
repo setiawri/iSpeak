@@ -7,6 +7,8 @@ FILTERING
 
 <input type="hidden" id="FILTER_Keyword" name="FILTER_Keyword" value="@ViewBag.FILTER_Keyword" />
 <input type="hidden" id="FILTER_Active" name="FILTER_Active" value="@ViewBag.FILTER_Active" />
+<input type="hidden" id="FILTER_Cancelled" name="FILTER_Cancelled" value="@ViewBag.FILTER_Cancelled" />
+<input type="hidden" id="FILTER_Approved" name="FILTER_Approved" value="@ViewBag.FILTER_Approved" />
 <input type="hidden" id="FILTER_Languages_Id" name="FILTER_Languages_Id" value="@ViewBag.FILTER_Languages_Id" />
 <input type="hidden" id="FILTER_LessonTypes_Id" name="FILTER_LessonTypes_Id" value="@ViewBag.FILTER_LessonTypes_Id" />
 <input type="hidden" id="FILTER_Branches_Id" name="FILTER_Branches_Id" value="@ViewBag.FILTER_Branches_Id" />
@@ -18,6 +20,10 @@ FILTERING
             $('#FILTER_Keyword').val('@ViewBag.FILTER_Keyword');
         if ('@ViewBag.FILTER_Active' != null)
             $('#FILTER_Active').val('@ViewBag.FILTER_Active');
+        if ('@ViewBag.FILTER_Cancelled' != null)
+            $('#FILTER_Cancelled').val('@ViewBag.FILTER_Cancelled');
+        if ('@ViewBag.FILTER_Approved' != null)
+            $('#FILTER_Approved').val('@ViewBag.FILTER_Approved');
         if ('@ViewBag.FILTER_Status' != null)
             $('#FILTER_Status').val('@ViewBag.FILTER_Status');
         if ('@ViewBag.FILTER_Languages_Id' != null)
@@ -26,6 +32,10 @@ FILTERING
             $('#FILTER_LessonTypes_Id').val('@ViewBag.FILTER_LessonTypes_Id');
         if ('@ViewBag.FILTER_Branches_Id' != null)
             $('#FILTER_Branches_Id').val('@ViewBag.FILTER_Branches_Id');
+        if ('@ViewBag.FILTER_DateFrom' != '')
+            setDateRangePicker('FILTER_DateFrom', '@string.Format("{0:yyyy/MM/dd}", ViewBag.FILTER_DateFrom ?? DateTime.Now)');
+        if ('@ViewBag.FILTER_DateTo' != '')
+            setDateRangePicker('FILTER_DateTo', '@string.Format("{0:yyyy/MM/dd}", ViewBag.FILTER_DateTo ?? DateTime.Now)');
     });
 
     function getAllFilter() { return getFilter(null, null, null, null); }
@@ -309,19 +319,23 @@ OTHER
         var url = '@Url.Action("__action", "__controller")';
         url = url.replace("__action", action).replace("__controller", controller);
         $.ajax({
-            type: "POST",
-            url: url,
-            data: {
-                id: id
-            },
+            type: "POST", url: url, data: { id: id },
             success: function (data) {
                 if(data.Message != '')
                     bootbox.alert({ backdrop: true, message: data.Message });
-            }, //end success
-            error: function (result) {
-                bootbox.alert({ backdrop: true, message: "Error " + result });
-            } //end error
-        }); //end ajax
+            },
+            error: function (result) { bootbox.alert({ backdrop: true, message: "Error " + result }); }
+        });
+    }
+
+    function AjaxGet(id, title, size, action, controller) {
+        var url = '@Url.Action("__action", "__controller")';
+        url = url.replace("__action", action).replace("__controller", controller);
+        $.ajax({
+            type: "POST", url: url, data: { id: id },
+            success: function (data) { bootbox.alert({ backdrop: true, title: title, size: size, message: data.content }); },
+            error: function (result) { bootbox.alert({ backdrop: true, message: "Error " + result }); }
+        });
     }
 
     // DATATABLES PLUGIN ===========================================================================================================================================
@@ -388,6 +402,17 @@ OTHER
         $("input").attr("autocomplete", "off"); //turn off autocomplete
         $('.form-input-styled').uniform(); //??
         $('.select2').select2(); //apply filtering on dropdownlists
+
+        //checkbox styling
+        $('.check-styled').uniform();
+        $('.check-styled-info').uniform({
+            wrapperClass: 'border-info-600 text-info-800'
+        });
+        $('.check-styled-danger').uniform({
+            wrapperClass: 'border-danger-600 text-danger-800'
+        });
+
+
         $('form:not(.filter) :input:visible:enabled:first').select(); //select content of first control
 
         //on-off switch
