@@ -64,7 +64,7 @@ namespace iSpeakWebApp.Models
 
         [Required]
         public bool IsChecked { get; set; } = true;
-        public static ModelMember COL_IsChecked = new ModelMember { Name = "IsChecked", Display = "IsChecked", LogDisplay = ActivityLogsController.editBooleanFormat("IsChecked") };
+        public static ModelMember COL_IsChecked = new ModelMember { Name = "IsChecked", Display = "IsChecked", LogDisplay = ActivityLogsController.editBooleanFormat("Approval") };
 
         /******************************************************************************************************************************************************/
 

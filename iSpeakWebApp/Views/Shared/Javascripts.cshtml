@@ -315,11 +315,11 @@ OTHER
 
     // AJAX ========================================================================================================================================================
 
-    function AjaxUpdate(id, action, controller) {
+    function AjaxUpdate(action, controller, id, value) {
         var url = '@Url.Action("__action", "__controller")';
         url = url.replace("__action", action).replace("__controller", controller);
         $.ajax({
-            type: "POST", url: url, data: { id: id },
+            type: "POST", url: url, data: { id: id, value: value },
             success: function (data) {
                 if(data.Message != '')
                     bootbox.alert({ backdrop: true, message: data.Message });

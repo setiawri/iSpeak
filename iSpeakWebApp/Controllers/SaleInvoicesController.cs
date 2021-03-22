@@ -20,6 +20,12 @@ namespace iSpeakWebApp.Controllers
             if (!UserAccountsController.getUserAccess(Session).SaleInvoices_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
+            if (FILTER_DateFrom == null)
+            {
+                FILTER_chkDateFrom = true;
+                FILTER_DateFrom = DateTime.Today.AddMonths(-2);
+            }
+
             setViewBag(FILTER_Keyword, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
             if (rss != null)
             {
@@ -154,6 +160,13 @@ namespace iSpeakWebApp.Controllers
             return Json(new { content = content }, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult UpdateApproval(Guid id, bool value)
+        {
+            update_IsChecked(id, value);
+
+            return Json(new { Message = "" });
+        }
+
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
         public List<SaleInvoicesModel> get(string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo) 
@@ -216,6 +229,22 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
+            db.SaveChanges();
+        }
+
+        public void update_IsChecked(Guid Id, bool value)
+        {
+            db.Database.ExecuteSqlCommand(@"
+                UPDATE SaleInvoices 
+                SET
+                    IsChecked = @IsChecked
+                WHERE SaleInvoices.Id = @Id;                
+            ",
+                DBConnection.getSqlParameter(SaleInvoicesModel.COL_Id.Name, Id),
+                DBConnection.getSqlParameter(SaleInvoicesModel.COL_IsChecked.Name, value)
+            );
+
+            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(SaleInvoicesModel.COL_IsChecked.LogDisplay, null, value));
             db.SaveChanges();
         }
 

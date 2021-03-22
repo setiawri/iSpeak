@@ -21,23 +21,22 @@ namespace iSpeakWebApp.Controllers
                                     <table class='table table-striped table-bordered'>
                                         <thead>
                                             <tr>
-                                                <th>Timestamp</th>
+                                                <!--<th>Timestamp</th>
                                                 <th>Description</th>
-                                                <th>Operator</th>
+                                                <th>Operator</th>-->
                                             </tr>
                                         </thead>
                                         <tbody>";
 
-            string Fullname = UserAccountsController.getUserAccount(Session).Fullname;
             foreach (ActivityLogsModel item in get(ReffId))
             {
                 message += string.Format(@"
                             <tr>
-                                <td>{0:dd/MM/yyyy HH:mm}</td>
-                                <td>{1}</td>
-                                <td>{2}</td>
+                                <td class='align-top'>{0:dd/MM/yy HH:mm}</td>
+                                <td class='align-top'>{1}</td>
+                                <td class='align-top'>{2}</td>
                             </tr>
-                    ", item.Timestamp, item.Description.Replace(Environment.NewLine, "<BR>"), Fullname);
+                    ", item.Timestamp, item.Description.Replace(Environment.NewLine, "<BR>"), item.UserAccounts_Fullname);
             }
 
             message += "</tbody></table></div>";
@@ -56,7 +55,8 @@ namespace iSpeakWebApp.Controllers
                 ReffId = reffId,
                 Timestamp = DateTime.Now,
                 Description = description,
-                UserAccounts_Id = (Guid)UserAccountsController.getUserId(Session)
+                UserAccounts_Id = (Guid)UserAccountsController.getUserId(Session),
+                UserAccounts_Fullname = null
             });
         }
 
@@ -73,8 +73,14 @@ namespace iSpeakWebApp.Controllers
         public List<ActivityLogsModel> get(Guid ReffId)
         {
             return db.Database.SqlQuery<ActivityLogsModel>(@"
-                        SELECT ActivityLogs.*
+                        SELECT ActivityLogs.Id,
+                            ActivityLogs.Timestamp,
+                            ActivityLogs.ReffId,
+                            ActivityLogs.Description,
+                            ActivityLogs.UserAccounts_Id,
+                            UserAccounts.Fullname AS UserAccounts_Fullname
                         FROM ActivityLogs
+                            LEFT JOIN UserAccounts ON UserAccounts.Id = ActivityLogs.UserAccounts_Id
                         WHERE ActivityLogs.ReffId = @ReffId
 						ORDER BY ActivityLogs.Timestamp DESC
                     ",

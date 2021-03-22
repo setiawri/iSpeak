@@ -129,7 +129,7 @@
                                             }
                                         </td>
                                         <td class="align-top" style="text-align:center;">
-                                            @Html.CheckBoxFor(modelItem => item.IsChecked, new { @class = "check-styled" })
+                                            @Html.CheckBoxFor(modelItem => item.IsChecked, new { @class = "check-styled", onclick=string.Format("UpdateApproval(this, '{0}')", item.Id) })
                                         </td>
                                         <td class="align-top">
                                             @if (!item.Cancelled)
@@ -146,8 +146,8 @@
                                             {
                                                 <a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Invoice @item.No', 'large', 'GetDetails', '@ControllerName')">View</a> @:•
                                             }
-                                            <a href="javascript:void(0)" onclick="Log('@item.Id')">Payments</a> •
-                                            <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                            <a href="javascript:void(0)" onclick="Log('@item.Id')">Payments</a>
+                                            • <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                         </td>
                                     </tr>
                                 }}
@@ -169,5 +169,9 @@
         setDateRangePicker('FILTER_DateFrom', '@string.Format("{0:yyyy/MM/dd}", DateTime.Today.AddMonths(-2))');
         setDateRangePicker('FILTER_DateTo', '@string.Format("{0:yyyy/MM/dd}", DateTime.Today)');
     });
+
+    function UpdateApproval(control, id) {
+        AjaxUpdate('UpdateApproval', '@ControllerName', id, control.checked);
+    }
 
 </script>

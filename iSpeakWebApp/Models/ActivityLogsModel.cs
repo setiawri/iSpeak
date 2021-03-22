@@ -18,5 +18,9 @@ namespace iSpeakWebApp.Models
         public string Description { get; set; }
 
         public Guid UserAccounts_Id { get; set; }
+
+        //this column is added to avoid error using DBContext linq to add/update. 
+        //In ActivityLogsController.get(), fullname is fetched again using UserAccounts_Id. This field is not used.
+        public string UserAccounts_Fullname { get; set; } = null;
     }
 }
