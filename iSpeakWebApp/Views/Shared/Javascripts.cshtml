@@ -12,39 +12,63 @@ FILTERING
 <input type="hidden" id="FILTER_Languages_Id" name="FILTER_Languages_Id" value="@ViewBag.FILTER_Languages_Id" />
 <input type="hidden" id="FILTER_LessonTypes_Id" name="FILTER_LessonTypes_Id" value="@ViewBag.FILTER_LessonTypes_Id" />
 <input type="hidden" id="FILTER_Branches_Id" name="FILTER_Branches_Id" value="@ViewBag.FILTER_Branches_Id" />
+<input type="hidden" id="FILTER_chkDateFrom" name="FILTER_chkDateFrom" value="@ViewBag.FILTER_chkDateFrom" />
+<input type="hidden" id="FILTER_DateFrom" name="FILTER_DateFrom" value="@ViewBag.FILTER_DateFrom" />
+<input type="hidden" id="FILTER_chkDateTo" name="FILTER_chkDateTo" value="@ViewBag.FILTER_chkDateTo" />
+<input type="hidden" id="FILTER_DateTo" name="FILTER_DateTo" value="@ViewBag.FILTER_DateTo" />
 
 <script type="text/javascript">
 
     $(document).ready(function () {
-        if ('@ViewBag.FILTER_Keyword' != null)
-            $('#FILTER_Keyword').val('@ViewBag.FILTER_Keyword');
-        if ('@ViewBag.FILTER_Active' != null)
-            $('#FILTER_Active').val('@ViewBag.FILTER_Active');
-        if ('@ViewBag.FILTER_Cancelled' != null)
-            $('#FILTER_Cancelled').val('@ViewBag.FILTER_Cancelled');
-        if ('@ViewBag.FILTER_Approved' != null)
-            $('#FILTER_Approved').val('@ViewBag.FILTER_Approved');
-        if ('@ViewBag.FILTER_Status' != null)
-            $('#FILTER_Status').val('@ViewBag.FILTER_Status');
-        if ('@ViewBag.FILTER_Languages_Id' != null)
-            $('#FILTER_Languages_Id').val('@ViewBag.FILTER_Languages_Id');
-        if ('@ViewBag.FILTER_LessonTypes_Id' != null)
-            $('#FILTER_LessonTypes_Id').val('@ViewBag.FILTER_LessonTypes_Id');
-        if ('@ViewBag.FILTER_Branches_Id' != null)
-            $('#FILTER_Branches_Id').val('@ViewBag.FILTER_Branches_Id');
-        if ('@ViewBag.FILTER_DateFrom' != '')
-            setDateRangePicker('FILTER_DateFrom', '@string.Format("{0:yyyy/MM/dd}", ViewBag.FILTER_DateFrom ?? DateTime.Now)');
-        if ('@ViewBag.FILTER_DateTo' != '')
-            setDateRangePicker('FILTER_DateTo', '@string.Format("{0:yyyy/MM/dd}", ViewBag.FILTER_DateTo ?? DateTime.Now)');
+
+        setFilter('FILTER_Keyword', '@ViewBag.FILTER_Keyword');
+        setFilter('FILTER_Active', '@ViewBag.FILTER_Active');
+        setFilter('FILTER_Cancelled', '@ViewBag.FILTER_Cancelled');
+        setFilter('FILTER_Approved', '@ViewBag.FILTER_Approved');
+        setFilter('FILTER_Status', '@ViewBag.FILTER_Status');
+        setFilter('FILTER_Languages_Id', '@ViewBag.FILTER_Languages_Id');
+        setFilter('FILTER_LessonTypes_Id', '@ViewBag.FILTER_LessonTypes_Id');
+        setFilter('FILTER_Branches_Id', '@ViewBag.FILTER_Branches_Id');
+
+        setCheckboxFilter('FILTER_chkDateFrom', '@ViewBag.FILTER_chkDateFrom');
+        setCheckboxFilter('FILTER_chkDateTo', '@ViewBag.FILTER_chkDateTo');
+
+        setDaterangepickerFilter('FILTER_DateFrom', '@string.Format("{0:yyyy/MM/dd}", ViewBag.FILTER_DateFrom ?? DateTime.Now)');
+        setDaterangepickerFilter('FILTER_DateTo', '@string.Format("{0:yyyy/MM/dd}", ViewBag.FILTER_DateTo ?? DateTime.Now)');
     });
 
-    function getAllFilter() { return getFilter(null, null, null, null); }
+    function setFilter(id, value) {
+        if (value != null)
+            $('#'+id).val(value);
+    }
+
+    function setCheckboxFilter(id, value) {
+        if (value != '') {
+            if ($('#'+id).is(":hidden"))
+                $('#' + id).val(value);
+            else
+                setCheckboxState(id, value);
+        }
+    }
+
     function getFilter(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id) {
         var filter = $('#FILTER_Keyword').val();
 
         if ($('#FILTER_Active') != null)
             FILTER_Active = $('#FILTER_Active').val();
         filter += appendFilter(FILTER_Active, "FILTER_Active");
+
+        if ($('#FILTER_Cancelled') != null)
+            FILTER_Cancelled = $('#FILTER_Cancelled').val();
+        filter += appendFilter(FILTER_Cancelled, "FILTER_Cancelled");
+
+        if ($('#FILTER_Approved') != null)
+            FILTER_Approved = $('#FILTER_Approved').val();
+        filter += appendFilter(FILTER_Approved, "FILTER_Approved");
+
+        if ($('#FILTER_Status') != null)
+            FILTER_Status = $('#FILTER_Status').val();
+        filter += appendFilter(FILTER_Status, "FILTER_Status");
 
         if ($('#FILTER_Languages_Id') != null)
             FILTER_Languages_Id = $('#FILTER_Languages_Id').val();
@@ -58,20 +82,47 @@ FILTERING
             FILTER_Branches_Id = $('#FILTER_Branches_Id').val();
         filter += appendFilter(FILTER_Branches_Id, "FILTER_Branches_Id");
 
+        if ($('#FILTER_DateFrom') != null)
+            FILTER_DateFrom = $('#FILTER_DateFrom').val();
+        filter += appendFilter(FILTER_DateFrom, "FILTER_DateFrom");
+
+        if ($('#FILTER_DateTo') != null)
+            FILTER_DateTo = $('#FILTER_DateTo').val();
+        filter += appendFilter(FILTER_DateTo, "FILTER_DateTo");
+
+        if ($('#FILTER_chkDateFrom') != null) 
+            FILTER_chkDateFrom = getCheckboxFilterValue('FILTER_chkDateFrom');
+        filter += appendFilter(FILTER_chkDateFrom, "FILTER_chkDateFrom");
+
+        if ($('#FILTER_chkDateTo') != null) 
+            FILTER_chkDateTo = getCheckboxFilterValue('FILTER_chkDateTo');
+        filter += appendFilter(FILTER_chkDateTo, "FILTER_chkDateTo");
+
         return filter;
     }
 
-    function Action(action, controller) {
+    function getCheckboxFilterValue(id) {
+        if ($('#'+id).is(":hidden"))
+            return $('#' + id).val();
+        else
+            return $('#' + id).prop('checked');
+    }
+
+    function Action(action, controller, returnurl) {
         var url = '@Url.Action("__action", "__controller", new { FILTER_Keyword = "__data" })';
         url = url.replace("__action", action).replace("__controller", controller);
-        url = url.replace("__data", getAllFilter());
+        url = url.replace("__data", getFilter());
+        if (returnurl != undefined)
+            url += "&ReturnUrl=" + returnurl;
         OpenWindow(url, "false");
     }
 
-    function ActionWithId(id, action, controller) {
+    function ActionWithId(id, action, controller, returnurl) {
         var url = '@Url.Action("__action", "__controller", new { id = "__data" })';
         url = url.replace("__action", action).replace("__controller", controller);
-        url = url.replace("__data", id + "?FILTER_Keyword=" + getAllFilter());
+        url = url.replace("__data", id + "?FILTER_Keyword=" + getFilter());
+        if (returnurl != undefined)
+            url += "&ReturnUrl=" + returnurl;
         OpenWindow(url, "false");
     }
 
@@ -203,6 +254,22 @@ OTHER
     function setDateRangePicker(id, value) {
         $('#' + id).data('daterangepicker').setStartDate(value);
         $('#' + id).data('daterangepicker').setEndDate(value);
+    }
+
+    function setDaterangepickerFilter(id, value) {
+        if ($('#' + id).length != 0 && !$('#' + id).is(":hidden") && value != '')
+            setDateRangePicker(id, value);
+    }
+
+    // CHECKBOXES ==================================================================================================================================================
+
+    function setCheckboxState(id, value) {
+        if (value == 'True')
+            value = true;
+        else if (value == 'False')
+            value = false;
+
+        $('#' + id).prop('checked', value);
     }
 
     // DATE MANIPULATOR ============================================================================================================================================
@@ -458,7 +525,9 @@ OTHER
         });
 
         applyEventsToInputTextboxes(); //call here so it is executed initially
-        applyLast();
+
+        if (typeof applyLast !== 'undefined' && $.isFunction(applyLast)) applyLast();
+
         activateNavigationMenu();
 
         showBootboxMessage();
