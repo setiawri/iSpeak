@@ -97,6 +97,7 @@ namespace iSpeakWebApp.Controllers
             ViewBag.FILTER_DateFrom = FILTER_DateFrom;
             ViewBag.FILTER_chkDateTo = FILTER_chkDateTo;
             ViewBag.FILTER_DateTo = FILTER_DateTo;
+            BranchesController.setDropDownListViewBag(this);
         }
 
         public JsonResult GetDetails(Guid id)

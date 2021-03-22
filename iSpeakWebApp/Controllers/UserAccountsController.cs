@@ -50,7 +50,7 @@ namespace iSpeakWebApp.Controllers
             }
             else
             {
-                return View(get(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id));
+                return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id));
             }
         }
 
@@ -59,7 +59,7 @@ namespace iSpeakWebApp.Controllers
         public ActionResult Index(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
         {
             setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id);
-            return View(get(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id));
+            return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id));
         }
 
         /* CREATE *********************************************************************************************************************************************/
@@ -390,6 +390,26 @@ namespace iSpeakWebApp.Controllers
                 Birthday.Month);
         }
 
+        public JsonResult GetDropDownListData(string keyword, int page, int take)
+        {
+            int skip = take * (page - 1);
+            List<UserAccountsModel> models = get(skip, take, keyword, 1, null);
+
+            List<Select2Pagination.Select2Results> results = new List<Select2Pagination.Select2Results>();
+            results.AddRange(models.Select(model => new Select2Pagination.Select2Results
+            {
+                id = model.Id,
+                text = model.Fullname
+            }));
+
+            Select2Pagination.Select2Page pagination = new Select2Pagination.Select2Page
+            {
+                more = results.Count() == take ? true : false
+            };
+
+            return Json(new { results, pagination }, JsonRequestBehavior.AllowGet);
+        }
+
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
         public bool isExists(Guid? Id, string Username)
@@ -419,11 +439,11 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public UserAccountsModel get(string Username, string Password) { return get(null, null, Username, Password, null, null, null, null, null).FirstOrDefault(); }
-        public List<UserAccountsModel> getBirthdays(Guid Branches_Id, Guid? UserAccountRoles_Id, int BirthdayListMonth) { return get(Branches_Id, null, null, null, 1, UserAccountRoles_Id, BirthdayListMonth, null, null); }
-        public List<UserAccountsModel> get(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id) { return get(null, null, null, null, FILTER_Active, null, null, FILTER_Keyword, FILTER_Languages_Id); }
-        public UserAccountsModel get(Guid Id) { return get(null, Id, null, null, null, null, null, null, null).FirstOrDefault(); }
-        public List<UserAccountsModel> get(Guid? Branches_Id, Guid? Id, string Username, string Password, int? Active, Guid? UserAccountRoles_Id, int? BirthdayListMonth, string FILTER_Keyword, Guid? Language_Id)
+        public UserAccountsModel get(string Username, string Password) { return get(null, null, null, null, Username, Password, null, null, null, null, null).FirstOrDefault(); }
+        public List<UserAccountsModel> getBirthdays(Guid Branches_Id, Guid? UserAccountRoles_Id, int BirthdayListMonth) { return get(null, null, Branches_Id, null, null, null, 1, UserAccountRoles_Id, BirthdayListMonth, null, null); }
+        public List<UserAccountsModel> get(int? skip, int? take, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id) { return get(skip, take, null, null, null, null, FILTER_Active, null, null, FILTER_Keyword, FILTER_Languages_Id); }
+        public UserAccountsModel get(Guid Id) { return get(null, null, null, Id, null, null, null, null, null, null, null).FirstOrDefault(); }
+        public List<UserAccountsModel> get(int? skip, int? take, Guid? Branches_Id, Guid? Id, string Username, string Password, int? Active, Guid? UserAccountRoles_Id, int? BirthdayListMonth, string FILTER_Keyword, Guid? Language_Id)
         {
             if (Branches_Id == null && Helper.isActiveBranchAvailable(Session))
                 Branches_Id = Helper.getActiveBranchId(Session);
@@ -446,6 +466,8 @@ namespace iSpeakWebApp.Controllers
 							)
 							AND (@FILTER_Keyword IS NULL OR (UserAccounts.Fullname LIKE '%'+@FILTER_Keyword+'%' OR UserAccounts.Username LIKE '%'+@FILTER_Keyword+'%'))
 						ORDER BY UserAccounts.Fullname ASC
+                        OFFSET COALESCE(@SKIP,0) ROWS
+                        FETCH NEXT COALESCE(CONVERT(int, @TAKE),0x7ffffff) ROWS ONLY
                     ",
                     DBConnection.getSqlParameter(UserAccountsModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(UserAccountsModel.COL_Username.Name, Username),
@@ -456,7 +478,9 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter("BirthdayListMonth", BirthdayListMonth),
                     DBConnection.getSqlParameter("UserAccountRoles_Id", UserAccountRoles_Id),
                     DBConnection.getSqlParameter("Languages_Id", Language_Id),
-                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
+                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
+                    DBConnection.getSqlParameter("SKIP", skip),
+                    DBConnection.getSqlParameter("TAKE", take)
                 ).ToList();
 
             foreach (UserAccountsModel model in models)

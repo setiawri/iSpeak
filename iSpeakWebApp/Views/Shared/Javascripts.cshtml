@@ -338,6 +338,25 @@ OTHER
         });
     }
 
+    function AjaxGetDropdownlistData(id, action, controller) {
+        var url = '@Url.Action("__action", "__controller")';
+        url = url.replace("__action", action).replace("__controller", controller);
+        $('#'+id).select2({
+            placeholder: 'Pilih',
+            ajax: {
+                url: url,
+                data: function (params) {
+                    var query = {
+                        keyword: params.term,
+                        page: params.page || 1,
+                        take: 20
+                    }
+                    return query;
+                }
+            }
+        });
+    }
+
     // DATATABLES PLUGIN ===========================================================================================================================================
 
     var datatable = $('.datatable').DataTable({
@@ -439,6 +458,7 @@ OTHER
         });
 
         applyEventsToInputTextboxes(); //call here so it is executed initially
+        applyLast();
         activateNavigationMenu();
 
         showBootboxMessage();

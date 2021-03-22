@@ -24,6 +24,23 @@
                     <fieldset class="mb-3">
                         <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Subtitle</legend>
 
+                        <div class="row mx-0">
+                            <div class="row ml-0 mr-2" style="width:100px;">
+                                <label class="mb-0">&nbsp;</label>
+                                <div class="input-group">
+                                    @Html.LabelFor(model => model.Customer_UserAccounts_Id, htmlAttributes: new { @class = "col-form-label required" })
+                                </div>
+                            </div>
+
+                            <div class="row ml-0 mr-2" style="width:200px;">
+                                <label class="mb-0">&nbsp;</label>
+                                <div class="input-group">
+                                    <select class="form-control" id="Customer_UserAccounts_Id" name="Customer_UserAccounts_Id"></select>
+                                    @Html.ValidationMessageFor(model => model.Customer_UserAccounts_Id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
                     </fieldset>
 
                     @if (access.SaleInvoices_Add)
@@ -41,3 +58,11 @@
     <!-- /content area -->
 
 </div>
+
+<script type="text/javascript">
+
+    function applyLast() {
+        AjaxGetDropdownlistData('Customer_UserAccounts_Id', 'GetDropDownListData', 'UserAccounts');
+    }
+
+</script>
