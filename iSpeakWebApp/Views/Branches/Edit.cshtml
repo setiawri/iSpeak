@@ -83,7 +83,7 @@
                         @if (access.Branches_Edit)
                         {
                             <div>
-                                <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
+                                <button type="submit" onclick="showLoadingSpinner()" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
                                 <a href="javascript:void(0)" onclick="Action('Index', '@ControllerName')" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
                             </div>
                         }

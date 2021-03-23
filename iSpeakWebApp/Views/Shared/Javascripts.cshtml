@@ -51,6 +51,11 @@ FILTERING
         }
     }
 
+    function setDaterangepickerFilter(id, value) {
+        if ($('#' + id).length != 0 && !$('#' + id).is(":hidden") && value != '')
+            setDateRangePicker(id, value);
+    }
+
     function getFilter(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id) {
         var filter = $('#FILTER_Keyword').val();
 
@@ -109,6 +114,7 @@ FILTERING
     }
 
     function Action(action, controller, returnurl) {
+        showLoadingSpinner();
         var url = '@Url.Action("__action", "__controller", new { FILTER_Keyword = "__data" })';
         url = url.replace("__action", action).replace("__controller", controller);
         url = url.replace("__data", getFilter());
@@ -118,6 +124,7 @@ FILTERING
     }
 
     function ActionWithId(id, action, controller, returnurl) {
+        showLoadingSpinner();
         var url = '@Url.Action("__action", "__controller", new { id = "__data" })';
         url = url.replace("__action", action).replace("__controller", controller);
         url = url.replace("__data", id + "?FILTER_Keyword=" + getFilter());
@@ -247,6 +254,30 @@ OTHER
         }
     }
 
+    var spinnerDialog;
+    function showLoadingSpinner() { showSpinner('Loading...'); } 
+    function showSpinner(message) {
+        spinnerDialog = bootbox.dialog({
+            message: '<p><i class="fa fa-spin fa-spinner"></i> ' + message + '</p>',
+            size: "small"
+        }).find('.modal-content').css({
+            'padding-top':'10px',
+            'font-size': '20pt',
+            'text-align': 'center',
+            'margin-top': function () {
+                var windowHeight = $(window).height();
+                var modalHeight = $(this).height();
+                var topMargin = (windowHeight - modalHeight) / 3;
+                return topMargin + "px";
+            }
+        }).find('.bootbox-close-button').css({
+            'display':'none'
+        });
+    }
+    function closeSpinner() {
+        spinnerDialog.modal('hide');
+    }
+
     // CALENDAR ====================================================================================================================================================
 
     $('.daterange-picker').daterangepicker({ singleDatePicker: true, locale: { format: 'YYYY/MM/DD' } });
@@ -254,11 +285,6 @@ OTHER
     function setDateRangePicker(id, value) {
         $('#' + id).data('daterangepicker').setStartDate(value);
         $('#' + id).data('daterangepicker').setEndDate(value);
-    }
-
-    function setDaterangepickerFilter(id, value) {
-        if ($('#' + id).length != 0 && !$('#' + id).is(":hidden") && value != '')
-            setDateRangePicker(id, value);
     }
 
     // CHECKBOXES ==================================================================================================================================================

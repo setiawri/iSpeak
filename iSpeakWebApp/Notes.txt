@@ -3,6 +3,7 @@ TO DO:
 - create user account info page
 - move button to scroll to bottom to javascripts file and set display to none. add javascript to display it on pages that requires it.
 - edit notes button in Settings > edit page is highlighted when cursor is hovering on the title.
+- add spinner before redirecting to another page
 
 IMPROVEMENTS:
 
