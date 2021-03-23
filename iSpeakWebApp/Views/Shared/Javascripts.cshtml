@@ -298,6 +298,16 @@ OTHER
         $('#' + id).prop('checked', value);
     }
 
+    function applyCheckboxStyling() {
+        $('.check-styled').uniform();
+        $('.check-styled-info').uniform({
+            wrapperClass: 'border-info-600 text-info-800'
+        });
+        $('.check-styled-danger').uniform({
+            wrapperClass: 'border-danger-600 text-danger-800'
+        });
+    }
+
     // DATE MANIPULATOR ============================================================================================================================================
 
     function parseJSONDate(value) {
@@ -485,6 +495,8 @@ OTHER
                 'first': 'First', 'last': 'Last', 'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;', 'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;'
             }
         }
+    }).on('order.dt', function () {
+        applyCheckboxStyling();
     });
 
     function getSearch() {
@@ -516,14 +528,7 @@ OTHER
         $('.select2').select2(); //apply filtering on dropdownlists
 
         //checkbox styling
-        $('.check-styled').uniform();
-        $('.check-styled-info').uniform({
-            wrapperClass: 'border-info-600 text-info-800'
-        });
-        $('.check-styled-danger').uniform({
-            wrapperClass: 'border-danger-600 text-danger-800'
-        });
-
+        applyCheckboxStyling();
 
         $('form:not(.filter) :input:visible:enabled:first').select(); //select content of first control
 

@@ -95,7 +95,7 @@
                             <thead>
                                 <tr>
                                     <th style="width:50px;">@Html.DisplayNameFor(model => model.No)</th>
-                                    <th style="width:150px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
+                                    <th class="non-sortable" style="width:150px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
                                     <th>@Html.DisplayNameFor(model => model.Customer_UserAccounts_Id)</th>
                                     <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Amount)</th>
                                     <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Due)</th>
@@ -181,6 +181,10 @@
 
     function UpdateApproval(control, id) {
         AjaxUpdate('UpdateApproval', '@ControllerName', id, control.checked);
+    }
+
+    function applyLast() {
+        datatable.order([0, 'desc']).draw();
     }
 
 </script>
