@@ -154,7 +154,6 @@
     </Compile>
     <Compile Include="Models\ActivityLogsModel.cs" />
     <Compile Include="Models\SaleInvoiceItems_InventoryModel.cs" />
-    <Compile Include="Models\SaleInvoiceItems_VouchersModel.cs" />
     <Compile Include="Models\SaleInvoiceItemsModel.cs" />
     <Compile Include="Models\SaleInvoicesModel.cs" />
     <Compile Include="Models\ConsignmentsModel.cs" />

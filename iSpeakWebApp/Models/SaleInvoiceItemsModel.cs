@@ -54,10 +54,19 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_DiscountAmount = new ModelMember { Name = "DiscountAmount", Display = "Discount", LogDisplay = ActivityLogsController.editIntFormat("Discount") };
 
 
-        [Display(Name = "Voucher")]
-        public Guid? SaleInvoiceItems_Vouchers_Id { get; set; }
-        public static ModelMember COL_SaleInvoiceItems_Vouchers_Id = new ModelMember { Name = "SaleInvoiceItems_Vouchers_Id", Display = "Voucher", LogDisplay = ActivityLogsController.editStringFormat("Voucher") };
-        public int SaleInvoiceItems_Vouchers_Amount { get; set; }
+        [Display(Name = "Vouchers")]
+        public string Vouchers { get; set; }
+        public static ModelMember COL_Vouchers = new ModelMember { Name = "Vouchers", Display = "Vouchers", LogDisplay = ActivityLogsController.editStringFormat("Vouchers") };
+
+
+        [Display(Name = "Vouchers")]
+        public string VouchersName { get; set; }
+        public static ModelMember COL_VouchersName = new ModelMember { Name = "VouchersName", Display = "Vouchers", LogDisplay = ActivityLogsController.editStringFormat("Vouchers") };
+
+
+        [Display(Name = "Vouchers Amount")]
+        public int VouchersAmount { get; set; }
+        public static ModelMember COL_VouchersAmount = new ModelMember { Name = "VouchersAmount", Display = "Vouchers Amount", LogDisplay = ActivityLogsController.editStringFormat("Vouchers Amount") };
 
 
         [Display(Name = "Product")]

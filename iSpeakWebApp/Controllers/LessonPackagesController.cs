@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using iSpeakWebApp.Models;
+using Newtonsoft.Json;
 using LIBUtil;
 
 namespace iSpeakWebApp.Controllers
@@ -135,7 +136,12 @@ namespace iSpeakWebApp.Controllers
 
         public static void setDropDownListViewBag(ControllerBase controller)
         {
-            controller.ViewBag.LessonPackages = new SelectList(get(), LessonPackagesModel.COL_Id.Name, LessonPackagesModel.COL_Name.Name);
+            controller.ViewBag.LessonPackages = new SelectList(get(1).OrderBy(x => x.Description), LessonPackagesModel.COL_Id.Name, LessonPackagesModel.COL_Description.Name);
+        }
+
+        public static void setViewBag(ControllerBase controller)
+        {
+            controller.ViewBag.LessonPackagesModels = get(1);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
@@ -158,13 +164,14 @@ namespace iSpeakWebApp.Controllers
 
         public List<LessonPackagesModel> get(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id) { return get(null, FILTER_Active, FILTER_Keyword, FILTER_Languages_Id, FILTER_LessonTypes_Id); }
         public LessonPackagesModel get(Guid Id) { return get(Id, null, null, null, null).FirstOrDefault(); }
-        public static List<LessonPackagesModel> get() { return get(null, null, null, null, null); }
+        public static List<LessonPackagesModel> get(int? Active) { return get(null, Active, null, null, null); }
         public static List<LessonPackagesModel> get(Guid? Id, int? Active, string FILTER_Keyword, Guid? Languages_Id, Guid? LessonTypes_Id)
         {
             return new DBContext().Database.SqlQuery<LessonPackagesModel>(@"
                         SELECT LessonPackages.*,
                             Languages.Name AS Languages_Name,
-                            LessonTypes.Name AS LessonTypes_Name
+                            LessonTypes.Name AS LessonTypes_Name,
+                            '['+Languages.Name+': '+LessonTypes.Name+'] '+LessonPackages.Name+' ('+FORMAT(LessonPackages.SessionHours,'N0')+' hrs) '+FORMAT(LessonPackages.Price,'N0') AS Description
                         FROM LessonPackages
                             LEFT JOIN Languages ON Languages.Id = LessonPackages.Languages_Id
                             LEFT JOIN LessonTypes ON LessonTypes.Id = LessonPackages.LessonTypes_Id

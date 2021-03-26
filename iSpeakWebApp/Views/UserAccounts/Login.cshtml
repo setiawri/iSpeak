@@ -74,10 +74,11 @@
     <!-- /page content -->
 </body>
 </html>
+
+@Html.Partial("Javascripts")
+
 <script type="text/javascript">
     $(document).ready(function () {
-        $('.form-input-styled').uniform();
-
         if ($('#Username').val() == '')
             $('#Username').select();
         else

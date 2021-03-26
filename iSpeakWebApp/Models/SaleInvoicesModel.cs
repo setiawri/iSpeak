@@ -22,7 +22,6 @@ namespace iSpeakWebApp.Models
         public string Branches_Name { get; set; }
 
 
-        [Required]
         public string No { get; set; }
         public static ModelMember COL_No = new ModelMember { Name = "No", Display = "No", LogDisplay = ActivityLogsController.editStringFormat("No") };
 
@@ -58,12 +57,12 @@ namespace iSpeakWebApp.Models
 
 
         [Required]
-        public bool Cancelled { get; set; } = true;
+        public bool Cancelled { get; set; } = false;
         public static ModelMember COL_Cancelled = new ModelMember { Name = "Cancelled", Display = "Cancelled", LogDisplay = ActivityLogsController.editBooleanFormat("Cancelled") };
 
 
         [Required]
-        public bool IsChecked { get; set; } = true;
+        public bool IsChecked { get; set; } = false;
         public static ModelMember COL_IsChecked = new ModelMember { Name = "IsChecked", Display = "IsChecked", LogDisplay = ActivityLogsController.editBooleanFormat("Approval") };
 
         /******************************************************************************************************************************************************/

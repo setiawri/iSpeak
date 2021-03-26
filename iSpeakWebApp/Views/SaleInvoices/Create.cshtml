@@ -12,17 +12,19 @@
 
     <!-- Content area -->
     <div class="content">
-        @using (Html.BeginForm())
+        @using (Html.BeginForm("Create", "SaleInvoices", FormMethod.Post, new { id = "targetForm" }))
         {
             @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.Amount)
+            <input type="hidden" id="JsonSaleInvoiceItems" name="JsonSaleInvoiceItems" />
             <!-- Form inputs -->
             <div class="card">
                 <div class="card-header header-elements-inline">
                     <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
                 </div>
                 <div class="card-body">
-                    <fieldset class="mb-3">
-                        <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Subtitle</legend>
+                    <fieldset class="mb-0">
+                        <legend class="text-uppercase font-size-sm font-weight-bold mb-0">@ViewBag.Subtitle</legend>
 
                         <div class="row mx-0">
                             <div class="row ml-0 mr-2" style="width:100px;">
@@ -32,7 +34,7 @@
                                 </div>
                             </div>
 
-                            <div class="row ml-0 mr-2" style="width:200px;">
+                            <div class="row ml-0 mr-2" style="width:300px;">
                                 <label class="mb-0">&nbsp;</label>
                                 <div class="input-group">
                                     <select class="form-control" id="Customer_UserAccounts_Id" name="Customer_UserAccounts_Id"></select>
@@ -44,31 +46,142 @@
                                 <div><a href="javascript:void(0)" onclick="Action('Create', 'UserAccounts')" class="btn btn-success">ADD<i class="icon-plus22 ml-2"></i></a></div>
                             </div>
                         </div>
-                        
-                        <div>
+
+                        <div class="mt-3">
                             <nav>
                                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                    <a class="nav-item nav-link active" id="nav-reminders-tab" data-toggle="tab" href="#nav-reminders" role="tab" aria-controls="nav-reminders" aria-selected="true" onclick="document.activeElement.blur();">Reminders (<label id="ReminderCount"></label>)</a>
-                                    <a class="nav-item nav-link" id="nav-birthdays-tab" data-toggle="tab" href="#nav-birthdays" role="tab" aria-controls="nav-birthdays" aria-selected="false" onclick="document.activeElement.blur();">Birthdays (<label id="BirthdayCount"></label>)</a>
+                                    <a data-toggle="tab" role="tab" onclick="document.activeElement.blur();" class="nav-item nav-link active" aria-selected="true" id="nav-LessonPackages-tab" href="#nav-LessonPackages" aria-controls="nav-LessonPackages">Lesson Packages</a>
+                                    <a data-toggle="tab" role="tab" onclick="document.activeElement.blur();" class="nav-item nav-link" aria-selected="false" id="nav-Inventory-tab" href="#nav-Inventory" aria-controls="nav-Inventory">Inventory</a>
+                                    <a data-toggle="tab" role="tab" onclick="document.activeElement.blur();" class="nav-item nav-link" aria-selected="false" id="nav-Services-tab" href="#nav-Services" aria-controls="nav-Services">Services</a>
                                 </div>
                             </nav>
-                            <div class="tab-content" id="nav-tabContent">
-                                <div class="tab-pane fade show active" id="nav-reminders" role="tabpanel" aria-labelledby="nav-reminders-tab">
+                            <div class="tab-content pl-2" id="nav-tabContent">
+                                <div role="tabpanel" class="tab-pane fade show active" id="nav-LessonPackages" aria-labelledby="nav-LessonPackages-tab">
+
+                                    <div class="form-group row">
+                                        @Html.Label("Lesson Package", htmlAttributes: new { @class = "col-form-label required", @style = "width:150px;" })
+                                        <div style="min-width:600px">
+                                            @Html.DropDownList("LessonPackages", ViewBag.LessonPackages as SelectList, "Pilih", new { @class = "form-control select2", onchange = "UpdateLessonSessionHours()" })
+                                            @Html.ValidationMessage("LessonPackages", "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        @Html.Label("Session Hours", htmlAttributes: new { @class = "col-form-label required", @style = "width:150px;" })
+                                        <div style="width:150px">
+                                            @Html.Editor("SessionHours", new { htmlAttributes = new { @class = "form-control positivenumericonly", Value = "0" } })
+                                            @Html.ValidationMessage("SessionHours", "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        @Html.Label("Travel Cost", htmlAttributes: new { @class = "col-form-label required", @style = "width:150px;" })
+                                        <div style="width:150px">
+                                            @Html.Editor("TravelCost", new { htmlAttributes = new { @class = "form-control positiveintegeronly", Value = "0", type = "number" } })
+                                            @Html.ValidationMessage("TravelCost", "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        @Html.Label("Tutor Travel", htmlAttributes: new { @class = "col-form-label required", @style = "width:150px;" })
+                                        <div class="" style="width:150px">
+                                            @Html.Editor("TutorTravelCost", new { htmlAttributes = new { @class = "form-control positiveintegeronly", Value = "0", type = "number" } })
+                                            @Html.ValidationMessage("TutorTravelCost", "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
 
                                 </div>
-                                <div class="tab-pane fade" id="nav-birthdays" role="tabpanel" aria-labelledby="nav-birthdays-tab">
 
+                                <div role="tabpanel" class="tab-pane fade" id="nav-Inventory" aria-labelledby="nav-Inventory-tab">
+                                    <div class="form-group row">
+                                        @Html.Label("Products", htmlAttributes: new { @class = "col-form-label required", @style = "width:150px;" })
+                                        <div class="" style="width:500px">
+                                            @Html.DropDownList("Products", ViewBag.Products as SelectList, "Pilih", new { @class = "form-control select2" })
+                                            @Html.ValidationMessage("Products", "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div role="tabpanel" class="tab-pane fade" id="nav-Services" aria-labelledby="nav-Services-tab">
+                                    <div class="form-group row">
+                                        @Html.Label("Services", htmlAttributes: new { @class = "col-form-label required", @style = "width:150px;" })
+                                        <div class="" style="width:500px">
+                                            @Html.DropDownList("Services", ViewBag.Services as SelectList, "Pilih", new { @class = "form-control select2" })
+                                            @Html.ValidationMessage("Services", "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="row ml-0 mr-2" style="width:100px">
+                                        <label class="mb-0 required">Qty</label>
+                                        <div>
+                                            @Html.Editor("Qty", new { htmlAttributes = new { @class = "form-control positiveintegeronly", Value = "1", type = "number" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="row ml-0 mr-2" style="width:150px">
+                                        <label class="mb-0">Discount</label>
+                                        <div>
+                                            @Html.Editor("Discount", new { htmlAttributes = new { @class = "form-control positiveintegeronly", @style = "width:150px", Value = "0", type = "number" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="row ml-0 mr-2" style="min-width:300px">
+                                        <label class="mb-0">Vouchers</label>
+                                        <div class="input-group">
+                                            @Html.ListBox("Vouchers", ViewBag.Vouchers as SelectList, new { @class = "form -control select2", @multiple = "multiple" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-2">
+                                    <div class="row ml-0 mr-2" style="width:0px">
+                                        <label class="mb-0">Notes</label>
+                                        <div>
+                                            @Html.Editor("ItemNotes", new { htmlAttributes = new { @class = "form-control", @style = "width:570px" } })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-2">
+                                    <div><a href="javascript:void(0)" onclick="AddItem()" class="btn btn-success">ADD<i class="icon-plus22 ml-2"></i></a></div>
                                 </div>
                             </div>
                         </div>
 
+                        <div class="col-lg-12 row mt-2">
+                            <table class="table table-condensed">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th style="width:60px"></th>
+                                        <th>DESCRIPTION</th>
+                                        <th style="width:250px" class="text-right">AMOUNT</th>
+                                        <th style="width:200px" class="text-right">DISCOUNTS</th>
+                                        <th style="width:100px" class="text-right">SUBTOTAL</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itemList">
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="3" class="pl-0">
+                                            Notes: @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control" } })
+                                        </th>
+                                        <th colspan="2" class="text-right align-top">
+                                            <label class="h4 mb-0">TOTAL:</label> <label id="totalAmount" class="h4 mb-0">0</label>
+                                        </th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
 
                     </fieldset>
 
                     @if (access.SaleInvoices_Add)
                     {
                         <div>
-                            <button type="submit" onclick="showLoadingSpinner()" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
+                            <button type="submit" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
                             <a href="javascript:void(0)" onclick="Action('Index', '@ControllerName')" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
                         </div>
                     }
@@ -83,8 +196,194 @@
 
 <script type="text/javascript">
 
+    var LessonPackagesModels = @Html.Raw(Json.Encode(ViewBag.LessonPackagesModels));
+    var VouchersModels = @Html.Raw(Json.Encode(ViewBag.VouchersModels));
+
+    $(document).ready(function () {
+
+    });
+
     function applyLast() {
         AjaxGetDropdownlistData('Customer_UserAccounts_Id', 'GetDropDownListData', 'UserAccounts');
     }
+
+    function UpdateLessonSessionHours() {
+        var item = getSelectedLessonPackage();
+        setValue('SessionHours', item.SessionHours);
+    }
+
+    function getSelectedLessonPackage() { return getSelectedItem('LessonPackages', LessonPackagesModels); }
+    function getSelectedVouchers() { return getSelectedItems('Vouchers', VouchersModels); }
+
+    //ITEM LIST ====================================================================================================================================================
+
+    var saleinvoiceitems = [];
+    var item_no = 100;
+    function getRowId(no) { return "item_" + no; }
+    function AddItem() {
+        if ($('#Qty').val() == 0 || $('#Qty').val() == null) {
+            showMessage('Please enter Qty', 'Qty');
+        } else {
+            var saleinvoiceitem = [];
+
+            var description = "";
+            var sessionhours = 0;
+            var price = 0;
+            var subtotal = 0;
+            var travelcoststring = "";
+            var qty = getValueInt('Qty');
+            var discount = getValueInt('Discount');
+            var itemnotes = getValueString('ItemNotes');
+            var itemnotesstring = "";
+
+            var Products_Id = null;
+            var Services_Id = null;
+            var LessonPackages_Id = null;
+            var TravelCost = 0;
+            var TutorTravelCost = 0;
+
+            var voucheramount = 0;
+            var voucheridlist = "";
+            var vouchernamelist = "";
+            var voucherstring = "";
+            $.each(getSelectedVouchers(), function (index, item) {
+                voucheridlist = appendWithDelimiter(voucheridlist, item.Id, ',');
+                vouchernamelist = appendWithDelimiter(vouchernamelist, item.Code+'('+formatN0(item.Amount)+')', ',');
+                voucheramount += item.Amount;
+                voucherstring += appendWithDelimiter(voucherstring, item.Code, ',');
+            });
+            if (voucherstring != '')
+                voucherstring = '<div>Voucher: <label class="form-label item-VoucherList">' + voucherstring + '</label></div>';
+
+            if (itemnotes != '')
+                itemnotesstring = '<div>ItemNotes: <label class="form-label item-ItemNotes">' + itemnotes + '</label></div>';
+
+            if ($('.tab-content .active').attr('id') == 'nav-LessonPackages') {
+                var item = getSelectedLessonPackage();
+                if (item == null) {
+                    return showMessage('Please select Lesson Package', 'LessonPackages');
+                } else {
+                    LessonPackages_Id = item.Id;
+                    description = '[' + item.Languages_Name + ': ' + item.LessonTypes_Name + '] ' + item.Name;
+                    sessionhours = getValueFloat('SessionHours');
+                    if (sessionhours > 0)
+                        description += ' (' + sessionhours + ')';
+                    price = item.Price;
+                    TravelCost = getValueInt('TravelCost');
+                    TutorTravelCost = getValueInt('TutorTravelCost');
+                    travelcoststring = '<div class="align-top">Travel: <label class="form-label item-TravelCost">' + formatN0(TravelCost) + '</label> (Tutor: <label class="form-label item-TutorTravelCost">' + formatN0(TutorTravelCost) + '</label>)</div>';
+                    subtotal = (qty * price) + TravelCost - discount - voucheramount;
+
+                    //reset fields
+                    setValue('SessionHours', item.SessionHours);
+                    setValue('TravelCost', 0);
+                    setValue('TutorTravelCost', 0);
+                }
+            } else if ($('.tab-content .active').attr('id') == 'nav-Inventory') {
+                itemRow += $('#Products option:selected').text();
+            } else if ($('.tab-content .active').attr('id') == 'nav-Services') {
+                itemRow += $('#Services option:selected').text();
+            }
+
+            item_no += 1;
+            var id = getRowId(item_no);
+            $('#itemList').append(
+                        '<tr id="' + id + '">'
+                    +   '   <td class="align-top">'
+                    +   '       <a href="javascript:void(0)" onclick="RemoveItem(\'' + id + '\')" class="text-danger"><i class="fa fa-2x fa-times"></i></a>'
+                    +   '   </td>'
+                    +   '   <td class="align-top">'
+                    +   '       <div><label class="form-label item-Description">' + description + '</label>'
+                    +   voucherstring
+                    +   itemnotesstring
+                    +   '   </td>'
+                    +   '   <td class="align-top text-right">'
+                    +   '       <div>Qty: <label class="form-label item-Qty">' + formatN0(qty) + '</label> x <label class="form-label item-Price">' + formatN0(price) + '</label></div>'
+                    +   travelcoststring
+                    +   '   </td>'
+                    +   '   <td class="align-top text-right">'
+                    +   '       <div>Discount: - <label class="form-label item-Discount">' + formatN0(discount) + '</label></div>'
+                    +   '       <div>Vouchers: - <label class="form-label item-Voucher">' + formatN0(voucheramount) + '</label></div>'
+                    +   '   </td>'
+                    +   '   <td class="align-top text-right">'
+                    +   '       <label class="form-label item-Amount">' + formatN0(subtotal) + '</label>'
+                    +   '   </td>'
+                    +   '</tr>'
+                );
+            addTotalAmount(subtotal);
+
+            setValue('Qty', 1);
+            setValue('Discount', 0);
+            resetListbox('Vouchers');
+            setValue('ItemNotes', '');
+
+
+            var saleinvoiceitem = {
+                id: id,
+                Id: null,
+                Amount: subtotal,
+                notes: itemnotes,
+                SaleInvoices_Id: emptyGuid(),
+                Description: description,
+                Qty: qty,
+                Price: price,
+                DiscountAmount: discount,
+                Vouchers: voucheridlist,
+                VouchersName: vouchernamelist,
+                VouchersAmount: voucheramount,
+                Products_Id: Products_Id,
+                Services_Id: Services_Id,
+                LessonPackages_Id: LessonPackages_Id,
+                SessionHours: sessionhours,
+                SessionHours_Remaining: sessionhours,
+                TravelCost: TravelCost,
+                TutorTravelCost: TutorTravelCost
+            };
+            saleinvoiceitems.push(saleinvoiceitem);
+        }
+    }
+
+    function RemoveItem(id) {
+        var subtotal = 0;
+        $.each(saleinvoiceitems, function (index, item) {
+            if (item.id == id) {
+                subtotal = item.amount;
+                saleinvoiceitems.splice(index, 1);
+                return false;
+            }
+        });
+
+        addTotalAmount(-1 * subtotal);
+        $('#' + id).remove();
+    }
+
+    function addTotalAmount(value) {
+        var total = sum($('#totalAmount').text(), value);
+        $('#totalAmount').text(formatN0(total));
+        $('#Amount').val(total);
+    }
+
+    //SUBMISSION ===================================================================================================================================================
+
+    $('#targetForm').submit(function (e) {
+
+        if ($('#Customer_UserAccounts_Id').val() == null) {
+            showMessage('Please select customer', 'Customer_UserAccounts_Id');
+        } else {
+            showLoadingSpinner();
+
+            //remove key id
+            $.each(saleinvoiceitems, function (index, item) {
+                item.Id = emptyGuid();
+                delete item.id;
+            });
+            $('#JsonSaleInvoiceItems').val(JSON.stringify(saleinvoiceitems));
+            return true;
+        }
+
+        return false;
+    });
+
+    //==============================================================================================================================================================
 
 </script>

@@ -61,5 +61,7 @@ namespace iSpeakWebApp.Models
 
         /******************************************************************************************************************************************************/
 
+        public string Description { get; set; } = "";
+        public static ModelMember COL_Description = new ModelMember { Name = "Description" };
     }
 }

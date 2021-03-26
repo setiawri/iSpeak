@@ -6,7 +6,7 @@ using iSpeakWebApp.Controllers;
 namespace iSpeakWebApp.Models
 {
     [Table("SaleInvoiceItems_Inventory")]
-    public class SlaeInvoiceItems_InventoryModel
+    public class SaleInvoiceItems_InventoryModel
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();

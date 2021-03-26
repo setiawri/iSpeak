@@ -1,9 +1,11 @@
 ﻿
 TO DO:
+- Sale Invoice: get voucher values and assign to list.
+- Sale Invoice: append cancellation reason in notes.
 - create user account info page
 - move button to scroll to bottom to javascripts file and set display to none. add javascript to display it on pages that requires it.
 - edit notes button in Settings > edit page is highlighted when cursor is hovering on the title.
-- add spinner before redirecting to another page
+- Javascript method showMessage(): bootbox.dialog onEscape element.select() is not working
 
 IMPROVEMENTS:
 
@@ -33,8 +35,6 @@ create mailing list on whatsapp. create mechanism to allow user to unsubscribe
 
 happy birthday greetings on home page on user birthday date
 
-Table SaleInvoiceItems COLUMN SaleInvoiceItems_Vouchers_Id: can this be removed and replaced with columns from table SaleInvoiceItems_Vouchers: Voucher_Ids (rename to Vouchers) and Amount (rename to VouchersAmount)?
-
 =====================================================================================================================================================================
 SOP
 =====================================================================================================================================================================
@@ -45,7 +45,7 @@ SALES
 =====
 - cancel button available if: 
 	> all payments are cancelled
-	> 
+	> all sessions are cancelled
 
 
 

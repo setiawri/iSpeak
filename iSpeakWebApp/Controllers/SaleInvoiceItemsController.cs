@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using System.Linq;
 using System.Collections.Generic;
 using System.Web.Mvc;
@@ -21,14 +20,12 @@ namespace iSpeakWebApp.Controllers
                         SaleInvoices.No AS SaleInvoices_No,
                         LessonPackages.Name AS LessonPackages_Name,
                         Services.Name AS Services_Name,
-                        Products.Name AS Products_Name,
-                        COALESCE(SaleInvoiceItems_Vouchers.Amount,0) AS SaleInvoiceItems_Vouchers_Amount
+                        Products.Name AS Products_Name
                     FROM SaleInvoiceItems
                         LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
                         LEFT JOIN LessonPackages ON LessonPackages.Id = SaleInvoiceItems.LessonPackages_Id
                         LEFT JOIN Services ON Services.Id = SaleInvoiceItems.Services_Id
                         LEFT JOIN Products ON Products.Id = SaleInvoiceItems.Products_Id
-                        LEFT JOIN SaleInvoiceItems_Vouchers ON SaleInvoiceItems_Vouchers.Id = SaleInvoiceItems.SaleInvoiceItems_Vouchers_Id
                     WHERE 1=1
 						AND (@Id IS NULL OR SaleInvoiceItems.Id = @Id)
 						AND (@Id IS NOT NULL OR (
@@ -41,37 +38,36 @@ namespace iSpeakWebApp.Controllers
             ).ToList();
         }
 
-        public void update(SaleInvoiceItemsModel model, string log)
+        public static void add(List<SaleInvoiceItemsModel> models, Guid SaleInvoices_Id)
         {
-            db.Database.ExecuteSqlCommand(@"
-                UPDATE SaleInvoiceItems 
-                SET
-                    Name = @Name,
-                    Active = @Active,
-                    Notes = @Notes,
-                    Branches_Id = @Branches_Id
-                WHERE SaleInvoiceItems.Id = @Id;                
-            ",
-                DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Id.Name, model.Id),
-                DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Notes.Name, model.Notes)
-            );
-
-            ActivityLogsController.AddEditLog(db, Session, model.Id, log);
-            db.SaveChanges();
-        }
-
-        public void add(SaleInvoiceItemsModel model)
-        {
-            db.Database.ExecuteSqlCommand(@"
-                INSERT INTO SaleInvoiceItems   (Id, Name, Active, Notes, Branches_Id) 
-                                    VALUES(@Id,@Name,@Active,@Notes,@Branches_Id);
-            ",
-                DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Id.Name, model.Id),
-                DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Notes.Name, model.Notes)
-            );
-
-            ActivityLogsController.AddCreateLog(db, Session, model.Id);
-            db.SaveChanges();
+            DBContext db = new DBContext();
+            int rowNo = 0;
+            foreach(SaleInvoiceItemsModel model in models)
+            {
+                db.Database.ExecuteSqlCommand(@"
+                        INSERT INTO SaleInvoiceItems   (Id, Notes, RowNo, SaleInvoices_Id, Description, Qty, Price, DiscountAmount, Vouchers, VouchersAmount, VouchersName, Products_Id, Services_Id, LessonPackages_Id, SessionHours, SessionHours_Remaining, TravelCost, TutorTravelCost) 
+                                                VALUES(@Id,@Notes,@RowNo,@SaleInvoices_Id,@Description,@Qty,@Price,@DiscountAmount,@Vouchers,@VouchersAmount,@VouchersName,@Products_Id,@Services_Id,@LessonPackages_Id,@SessionHours,@SessionHours_Remaining,@TravelCost,@TutorTravelCost);
+                    ",
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Id.Name, Guid.NewGuid()),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Notes.Name, model.Notes),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_RowNo.Name, ++rowNo),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SaleInvoices_Id.Name, SaleInvoices_Id),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Description.Name, model.Description),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Qty.Name, model.Qty),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Price.Name, model.Price),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_DiscountAmount.Name, model.DiscountAmount),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Vouchers.Name, model.Vouchers),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_VouchersName.Name, model.VouchersName),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_VouchersAmount.Name, model.VouchersAmount),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Products_Id.Name, model.Products_Id),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Services_Id.Name, model.Services_Id),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_LessonPackages_Id.Name, model.LessonPackages_Id),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SessionHours.Name, model.SessionHours),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SessionHours_Remaining.Name, model.SessionHours_Remaining),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_TravelCost.Name, model.TravelCost),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_TutorTravelCost.Name, model.TutorTravelCost)
+                );
+            }
         }
 
         /******************************************************************************************************************************************************/

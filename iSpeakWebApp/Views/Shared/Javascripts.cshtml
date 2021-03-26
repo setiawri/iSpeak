@@ -171,8 +171,31 @@ OTHER
 
     // TEXTBOX =====================================================================================================================================================
 
-    function ZeroIfEmpty(value) { return setIfEmpty(value, 0); }
-    function setIfEmpty(value, defaultValue) {
+    function getValueString(id) {
+        return trim($('#' + id).val());
+    }
+
+    function trim(value) { return $.trim(value); }
+
+    function getValueInt(id) {
+        return parseInt(getDefaultIfEmpty($('#'+id).val(), 0));
+    }
+
+    function getValueFloat(id) {
+        return parseFloat(getDefaultIfEmpty($('#' + id).val(), 0));
+    }
+
+    function setValue(id, value) { $('#' + id).val(value); }
+
+    function resetListbox(id) { $('#'+id).val('').trigger('change'); }
+
+    function setToZeroIfEmpty(control) {
+        $(control).val(getDefaultIfEmpty($(control).val(), 0));
+        if ($(control).val() == 0)
+            $(control).select();
+    }
+
+    function getDefaultIfEmpty(value, defaultValue) {
         if (value == '')
             return defaultValue;
         else
@@ -190,7 +213,7 @@ OTHER
 
         $('.positivenumericonly').bind('keypress', function (e) {
             return event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57);
-        });
+        }).bind('keyup', function (e) { setToZeroIfEmpty($(this)); });
 
         $('.integeronly').bind('keypress', function (e) {
             return event.charCode == 45 || (event.charCode >= 48 && event.charCode <= 57);
@@ -198,7 +221,10 @@ OTHER
 
         $('.positiveintegeronly').bind('keypress', function (e) {
             return (event.charCode >= 48 && event.charCode <= 57);
-        });
+        }).bind('keyup', function (e) { setToZeroIfEmpty($(this)); });
+
+        //doesn't work for input with type='number' because it cannot have comma
+        //}).bind('keyup', function (e) { $(this).val(formatN0($(this).val())); });
 
         //allow editing text after initial select all on focus
         $('input').on('focus', function (e) {
@@ -209,6 +235,23 @@ OTHER
                 })
                 .select();
         });
+    }
+
+    //format string to N0
+    function formatN0(value1, value2) {
+        return sum(value1, value2).toLocaleString();
+    }
+
+    function sum(value1, value2) {
+        if (value2 == null)
+            value2 = 0;
+
+        if (!$.isNumeric(value1))
+            value1 = value1.replace(/,/g, '');
+        if (!$.isNumeric(value2))
+            value2 = value2.replace(/,/g, '');
+
+        return parseInt(value1) + parseInt(value2);
     }
 
     // DROPDOWNLIST ================================================================================================================================================
@@ -238,6 +281,28 @@ OTHER
         $('#'+id).val(value).trigger('change');
     }
 
+    function getSelectedItem(ddlid, models) {        
+        var result = getSelectedItems(ddlid, models);
+        if (result.length > 0)
+            return result[0];
+        else
+            return null;
+    }
+
+    function getSelectedItems(ddlid, models) {
+        var result = [];
+        var selecteditems = $('#' + ddlid + ' option:selected').map(function () { return this.value; }).get();
+        $.each(selecteditems, function (index, id) {
+            $.each(models, function (index, item) {
+                if (item.Id == id) {
+                    result.push(item);
+                    return false;
+                }
+            });
+        });
+        return result;
+    }
+
     // NAVIGATION MENU =============================================================================================================================================
 
     function activateNavigationMenu() {
@@ -246,16 +311,16 @@ OTHER
 
     // BOOTBOX =====================================================================================================================================================
 
-    function showBootboxMessage() {
-        var msg = '@TempData["BootboxMessage"]';
-        if (msg !== '') {
-            msg = msg.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
-            bootbox.alert({ backdrop: true, message: msg });
+    function showControllerMessage() { showMessage('@TempData["BootboxMessage"]'); }
+    function showMessage(message, idToSelectOnEscape) {
+        if (message !== '') {
+            message = message.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+            bootbox.dialog({ backdrop: true, message: message, onEscape: function () { $('#'+idToSelectOnEscape).select(); } }); //.select() is not working
         }
     }
 
     var spinnerDialog;
-    function showLoadingSpinner() { showSpinner('Loading...'); } 
+    function showLoadingSpinner() { showSpinner('Loading...'); }
     function showSpinner(message) {
         spinnerDialog = bootbox.dialog({
             message: '<p><i class="fa fa-spin fa-spinner"></i> ' + message + '</p>',
@@ -388,7 +453,7 @@ OTHER
             return originalText;
         else {
             if (originalText != "")
-                originalText += delimiter;
+                originalText += delimiter +' ';
             return originalText += newValue;
         }
     }
@@ -561,7 +626,7 @@ OTHER
 
         activateNavigationMenu();
 
-        showBootboxMessage();
+        showControllerMessage();
     });
 
     function setNavigationMenuVisibility() {
@@ -611,4 +676,5 @@ OTHER
             window.location.href = url;
     }
 
+    function emptyGuid() { return '00000000-0000-0000-0000-000000000000'; }
 </script>

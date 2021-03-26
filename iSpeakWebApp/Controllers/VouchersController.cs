@@ -138,7 +138,12 @@ namespace iSpeakWebApp.Controllers
 
         public static void setDropDownListViewBag(ControllerBase controller)
         {
-            controller.ViewBag.Vouchers = new SelectList(get(), VouchersModel.COL_Id.Name, VouchersModel.COL_Code.Name);
+            controller.ViewBag.Vouchers = new SelectList(get(1), VouchersModel.COL_Id.Name, VouchersModel.COL_Code.Name);
+        }
+
+        public static void setViewBag(ControllerBase controller)
+        {
+            controller.ViewBag.VouchersModels = get(1);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
@@ -157,10 +162,10 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public List<VouchersModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Active, FILTER_Keyword); }
+        public List<VouchersModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Keyword, FILTER_Active); }
         public VouchersModel get(Guid Id) { return get(Id, null, null).FirstOrDefault(); }
-        public static List<VouchersModel> get() { return get(null, null, null); }
-        public static List<VouchersModel> get(Guid? Id, int? FILTER_Active, string FILTER_Keyword)
+        public static List<VouchersModel> get(int? Active) { return get(null, null, Active); }
+        public static List<VouchersModel> get(Guid? Id, string FILTER_Keyword, int? Active)
         {
             return new DBContext().Database.SqlQuery<VouchersModel>(@"
                         SELECT Vouchers.*
@@ -174,7 +179,7 @@ namespace iSpeakWebApp.Controllers
 						ORDER BY Vouchers.Code ASC
                     ",
                     DBConnection.getSqlParameter(VouchersModel.COL_Id.Name, Id),
-                    DBConnection.getSqlParameter(VouchersModel.COL_Active.Name, FILTER_Active),
+                    DBConnection.getSqlParameter(VouchersModel.COL_Active.Name, Active),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
         }
