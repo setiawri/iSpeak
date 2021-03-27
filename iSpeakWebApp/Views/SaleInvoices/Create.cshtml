@@ -248,15 +248,15 @@
             var voucherstring = "";
             $.each(getSelectedVouchers(), function (index, item) {
                 voucheridlist = appendWithDelimiter(voucheridlist, item.Id, ',');
-                vouchernamelist = appendWithDelimiter(vouchernamelist, item.Code+'('+formatN0(item.Amount)+')', ',');
+                vouchernamelist = appendWithDelimiter(vouchernamelist, item.Code+' ('+formatN0(item.Amount)+')', ',');
+                voucherstring = vouchernamelist;
                 voucheramount += item.Amount;
-                voucherstring += appendWithDelimiter(voucherstring, item.Code, ',');
             });
             if (voucherstring != '')
-                voucherstring = '<div>Voucher: <label class="form-label item-VoucherList">' + voucherstring + '</label></div>';
+                voucherstring = '<br/>Voucher: ' + voucherstring;
 
             if (itemnotes != '')
-                itemnotesstring = '<div>ItemNotes: <label class="form-label item-ItemNotes">' + itemnotes + '</label></div>';
+                itemnotesstring = '<br/>Notes: ' + itemnotes;
 
             if ($('.tab-content .active').attr('id') == 'nav-LessonPackages') {
                 var item = getSelectedLessonPackage();
@@ -267,11 +267,11 @@
                     description = '[' + item.Languages_Name + ': ' + item.LessonTypes_Name + '] ' + item.Name;
                     sessionhours = getValueFloat('SessionHours');
                     if (sessionhours > 0)
-                        description += ' (' + sessionhours + ')';
+                        description += ' (' + sessionhours + ' hrs)';
                     price = item.Price;
                     TravelCost = getValueInt('TravelCost');
                     TutorTravelCost = getValueInt('TutorTravelCost');
-                    travelcoststring = '<div class="align-top">Travel: <label class="form-label item-TravelCost">' + formatN0(TravelCost) + '</label> (Tutor: <label class="form-label item-TutorTravelCost">' + formatN0(TutorTravelCost) + '</label>)</div>';
+                    travelcoststring = '<br/>Travel: ' + formatN0(TravelCost) + ' (Tutor: ' + formatN0(TutorTravelCost) + ')';
                     subtotal = (qty * price) + TravelCost - discount - voucheramount;
 
                     //reset fields
@@ -293,20 +293,20 @@
                     +   '       <a href="javascript:void(0)" onclick="RemoveItem(\'' + id + '\')" class="text-danger"><i class="fa fa-2x fa-times"></i></a>'
                     +   '   </td>'
                     +   '   <td class="align-top">'
-                    +   '       <div><label class="form-label item-Description">' + description + '</label>'
+                    +   description
                     +   voucherstring
                     +   itemnotesstring
                     +   '   </td>'
                     +   '   <td class="align-top text-right">'
-                    +   '       <div>Qty: <label class="form-label item-Qty">' + formatN0(qty) + '</label> x <label class="form-label item-Price">' + formatN0(price) + '</label></div>'
+                    +   '       Qty: ' + formatN0(qty) + ' x ' + formatN0(price)
                     +   travelcoststring
                     +   '   </td>'
                     +   '   <td class="align-top text-right">'
-                    +   '       <div>Discount: - <label class="form-label item-Discount">' + formatN0(discount) + '</label></div>'
-                    +   '       <div>Vouchers: - <label class="form-label item-Voucher">' + formatN0(voucheramount) + '</label></div>'
+                    +   '       Discount: ' + formatN0(-1 * discount)
+                    +   '       <br/>Vouchers: ' + formatN0(-1 * voucheramount)
                     +   '   </td>'
                     +   '   <td class="align-top text-right">'
-                    +   '       <label class="form-label item-Amount">' + formatN0(subtotal) + '</label>'
+                    +   '       <strong>' + formatN0(subtotal) + '</strong>'
                     +   '   </td>'
                     +   '</tr>'
                 );

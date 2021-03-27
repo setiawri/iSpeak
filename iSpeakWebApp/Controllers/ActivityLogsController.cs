@@ -21,9 +21,9 @@ namespace iSpeakWebApp.Controllers
                                     <table class='table table-striped table-bordered'>
                                         <thead>
                                             <tr>
-                                                <!--<th>Timestamp</th>
+                                                <th>Timestamp</th>
                                                 <th>Description</th>
-                                                <th>Operator</th>-->
+                                                <th>User</th>
                                             </tr>
                                         </thead>
                                         <tbody>";

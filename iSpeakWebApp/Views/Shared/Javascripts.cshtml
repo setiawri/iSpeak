@@ -468,11 +468,12 @@ OTHER
                 ReffId: id
             },
             success: function (data) {
-                var dialog = bootbox.alert({
+                bootbox.dialog({
                     title: 'Log',
                     size: 'large',
                     message: data.content,
-                    backdrop: true
+                    backdrop: true,
+                    onEscape: true
                 }).off("shown.bs.modal"); //scroll to top
             }, //end success
             error: function (result) {
@@ -501,7 +502,7 @@ OTHER
         url = url.replace("__action", action).replace("__controller", controller);
         $.ajax({
             type: "POST", url: url, data: { id: id },
-            success: function (data) { bootbox.alert({ backdrop: true, title: title, size: size, message: data.content }); },
+            success: function (data) { bootbox.dialog({ backdrop: true, onEscape: true, title: title, size: size, message: data.content }); },
             error: function (result) { bootbox.alert({ backdrop: true, message: "Error " + result }); }
         });
     }

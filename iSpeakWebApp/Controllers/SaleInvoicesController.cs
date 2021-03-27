@@ -138,6 +138,10 @@ namespace iSpeakWebApp.Controllers
                 if (!string.IsNullOrEmpty(subtractions))
                     subtractions += "<br/>";
 
+                string log = model.RowNo.ToString();
+                if (access.SaleInvoices_TutorTravelCost_View)
+                    log = string.Format("<a href='javascript: void(0)' onclick=\"Log('{0}')\">{1}</a>", model.Id.ToString(), model.RowNo);
+
                 content += string.Format(@"
                             <tr>
                                 <td class='align-top' style='width:10px;'>{0}</td>
@@ -152,7 +156,7 @@ namespace iSpeakWebApp.Controllers
                                 </td>
                             </tr>
                         ",
-                        access.SaleInvoices_TutorTravelCost_View ? string.Format("<a href='{0}Logs/Index/{1}?ctrl=Sale&table=SaleInvoiceItems&header={1}' target='_blank'>{2}</a>", Url.Content("~"), model.Id, model.RowNo) : model.RowNo.ToString(),
+                        log,
                         model.Description,
                         model.LessonPackages_Id != null ? string.Format("<br/><strong>Available Hours:</strong> {0:N0}", model.SessionHours_Remaining) : "",
                         !string.IsNullOrWhiteSpace(model.VouchersName) ? string.Format("<br/>Vouchers: {0}", model.VouchersName) : "",

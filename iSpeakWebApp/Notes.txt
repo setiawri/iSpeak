@@ -9,6 +9,9 @@ TO DO:
 
 IMPROVEMENTS:
 
+Sale Invoice Items:
+- feature to edit tutor travel cost. add log on edit.
+
 Promotion Events:
 - model: add field StartDate
 - Index: add filter to show date range
