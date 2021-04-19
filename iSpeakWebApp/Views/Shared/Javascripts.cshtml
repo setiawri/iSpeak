@@ -16,6 +16,8 @@ FILTERING
 <input type="hidden" id="FILTER_DateFrom" name="FILTER_DateFrom" value="@ViewBag.FILTER_DateFrom" />
 <input type="hidden" id="FILTER_chkDateTo" name="FILTER_chkDateTo" value="@ViewBag.FILTER_chkDateTo" />
 <input type="hidden" id="FILTER_DateTo" name="FILTER_DateTo" value="@ViewBag.FILTER_DateTo" />
+<input type="hidden" id="FILTER_PaymentNo" name="FILTER_PaymentNo" value="@ViewBag.FILTER_PaymentNo" />
+<input type="hidden" id="FILTER_InvoiceNo" name="FILTER_InvoiceNo" value="@ViewBag.FILTER_InvoiceNo" />
 
 <script type="text/javascript">
 
@@ -29,6 +31,8 @@ FILTERING
         setFilter('FILTER_Languages_Id', '@ViewBag.FILTER_Languages_Id');
         setFilter('FILTER_LessonTypes_Id', '@ViewBag.FILTER_LessonTypes_Id');
         setFilter('FILTER_Branches_Id', '@ViewBag.FILTER_Branches_Id');
+        setFilter('FILTER_PaymentNo', '@ViewBag.FILTER_PaymentNo');
+        setFilter('FILTER_InvoiceNo', '@ViewBag.FILTER_InvoiceNo');
 
         setCheckboxFilter('FILTER_chkDateFrom', '@ViewBag.FILTER_chkDateFrom');
         setCheckboxFilter('FILTER_chkDateTo', '@ViewBag.FILTER_chkDateTo');
@@ -95,11 +99,11 @@ FILTERING
             FILTER_DateTo = $('#FILTER_DateTo').val();
         filter += appendFilter(FILTER_DateTo, "FILTER_DateTo");
 
-        if ($('#FILTER_chkDateFrom') != null) 
+        if ($('#FILTER_chkDateFrom') != null)
             FILTER_chkDateFrom = getCheckboxFilterValue('FILTER_chkDateFrom');
         filter += appendFilter(FILTER_chkDateFrom, "FILTER_chkDateFrom");
 
-        if ($('#FILTER_chkDateTo') != null) 
+        if ($('#FILTER_chkDateTo') != null)
             FILTER_chkDateTo = getCheckboxFilterValue('FILTER_chkDateTo');
         filter += appendFilter(FILTER_chkDateTo, "FILTER_chkDateTo");
 
@@ -116,18 +120,19 @@ FILTERING
     function Action(action, controller, returnurl) {
         showLoadingSpinner();
         var url = '@Url.Action("__action", "__controller", new { FILTER_Keyword = "__data" })';
-        url = url.replace("__action", action).replace("__controller", controller);
         url = url.replace("__data", getFilter());
-        if (returnurl != undefined)
-            url += "&ReturnUrl=" + returnurl;
-        OpenWindow(url, "false");
+        ProcessAction(url, action, controller, returnurl)
     }
 
     function ActionWithId(id, action, controller, returnurl) {
         showLoadingSpinner();
         var url = '@Url.Action("__action", "__controller", new { id = "__data" })';
-        url = url.replace("__action", action).replace("__controller", controller);
         url = url.replace("__data", id + "?FILTER_Keyword=" + getFilter());
+        ProcessAction(url, action, controller, returnurl)
+    }
+
+    function ProcessAction(url, action , controller, returnurl) {
+        url = url.replace("__action", action).replace("__controller", controller);
         if (returnurl != undefined)
             url += "&ReturnUrl=" + returnurl;
         OpenWindow(url, "false");
@@ -281,7 +286,7 @@ OTHER
         $('#'+id).val(value).trigger('change');
     }
 
-    function getSelectedItem(ddlid, models) {        
+    function getSelectedItem(ddlid, models) {
         var result = getSelectedItems(ddlid, models);
         if (result.length > 0)
             return result[0];

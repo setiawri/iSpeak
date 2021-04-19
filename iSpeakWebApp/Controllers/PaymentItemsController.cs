@@ -15,15 +15,17 @@ namespace iSpeakWebApp.Controllers
         {
             return new DBContext().Database.SqlQuery<PaymentItemsModel>(@"
                     SELECT PaymentItems.*,
-                        Payments.No AS Payments_No
+                        Payments.No AS Payments_No,
+                        SaleInvoices.No AS SaleInvoices_No
                     FROM PaymentItems
                         LEFT JOIN Payments ON Payments.Id = PaymentItems.Payments_Id
+                        LEFT JOIN SaleInvoices ON SaleInvoices.Id = PaymentItems.ReferenceId
                     WHERE 1=1
 						AND (@Id IS NULL OR PaymentItems.Id = @Id)
 						AND (@Id IS NOT NULL OR (
                             (@Payments_Id IS NULL OR PaymentItems.Payments_Id = @Payments_Id)
                         ))
-					ORDER BY PaymentItems.RowNo ASC
+					ORDER BY Payments.No ASC
                 ",
                 DBConnection.getSqlParameter(PaymentItemsModel.COL_Id.Name, Id),
                 DBConnection.getSqlParameter(PaymentItemsModel.COL_Payments_Id.Name, Payments_Id)

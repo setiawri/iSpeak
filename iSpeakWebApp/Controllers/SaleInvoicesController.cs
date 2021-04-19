@@ -16,56 +16,54 @@ namespace iSpeakWebApp.Controllers
         /* INDEX **********************************************************************************************************************************************/
 
         // GET: SaleInvoices
-        public ActionResult Index(int? rss, string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, 
+        public ActionResult Index(int? rss, string FILTER_Keyword, string FILTER_PaymentNo, int? FILTER_Cancelled, int? FILTER_Approved, 
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
             if (!UserAccountsController.getUserAccess(Session).SaleInvoices_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            if (FILTER_DateFrom == null)
+            if (rss != null && FILTER_DateFrom == null)
             {
                 FILTER_chkDateFrom = true;
                 FILTER_DateFrom = DateTime.Today.AddMonths(-2);
             }
 
-            setViewBag(FILTER_Keyword, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
-            if (rss != null)
+            setViewBag(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
+            if (rss == null || !string.IsNullOrEmpty(FILTER_Keyword))
+                return View(get(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo));
+            else
             {
                 ViewBag.RemoveDatatablesStateSave = rss;
                 return View();
-            }
-            else
-            {
-                return View(get(FILTER_Keyword, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo));
             }
         }
 
         // POST: SaleInvoices
         [HttpPost]
-        public ActionResult Index(string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, 
+        public ActionResult Index(string FILTER_Keyword, string FILTER_PaymentNo, int? FILTER_Cancelled, int? FILTER_Approved, 
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
-            setViewBag(FILTER_Keyword, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
-            return View(get(FILTER_Keyword, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo));
+            setViewBag(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
+            return View(get(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo));
         }
 
         /* CREATE *********************************************************************************************************************************************/
 
         // GET: SaleInvoices/Create
-        public ActionResult Create(string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, 
+        public ActionResult Create(string FILTER_Keyword, string FILTER_PaymentNo, int? FILTER_Cancelled, int? FILTER_Approved, 
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
             if (!UserAccountsController.getUserAccess(Session).SaleInvoices_Add)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            setViewBag(FILTER_Keyword, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
+            setViewBag(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
             return View(new SaleInvoicesModel());
         }
 
         // POST: SaleInvoices/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(SaleInvoicesModel model, string JsonSaleInvoiceItems, string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, 
+        public ActionResult Create(SaleInvoicesModel model, string JsonSaleInvoiceItems, string FILTER_Keyword, string FILTER_PaymentNo, int? FILTER_Cancelled, int? FILTER_Approved, 
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
             if (ModelState.IsValid && !string.IsNullOrEmpty(JsonSaleInvoiceItems))
@@ -82,13 +80,13 @@ namespace iSpeakWebApp.Controllers
                 });
             }
 
-            setViewBag(FILTER_Keyword, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
+            setViewBag(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
             return View(model);
         }
 
         /* METHODS ********************************************************************************************************************************************/
 
-        public void setViewBag(string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, 
+        public void setViewBag(string FILTER_Keyword, string FILTER_PaymentNo, int? FILTER_Cancelled, int? FILTER_Approved, 
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
             ViewBag.FILTER_Keyword = FILTER_Keyword;
@@ -98,6 +96,7 @@ namespace iSpeakWebApp.Controllers
             ViewBag.FILTER_DateFrom = FILTER_DateFrom;
             ViewBag.FILTER_chkDateTo = FILTER_chkDateTo;
             ViewBag.FILTER_DateTo = FILTER_DateTo;
+            ViewBag.FILTER_PaymentNo = FILTER_PaymentNo;
             LessonPackagesController.setDropDownListViewBag(this);
             LessonPackagesController.setViewBag(this);
             ProductsController.setDropDownListViewBag(this);
@@ -194,11 +193,11 @@ namespace iSpeakWebApp.Controllers
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public List<SaleInvoicesModel> get(string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved,
+        public List<SaleInvoicesModel> get(string FILTER_Keyword, string FILTER_PaymentNo, int? FILTER_Cancelled, int? FILTER_Approved,
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo) 
-        { return get(Session, null, FILTER_Keyword, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo, FILTER_Cancelled, FILTER_Approved); }
-        public SaleInvoicesModel get(Guid Id) { return get(Session, Id, null, false, null, false, null, null, null).FirstOrDefault(); }
-        public static List<SaleInvoicesModel> get(HttpSessionStateBase Session, Guid? Id, string FILTER_Keyword, 
+        { return get(Session, null, FILTER_Keyword, FILTER_PaymentNo, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo, FILTER_Cancelled, FILTER_Approved); }
+        public SaleInvoicesModel get(Guid Id) { return get(Session, Id, null, null, false, null, false, null, null, null).FirstOrDefault(); }
+        public static List<SaleInvoicesModel> get(HttpSessionStateBase Session, Guid? Id, string FILTER_Keyword, string FILTER_PaymentNo, 
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo, 
             int? Cancelled, int? IsChecked)
         {
@@ -221,6 +220,13 @@ namespace iSpeakWebApp.Controllers
 						AND (@Id IS NULL OR SaleInvoices.Id = @Id)
 						AND (@Id IS NOT NULL OR (
     						(@FILTER_Keyword IS NULL OR (SaleInvoices.No LIKE '%'+@FILTER_Keyword+'%'))
+    						AND (@FILTER_PaymentNo IS NULL OR (SaleInvoices.Id IN (                                
+                                SELECT SaleInvoices.Id
+                                FROM PaymentItems 
+	                                LEFT JOIN Payments ON Payments.Id = PaymentItems.Payments_Id
+	                                LEFT JOIN SaleInvoices ON Saleinvoices.Id = PaymentItems.ReferenceId
+                                WHERE Payments.No = @FILTER_PaymentNo
+                            )))
                             AND (@FILTER_DateFrom IS NULL OR SaleInvoices.Timestamp >= @FILTER_DateFrom)
                             AND (@FILTER_DateTo IS NULL OR SaleInvoices.Timestamp <= @FILTER_DateTo)
                             AND (@Cancelled IS NULL OR SaleInvoices.Cancelled = @Cancelled)
@@ -231,6 +237,7 @@ namespace iSpeakWebApp.Controllers
                 ",
                 DBConnection.getSqlParameter(SaleInvoicesModel.COL_Id.Name, Id),
                 DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
+                DBConnection.getSqlParameter("FILTER_PaymentNo", FILTER_PaymentNo),
                 DBConnection.getSqlParameter("FILTER_DateFrom", FILTER_DateFrom),
                 DBConnection.getSqlParameter("FILTER_DateTo", Util.getAsEndDate(FILTER_DateTo)),
                 DBConnection.getSqlParameter(SaleInvoicesModel.COL_Branches_Id.Name, Branches_Id),

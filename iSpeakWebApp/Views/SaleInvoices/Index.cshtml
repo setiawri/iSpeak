@@ -42,6 +42,13 @@
                             </div>
                         </div>
 
+                        <div class="row ml-0 mr-2" style="width:100px;">
+                            <label class="mb-0">Payment</label>
+                            <div class="input-group">
+                                <input type="text" name="FILTER_PaymentNo" id="FILTER_PaymentNo" class="form-control" />
+                            </div>
+                        </div>
+
                         <div class="row ml-0 mr-2" style="width:150px;">
                             <label class="mb-0">Date From</label>
                             <div class="input-group">
@@ -162,8 +169,11 @@
                                             {
                                                 <a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Invoice @item.No', 'large', 'GetDetails', '@ControllerName')">View</a> @:•
                                             }
-                                            <a href="javascript:void(0)" onclick="Log('@item.Id')">Payments</a>
-                                            • <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                            @if (access.Payments_View)
+                                            {
+                                                <a href='/Payments?FILTER_chkDateFrom=false&FILTER_chkDateTo=false&FILTER_InvoiceNo=@item.No' target='_blank'>Payment</a> @:•
+                                            }
+                                            <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                         </td>
                                     </tr>
                                 }}

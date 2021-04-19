@@ -28,6 +28,13 @@
                             </div>
                         </div>
 
+                        <div class="row ml-0 mr-2" style="width:100px;">
+                            <label class="mb-0">Invoice</label>
+                            <div class="input-group">
+                                <input type="text" name="FILTER_InvoiceNo" id="FILTER_InvoiceNo" class="form-control" />
+                            </div>
+                        </div>
+
                         <div class="row ml-0 mr-2" style="width:150px;">
                             <label class="mb-0">Date From</label>
                             <div class="input-group">
@@ -96,9 +103,9 @@
                                     {
                                         <th class="non-searchable non-sortable" style="width:0px;">Approval</th>
                                     }
-                                    <th>@Html.DisplayNameFor(model => model.Notes)</th>
+                                    <th class="non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
                                     <th class="non-searchable non-sortable" style="width:70px;"></th>
-                                    <th class="non-searchable non-sortable" style="width:180px;"></th>
+                                    <th class="non-searchable non-sortable" style="width:120px;"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -122,7 +129,7 @@
                                                          @item.DebitNumber
                                                      }
                                                 </div>
-                                                <div>@Html.DisplayFor(modelItem => item.DebitOwnerName)</div>
+                                                <div>@string.Format("{0}", item.DebitOwnerName.Split(' '))</div>
                                             }
                                         </td>
                                         <td class="align-top text-right">@Html.DisplayFor(modelItem => item.ConsignmentAmount)</td>
@@ -146,10 +153,9 @@
                                             }
                                             @if (access.Payments_Edit)
                                             {
-                                                <a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Payment @item.No', 'large', 'GetDetails', '@ControllerName')">View</a> @:•
+                                                <a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Payment @item.No', 'medium', 'GetDetails', '@ControllerName')">View</a> @:•
                                             }
-                                            <a href="javascript:void(0)" onclick="Log('@item.Id')">Invoices</a>
-                                            • <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                            <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                         </td>
                                     </tr>
                                 }}
