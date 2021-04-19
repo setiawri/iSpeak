@@ -128,7 +128,9 @@
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Controllers\ActivityLogsController.cs" />
+    <Compile Include="Controllers\PaymentItemsController.cs" />
     <Compile Include="Controllers\SaleInvoiceItemsController.cs" />
+    <Compile Include="Controllers\PaymentsController.cs" />
     <Compile Include="Controllers\SaleInvoicesController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\ServicesController.cs" />
@@ -153,8 +155,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ActivityLogsModel.cs" />
+    <Compile Include="Models\PaymentItemsModel.cs" />
     <Compile Include="Models\SaleInvoiceItems_InventoryModel.cs" />
     <Compile Include="Models\SaleInvoiceItemsModel.cs" />
+    <Compile Include="Models\PaymentsModel.cs" />
     <Compile Include="Models\SaleInvoicesModel.cs" />
     <Compile Include="Models\ConsignmentsModel.cs" />
     <Compile Include="Models\ExpenseCategoriesModel.cs" />
@@ -313,11 +317,16 @@
     <Content Include="Views\Products\Index.cshtml" />
     <Content Include="Views\SaleInvoices\Index.cshtml" />
     <Content Include="Views\SaleInvoices\Create.cshtml" />
+    <Content Include="Views\Payments\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\LIBUtil\LIBUtil\LIBUtil\LIBUtil.csproj">
       <Project>{23013bfc-021e-426a-8a92-8c1c34836974}</Project>
       <Name>LIBUtil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\LIBUtil\LIBUtil\LIBWebMVC\LIBWebMVC.csproj">
+      <Project>{344268d2-6387-4ad2-88f5-dc743733abfc}</Project>
+      <Name>LIBWebMVC</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

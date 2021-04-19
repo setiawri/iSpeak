@@ -1,7 +1,6 @@
 ﻿
 TO DO:
-- Sale Invoice: get voucher values and assign to list.
-- Sale Invoice: append cancellation reason in notes.
+- Sale Invoice: feature to cancel: check payments and lesson sessions. on cancel, add reason to cancel field in database table column. 
 - create user account info page
 - move button to scroll to bottom to javascripts file and set display to none. add javascript to display it on pages that requires it.
 - edit notes button in Settings > edit page is highlighted when cursor is hovering on the title.

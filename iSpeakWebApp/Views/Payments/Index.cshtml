@@ -1,10 +1,10 @@
-﻿@model IEnumerable<iSpeakWebApp.Models.SaleInvoicesModel>
+﻿@model IEnumerable<iSpeakWebApp.Models.PaymentsModel>
 
 @{
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
-    string ControllerName = "SaleInvoices";
+    string ControllerName = "Payments";
     ViewBag.SelectedNavigationMenu = "Sales";
-    ViewBag.Title = "SALE INVOICES";
+    ViewBag.Title = "PAYMENTS";
     ViewBag.Subtitle = "Index";
 }
 
@@ -21,20 +21,6 @@
                 <div class="card-body">
 
                     <div class="row mx-0">
-                        @if (access.SaleInvoices_Add)
-                        {
-                            <div class="mr-2">
-                                <label class="mb-0">&nbsp;</label>
-                                <div><a href="javascript:void(0)" onclick="Action('Create', '@ControllerName')" class="btn btn-success">CREATE<i class="icon-plus22 ml-2"></i></a></div>
-                            </div>
-                        }
-                        @if (access.Payments_Add)
-                        {
-                            <div class="mr-2">
-                                <label class="mb-0">&nbsp;</label>
-                                <div><a href="javascript:void(0)" onclick="Action('CreatePayments', '@ControllerName')" class="btn btn-primary">PAYMENT<i class="icon-plus22 ml-2"></i></a></div>
-                            </div>
-                        }
                         <div class="row ml-0 mr-2" style="width:100px;">
                             <label class="mb-0">No</label>
                             <div class="input-group">
@@ -77,7 +63,7 @@
                             </div>
                         </div>
 
-                        @if (access.SaleInvoices_Approve)
+                        @if (access.Payments_Approve)
                         {
                             <div class="row ml-0 mr-2" style="width:80px;">
                                 <label class="mb-0">Approved</label>
@@ -103,50 +89,50 @@
                                 <tr>
                                     <th style="width:50px;">@Html.DisplayNameFor(model => model.No)</th>
                                     <th class="non-sortable" style="width:150px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Customer_UserAccounts_Id)</th>
-                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Amount)</th>
-                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Due)</th>
-                                    <th class="non-searchable non-sortable" style="width:0px;"></th>
-                                    @if (access.SaleInvoices_Approve)
+                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.CashAmount)</th>
+                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.DebitNumber)</th>
+                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.ConsignmentAmount)</th>
+                                    @if (access.Payments_Approve)
                                     {
                                         <th class="non-searchable non-sortable" style="width:0px;">Approval</th>
                                     }
+                                    <th>@Html.DisplayNameFor(model => model.Notes)</th>
                                     <th class="non-searchable non-sortable" style="width:70px;"></th>
                                     <th class="non-searchable non-sortable" style="width:180px;"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @if (Model != null) { foreach (var item in Model)
-                                    {
+                                    { 
                                     <tr>
                                         <td class="align-top">@Html.DisplayFor(modelItem => item.No)</td>
                                         <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
-                                        <td class="align-top">
-                                            <div>@Html.DisplayFor(modelItem => item.Customer_UserAccounts_Name)</div>
-                                            @if (!string.IsNullOrEmpty(item.Notes))
+                                        <td class="align-top text-right">@Html.DisplayFor(modelItem => item.CashAmount)</td>
+                                        <td class="align-top text-right">
+                                            <div>@Html.DisplayFor(modelItem => item.DebitAmount)</div>
+                                            @if (item.DebitAmount > 0)
                                             {
-                                                <div><strong>Notes: </strong>@Html.DisplayFor(modelItem => item.Notes)</div>
+                                                <div>[@Html.DisplayFor(modelItem => item.DebitBank)] 
+                                                     @if(!string.IsNullOrEmpty(item.DebitNumber) && item.DebitNumber.Length > 4)
+                                                     {
+                                                         @:*@item.DebitNumber.Substring(item.DebitNumber.Length-4, 4)
+                                                     } 
+                                                     else 
+                                                     {
+                                                         @item.DebitNumber
+                                                     }
+                                                </div>
+                                                <div>@Html.DisplayFor(modelItem => item.DebitOwnerName)</div>
                                             }
                                         </td>
-                                        <td class="align-top text-right">@Html.DisplayFor(modelItem => item.Amount)</td>
-                                        <td class="align-top text-right pr-1">
-                                            @if (item.Due > 0)
-                                            {
-                                                @Html.DisplayFor(modelItem => item.Due)
-                                            }
-                                        </td>
-                                        <td class="align-top pl-0">
-                                            @if (item.Due > 0)
-                                            {
-                                                <input type="checkbox" class="check-styled" id="@item.Id" />
-                                            }
-                                        </td>
-                                        @if (access.SaleInvoices_Approve)
+                                        <td class="align-top text-right">@Html.DisplayFor(modelItem => item.ConsignmentAmount)</td>
+                                        @if (access.Payments_Approve)
                                         {
                                             <td class="align-top" style="text-align:center;">
-                                                @Html.CheckBoxFor(modelItem => item.IsChecked, new { @class = "check-styled", onclick=string.Format("UpdateApproval(this, '{0}')", item.Id) })
+                                                @Html.CheckBoxFor(modelItem => item.Confirmed, new { @class = "check-styled", onclick=string.Format("UpdateApproval(this, '{0}')", item.Id) })
                                             </td>
                                         }
+                                        <td class="align-top tablecellwrap">@Html.DisplayFor(modelItem => item.Notes)</td>
                                         <td class="align-top">
                                             @if (!item.Cancelled)
                                             {
@@ -158,11 +144,11 @@
                                             {
                                                 <div><span class="badge badge-danger d-block mr-1">CANCELLED</span></div>
                                             }
-                                            @if (access.SaleInvoices_Edit)
+                                            @if (access.Payments_Edit)
                                             {
-                                                <a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Invoice @item.No', 'large', 'GetDetails', '@ControllerName')">View</a> @:•
+                                                <a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Payment @item.No', 'large', 'GetDetails', '@ControllerName')">View</a> @:•
                                             }
-                                            <a href="javascript:void(0)" onclick="Log('@item.Id')">Payments</a>
+                                            <a href="javascript:void(0)" onclick="Log('@item.Id')">Invoices</a>
                                             • <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                         </td>
                                     </tr>

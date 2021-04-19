@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using iSpeakWebApp.Models;
 using LIBUtil;
+using LIBWebMVC;
 
 namespace iSpeakWebApp.Controllers
 {
@@ -75,12 +76,12 @@ namespace iSpeakWebApp.Controllers
 
                 //Update Database
                 if (string.IsNullOrEmpty(log))
-                    Util.setBootboxMessage(this, "No change to update");
+                    UtilWebMVC.setBootboxMessage(this, "No change to update");
                 else
                 {
                     update(modifiedModel); //update setting values
                     db.SaveChanges(); //insert activity logs
-                    Util.setBootboxMessage(this, log);
+                    UtilWebMVC.setBootboxMessage(this, log);
                     return RedirectToAction(nameof(Edit));
                 }
             }
@@ -203,7 +204,7 @@ namespace iSpeakWebApp.Controllers
                     if (oldValue != null && oldValue.Contains(value))
                         oldValue.Remove(value);
                     else
-                        addedlog = append<T>(addedlog, value, ",");
+                        addedlog = append<T>(addedlog, value, ", ");
                 }
             }
             if (!string.IsNullOrEmpty(addedlog)) addedlog = Environment.NewLine + "Added: " + addedlog;
@@ -212,7 +213,7 @@ namespace iSpeakWebApp.Controllers
             if (oldValue != null)
             {
                 foreach (string value in oldValue)
-                    removedlog = append<T>(removedlog, value, ",");
+                    removedlog = append<T>(removedlog, value, ", ");
             }
             if (!string.IsNullOrEmpty(removedlog)) removedlog = Environment.NewLine + "Removed: " + removedlog;
 
@@ -231,7 +232,7 @@ namespace iSpeakWebApp.Controllers
             if (typeof(T) == typeof(UserAccountRolesModel))
                 value = db.UserAccountRoles.Where(x => x.Id.ToString() == value).FirstOrDefault().Name;
 
-            return Util.append(log, value, ",");
+            return Util.append(log, value, ", ");
         }
 
         #endregion METHODS

@@ -209,6 +209,13 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.SaleInvoices_Approve, model.SaleInvoices_Approve, UserAccountRolesModel.COL_SaleInvoices_Approve.LogDisplay);
                     log = Helper.append(log, originalModel.SaleInvoices_TutorTravelCost_View, model.SaleInvoices_TutorTravelCost_View, UserAccountRolesModel.COL_SaleInvoices_TutorTravelCost_View.LogDisplay);
 
+                    //Payments
+                    log = Helper.append(log, originalModel.Payments_Notes, model.Payments_Notes, UserAccountRolesModel.COL_Payments_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.Payments_Add, model.Payments_Add, UserAccountRolesModel.COL_Payments_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.Payments_Edit, model.Payments_Edit, UserAccountRolesModel.COL_Payments_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.Payments_View, model.Payments_View, UserAccountRolesModel.COL_Payments_View.LogDisplay);
+                    log = Helper.append(log, originalModel.Payments_Approve, model.Payments_Approve, UserAccountRolesModel.COL_Payments_Approve.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -328,6 +335,11 @@ namespace iSpeakWebApp.Controllers
                 if (item.SaleInvoices_Approve) model.SaleInvoices_Approve = true;
                 if (item.SaleInvoices_TutorTravelCost_View) model.SaleInvoices_TutorTravelCost_View = true;
 
+                //Payments
+                if (item.Payments_Add) model.Payments_Add = true;
+                if (item.Payments_Edit) model.Payments_Edit = true;
+                if (item.Payments_View) model.Payments_View = true;
+                if (item.Payments_Approve) model.Payments_Approve = true;
             }
 
             return model;

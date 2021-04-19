@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using iSpeakWebApp.Controllers;
 using iSpeakWebApp.Models;
 using LIBUtil;
+using LIBWebMVC;
 
 namespace iSpeakWebApp
 {
@@ -99,11 +100,11 @@ namespace iSpeakWebApp
                 payPeriod = payPeriod.AddMonths(1);
 
             var ViewBag = controller.ViewBag;
-            ViewBag.PayPeriodYear = Util.validateParameter(payPeriod.Year);
-            ViewBag.PayPeriodMonth = Util.validateParameter(payPeriod.Month);
-            ViewBag.PayPeriod = Util.validateParameter(payPeriod);
-            ViewBag.Search = Util.validateParameter(search);
-            ViewBag.ActionType = Util.validateParameter(ActionType);
+            ViewBag.PayPeriodYear = UtilWebMVC.validateParameter(payPeriod.Year);
+            ViewBag.PayPeriodMonth = UtilWebMVC.validateParameter(payPeriod.Month);
+            ViewBag.PayPeriod = UtilWebMVC.validateParameter(payPeriod);
+            ViewBag.Search = UtilWebMVC.validateParameter(search);
+            ViewBag.ActionType = UtilWebMVC.validateParameter(ActionType);
 
             return payPeriod;
         }
@@ -151,7 +152,7 @@ namespace iSpeakWebApp
                     if (oldValue != null && oldValue.Contains(value))
                         oldValue.Remove(value);
                     else
-                        addedlog = append<T>(addedlog, value, ",");
+                        addedlog = append<T>(addedlog, value, ", ");
                 }
             }
             if (!string.IsNullOrEmpty(addedlog)) addedlog = Environment.NewLine + "Added: " + addedlog;
@@ -160,7 +161,7 @@ namespace iSpeakWebApp
             if (oldValue != null)
             {
                 foreach (string value in oldValue)
-                    removedlog = append<T>(removedlog, value, ",");
+                    removedlog = append<T>(removedlog, value, ", ");
             }
 
             if (!string.IsNullOrEmpty(removedlog)) removedlog = Environment.NewLine + "Removed: " + removedlog;

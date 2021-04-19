@@ -577,6 +577,40 @@
 
                             <hr />
 
+                            <label class="h5 mb-0">PAYMENTS</label>
+                            <div class="pl-0">
+                                <div id="Payments_Div">
+                                    <button id="Payments" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                    <label id="Payments_Label" class="col-form-label">@Model.Payments_Notes</label>
+                                </div>
+                                <div id="Payments_Edit" class="input-group d-none mb-1">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.Payments_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes" } })
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    @Html.CheckBoxFor(model => model.Payments_View)
+                                </div>
+                                <div class="input-group-append">
+                                    @Html.LabelFor(model => model.Payments_View, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.Payments_Add)
+                                    </div>
+                                    @Html.LabelFor(model => model.Payments_Add, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.Payments_Edit)
+                                    </div>
+                                    @Html.LabelFor(model => model.Payments_Edit, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.Payments_Approve)
+                                    </div>
+                                    @Html.LabelFor(model => model.Payments_Approve, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                </div>
+                            </div>
+
+                            <hr />
+
                         </fieldset>
 
                         @if (access.UserAccountRoles_Edit)

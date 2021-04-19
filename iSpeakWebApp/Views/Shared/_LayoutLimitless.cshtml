@@ -57,17 +57,20 @@
                         <i class="icon-home4 mr-2"></i>Dashboard
                     </a>
                 </li>
-                <li class="nav-item dropdown">
+                <li id="Menu_Sales" class="nav-item dropdown">
                     <a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
                         <i class="icon-list3 mr-2"></i>
-                        Sale
+                        Sales
                     </a>
                     <div class="dropdown-menu">
                         @if (access.SaleInvoices_View)
                         {
                             <a href="@Url.Action("Index", "SaleInvoices", new { rss=1 })" class="dropdown-item">Invoices</a>
                         }
-                        <a href="@Url.Action("Print", "Payments", new { rss=1 })" class="dropdown-item">Payments</a>
+                        @if (access.Payments_View)
+                        {
+                            <a href="@Url.Action("Index", "Payments", new { rss=1 })" class="dropdown-item">Payments</a>
+                        }
                         <a href="@Url.Action("Index", "Return", new { rss=1 })" class="dropdown-item">Returns</a>
                     </div>
                 </li>

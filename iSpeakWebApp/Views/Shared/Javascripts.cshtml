@@ -347,10 +347,26 @@ OTHER
 
     $('.daterange-picker').daterangepicker({ singleDatePicker: true, locale: { format: 'YYYY/MM/DD' } });
 
-    function setDateRangePicker(id, value) {
-        $('#' + id).data('daterangepicker').setStartDate(value);
-        $('#' + id).data('daterangepicker').setEndDate(value);
+    $('.daterangepicker-multidate').daterangepicker({ singleDatePicker: false, locale: { format: 'YYYY/MM/DD' } }, function (start, end, label) {
+        daterangepickerCallback(start, end, label);
+    });
+
+    //function setDateRangePicker(id, value) {
+    //    $('#' + id).data('daterangepicker').setStartDate(value);
+    //    $('#' + id).data('daterangepicker').setEndDate(value);
+    //}
+
+    function setDateRangePickerWithStringDate(id, start, end) { setDateRangePicker(id, new Date(start), new Date(end)); }
+    function setDateRangePicker(id, start, end) {
+        $('#' + id).data('daterangepicker').setStartDate(start);
+        if (end != null)
+            $('#' + id).data('daterangepicker').setEndDate(end);
+        else
+            $('#' + id).data('daterangepicker').setEndDate(start);
     }
+
+    function setDateRangePickerStartDate(id, daterangepickerId) { $('#' + id).val($('#' + daterangepickerId).val().split(' - ')[0]); }
+    function setDateRangePickerEndDate(id, daterangepickerId) { $('#' + id).val($('#' + daterangepickerId).val().split(' - ')[1]); }
 
     // CHECKBOXES ==================================================================================================================================================
 
@@ -371,6 +387,10 @@ OTHER
         $('.check-styled-danger').uniform({
             wrapperClass: 'border-danger-600 text-danger-800'
         });
+    }
+
+    function getCheckboxValue(id) {
+        return $('#' + id).prop('checked');
     }
 
     // DATE MANIPULATOR ============================================================================================================================================
@@ -403,7 +423,7 @@ OTHER
                 if (format[i] == 'MMM') {
                     month = monthNames[value.getMonth()];
                 } else if (format[i] == 'MM') {
-                    month = (('' + value.getMonth()).length < 2 ? '0' : '') + value.getMonth() + ' ';
+                    month = (('' + value.getMonth()).length < 2 ? '0' : '') + (value.getMonth()+1) + ' ';
                 }
                 result.push(month);
             }
