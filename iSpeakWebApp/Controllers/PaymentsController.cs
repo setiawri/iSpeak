@@ -160,10 +160,15 @@ namespace iSpeakWebApp.Controllers
             return Json(new { content = content }, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult UpdateApproval(Guid id, bool value)
+        public JsonResult Update_Confirmed(Guid id, bool value)
         {
             update_Confirmed(id, value);
+            return Json(new { Message = "" });
+        }
 
+        public JsonResult Update_Cancelled(Guid id, string notes)
+        {
+            update_CancelNotes(id, notes);
             return Json(new { Message = "" });
         }
 
@@ -231,6 +236,23 @@ namespace iSpeakWebApp.Controllers
             db.SaveChanges();
         }
 
+        public void update_CancelNotes(Guid Id, string CancelNotes)
+        {
+            db.Database.ExecuteSqlCommand(@"
+                UPDATE Payments 
+                SET
+                    Cancelled = 1,
+                    CancelNotes = @CancelNotes
+                WHERE Payments.Id = @Id;                
+            ",
+                DBConnection.getSqlParameter(PaymentsModel.COL_Id.Name, Id),
+                DBConnection.getSqlParameter(PaymentsModel.COL_CancelNotes.Name, CancelNotes)
+            );
+
+            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(PaymentsModel.COL_CancelNotes.LogDisplay, CancelNotes));
+            db.SaveChanges();
+        }
+
         //public void add(PaymentsModel model, List<SaleInvoiceItemsModel> SaleInvoiceItems)
         //{
         //    model.Branches_Id = Helper.getActiveBranchId(Session);
@@ -238,13 +260,13 @@ namespace iSpeakWebApp.Controllers
         //    model.Due = model.Amount;
 
         //    db.Database.ExecuteSqlCommand(@"
-                
-	       //     -- INCREMENT LAST HEX NUMBER
-	       //     DECLARE @HexLength int = 5, @LastHex_String varchar(5), @NewNo varchar(5)
-	       //     SELECT @LastHex_String = ISNULL(MAX(No),'') From Payments	
-	       //     DECLARE @LastHex_Int int
-	       //     SELECT @LastHex_Int = CONVERT(INT, CONVERT(VARBINARY, REPLICATE('0', LEN(@LastHex_String)%2) + @LastHex_String, 2)) --@LastHex_String length must be even number of digits to convert to int
-	       //     SET @NewNo = RIGHT(CONVERT(NVARCHAR(10), CONVERT(VARBINARY(8), @LastHex_Int + 1), 1),@HexLength)
+
+        //     -- INCREMENT LAST HEX NUMBER
+        //     DECLARE @HexLength int = 5, @LastHex_String varchar(5), @NewNo varchar(5)
+        //     SELECT @LastHex_String = ISNULL(MAX(No),'') From Payments	
+        //     DECLARE @LastHex_Int int
+        //     SELECT @LastHex_Int = CONVERT(INT, CONVERT(VARBINARY, REPLICATE('0', LEN(@LastHex_String)%2) + @LastHex_String, 2)) --@LastHex_String length must be even number of digits to convert to int
+        //     SET @NewNo = RIGHT(CONVERT(NVARCHAR(10), CONVERT(VARBINARY(8), @LastHex_Int + 1), 1),@HexLength)
 
         //        INSERT INTO Payments   (Id, No,    Branches_Id, Timestamp, Notes, Customer_UserAccounts_Id, Amount, Due, Cancelled, IsChecked) 
         //                            VALUES(@Id,@NewNo,@Branches_Id,@Timestamp,@Notes,@Customer_UserAccounts_Id,@Amount,@Due,@Cancelled,@IsChecked);

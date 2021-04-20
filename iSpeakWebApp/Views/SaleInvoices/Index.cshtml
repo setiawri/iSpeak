@@ -163,9 +163,7 @@
                                             <td class="align-top">
                                                 @if (!item.Cancelled)
                                                 {
-                                                    <div>
-                                                        <a href="javascript:void(0)"><span class="badge badge-warning d-block mr-1" style="width:50px;" data-toggle="modal" data-target="#modal_cancel" onclick="PopulateCancelModal('@item.Id','@item.No')">CANCEL</span></a>
-                                                    </div>
+                                                    <a href="javascript:void(0)"><span class="badge badge-warning d-block mr-1" style="width:50px;" data-toggle="modal" data-target="#modal_cancel" onclick="PopulateCancelModal('@item.Id','@item.No')">CANCEL</span></a>
                                                 }
                                             </td>
                                             <td class="align-top">

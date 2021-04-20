@@ -66,7 +66,8 @@ namespace iSpeakWebApp.Models
         public bool IsTransfer { get; set; } = false;
 
 
-        public string Notes_Cancel { get; set; } = string.Empty;
+        public string CancelNotes { get; set; } = null;
+        public static ModelMember COL_CancelNotes = new ModelMember { Name = "CancelNotes", Display = "Cancel Notes", LogDisplay = ActivityLogsController.editStringFormat2("Cancelled. Notes") };
 
 
         /******************************************************************************************************************************************************/

@@ -192,23 +192,19 @@ namespace iSpeakWebApp.Controllers
 
         public JsonResult Update_Cancelled(Guid id, string notes)
         {
-            update_CancelNotes(id, notes);
+            //cannot have payments
+            //cannot have lesson sessions
+            if (true)
+            {
+                Response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
+                return Json("error nih");
+            }
+            else
+            {
+                update_CancelNotes(id, notes);
+            }
             return Json(new { Message = "" });
         }
-
-        //public JsonResult CreatePayment(string JsonIdList)
-        //{
-        //    if (true)
-        //    {
-        //        Response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
-        //        return Json("error nih");
-        //    }
-        //    else
-        //    {
-        //        update_CancelNotes(id, notes);
-        //    }
-        //    return Json(new { Message = "" });
-        //}
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 

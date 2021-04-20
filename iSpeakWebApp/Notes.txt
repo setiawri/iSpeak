@@ -45,7 +45,7 @@ Products pages is managed by managers only. Admin only input inventory based on 
 
 SALES
 =====
-- cancel button available if: 
+- valid to cancel if: 
 	> all payments are cancelled
 	> all sessions are cancelled
 
