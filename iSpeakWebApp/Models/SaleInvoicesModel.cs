@@ -62,6 +62,11 @@ namespace iSpeakWebApp.Models
 
 
         [Required]
+        public string CancelNotes { get; set; } = null;
+        public static ModelMember COL_CancelNotes = new ModelMember { Name = "CancelNotes", Display = "Cancel Notes", LogDisplay = ActivityLogsController.editStringFormat2("Cancelled. Notes") };
+
+
+        [Required]
         public bool IsChecked { get; set; } = false;
         public static ModelMember COL_IsChecked = new ModelMember { Name = "IsChecked", Display = "IsChecked", LogDisplay = ActivityLogsController.editBooleanFormat("Approval") };
 

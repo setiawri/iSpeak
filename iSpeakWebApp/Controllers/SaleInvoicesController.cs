@@ -184,12 +184,31 @@ namespace iSpeakWebApp.Controllers
             return Json(new { content = content }, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult UpdateApproval(Guid id, bool value)
+        public JsonResult Update_IsChecked(Guid id, bool value)
         {
             update_IsChecked(id, value);
-
             return Json(new { Message = "" });
         }
+
+        public JsonResult Update_Cancelled(Guid id, string notes)
+        {
+            update_CancelNotes(id, notes);
+            return Json(new { Message = "" });
+        }
+
+        //public JsonResult CreatePayment(string JsonIdList)
+        //{
+        //    if (true)
+        //    {
+        //        Response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
+        //        return Json("error nih");
+        //    }
+        //    else
+        //    {
+        //        update_CancelNotes(id, notes);
+        //    }
+        //    return Json(new { Message = "" });
+        //}
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
@@ -259,6 +278,23 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddEditLog(db, Session, Id, string.Format(SaleInvoicesModel.COL_IsChecked.LogDisplay, null, value));
+            db.SaveChanges();
+        }
+
+        public void update_CancelNotes(Guid Id, string CancelNotes)
+        {
+            db.Database.ExecuteSqlCommand(@"
+                UPDATE SaleInvoices 
+                SET
+                    Cancelled = 1,
+                    CancelNotes = @CancelNotes
+                WHERE SaleInvoices.Id = @Id;                
+            ",
+                DBConnection.getSqlParameter(SaleInvoicesModel.COL_Id.Name, Id),
+                DBConnection.getSqlParameter(SaleInvoicesModel.COL_CancelNotes.Name, CancelNotes)
+            );
+
+            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(SaleInvoicesModel.COL_CancelNotes.LogDisplay, CancelNotes));
             db.SaveChanges();
         }
 
