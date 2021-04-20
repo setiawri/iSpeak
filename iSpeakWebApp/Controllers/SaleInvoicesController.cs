@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Web;
 using System.Linq;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Web.Mvc;
 using iSpeakWebApp.Models;
 using Newtonsoft.Json;
 using LIBUtil;
+using LIBWebMVC;
 
 namespace iSpeakWebApp.Controllers
 {
@@ -22,7 +24,7 @@ namespace iSpeakWebApp.Controllers
             if (!UserAccountsController.getUserAccess(Session).SaleInvoices_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            if (rss != null && FILTER_DateFrom == null)
+            if (rss != null)
             {
                 FILTER_chkDateFrom = true;
                 FILTER_DateFrom = DateTime.Today.AddMonths(-2);
@@ -192,20 +194,9 @@ namespace iSpeakWebApp.Controllers
 
         public JsonResult Update_Cancelled(Guid id, string notes)
         {
-            //cannot have payments
-            //cannot have lesson sessions
-            if (true)
-            {
-                Response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
-                return Json("error nih");
-            }
-            else
-            {
-                update_CancelNotes(id, notes);
-            }
-            return Json(new { Message = "" });
+            return UtilWebMVC.Json(Response, update_CancelNotes(id, notes));
         }
-
+        
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
         public List<SaleInvoicesModel> get(string FILTER_Keyword, string FILTER_PaymentNo, int? FILTER_Cancelled, int? FILTER_Approved,
@@ -277,21 +268,49 @@ namespace iSpeakWebApp.Controllers
             db.SaveChanges();
         }
 
-        public void update_CancelNotes(Guid Id, string CancelNotes)
+        public string update_CancelNotes(Guid Id, string CancelNotes)
         {
-            db.Database.ExecuteSqlCommand(@"
-                UPDATE SaleInvoices 
-                SET
-                    Cancelled = 1,
-                    CancelNotes = @CancelNotes
-                WHERE SaleInvoices.Id = @Id;                
-            ",
-                DBConnection.getSqlParameter(SaleInvoicesModel.COL_Id.Name, Id),
-                DBConnection.getSqlParameter(SaleInvoicesModel.COL_CancelNotes.Name, CancelNotes)
+            SqlQueryResult result = DBConnection.executeQuery("DBContext", @"
+                    IF EXISTS(
+                            SELECT Payments.Id
+                            FROM PaymentItems 
+	                            LEFT JOIN Payments ON Payments.Id = PaymentItems.Payments_Id
+	                            LEFT JOIN SaleInvoices ON Saleinvoices.Id = PaymentItems.ReferenceId
+                            WHERE SaleInvoices.Id = @Id AND Payments.Cancelled = 0
+                        )
+                        SET @returnValueString = 'Please cancel related payments and try again.';
+
+                    IF EXISTS(
+                            SELECT *
+                            FROM LessonSessions 
+	                            LEFT JOIN SaleInvoiceitems ON SaleInvoiceitems.Id = LessonSessions.SaleInvoiceItems_Id
+	                            LEFT JOIN SaleInvoices ON Saleinvoices.Id = SaleInvoiceitems.SaleInvoices_Id
+                            WHERE SaleInvoices.Id = @Id AND LessonSessions.Deleted = 0
+                        )
+                        SET @returnValueString = 'Please cancel related lesson sessions and try again.';
+   
+                    IF @returnValueString IS NULL
+                        BEGIN
+                            UPDATE SaleInvoices 
+                            SET
+                                Cancelled = 1,
+                                CancelNotes = @CancelNotes
+                            WHERE SaleInvoices.Id = @Id;                    
+                        END                    
+                ", false, 
+                true,
+                new SqlQueryParameter(SaleInvoicesModel.COL_Id.Name, SqlDbType.UniqueIdentifier, Util.wrapNullable(Id)),
+                new SqlQueryParameter(SaleInvoicesModel.COL_CancelNotes.Name, SqlDbType.VarChar, Util.wrapNullable(CancelNotes))
             );
 
-            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(SaleInvoicesModel.COL_CancelNotes.LogDisplay, CancelNotes));
-            db.SaveChanges();
+            if (!string.IsNullOrEmpty(result.ValueString))
+                return result.ValueString;
+            else
+            {
+                ActivityLogsController.AddEditLog(db, Session, Id, string.Format(SaleInvoicesModel.COL_CancelNotes.LogDisplay, CancelNotes));
+                db.SaveChanges();
+                return null;
+            }
         }
 
         public void add(SaleInvoicesModel model, List<SaleInvoiceItemsModel> SaleInvoiceItems)

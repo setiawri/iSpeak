@@ -220,7 +220,7 @@
                             </div>
                         </div>
 
-                        <div class="modal-footer">
+                        <div id="modal_cancel-footer" class="modal-footer">
                             <button type="button" class="btn bg-success" onclick="Cancel()">Submit</button>
                             <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
                         </div>
@@ -258,6 +258,10 @@
         $('#modal_cancel-Notes').val('');
     }
 
+    $('#modal_cancel').on('shown.bs.modal', function () {
+        $('#modal_cancel-Notes').focus();
+    })  
+
     function Cancel() {
         if (!event.detail || event.detail == 1) {
             if ($('#modal_cancel-Notes').val() == '') {
@@ -271,20 +275,23 @@
                         id: $('#modal_cancel-Id').val(),
                         notes: $('#modal_cancel-Notes').val()
                     },
+                    beforeSend: function (data) {
+                        disableDivElements('modal_cancel-footer', true);
+                    },
                     success: function (data) {
                         $('#LoadData').trigger('click');
-                    }, //end success
+                        disableDivElements('modal_cancel-footer', true);
+                    },
                     error: function (data) {
-                        showMessage("Error " + data.responseText);
-                    } //end error
+                        showMessage("ERROR: " + data.responseText);
+                    },
+                    complete: function (data) {
+                        disableDivElements('modal_cancel-footer', false);
+                    }
                 }); //end ajax
             }
         }
     }
-
-    $('#modal_cancel').on('shown.bs.modal', function () {
-        $('#modal_cancel-Notes').focus();
-    })  
 
     //==============================================================================================================================================================
 

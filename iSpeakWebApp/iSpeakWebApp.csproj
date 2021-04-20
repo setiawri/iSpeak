@@ -234,7 +234,8 @@
     <Content Include="assets\js\plugins\ui\moment\moment_locales.min.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Notes.txt" />
+    <None Include="iSpeakMigrationScript.sql" />
+    <None Include="Notes.txt" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
