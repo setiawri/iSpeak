@@ -16,6 +16,7 @@
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(model => model.Amount)
+            @Html.HiddenFor(model => model.CancelNotes)
             <input type="hidden" id="JsonSaleInvoiceItems" name="JsonSaleInvoiceItems" />
             <!-- Form inputs -->
             <div class="card">

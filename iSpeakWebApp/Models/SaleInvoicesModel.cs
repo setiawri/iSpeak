@@ -61,7 +61,6 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Cancelled = new ModelMember { Name = "Cancelled", Display = "Cancelled", LogDisplay = ActivityLogsController.editBooleanFormat("Cancelled") };
 
 
-        [Required]
         public string CancelNotes { get; set; } = null;
         public static ModelMember COL_CancelNotes = new ModelMember { Name = "CancelNotes", Display = "Cancel Notes", LogDisplay = ActivityLogsController.editStringFormat2("Cancelled. Notes") };
 
