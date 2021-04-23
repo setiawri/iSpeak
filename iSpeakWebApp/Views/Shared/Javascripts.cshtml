@@ -5,6 +5,7 @@
 FILTERING
 =================================================================================================================================================================-->
 
+<input type="hidden" id="returnurl" name="returnurl" value="@ViewBag.returnurl" />
 <input type="hidden" id="FILTER_Keyword" name="FILTER_Keyword" value="@ViewBag.FILTER_Keyword" />
 <input type="hidden" id="FILTER_Active" name="FILTER_Active" value="@ViewBag.FILTER_Active" />
 <input type="hidden" id="FILTER_Cancelled" name="FILTER_Cancelled" value="@ViewBag.FILTER_Cancelled" />
@@ -23,6 +24,7 @@ FILTERING
 
     $(document).ready(function () {
 
+        setFilter('returnurl', '@ViewBag.returnurl');
         setFilter('FILTER_Keyword', '@ViewBag.FILTER_Keyword');
         setFilter('FILTER_Active', '@ViewBag.FILTER_Active');
         setFilter('FILTER_Cancelled', '@ViewBag.FILTER_Cancelled');
@@ -242,21 +244,43 @@ OTHER
         });
     }
 
-    //format string to N0
-    function formatN0(value1, value2) {
-        return sum(value1, value2).toLocaleString();
+    function selectFirstInput() {
+        $('form:not(.filter) :input:visible:enabled:first').select(); //select content of first visible and enabled control
     }
 
-    function sum(value1, value2) {
-        if (value2 == null)
+    //format string to N0
+    function formatN0(value1, value2, value3) {
+        return sum(value1, value2, value3).toLocaleString();
+    }
+
+    function sum(value1, value2, value3) {
+        if (value1 == null || value1 == "")
+            value1 = 0;
+
+        if (value2 == null || value2 == "")
             value2 = 0;
 
-        if (!$.isNumeric(value1))
-            value1 = value1.replace(/,/g, '');
-        if (!$.isNumeric(value2))
-            value2 = value2.replace(/,/g, '');
+        if (value3 == null || value3 == "")
+            value3 = 0;
 
-        return parseInt(value1) + parseInt(value2);
+        if (!$.isNumeric(value1))
+            value1 = convertFormattedStringToInt(value1);
+        if (!$.isNumeric(value2))
+            value1 = convertFormattedStringToInt(value2);
+        if (!$.isNumeric(value3))
+            value1 = convertFormattedStringToInt(value3);
+
+        return parseInt(value1) + parseInt(value2) + parseInt(value3);
+    }
+
+    function convertFormattedStringToInt(value) {
+        return parseInt(value.replace(/,/g, ''));
+    }
+
+    // BUTTONS =====================================================================================================================================================
+
+    function performClickButton(id) {
+        $('#'+id).trigger('click');
     }
 
     // DROPDOWNLIST ================================================================================================================================================
@@ -284,6 +308,10 @@ OTHER
 
     function DropdownChange(id, value) {
         $('#'+id).val(value).trigger('change');
+    }
+
+    function getDDLSelectedValue(id) {
+        return $('#' + id + ' option:selected').val();
     }
 
     function getSelectedItem(ddlid, models) {
@@ -396,6 +424,18 @@ OTHER
 
     function getCheckboxValue(id) {
         return $('#' + id).prop('checked');
+    }
+
+    function getSelectedCheckboxesId(datatablebody, checkboxClassname) {
+        var idList = '';
+        $('#' + datatablebody + ' tr').find('.' + checkboxClassname).each(function () {
+            if ($(this).prop('checked') == true) {
+                idList = $('input:checkbox.' + checkboxClassname + ':checked').map(function () {
+                    return this.id;
+                }).get();
+            }
+        });
+        return idList;
     }
 
     // DATE MANIPULATOR ============================================================================================================================================
@@ -625,7 +665,7 @@ OTHER
         //checkbox styling
         applyCheckboxStyling();
 
-        $('form:not(.filter) :input:visible:enabled:first').select(); //select content of first control
+        selectFirstInput();
 
         //on-off switch
         if (document.querySelector('.form-check-input-switchery') != null) {

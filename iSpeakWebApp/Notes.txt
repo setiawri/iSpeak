@@ -1,12 +1,21 @@
 ﻿
 TO DO:
-- fix bug in saleinvoices index page : doesn't retain datatables state
+- fix bug in saleinvoices index page : 
+	> doesn't retain datatables state. 
+	> filter date is not working properly: sometimes reset to current date.
+	> second page's checkboxes not check-styled
+	> selectfirstinputInModal() in Javascripts is not working
 - create user account info page
 - move button to scroll to bottom to javascripts file and set display to none. add javascript to display it on pages that requires it.
 - edit notes button in Settings > edit page is highlighted when cursor is hovering on the title.
 - Javascript method showMessage(): bootbox.dialog onEscape element.select() is not working
 
 IMPROVEMENTS:
+
+Add Banks master data and role access
+
+Sale Invoice Index:
+- change datepicker to multidate datepicker
 
 Sale Invoice Items:
 - feature to edit tutor travel cost. add log on edit.
@@ -49,5 +58,9 @@ SALES
 	> all payments are cancelled
 	> all sessions are cancelled
 
+SALE PAYMENTS
+=============
+- if cash, automatically create entry in petty cash
+- if partial payment, older sale invoices are paid first
 
 

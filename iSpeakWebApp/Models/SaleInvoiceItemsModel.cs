@@ -65,6 +65,7 @@ namespace iSpeakWebApp.Models
 
 
         [Display(Name = "Vouchers Amount")]
+        [DisplayFormat(DataFormatString = "{0:N0}")]
         public int VouchersAmount { get; set; }
         public static ModelMember COL_VouchersAmount = new ModelMember { Name = "VouchersAmount", Display = "Vouchers Amount", LogDisplay = ActivityLogsController.editStringFormat("Vouchers Amount") };
 
@@ -114,6 +115,9 @@ namespace iSpeakWebApp.Models
 
 
         /******************************************************************************************************************************************************/
+
+        [DisplayFormat(DataFormatString = "{0:N0}")]
+        public int TotalAmount { get; set; } = 0;
 
     }
 }

@@ -28,7 +28,7 @@ namespace iSpeakWebApp.Controllers
                 FILTER_DateFrom = DateTime.Today.AddMonths(-2);
             }
 
-            setViewBag(FILTER_Keyword, FILTER_InvoiceNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
+            setViewBag(FILTER_Keyword, FILTER_InvoiceNo, null, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
             if (rss != null)
             {
                 ViewBag.RemoveDatatablesStateSave = rss;
@@ -45,50 +45,125 @@ namespace iSpeakWebApp.Controllers
         public ActionResult Index(string FILTER_Keyword, string FILTER_InvoiceNo, int? FILTER_Cancelled, int? FILTER_Approved, 
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
-            setViewBag(FILTER_Keyword, FILTER_InvoiceNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
+            setViewBag(FILTER_Keyword, FILTER_InvoiceNo, null, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
             return View(get(FILTER_Keyword, FILTER_InvoiceNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo));
         }
 
         /* CREATE *********************************************************************************************************************************************/
 
         // GET: Payments/Create
-        public ActionResult Create(string FILTER_Keyword, string FILTER_InvoiceNo, int? FILTER_Cancelled, int? FILTER_Approved, 
-            bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
+        public ActionResult Create(string id)
         {
             if (!UserAccountsController.getUserAccess(Session).Payments_Add)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            setViewBag(FILTER_Keyword, FILTER_InvoiceNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
-            return View(new PaymentsModel());
+            List<SaleInvoiceItemsModel> SaleInvoiceItems = SaleInvoiceItemsController.get(null, null, id);
+            setCreateViewBags(id, SaleInvoiceItems);
+            return View(SaleInvoiceItems);
         }
 
-        // POST: Payments/Create
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create(PaymentsModel model, string JsonSaleInvoiceItems, string FILTER_Keyword, string FILTER_InvoiceNo, int? FILTER_Cancelled, int? FILTER_Approved, 
-        //    bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
-        //{
-        //    if (ModelState.IsValid && !string.IsNullOrEmpty(JsonSaleInvoiceItems))
-        //    {                
-        //        add(model, JsonConvert.DeserializeObject<List<SaleInvoiceItemsModel>>(JsonSaleInvoiceItems));
-        //        return RedirectToAction(nameof(Index), new { 
-        //            FILTER_Keyword = FILTER_Keyword,
-        //            FILTER_Cancelled = FILTER_Cancelled,
-        //            FILTER_Approved = FILTER_Approved,
-        //            FILTER_chkDateFrom = FILTER_chkDateFrom,
-        //            FILTER_DateFrom = FILTER_DateFrom,
-        //            FILTER_chkDateTo = FILTER_chkDateTo,
-        //            FILTER_DateTo = FILTER_DateTo
-        //        });
-        //    }
+        //POST: Payments/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(string id, string JsonPayments)
+        {
+            List<SaleInvoicesModel> saleinvoices = SaleInvoicesController.get(Session, id).OrderBy(x=>x.Timestamp).ToList();
 
-        //    setViewBag(FILTER_Keyword, FILTER_InvoiceNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
-        //    return View(model);
-        //}
+            if (ModelState.IsValid)
+            {
+                PaymentsModel payment = JsonConvert.DeserializeObject<PaymentsModel>(JsonPayments);
+                payment.Id = Guid.NewGuid();
+                payment.No = Util.incrementHexNumber(db.Payments.Max(x => x.No));
+
+                if (payment.DebitAmount == 0)
+                {
+                    payment.DebitBank = null;
+                    payment.DebitNumber = null;
+                    payment.DebitOwnerName = null;
+                    payment.DebitRefNo = null;
+                }
+                
+                if (payment.ConsignmentAmount == 0)
+                    payment.Consignments_Id = null;
+
+                //create payment items and update sale invoice due amount
+                int RemainingPaymentAmount = payment.DebitAmount + payment.CashAmount + payment.ConsignmentAmount;
+                int paymentItemAmount = 0;
+                int dueBefore = 0;
+                int dueAfter = 0;
+                foreach(SaleInvoicesModel saleinvoice in saleinvoices)
+                {
+                    dueBefore = saleinvoice.Due;
+                    dueAfter = saleinvoice.Due;
+                    if (RemainingPaymentAmount == 0)
+                        break;
+                    else
+                    {
+                        if (RemainingPaymentAmount >= saleinvoice.Due)
+                            paymentItemAmount = saleinvoice.Due;
+                        else
+                            paymentItemAmount = RemainingPaymentAmount;
+
+                        RemainingPaymentAmount -= paymentItemAmount;
+                        dueAfter -= paymentItemAmount;
+
+                        SaleInvoicesController.update_Due(Session, db, saleinvoice.Id, saleinvoice.Due, saleinvoice.Due - paymentItemAmount);
+                        saleinvoice.Due -= paymentItemAmount;
+                    }
+
+                    PaymentItemsController.add(db, payment.Id, new PaymentItemsModel {
+                        Id = Guid.NewGuid(),
+                        Payments_Id = payment.Id,
+                        ReferenceId = saleinvoice.Id,
+                        Amount = paymentItemAmount,
+                        DueBefore = dueBefore,
+                        DueAfter = dueAfter
+                    });
+                }
+
+                //create petty cash
+                if (payment.CashAmount > 0)
+                {
+
+                }
+
+                db.Payments.Add(payment);
+                db.SaveChanges();
+
+                return RedirectToAction(nameof(Print), new { id = payment.Id });
+            }
+
+            List<SaleInvoiceItemsModel> SaleInvoiceItems = SaleInvoiceItemsController.get(null, null, id);
+            setCreateViewBags(id, SaleInvoiceItems);
+            return View(SaleInvoiceItems);
+        }
+
+        public void setCreateViewBags(string saleInvoiceIdList, List<SaleInvoiceItemsModel> SaleInvoiceItems)
+        {
+            ViewBag.TotalAmount = SaleInvoiceItems.Sum(x => x.TotalAmount);
+
+            List<SaleInvoicesModel> saleinvoices = SaleInvoicesController.get(Session, saleInvoiceIdList);
+            ViewBag.DueAmount = saleinvoices.Sum(x => x.Due);
+
+            ViewBag.id = saleInvoiceIdList;
+            //BanksController.setDropDownListViewBag(this);
+            ConsignmentsController.setDropDownListViewBag(this);
+        }
+
+        /* PRINT **********************************************************************************************************************************************/
+
+        // GET: Payments/Create
+        public ActionResult Print(Guid id)
+        {
+            if (!UserAccountsController.getUserAccess(Session).Payments_View)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
+            return View(get(id));
+        }
 
         /* METHODS ********************************************************************************************************************************************/
 
-        public void setViewBag(string FILTER_Keyword, string FILTER_InvoiceNo, int? FILTER_Cancelled, int? FILTER_Approved, 
+        public void setViewBag(string FILTER_Keyword, string FILTER_InvoiceNo, string FILTER_PaymentNo, int? FILTER_Cancelled, int? FILTER_Approved, 
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
             ViewBag.FILTER_Keyword = FILTER_Keyword;
@@ -99,6 +174,7 @@ namespace iSpeakWebApp.Controllers
             ViewBag.FILTER_chkDateTo = FILTER_chkDateTo;
             ViewBag.FILTER_DateTo = FILTER_DateTo;
             ViewBag.FILTER_InvoiceNo = FILTER_InvoiceNo;
+            ViewBag.FILTER_PaymentNo = FILTER_PaymentNo;
             LessonPackagesController.setDropDownListViewBag(this);
             LessonPackagesController.setViewBag(this);
             ProductsController.setDropDownListViewBag(this);
@@ -252,41 +328,6 @@ namespace iSpeakWebApp.Controllers
             ActivityLogsController.AddEditLog(db, Session, Id, string.Format(PaymentsModel.COL_CancelNotes.LogDisplay, CancelNotes));
             db.SaveChanges();
         }
-
-        //public void add(PaymentsModel model, List<SaleInvoiceItemsModel> SaleInvoiceItems)
-        //{
-        //    model.Branches_Id = Helper.getActiveBranchId(Session);
-        //    model.Timestamp = DateTime.Now;
-        //    model.Due = model.Amount;
-
-        //    db.Database.ExecuteSqlCommand(@"
-
-        //     -- INCREMENT LAST HEX NUMBER
-        //     DECLARE @HexLength int = 5, @LastHex_String varchar(5), @NewNo varchar(5)
-        //     SELECT @LastHex_String = ISNULL(MAX(No),'') From Payments	
-        //     DECLARE @LastHex_Int int
-        //     SELECT @LastHex_Int = CONVERT(INT, CONVERT(VARBINARY, REPLICATE('0', LEN(@LastHex_String)%2) + @LastHex_String, 2)) --@LastHex_String length must be even number of digits to convert to int
-        //     SET @NewNo = RIGHT(CONVERT(NVARCHAR(10), CONVERT(VARBINARY(8), @LastHex_Int + 1), 1),@HexLength)
-
-        //        INSERT INTO Payments   (Id, No,    Branches_Id, Timestamp, Notes, Customer_UserAccounts_Id, Amount, Due, Cancelled, IsChecked) 
-        //                            VALUES(@Id,@NewNo,@Branches_Id,@Timestamp,@Notes,@Customer_UserAccounts_Id,@Amount,@Due,@Cancelled,@IsChecked);
-        //    ",
-        //        DBConnection.getSqlParameter(PaymentsModel.COL_Id.Name, model.Id),
-        //        DBConnection.getSqlParameter(PaymentsModel.COL_Branches_Id.Name, model.Branches_Id),
-        //        DBConnection.getSqlParameter(PaymentsModel.COL_Timestamp.Name, model.Timestamp),
-        //        DBConnection.getSqlParameter(PaymentsModel.COL_Notes.Name, model.Notes),
-        //        DBConnection.getSqlParameter(PaymentsModel.COL_Customer_UserAccounts_Id.Name, model.Customer_UserAccounts_Id),
-        //        DBConnection.getSqlParameter(PaymentsModel.COL_Amount.Name, model.Amount),
-        //        DBConnection.getSqlParameter(PaymentsModel.COL_Due.Name, model.Due),
-        //        DBConnection.getSqlParameter(PaymentsModel.COL_Cancelled.Name, model.Cancelled),
-        //        DBConnection.getSqlParameter(PaymentsModel.COL_IsChecked.Name, model.IsChecked)
-        //    );
-
-        //    ActivityLogsController.AddCreateLog(db, Session, model.Id);
-        //    db.SaveChanges();
-
-        //    SaleInvoiceItemsController.add(SaleInvoiceItems, model.Id);
-        //}
 
         /******************************************************************************************************************************************************/
     }

@@ -15,16 +15,20 @@ namespace iSpeakWebApp.Models
         public string Payments_No { get; set; }
 
 
-        public Guid Reference_Id { get; set; }
+        public Guid ReferenceId { get; set; }
+        public static ModelMember COL_ReferenceId = new ModelMember { Name = "ReferenceId" };
 
 
         public int Amount { get; set; }
+        public static ModelMember COL_Amount = new ModelMember { Name = "Amount" };
 
 
         public int DueBefore { get; set; }
+        public static ModelMember COL_DueBefore = new ModelMember { Name = "DueBefore" };
 
 
         public int DueAfter { get; set; }
+        public static ModelMember COL_DueAfter = new ModelMember { Name = "DueAfter" };
 
 
         /******************************************************************************************************************************************************/

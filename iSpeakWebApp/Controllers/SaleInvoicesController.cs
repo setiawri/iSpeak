@@ -65,7 +65,8 @@ namespace iSpeakWebApp.Controllers
         // POST: SaleInvoices/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(SaleInvoicesModel model, string JsonSaleInvoiceItems, string FILTER_Keyword, string FILTER_PaymentNo, int? FILTER_Cancelled, int? FILTER_Approved, 
+        public ActionResult Create(SaleInvoicesModel model, string JsonSaleInvoiceItems, 
+            string FILTER_Keyword, string FILTER_PaymentNo, int? FILTER_Cancelled, int? FILTER_Approved, 
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
             if (ModelState.IsValid && !string.IsNullOrEmpty(JsonSaleInvoiceItems))
@@ -73,6 +74,7 @@ namespace iSpeakWebApp.Controllers
                 add(model, JsonConvert.DeserializeObject<List<SaleInvoiceItemsModel>>(JsonSaleInvoiceItems));
                 return RedirectToAction(nameof(Index), new { 
                     FILTER_Keyword = FILTER_Keyword,
+                    FILTER_PaymentNo = FILTER_PaymentNo,
                     FILTER_Cancelled = FILTER_Cancelled,
                     FILTER_Approved = FILTER_Approved,
                     FILTER_chkDateFrom = FILTER_chkDateFrom,
@@ -111,7 +113,7 @@ namespace iSpeakWebApp.Controllers
         {
             UserAccountRolesModel access = UserAccountsController.getUserAccess(Session);
 
-            List<SaleInvoiceItemsModel> models = SaleInvoiceItemsController.get(null, id);
+            List<SaleInvoiceItemsModel> models = SaleInvoiceItemsController.get(null, id, null);
             string content = string.Format(@"
                     <div class='table-responsive'>
                         <table class='table table-striped table-bordered'>
@@ -201,10 +203,11 @@ namespace iSpeakWebApp.Controllers
 
         public List<SaleInvoicesModel> get(string FILTER_Keyword, string FILTER_PaymentNo, int? FILTER_Cancelled, int? FILTER_Approved,
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo) 
-        { return get(Session, null, FILTER_Keyword, FILTER_PaymentNo, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo, FILTER_Cancelled, FILTER_Approved); }
-        public SaleInvoicesModel get(Guid Id) { return get(Session, Id, null, null, false, null, false, null, null, null).FirstOrDefault(); }
-        public static List<SaleInvoicesModel> get(HttpSessionStateBase Session, Guid? Id, string FILTER_Keyword, string FILTER_PaymentNo, 
-            bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo, 
+        { return get(Session, null, null, FILTER_Keyword, FILTER_PaymentNo, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo, FILTER_Cancelled, FILTER_Approved); }
+        public static List<SaleInvoicesModel> get(HttpSessionStateBase Session, string SaleInvoiceItemIdList) { return get(Session, null, SaleInvoiceItemIdList, null, null, false, null, false, null, null, null); }
+        public SaleInvoicesModel get(Guid Id) { return get(Session, Id, null, null, null, false, null, false, null, null, null).FirstOrDefault(); }
+        public static List<SaleInvoicesModel> get(HttpSessionStateBase Session, Guid? Id, string SaleInvoiceItemIdList,
+            string FILTER_Keyword, string FILTER_PaymentNo, bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo, 
             int? Cancelled, int? IsChecked)
         {
             Guid Branches_Id = Helper.getActiveBranchId(Session);
@@ -215,7 +218,11 @@ namespace iSpeakWebApp.Controllers
             if (FILTER_chkDateTo == null || !(bool)FILTER_chkDateTo)
                 FILTER_DateTo = null;
 
-            return new DBContext().Database.SqlQuery<SaleInvoicesModel>(@"
+            string SaleInvoiceItemIdListClause = "";
+            if (!string.IsNullOrEmpty(SaleInvoiceItemIdList))
+                SaleInvoiceItemIdListClause = string.Format("AND SaleInvoices.Id IN ({0})", UtilWebMVC.convertToSqlIdList(SaleInvoiceItemIdList));
+
+            string sql = string.Format(@"
                     SELECT SaleInvoices.*,
                         Branches.Name AS Branches_Name,
                         Customer_UserAccounts.Fullname AS Customer_UserAccounts_Name
@@ -238,9 +245,12 @@ namespace iSpeakWebApp.Controllers
                             AND (@Cancelled IS NULL OR SaleInvoices.Cancelled = @Cancelled)
                             AND (@IsChecked IS NULL OR SaleInvoices.IsChecked = @IsChecked)
                             AND (@Branches_Id IS NULL OR SaleInvoices.Branches_Id = @Branches_Id)
+                            {0}
                         ))
 					ORDER BY SaleInvoices.No DESC
-                ",
+                ", SaleInvoiceItemIdListClause);
+
+            return new DBContext().Database.SqlQuery<SaleInvoicesModel>(sql,
                 DBConnection.getSqlParameter(SaleInvoicesModel.COL_Id.Name, Id),
                 DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
                 DBConnection.getSqlParameter("FILTER_PaymentNo", FILTER_PaymentNo),
@@ -265,6 +275,22 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddEditLog(db, Session, Id, string.Format(SaleInvoicesModel.COL_IsChecked.LogDisplay, null, value));
+            db.SaveChanges();
+        }
+
+        public static void update_Due(HttpSessionStateBase Session, DBContext db, Guid Id, int originalValue, int newValue)
+        {
+            db.Database.ExecuteSqlCommand(@"
+                UPDATE SaleInvoices 
+                SET
+                    Due = @Due
+                WHERE SaleInvoices.Id = @Id;                
+            ",
+                DBConnection.getSqlParameter(SaleInvoicesModel.COL_Id.Name, Id),
+                DBConnection.getSqlParameter(SaleInvoicesModel.COL_Due.Name, newValue)
+            );
+
+            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(SaleInvoicesModel.COL_Due.LogDisplay, originalValue, newValue));
             db.SaveChanges();
         }
 

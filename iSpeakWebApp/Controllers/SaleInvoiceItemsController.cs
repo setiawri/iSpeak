@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
 using System.Collections.Generic;
 using System.Web.Mvc;
@@ -13,14 +14,19 @@ namespace iSpeakWebApp.Controllers
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public static List<SaleInvoiceItemsModel> get(Guid? Id, Guid? SaleInvoices_Id)
+        public static List<SaleInvoiceItemsModel> get(Guid? Id, Guid? SaleInvoices_Id, string IdList)
         {
-            return new DBContext().Database.SqlQuery<SaleInvoiceItemsModel>(@"
+            string IdListClause = "";
+            if (!string.IsNullOrEmpty(IdList))
+                IdListClause = string.Format("AND SaleInvoices.Id IN ({0})", LIBWebMVC.UtilWebMVC.convertToSqlIdList(IdList));
+
+            string sql = string.Format(@"
                     SELECT SaleInvoiceItems.*,
                         SaleInvoices.No AS SaleInvoices_No,
                         LessonPackages.Name AS LessonPackages_Name,
                         Services.Name AS Services_Name,
-                        Products.Name AS Products_Name
+                        Products.Name AS Products_Name,
+                        (SaleInvoiceItems.Qty * SaleInvoiceItems.Price) - COALESCE(SaleInvoiceItems.DiscountAmount,0) - COALESCE(SaleInvoiceItems.VouchersAmount,0) AS TotalAmount
                     FROM SaleInvoiceItems
                         LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
                         LEFT JOIN LessonPackages ON LessonPackages.Id = SaleInvoiceItems.LessonPackages_Id
@@ -30,9 +36,12 @@ namespace iSpeakWebApp.Controllers
 						AND (@Id IS NULL OR SaleInvoiceItems.Id = @Id)
 						AND (@Id IS NOT NULL OR (
                             (@SaleInvoices_Id IS NULL OR SaleInvoiceItems.SaleInvoices_Id = @SaleInvoices_Id)
+                            {0}
                         ))
 					ORDER BY SaleInvoiceItems.RowNo ASC
-                ",
+                ", IdListClause);
+
+            return new DBContext().Database.SqlQuery<SaleInvoiceItemsModel>(sql,
                 DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Id.Name, Id),
                 DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SaleInvoices_Id.Name, SaleInvoices_Id)
             ).ToList();
