@@ -26,7 +26,7 @@ namespace iSpeakWebApp.Controllers
                         LessonPackages.Name AS LessonPackages_Name,
                         Services.Name AS Services_Name,
                         Products.Name AS Products_Name,
-                        (SaleInvoiceItems.Qty * SaleInvoiceItems.Price) - COALESCE(SaleInvoiceItems.DiscountAmount,0) - COALESCE(SaleInvoiceItems.VouchersAmount,0) AS TotalAmount
+                        (SaleInvoiceItems.Qty * SaleInvoiceItems.Price) + COALESCE(SaleInvoiceItems.TravelCost,0) - COALESCE(SaleInvoiceItems.DiscountAmount,0) - COALESCE(SaleInvoiceItems.VouchersAmount,0) AS TotalAmount
                     FROM SaleInvoiceItems
                         LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
                         LEFT JOIN LessonPackages ON LessonPackages.Id = SaleInvoiceItems.LessonPackages_Id

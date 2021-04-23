@@ -1,0 +1,297 @@
+﻿@model IEnumerable<iSpeakWebApp.Models.SaleInvoiceItemsModel>
+
+@{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    string ControllerName = "Payments";
+    ViewBag.SelectedNavigationMenu = "Sales";
+    ViewBag.Title = "PAYMENT";
+    ViewBag.Subtitle = "Create";
+}
+
+<div class="content-wrapper">
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm("Create", ControllerName, FormMethod.Post, new { id = "targetForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("id")
+            @Html.Hidden("JsonPayments")
+            <!-- Form inputs -->
+            <div class="card animated bounceInLeft" style="min-height:600px;">
+                <div class="card-header header-elements-inline pb-1">
+                    <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
+                </div>
+                <div class="card-body" style="min-height:500px;">
+
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width:50px;">@Html.DisplayNameFor(model => model.SaleInvoices_Id)</th>
+                                    <th class="non-sortable">@Html.DisplayNameFor(model => model.Description)</th>
+                                    <th class="non-sortable text-right" style="width:200px;">Amount</th>
+                                    <th class="non-sortable text-right" style="width:200px;">Discount</th>
+                                    <th class="non-sortable text-right" style="width:200px;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.SaleInvoices_No)</td>
+                                            <td class="align-top">
+                                                <div>@Html.DisplayFor(modelItem => item.Description)</div>
+                                                @if (!string.IsNullOrEmpty(item.VouchersName))
+                                                {
+                                                    <div>Vouchers: @Html.DisplayFor(modelItem => item.VouchersName)</div>
+                                                }
+                                                @if (!string.IsNullOrEmpty(item.Notes))
+                                                {
+                                                    <div>Notes: @Html.DisplayFor(modelItem => item.Notes)</div>
+                                                }
+                                            </td>
+                                            <td class="align-top text-right">
+                                                <div>Qty: @Html.DisplayFor(modelItem => item.Qty) x @Html.DisplayFor(modelItem => item.Price)</div>
+                                                @if (item.TravelCost > 0)
+                                                {
+                                                    <div>Travel: @Html.DisplayFor(modelItem => item.TravelCost) @(item.TutorTravelCost > 0 ? string.Format("(Tutor: {0:N0})", item.TutorTravelCost) : "")</div>
+                                                }
+                                            </td>
+                                            <td class="align-top text-right">
+                                                <div>Discount: @Html.DisplayFor(modelItem => item.DiscountAmount)</div>
+                                                @if (!string.IsNullOrEmpty(item.Notes))
+                                                {
+                                                    <div>Vouchers: @Html.DisplayFor(modelItem => item.VouchersAmount)</div>
+                                                }
+                                            </td>
+                                            <td class="align-top text-right">
+                                                <div style="font-size:12pt">@Html.DisplayFor(modelItem => item.TotalAmount)</div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="mt-2 col-lg-12 text-right">
+                        <div style="font-size:14pt">TOTAL: @string.Format("{0:N0}", ViewBag.TotalAmount ?? 0)</div>
+                    </div>
+
+                    <div class="row mx-0 mt-2 float-right">
+                        <div class="ml-0" style="width:150px;">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-white">DUE</span>
+                                </div>
+                                <input type="text" id="DueAmount" class="form-control text-right" value="@string.Format("{0:N0}", ViewBag.DueAmount)" readonly>
+                            </div>
+                        </div>
+
+                        <div class="ml-2 mr-0">
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal_payment">PAY<i class="icon-checkmark3 ml-2"></i></button>
+                        </div>
+                        <div class="ml-2 mr-0">
+                            <a href="@Url.Action("Index", "SaleInvoices", new { rss = "1" })" class="btn btn-warning">CANCEL<i class="icon-cross2 ml-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modal_payment" class="modal fade" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-success">
+                            <h5 class="modal-title">PAYMENT</h5>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <form action="#" class="form-horizontal">
+                            <div class="modal-body">
+                                <div class="form-group row modal-bank-input">
+                                    <label class="col-form-label col-sm-3">BANK</label>
+                                    <div class="col-sm-3">
+                                        <div class="form-check form-check-inline">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="check-styled" id="rbTransfer" name="radio-inline-left" data-fouc>
+                                                TRANSFER
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="form-check form-check-inline">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="check-styled" id="rbDebit" name="radio-inline-left" checked data-fouc>
+                                                DEBIT
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="DebitAmount" class="form-control text-right mdl-card positiveintegeronly" onkeyup="calculateAmount()" placeholder="Bank Amount">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-3">REF # / Last 4 #</label>
+                                    <div class="col-sm-5">
+                                        <input type="text" id="DebitRefNo" class="form-control mdl-reff" placeholder="Reference number">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="DebitNumber" class="form-control mdl-nocard" placeholder="Card last 4 digits">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-3">Name / <span class="required">Bank</span></label>
+                                    <div class="col-sm-5">
+                                        <input type="text" id="DebitOwnerName" class="form-control mdl-name" placeholder="Account Name">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select id="Banks" class="form-control mdl-bank">
+                                            <option value="" selected>Pilih</option>
+                                            <option value="BCA">BCA</option>
+                                            <option value="BNI">BNI</option>
+                                            <option value="BRI">BRI</option>
+                                            <option value="Danamon">Danamon</option>
+                                            <option value="Mandiri">Mandiri</option>
+                                            <option value="Permata">Permata</option>
+                                            <option value="Others">Others</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-3">CASH</label>
+                                    <div class="col-sm-5">
+                                        <input type="text" id="CashAmount" class="form-control text-right mdl-cash positiveintegeronly" onkeyup="calculateAmount()" placeholder="Cash Amount">
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-3">CONSIGNMENT</label>
+                                    <div class="col-sm-5">
+                                        @Html.DropDownList("Consignments", ViewBag.Consignments as SelectList, "Pilih", new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="ConsignmentAmount" class="form-control text-right mdl-consignment positiveintegeronly" onkeyup="calculateAmount()" placeholder="Consignment Amount">
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-3">NOTES</label>
+                                    <div class="col-sm-9">
+                                        <textarea id="Notes" class="form-control mdl-notes" rows="2"></textarea>
+                                    </div>
+                                </div>
+                                <hr />
+
+                                <div class="row modal_payment-footer pl-2 pr-0">
+                                    <div class="ml-0 mr-1" style="width:185px;">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text bg-white font-weight-bold">TOTAL</span>
+                                            </div>
+                                            <input type="text" id="PaymentAmount" class="form-control text-right font-weight-bold" value="0" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="ml-0 mr-1" style="width:210px;">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text bg-white">REMAINING</span>
+                                            </div>
+                                            <input type="text" id="RemainingAmount" class="form-control text-right" value="0" readonly>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn bg-success mdl-btn-submit mr-1">SUBMIT</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">CLOSE</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /form inputs -->
+        }
+    </div>
+    <!-- /content area -->
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        setFilter('id', '@ViewBag.id');
+    });
+
+    function applyLast() {
+    }
+
+    $('#modal_payment').on('shown.bs.modal', function () {
+        $('#DebitAmount').select();
+    })
+
+    function calculateAmount() {
+        $('#PaymentAmount').val(formatN0(calculatePaymentAmount()));
+        $('#RemainingAmount').val(formatN0(calculateRemainingAmount()));
+    }
+
+    function calculatePaymentAmount() {
+        return sum($('#DebitAmount').val(), $('#CashAmount').val(), $('#ConsignmentAmount').val());
+    }
+
+    function calculateRemainingAmount() {
+        return convertFormattedStringToInt($('#DueAmount').val()) - calculatePaymentAmount();
+    }
+
+    //SUBMISSION ===================================================================================================================================================
+
+    $('#targetForm').submit(function (e) {
+        disableDivElements('modal_payment-footer', true);
+
+        var paymentAmount = calculatePaymentAmount();
+        var remainingAmount = calculateRemainingAmount();
+        if (paymentAmount == 0) {
+            showMessage('Please input payment amount.', 'DebitAmount');
+        } else if (remainingAmount < 0) {
+            showMessage('Payment amount cannot be more than due amount');
+        } else if (getValueInt('DebitAmount') > 0 && getDDLSelectedValue('Banks') == "") {
+            showMessage('Please select Bank', 'Banks');
+        } else if (getValueInt('ConsignmentAmount') > 0 && getDDLSelectedValue('Consignments') == "") {
+            showMessage('Please select Consignment', 'Consignments');
+        } else {
+            showLoadingSpinner();
+
+            var paymentitem = {
+                Id: emptyGuid(),
+                No: "",
+                Timestamp: new Date(),
+                CashAmount: getValueInt('CashAmount'),
+                DebitAmount: getValueInt('DebitAmount'),
+                DebitBank: getDDLSelectedValue('Banks'),
+                DebitOwnerName: getValueString('DebitOwnerName'),
+                DebitNumber: getValueString('DebitNumber'),
+                DebitRefNo: getValueString('DebitRefNo'),
+                Consignments_Id: getDDLSelectedValue('Consignments'),
+                ConsignmentAmount: getValueInt('ConsignmentAmount'),
+                Notes: getValueString('Notes'),
+                Cancelled: false,
+                Confirmed: false,
+                IsTransfer: getCheckboxValue('rbTransfer'),
+                CancelNotes: null
+            };
+
+            $('#JsonPayments').val(JSON.stringify(paymentitem));
+
+            return true;
+        }
+
+        disableDivElements('modal_payment-footer', false);
+        return false;
+    });
+
+    //==============================================================================================================================================================
+
+</script>

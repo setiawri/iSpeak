@@ -1,0 +1,148 @@
+﻿@model IEnumerable<iSpeakWebApp.Models.PettyCashRecordsModel>
+
+@{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    string ControllerName = "PettyCashRecords";
+    ViewBag.SelectedNavigationMenu = "PettyCashRecords";
+    ViewBag.Title = "PETTY CASH";
+    ViewBag.Subtitle = "Index";
+}
+
+<div class="content-wrapper">
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm("Index", ControllerName, FormMethod.Post))
+        {
+            <!-- Form inputs -->
+            <div class="card animated bounceInLeft">
+                <div class="card-header header-elements-inline pb-1">
+                    <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row mx-0">
+                        <div class="row ml-0 mr-2" style="width:100px;">
+                            <label class="mb-0">No</label>
+                            <div class="input-group">
+                                <input type="text" name="FILTER_Keyword" id="FILTER_Keyword" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:150px;">
+                            <label class="mb-0">Date From</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        @Html.CheckBox("FILTER_chkDateFrom", true, new { @class = "form-check-input check-styled" })
+                                    </div>
+                                </div>
+                                @Html.Editor("FILTER_DateFrom", new { htmlAttributes = new { @class = "form-control daterange-picker" } })
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:150px;">
+                            <label class="mb-0">Date To</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        @Html.CheckBox("FILTER_chkDateTo", true, new { @class = "form-check-input check-styled" })
+                                    </div>
+                                </div>
+                                @Html.Editor("FILTER_DateTo", new { htmlAttributes = new { @class = "form-control daterange-picker" } })
+                            </div>
+                        </div>
+
+                        @if (access.PettyCashRecords_Approve)
+                        {
+                            <div class="row ml-0 mr-2" style="width:80px;">
+                                <label class="mb-0">Approved</label>
+                                <div class="input-group">
+                                    <select id="FILTER_Approved" name="FILTER_Approved" class="custom-select">
+                                        <option value="" selected>ALL</option>
+                                        <option value="1">YES</option>
+                                        <option value="0">NO</option>
+                                    </select>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="ml-0 mr-2">
+                            <label class="mb-0">&nbsp;</label>
+                            <button type="submit" id="LoadData" onclick="showLoadingSpinner()" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>LOAD</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover datatable">
+                            <thead>
+                                <tr>
+                                    <th style="width:50px;">@Html.DisplayNameFor(model => model.No)</th>
+                                    <th class="non-sortable">@Html.DisplayNameFor(model => model.Timestamp)</th>
+                                    <th>@Html.DisplayNameFor(model => model.PettyCashRecordsCategories_Id)</th>
+                                    <th class="non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
+                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Amount)</th>
+                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Balance)</th>
+                                    <th>@Html.DisplayNameFor(model => model.UserAccounts_Id_TEMP)</th>
+                                    @if (access.PettyCashRecords_Approve)
+                                    {
+                                        <th class="non-searchable non-sortable" style="width:0px;">Approval</th>
+                                    }
+                                    <th class="non-searchable non-sortable" style="width:70px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.No)</td>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.PettyCashRecordsCategories_Name)</td>
+                                            <td class="align-top tablecellwrap">@Html.DisplayFor(modelItem => item.Notes)</td>
+                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.Balance)</td>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.UserAccounts_Firstname)</td>
+                                            @if (access.PettyCashRecords_Approve)
+                                            {
+                                                <td class="align-top" style="text-align:center;">
+                                                    @Html.CheckBoxFor(modelItem => item.IsChecked, new { @class = "check-styled", onclick = string.Format("UpdateApproval(this, '{0}')", item.Id) })
+                                                </td>
+                                            }
+                                            <td class="align-top">
+                                                <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- /form inputs -->
+        }
+
+    </div>
+    <!-- /content area -->
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        setDateRangePicker('FILTER_DateFrom', '@string.Format("{0:yyyy/MM/dd}", DateTime.Today.AddMonths(-2))');
+        setDateRangePicker('FILTER_DateTo', '@string.Format("{0:yyyy/MM/dd}", DateTime.Today)');
+    });
+
+    function UpdateApproval(control, id) {
+        AjaxUpdate('Update_IsChecked', '@ControllerName', id, control.checked);
+    }
+
+    function applyLast() {
+        datatable.order([0, 'desc']).draw();
+    }
+
+    //==============================================================================================================================================================
+
+</script>

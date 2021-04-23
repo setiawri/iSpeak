@@ -373,6 +373,28 @@ namespace iSpeakWebApp.Models
         public bool Payments_Approve { get; set; }
         public static ModelMember COL_Payments_Approve = new ModelMember { Name = "Payments_Approve", Display = "Approve", LogDisplay = ActivityLogsController.editBooleanFormat("Payments Approve") };
 
+        /* SERVICES *******************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string PettyCashRecords_Notes { get; set; }
+        public static ModelMember COL_PettyCashRecords_Notes = new ModelMember { Name = "PettyCashRecords_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("PettyCashRecords Notes") };
+
+        [Display(Name = "Add")]
+        public bool PettyCashRecords_Add { get; set; }
+        public static ModelMember COL_PettyCashRecords_Add = new ModelMember { Name = "PettyCashRecords_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("PettyCashRecords Add") };
+
+        [Display(Name = "View")]
+        public bool PettyCashRecords_View { get; set; }
+        public static ModelMember COL_PettyCashRecords_View = new ModelMember { Name = "PettyCashRecords_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("PettyCashRecords View") };
+
+        [Display(Name = "Edit")]
+        public bool PettyCashRecords_Edit { get; set; }
+        public static ModelMember COL_PettyCashRecords_Edit = new ModelMember { Name = "PettyCashRecords_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("PettyCashRecords Edit") };
+
+        [Display(Name = "Approve")]
+        public bool PettyCashRecords_Approve { get; set; }
+        public static ModelMember COL_PettyCashRecords_Approve = new ModelMember { Name = "PettyCashRecords_Approve", Display = "Approve", LogDisplay = ActivityLogsController.editBooleanFormat("PettyCashRecords Approve") };
+
         /******************************************************************************************************************************************************/
 
     }

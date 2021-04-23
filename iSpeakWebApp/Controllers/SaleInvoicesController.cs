@@ -169,7 +169,7 @@ namespace iSpeakWebApp.Controllers
                         model.TravelCost > 0 || model.TutorTravelCost > 0 ? string.Format("<br/>Travel: {0:N0}", model.TravelCost) : "",
                         access.SaleInvoices_TutorTravelCost_View && (model.TravelCost > 0 || model.TutorTravelCost > 0) ? string.Format(" (Tutor: {0:N0})", model.TutorTravelCost) : "",
                         subtractions,
-                        (model.Qty * model.Price) + model.TravelCost - model.DiscountAmount - voucher
+                        model.TotalAmount
                     );
             }
 

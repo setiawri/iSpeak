@@ -15,6 +15,8 @@
 
 -- MANUAL TABLE MODIFICATIONS ===========================================================================================
 
+-- TABLE PettyCashRecords: need to remove UserAccounts_Id (nvarchar) and rename UserAccounts_Id_TEMP(uniqueidentifier) to UserAccounts_Id
+
 -- NEED TO DO AFTER SCRIPT IS RUN =======================================================================================
 
 -- assign roles to users. currently all get student role
@@ -269,6 +271,15 @@
 	GO
 	UPDATE Payments SET CancelNotes=Notes_Cancel WHERE Cancelled=1;
 
+	
+-- PETTY CASH RECORDS ===================================================================================================
+
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'UserAccounts_Id_TEMP' AND TABLE_NAME = 'PettyCashRecords' AND TABLE_SCHEMA='dbo') 
+		ALTER TABLE PettyCashRecords ADD UserAccounts_Id_TEMP uniqueidentifier NULL;
+	GO
+	
+	UPDATE PettyCashRecords SET UserAccounts_Id_TEMP = CONVERT(UNIQUEIDENTIFIER, UserAccounts_Id)
+
 -- ADD ROLE ACCESSES ====================================================================================================
 
 	--Reminders
@@ -482,6 +493,19 @@
 	ALTER TABLE UserAccountRoles ADD Payments_Edit bit default 0 not null;
 	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Payments_Approve' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
 	ALTER TABLE UserAccountRoles ADD Payments_Approve bit default 0 not null;
+	GO
+	
+	--PettyCashRecords
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'PettyCashRecords_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD PettyCashRecords_Notes varchar(MAX) null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'PettyCashRecords_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD PettyCashRecords_Add bit default 0 not null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'PettyCashRecords_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD PettyCashRecords_View bit default 0 not null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'PettyCashRecords_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD PettyCashRecords_Edit bit default 0 not null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'PettyCashRecords_Approve' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD PettyCashRecords_Approve bit default 0 not null;
 	GO
 	
 -- ======================================================================================================================

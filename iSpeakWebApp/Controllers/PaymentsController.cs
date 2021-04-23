@@ -57,9 +57,7 @@ namespace iSpeakWebApp.Controllers
             if (!UserAccountsController.getUserAccess(Session).Payments_Add)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            List<SaleInvoiceItemsModel> SaleInvoiceItems = SaleInvoiceItemsController.get(null, null, id);
-            setCreateViewBags(id, SaleInvoiceItems);
-            return View(SaleInvoiceItems);
+            return setCreateViewBagsAndReturn(id);
         }
 
         //POST: Payments/Create
@@ -74,6 +72,7 @@ namespace iSpeakWebApp.Controllers
                 PaymentsModel payment = JsonConvert.DeserializeObject<PaymentsModel>(JsonPayments);
                 payment.Id = Guid.NewGuid();
                 payment.No = Util.incrementHexNumber(db.Payments.Max(x => x.No));
+                payment.Timestamp = DateTime.Now;
 
                 if (payment.DebitAmount == 0)
                 {
@@ -124,7 +123,20 @@ namespace iSpeakWebApp.Controllers
                 //create petty cash
                 if (payment.CashAmount > 0)
                 {
-
+                    PettyCashRecordsController.add(db, new PettyCashRecordsModel
+                    {
+                        Id = Guid.NewGuid(),
+                        Branches_Id = Helper.getActiveBranchId(Session),
+                        RefId = payment.Id,
+                        No = "",
+                        Timestamp = payment.Timestamp,
+                        PettyCashRecordsCategories_Id = SettingsController.get().AutoEntryForCashPayments,
+                        Notes = "Cash Payment [" + payment.No + "]",
+                        Amount = payment.CashAmount,
+                        IsChecked = false,
+                        UserAccounts_Id_TEMP = (Guid)UserAccountsController.getUserId(Session),
+                        ExpenseCategories_Id = null
+                    });
                 }
 
                 db.Payments.Add(payment);
@@ -133,13 +145,15 @@ namespace iSpeakWebApp.Controllers
                 return RedirectToAction(nameof(Print), new { id = payment.Id });
             }
 
-            List<SaleInvoiceItemsModel> SaleInvoiceItems = SaleInvoiceItemsController.get(null, null, id);
-            setCreateViewBags(id, SaleInvoiceItems);
-            return View(SaleInvoiceItems);
+            return setCreateViewBagsAndReturn(id);
         }
 
-        public void setCreateViewBags(string saleInvoiceIdList, List<SaleInvoiceItemsModel> SaleInvoiceItems)
+        public ActionResult setCreateViewBagsAndReturn(string saleInvoiceIdList)
         {
+            List<SaleInvoiceItemsModel> SaleInvoiceItems = SaleInvoiceItemsController.get(null, null, saleInvoiceIdList)
+                .OrderBy(x => x.SaleInvoices_No)
+                .ThenBy(x => x.RowNo)
+                .ToList();
             ViewBag.TotalAmount = SaleInvoiceItems.Sum(x => x.TotalAmount);
 
             List<SaleInvoicesModel> saleinvoices = SaleInvoicesController.get(Session, saleInvoiceIdList);
@@ -148,6 +162,8 @@ namespace iSpeakWebApp.Controllers
             ViewBag.id = saleInvoiceIdList;
             //BanksController.setDropDownListViewBag(this);
             ConsignmentsController.setDropDownListViewBag(this);
+
+            return View(SaleInvoiceItems);
         }
 
         /* PRINT **********************************************************************************************************************************************/
@@ -167,20 +183,14 @@ namespace iSpeakWebApp.Controllers
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
             ViewBag.FILTER_Keyword = FILTER_Keyword;
+            ViewBag.FILTER_InvoiceNo = FILTER_InvoiceNo;
+            ViewBag.FILTER_PaymentNo = FILTER_PaymentNo;
             ViewBag.FILTER_Cancelled = FILTER_Cancelled;
             ViewBag.FILTER_Approved = FILTER_Approved;
             ViewBag.FILTER_chkDateFrom = FILTER_chkDateFrom;
             ViewBag.FILTER_DateFrom = FILTER_DateFrom;
             ViewBag.FILTER_chkDateTo = FILTER_chkDateTo;
             ViewBag.FILTER_DateTo = FILTER_DateTo;
-            ViewBag.FILTER_InvoiceNo = FILTER_InvoiceNo;
-            ViewBag.FILTER_PaymentNo = FILTER_PaymentNo;
-            LessonPackagesController.setDropDownListViewBag(this);
-            LessonPackagesController.setViewBag(this);
-            ProductsController.setDropDownListViewBag(this);
-            ServicesController.setDropDownListViewBag(this);
-            VouchersController.setDropDownListViewBag(this);
-            VouchersController.setViewBag(this);
         }
 
         public JsonResult GetDetails(Guid id)
@@ -236,7 +246,7 @@ namespace iSpeakWebApp.Controllers
             return Json(new { content = content }, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult Update_Confirmed(Guid id, bool value)
+        public JsonResult Update_Approval(Guid id, bool value)
         {
             update_Confirmed(id, value);
             return Json(new { Message = "" });

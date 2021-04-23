@@ -1,5 +1,6 @@
 ﻿
 TO DO:
+- Petty Cash Records index: add button to edit expense categories and show the value
 - fix bug in saleinvoices index page : 
 	> doesn't retain datatables state. 
 	> filter date is not working properly: sometimes reset to current date.

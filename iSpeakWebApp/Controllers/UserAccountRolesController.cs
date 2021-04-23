@@ -10,9 +10,9 @@ using LIBUtil;
  * To add new user access:
  * - add items in UserAccountRolesModel
  * - add items to database table UserAccountRoles
+ * - add items in UserAccountRoles > Edit.cshtml
  * - add items in Post UserAccountRolesController.Edit() 
  * - add items in UserAccountRolesController.getAccesses() 
- * - add items in UserAccountRoles > Edit.cshtml
  * - update views that use the items including main layout file
  */
 
@@ -216,6 +216,13 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.Payments_View, model.Payments_View, UserAccountRolesModel.COL_Payments_View.LogDisplay);
                     log = Helper.append(log, originalModel.Payments_Approve, model.Payments_Approve, UserAccountRolesModel.COL_Payments_Approve.LogDisplay);
 
+                    //PettyCashRecords
+                    log = Helper.append(log, originalModel.PettyCashRecords_Notes, model.PettyCashRecords_Notes, UserAccountRolesModel.COL_PettyCashRecords_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.PettyCashRecords_Add, model.PettyCashRecords_Add, UserAccountRolesModel.COL_PettyCashRecords_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.PettyCashRecords_Edit, model.PettyCashRecords_Edit, UserAccountRolesModel.COL_PettyCashRecords_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.PettyCashRecords_View, model.PettyCashRecords_View, UserAccountRolesModel.COL_PettyCashRecords_View.LogDisplay);
+                    log = Helper.append(log, originalModel.PettyCashRecords_Approve, model.PettyCashRecords_Approve, UserAccountRolesModel.COL_PettyCashRecords_Approve.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -340,6 +347,13 @@ namespace iSpeakWebApp.Controllers
                 if (item.Payments_Edit) model.Payments_Edit = true;
                 if (item.Payments_View) model.Payments_View = true;
                 if (item.Payments_Approve) model.Payments_Approve = true;
+
+                //PettyCashRecords
+                if (item.PettyCashRecords_Add) model.PettyCashRecords_Add = true;
+                if (item.PettyCashRecords_Edit) model.PettyCashRecords_Edit = true;
+                if (item.PettyCashRecords_View) model.PettyCashRecords_View = true;
+                if (item.PettyCashRecords_Approve) model.PettyCashRecords_Approve = true;
+
             }
 
             return model;

@@ -129,6 +129,7 @@
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Controllers\ActivityLogsController.cs" />
     <Compile Include="Controllers\PaymentItemsController.cs" />
+    <Compile Include="Controllers\PettyCashRecordsController.cs" />
     <Compile Include="Controllers\SaleInvoiceItemsController.cs" />
     <Compile Include="Controllers\PaymentsController.cs" />
     <Compile Include="Controllers\SaleInvoicesController.cs" />
@@ -156,6 +157,7 @@
     </Compile>
     <Compile Include="Models\ActivityLogsModel.cs" />
     <Compile Include="Models\PaymentItemsModel.cs" />
+    <Compile Include="Models\PettyCashRecordsModel.cs" />
     <Compile Include="Models\SaleInvoiceItems_InventoryModel.cs" />
     <Compile Include="Models\SaleInvoiceItemsModel.cs" />
     <Compile Include="Models\PaymentsModel.cs" />
@@ -249,6 +251,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Payments\Create.cshtml" />
     <Content Include="Views\Payments\Print.cshtml" />
+    <Content Include="Views\PettyCashRecords\Create.cshtml" />
+    <Content Include="Views\PettyCashRecords\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
