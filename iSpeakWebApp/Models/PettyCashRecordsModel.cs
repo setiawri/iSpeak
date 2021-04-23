@@ -14,12 +14,11 @@ namespace iSpeakWebApp.Models
         public Guid Branches_Id { get; set; }
         public static ModelMember COL_Branches_Id = new ModelMember { Name = "Branches_Id" };
 
-        public Guid? RefId { get; set; }
+        public Guid? RefId { get; set; } = null;
         public static ModelMember COL_RefId = new ModelMember { Name = "RefId" };
 
 
-        [Required]
-        public string No { get; set; }
+        public string No { get; set; } = string.Empty;
         public static ModelMember COL_No = new ModelMember { Name = "No" };
 
 
@@ -34,17 +33,19 @@ namespace iSpeakWebApp.Models
         public string PettyCashRecordsCategories_Name { get; set; }
 
 
+        [Required]
         [Display(Name = "Description")]
         public string Notes { get; set; }
         public static ModelMember COL_Notes = new ModelMember { Name = "Notes" };
 
 
+        [Required]
         [DisplayFormat(DataFormatString = "{0:N0}")]
-        public int Amount { get; set; }
+        public int Amount { get; set; } = 0;
         public static ModelMember COL_Amount = new ModelMember { Name = "Amount" };
 
 
-        public bool IsChecked { get; set; }
+        public bool IsChecked { get; set; } = false;
         public static ModelMember COL_IsChecked = new ModelMember { Name = "IsChecked", Display = "IsChecked", LogDisplay = ActivityLogsController.editBooleanFormat("Approval") };
 
 
@@ -52,20 +53,20 @@ namespace iSpeakWebApp.Models
 
 
         [Display(Name = "Name")]
-        public Guid UserAccounts_Id_TEMP { get; set; }
+        public Guid? UserAccounts_Id_TEMP { get; set; }
         public static ModelMember COL_UserAccounts_Id_TEMP = new ModelMember { Name = "UserAccounts_Id_TEMP" };
         public string UserAccounts_Firstname { get; set; }
 
 
         [Display(Name = "Expense Category")]
-        public Guid? ExpenseCategories_Id { get; set; }
+        public Guid? ExpenseCategories_Id { get; set; } = null;
         public static ModelMember COL_ExpenseCategories_Id = new ModelMember { Name = "ExpenseCategories_Id" };
 
         /******************************************************************************************************************************************************/
 
         [Display(Name = "Balance")]
         [DisplayFormat(DataFormatString = "{0:N0}")]
-        public int Balance { get; set; }
+        public int Balance { get; set; } = 0;
 
     }
 }

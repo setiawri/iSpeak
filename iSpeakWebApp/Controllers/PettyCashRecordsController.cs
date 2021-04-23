@@ -51,26 +51,42 @@ namespace iSpeakWebApp.Controllers
         /* CREATE *********************************************************************************************************************************************/
 
         // GET: PettyCashRecords/Create
-        public ActionResult Create(string id)
+        public ActionResult Create(string FILTER_Keyword, int? FILTER_Approved,
+            bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
             if (!UserAccountsController.getUserAccess(Session).PettyCashRecords_Add)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
+            setViewBag(FILTER_Keyword, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
             return View();
         }
 
         //POST: PettyCashRecords/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(string id, string JsonPettyCashRecords)
+        public ActionResult Create(PettyCashRecordsModel model, string FILTER_Keyword, int? FILTER_Approved,
+            bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
-            List<SaleInvoicesModel> saleinvoices = SaleInvoicesController.get(Session, id).OrderBy(x=>x.Timestamp).ToList();
-
             if (ModelState.IsValid)
             {
+                model.Id = Guid.NewGuid();
+                model.Branches_Id = Helper.getActiveBranchId(Session);
+                model.Timestamp = DateTime.Now;
+                model.UserAccounts_Id_TEMP = (Guid)UserAccountsController.getUserId(Session);
+                add(db, model);
 
+                return RedirectToAction(nameof(Index), new
+                {
+                    FILTER_Keyword = FILTER_Keyword,
+                    FILTER_Approved = FILTER_Approved,
+                    FILTER_chkDateFrom = FILTER_chkDateFrom,
+                    FILTER_DateFrom = FILTER_DateFrom,
+                    FILTER_chkDateTo = FILTER_chkDateTo,
+                    FILTER_DateTo = FILTER_DateTo
+                });
             }
 
+            setViewBag(FILTER_Keyword, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
             return View();
         }
 
@@ -85,9 +101,11 @@ namespace iSpeakWebApp.Controllers
             ViewBag.FILTER_DateFrom = FILTER_DateFrom;
             ViewBag.FILTER_chkDateTo = FILTER_chkDateTo;
             ViewBag.FILTER_DateTo = FILTER_DateTo;
+            PettyCashRecordsCategoriesController.setDropDownListViewBag(this);
+            ExpenseCategoriesController.setDropDownListViewBag(this);
         }
 
-        public JsonResult Update_IsChecked(Guid id, bool value)
+        public JsonResult UpdateApproval(Guid id, bool value)
         {
             update_IsChecked(id, value);
             return Json(new { Message = "" });

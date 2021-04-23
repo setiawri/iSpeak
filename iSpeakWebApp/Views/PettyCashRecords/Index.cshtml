@@ -21,6 +21,14 @@
                 <div class="card-body">
 
                     <div class="row mx-0">
+                        @if (access.PettyCashRecords_Add)
+                        {
+                            <div class="mr-2">
+                                <label class="mb-0">&nbsp;</label>
+                                <div><a href="javascript:void(0)" onclick="Action('Create', '@ControllerName')" class="btn btn-success">CREATE<i class="icon-plus22 ml-2"></i></a></div>
+                            </div>
+                        }
+
                         <div class="row ml-0 mr-2" style="width:100px;">
                             <label class="mb-0">No</label>
                             <div class="input-group">
@@ -77,17 +85,20 @@
                             <thead>
                                 <tr>
                                     <th style="width:50px;">@Html.DisplayNameFor(model => model.No)</th>
-                                    <th class="non-sortable">@Html.DisplayNameFor(model => model.Timestamp)</th>
-                                    <th>@Html.DisplayNameFor(model => model.PettyCashRecordsCategories_Id)</th>
+                                    <th class="non-sortable" style="width:150px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
+                                    <th class="non-sortable">@Html.DisplayNameFor(model => model.PettyCashRecordsCategories_Id)</th>
                                     <th class="non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
-                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Amount)</th>
-                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Balance)</th>
-                                    <th>@Html.DisplayNameFor(model => model.UserAccounts_Id_TEMP)</th>
+                                    <th class="non-sortable text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Amount)</th>
+                                    <th class="non-sortable text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Balance)</th>
+                                    <th class="non-sortable" style="width:150px;">@Html.DisplayNameFor(model => model.UserAccounts_Id_TEMP)</th>
                                     @if (access.PettyCashRecords_Approve)
                                     {
                                         <th class="non-searchable non-sortable" style="width:0px;">Approval</th>
                                     }
-                                    <th class="non-searchable non-sortable" style="width:70px;"></th>
+                                    @if (access.PettyCashRecords_Approve)
+                                    {
+                                        <th class="non-searchable non-sortable" style="width:70px;"></th>
+                                    }
                                 </tr>
                             </thead>
                             <tbody>
@@ -109,9 +120,12 @@
                                                     @Html.CheckBoxFor(modelItem => item.IsChecked, new { @class = "check-styled", onclick = string.Format("UpdateApproval(this, '{0}')", item.Id) })
                                                 </td>
                                             }
+                                            @if (access.PettyCashRecords_Approve)
+                                            { 
                                             <td class="align-top">
                                                 <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                             </td>
+                                            }
                                         </tr>
                                     }
                                 }
@@ -136,7 +150,7 @@
     });
 
     function UpdateApproval(control, id) {
-        AjaxUpdate('Update_IsChecked', '@ControllerName', id, control.checked);
+        AjaxUpdate('UpdateApproval', '@ControllerName', id, control.checked);
     }
 
     function applyLast() {

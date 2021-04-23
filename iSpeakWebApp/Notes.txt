@@ -13,6 +13,8 @@ TO DO:
 
 IMPROVEMENTS:
 
+PettyCashRecordsModel: UserAccounts_Id shoud not be nullable. there is a problem setting 2 null values in database
+
 Add Banks master data and role access
 
 Sale Invoice Index:

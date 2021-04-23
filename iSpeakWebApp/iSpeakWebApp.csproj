@@ -251,8 +251,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Payments\Create.cshtml" />
     <Content Include="Views\Payments\Print.cshtml" />
-    <Content Include="Views\PettyCashRecords\Create.cshtml" />
     <Content Include="Views\PettyCashRecords\Index.cshtml" />
+    <Content Include="Views\PettyCashRecords\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
