@@ -14,15 +14,16 @@ namespace iSpeakWebApp.Controllers
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public static List<SaleInvoiceItemsModel> get(Guid? Id, Guid? SaleInvoices_Id, string IdList)
+        public static List<SaleInvoiceItemsModel> get(Guid? Id, Guid? SaleInvoices_Id, string SaleInvoices_IdList, Guid? Payments_Id)
         {
-            string IdListClause = "";
-            if (!string.IsNullOrEmpty(IdList))
-                IdListClause = string.Format("AND SaleInvoices.Id IN ({0})", LIBWebMVC.UtilWebMVC.convertToSqlIdList(IdList));
+            string SaleInvoices_IdList_Clause = "";
+            if (!string.IsNullOrEmpty(SaleInvoices_IdList))
+                SaleInvoices_IdList_Clause = string.Format("AND SaleInvoices.Id IN ({0})", LIBWebMVC.UtilWebMVC.convertToSqlIdList(SaleInvoices_IdList));
 
             string sql = string.Format(@"
                     SELECT SaleInvoiceItems.*,
                         SaleInvoices.No AS SaleInvoices_No,
+                        Customer_UserAccounts.Fullname AS Customer_UserAccounts_Name,
                         LessonPackages.Name AS LessonPackages_Name,
                         Services.Name AS Services_Name,
                         Products.Name AS Products_Name,
@@ -32,17 +33,24 @@ namespace iSpeakWebApp.Controllers
                         LEFT JOIN LessonPackages ON LessonPackages.Id = SaleInvoiceItems.LessonPackages_Id
                         LEFT JOIN Services ON Services.Id = SaleInvoiceItems.Services_Id
                         LEFT JOIN Products ON Products.Id = SaleInvoiceItems.Products_Id
+                        LEFT JOIN UserAccounts Customer_UserAccounts ON Customer_UserAccounts.Id = SaleInvoices.Customer_UserAccounts_Id
                     WHERE 1=1
 						AND (@Id IS NULL OR SaleInvoiceItems.Id = @Id)
 						AND (@Id IS NOT NULL OR (
                             (@SaleInvoices_Id IS NULL OR SaleInvoiceItems.SaleInvoices_Id = @SaleInvoices_Id)
+                            AND (@Payments_Id IS NULL OR (SaleInvoiceItems.SaleInvoices_Id IN (
+				                SELECT PaymentItems.ReferenceId
+				                FROM PaymentItems
+				                WHERE PaymentItems.Payments_Id = @Payments_Id
+                            )))
                             {0}
                         ))
 					ORDER BY SaleInvoiceItems.RowNo ASC
-                ", IdListClause);
+                ", SaleInvoices_IdList_Clause);
 
             return new DBContext().Database.SqlQuery<SaleInvoiceItemsModel>(sql,
                 DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Id.Name, Id),
+                DBConnection.getSqlParameter("Payments_Id", Payments_Id),
                 DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SaleInvoices_Id.Name, SaleInvoices_Id)
             ).ToList();
         }

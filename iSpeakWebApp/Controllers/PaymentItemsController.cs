@@ -16,7 +16,8 @@ namespace iSpeakWebApp.Controllers
             return new DBContext().Database.SqlQuery<PaymentItemsModel>(@"
                     SELECT PaymentItems.*,
                         Payments.No AS Payments_No,
-                        SaleInvoices.No AS SaleInvoices_No
+                        SaleInvoices.No AS SaleInvoices_No,
+                        SaleInvoices.Amount AS SaleInvoices_Amount
                     FROM PaymentItems
                         LEFT JOIN Payments ON Payments.Id = PaymentItems.Payments_Id
                         LEFT JOIN SaleInvoices ON SaleInvoices.Id = PaymentItems.ReferenceId

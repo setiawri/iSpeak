@@ -45,6 +45,7 @@ namespace iSpeakWebApp.Models
 
 
         public Guid? Consignments_Id { get; set; } = new Guid();
+        public string Consignments_Name { get; set; }
 
 
         [Display(Name = "Consignment")]

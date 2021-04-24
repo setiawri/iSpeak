@@ -150,7 +150,7 @@ namespace iSpeakWebApp.Controllers
 
         public ActionResult setCreateViewBagsAndReturn(string saleInvoiceIdList)
         {
-            List<SaleInvoiceItemsModel> SaleInvoiceItems = SaleInvoiceItemsController.get(null, null, saleInvoiceIdList)
+            List<SaleInvoiceItemsModel> SaleInvoiceItems = SaleInvoiceItemsController.get(null, null, saleInvoiceIdList, null)
                 .OrderBy(x => x.SaleInvoices_No)
                 .ThenBy(x => x.RowNo)
                 .ToList();
@@ -169,12 +169,22 @@ namespace iSpeakWebApp.Controllers
         /* PRINT **********************************************************************************************************************************************/
 
         // GET: Payments/Create
-        public ActionResult Print(Guid id)
+        public ActionResult Print(Guid? id)
         {
-            if (!UserAccountsController.getUserAccess(Session).Payments_View)
+            if (id == null || !UserAccountsController.getUserAccess(Session).Payments_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            return View(get(id));
+            PaymentsModel model = get((Guid)id);
+
+            ViewBag.InvoiceHeaderText = new BranchesController().get(Helper.getActiveBranchId(Session)).InvoiceHeaderText;
+            ViewData["SaleInvoiceItems"] = SaleInvoiceItemsController.get(null, null, null, model.Id)
+                .OrderBy(x => x.SaleInvoices_No)
+                .ThenBy(x => x.RowNo)
+                .ToList(); 
+            ViewData["PaymentItems"] = PaymentItemsController.get(null, model.Id);
+            ViewBag.TotalAmount = model.CashAmount + model.ConsignmentAmount + model.DebitAmount;
+
+            return View(model);
         }
 
         /* METHODS ********************************************************************************************************************************************/
@@ -277,8 +287,10 @@ namespace iSpeakWebApp.Controllers
                 FILTER_DateTo = null;
 
             return new DBContext().Database.SqlQuery<PaymentsModel>(@"
-                    SELECT Payments.*
+                    SELECT Payments.*,
+                        Consignments.Name AS Consignments_Name
                     FROM Payments
+                        LEFT JOIN Consignments ON Consignments.Id = Payments.Consignments_Id
                     WHERE 1=1
 						AND (@Id IS NULL OR Payments.Id = @Id)
 						AND (@Id IS NOT NULL OR (

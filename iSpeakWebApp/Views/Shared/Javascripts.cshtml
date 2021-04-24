@@ -119,25 +119,27 @@ FILTERING
             return $('#' + id).prop('checked');
     }
 
-    function Action(action, controller, returnurl) {
+    function Action(action, controller, newwindow, returnurl) {
         showLoadingSpinner();
         var url = '@Url.Action("__action", "__controller", new { FILTER_Keyword = "__data" })';
         url = url.replace("__data", getFilter());
-        ProcessAction(url, action, controller, returnurl)
+        ProcessAction(url, action, controller, newwindow, returnurl)
     }
 
-    function ActionWithId(id, action, controller, returnurl) {
+    function ActionWithId(id, action, controller, newwindow, returnurl) {
         showLoadingSpinner();
         var url = '@Url.Action("__action", "__controller", new { id = "__data" })';
         url = url.replace("__data", id + "?FILTER_Keyword=" + getFilter());
-        ProcessAction(url, action, controller, returnurl)
+        ProcessAction(url, action, controller, newwindow, returnurl)
     }
 
-    function ProcessAction(url, action , controller, returnurl) {
+    function ProcessAction(url, action, controller, newwindow, returnurl) {
         url = url.replace("__action", action).replace("__controller", controller);
         if (returnurl != undefined)
             url += "&ReturnUrl=" + returnurl;
-        OpenWindow(url, "false");
+        if (newwindow == null)
+            newwindow = "false";
+        OpenWindow(url, newwindow);
     }
 
     function appendFilter(value, filterName) {

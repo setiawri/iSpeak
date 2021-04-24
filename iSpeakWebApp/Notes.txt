@@ -7,9 +7,17 @@ TO DO:
 	> second page's checkboxes not check-styled
 	> selectfirstinputInModal() in Javascripts is not working
 - create user account info page
+- sale invoices create page: fix so inventory and services can be added
+- payroll pages: payroll rates & payroll
+- schedules
 - move button to scroll to bottom to javascripts file and set display to none. add javascript to display it on pages that requires it.
 - edit notes button in Settings > edit page is highlighted when cursor is hovering on the title.
 - Javascript method showMessage(): bootbox.dialog onEscape element.select() is not working
+- reports
+	> new students
+	> 
+- promotion emails
+- mobile app
 
 IMPROVEMENTS:
 

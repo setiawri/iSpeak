@@ -160,11 +160,9 @@
                                                 {
                                                     <div><span class="badge badge-danger d-block mr-1">CANCELLED</span></div>
                                                 }
-                                                @if (access.Payments_Edit)
-                                                {
-                                                    <a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Payment @item.No', 'medium', 'GetDetails', '@ControllerName')">View</a> @:•
-                                                }
-                                                <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                                @*<a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Payment @item.No', 'medium', 'GetDetails', '@ControllerName')">View</a> @:•*@
+                                                <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Print', '@ControllerName', 'true')">Receipt</a>
+                                                • <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                             </td>
                                         </tr>
                                     }

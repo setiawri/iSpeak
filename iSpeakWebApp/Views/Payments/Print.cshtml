@@ -1,205 +1,249 @@
-﻿@model IEnumerable<iSpeakWebApp.Models.PaymentsModel>
+﻿@model iSpeakWebApp.Models.PaymentsModel
+@using iSpeakWebApp.Models
 
 @{
+    Layout = null;
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     string ControllerName = "Payments";
     ViewBag.SelectedNavigationMenu = "Sales";
-    ViewBag.Title = "PAYMENT";
+    ViewBag.Title = "PAYMENT RECEIPT";
     ViewBag.Subtitle = "Print";
+
+    List<SaleInvoiceItemsModel> SaleInvoiceItems = (List<SaleInvoiceItemsModel>)ViewData["SaleInvoiceItems"];
+    List<PaymentItemsModel> PaymentItems = (List<PaymentItemsModel>)ViewData["PaymentItems"];
 }
 
-<div class="content-wrapper">
-    <!-- Content area -->
-    <div class="content">
-        @using (Html.BeginForm("Index", ControllerName, FormMethod.Post))
-        {
-            <!-- Form inputs -->
-            <div class="card animated bounceInLeft">
-                <div class="card-header header-elements-inline pb-1">
-                    <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
-                </div>
-                <div class="card-body">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewBag.Title</title>
+    @Html.Partial("Scripts")
+</head>
+<body class="bg-slate-800">
+    <!-- Page content -->
+    <div class="page-content">
+        <!-- Main content -->
+        <div class="content-wrapper">
+            <!-- Content area -->
+            <div class="content">
+                <!-- Invoice template -->
+                <div class="card">
+                    <div class="card-header bg-transparent header-elements-inline">
+                        <h4 class="card-title">@ViewBag.Title</h4>
+                        <div class="header-elements">
+                            @*<button type="button" class="btn btn-light btn-sm ml-3" onclick="back_exec()"><i class="icon-circle-left2 mr-2"></i> Back</button>*@
+                            <button type="button" class="btn btn-light btn-sm ml-3" onclick="print_exec()"><i class="icon-printer mr-2"></i> Print</button>
+                        </div>
+                    </div>
 
-                    <div class="table-responsive">
-                        <table class="table table-hover datatable">
-                            <thead>
-                                <tr>
-                                    <th style="width:50px;">@Html.DisplayNameFor(model => model.No)</th>
-                                    <th class="non-sortable" style="width:150px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
-                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.CashAmount)</th>
-                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.DebitNumber)</th>
-                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.ConsignmentAmount)</th>
-                                    @if (access.Payments_Approve)
-                                    {
-                                        <th class="non-searchable non-sortable" style="width:0px;">Approval</th>
-                                    }
-                                    <th class="non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
-                                    <th class="non-searchable non-sortable" style="width:70px;"></th>
-                                    <th class="non-searchable non-sortable" style="width:120px;"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model != null)
-                                {
-                                    foreach (var item in Model)
-                                    {
-                                        <tr>
-                                            <td class="align-top">@Html.DisplayFor(modelItem => item.No)</td>
-                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
-                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.CashAmount)</td>
-                                            <td class="align-top text-right">
-                                                <div>@Html.DisplayFor(modelItem => item.DebitAmount)</div>
-                                                @if (item.DebitAmount > 0)
-                                                {
-                                                    <div>
-                                                        [@Html.DisplayFor(modelItem => item.DebitBank)]
-                                                        @if (!string.IsNullOrEmpty(item.DebitNumber) && item.DebitNumber.Length > 4)
-                                                        {
-                                                            @:*@item.DebitNumber.Substring(item.DebitNumber.Length - 4, 4)
-                                                        }
-                                                        else
-                                                        {
-                                                            @item.DebitNumber
-                                                        }
-                                                    </div>
-                                                    <div>@string.Format("{0}", item.DebitOwnerName.Split(' '))</div>
-                                                }
-                                            </td>
-                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.ConsignmentAmount)</td>
-                                            @if (access.Payments_Approve)
-                                            {
-                                                <td class="align-top" style="text-align:center;">
-                                                    @Html.CheckBoxFor(modelItem => item.Confirmed, new { @class = "check-styled", onclick = string.Format("UpdateApproval(this, '{0}')", item.Id) })
-                                                </td>
-                                            }
-                                            <td class="align-top">                                                
-                                                @if (!string.IsNullOrEmpty(item.CancelNotes))
-                                                {
-                                                    <div><strong>Cancelled: </strong>@Html.DisplayFor(modelItem => item.CancelNotes)</div>
-                                                }
-                                                @Html.DisplayFor(modelItem => item.Notes)
-                                            </td>
-                                            <td class="align-top">
-                                                @if (!item.Cancelled)
-                                                {
-                                                    <a href="javascript:void(0)"><span class="badge badge-warning d-block mr-1" style="width:50px;" data-toggle="modal" data-target="#modal_cancel" onclick="PopulateCancelModal('@item.Id','@item.No')">CANCEL</span></a>
-                                                }
-                                            </td>
-                                            <td class="align-top">
-                                                @if (item.Cancelled)
-                                                {
-                                                    <div><span class="badge badge-danger d-block mr-1">CANCELLED</span></div>
-                                                }
-                                                @if (access.Payments_Edit)
-                                                {
-                                                    <a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Payment @item.No', 'medium', 'GetDetails', '@ControllerName')">View</a> @:•
-                                                }
-                                                <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
-                                            </td>
+                    <div class="card-body" id="print-area">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div>
+                                    <h4 class="text-primary mb-2 mt-md-2">RECEIPT #@Model.No</h4>
+                                    <ul class="list list-unstyled mb-0">
+                                        <li>DATE: <span class="font-weight-semibold">@string.Format("{0:dd/MM/yyyy}", TimeZoneInfo.ConvertTimeFromUtc(Model.Timestamp, TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time")))</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div style="float: right">
+                                    <div class="row">
+                                        <div class="col-sm-7">
+                                            <div class="text-sm-right mt-2">
+                                                <ul class="list list-unstyled mb-0">
+                                                    <li><span class="font-weight-semibold" style="white-space: pre-line">@ViewBag.InvoiceHeaderText</span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-5 pr-4">
+                                            <img src="@Helper.getImageUrl("logo.png", Request, Server)" class="img-responsive" style="width: 150px" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-md-flex flex-md-wrap">
+                            <div class="table-responsive">
+                                <table class="table table-lg">
+                                    <thead>
+                                        <tr class="bg-grey-300" style="line-height:0;">
+                                            <th style="width:40px;">Invoice</th>
+                                            <th>Description</th>
+                                            <th class="text-right" style="width:130px;">Price</th>
+                                            <th class="text-right" style="width:150px;"></th>
+                                            <th class="text-right" style="width:80px;">Subtotal</th>
                                         </tr>
-                                    }
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <!-- /form inputs -->
-        }
-
-        <!-- Cancel form modal -->
-        <div id="modal_cancel" class="modal fade" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header bg-warning">
-                        <h6 class="modal-title">Cancel Payment</h6>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-
-                    <form action="#" class="form-horizontal">
-                        <div class="modal-body">
-                            <div style="display: none">
-                                <input class="form-control" id="modal_cancel-Id" />
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in SaleInvoiceItems)
+                                        {
+                                            <tr>
+                                                <td class="align-top">@Html.DisplayFor(modelItem => item.SaleInvoices_No)</td>
+                                                <td class="align-top">
+                                                    @Html.DisplayFor(modelItem => item.Description)
+                                                    <br /><strong>Name: </strong>@Html.DisplayFor(modelItem => item.Customer_UserAccounts_Name)
+                                                    @if (item.VouchersAmount > 0)
+                                                    {
+                                                        @:, <strong>Vouchers: </strong>@Html.DisplayFor(modelItem => item.VouchersName)
+                                                    }
+                                                    @if (!string.IsNullOrEmpty(item.Notes))
+                                                    {
+                                                        <br /><strong>Notes: </strong>@Html.DisplayFor(modelItem => item.Notes)
+                                                    }
+                                                </td>
+                                                <td class="align-top text-right">
+                                                    @Html.DisplayFor(modelItem => item.Qty) x @Html.DisplayFor(modelItem => item.Price)
+                                                    @if (item.TravelCost > 0)
+                                                    {
+                                                        <br />@:Travel: @Html.DisplayFor(modelItem => item.TravelCost)
+                                                    }
+                                                </td>
+                                                <td class="align-top text-right">
+                                                    @if (item.VouchersAmount > 0)
+                                                    {
+                                                        @:Vouchers: @Html.DisplayFor(modelItem => item.VouchersAmount)
+                                                    }
+                                                    @if (item.DiscountAmount > 0)
+                                                    {
+                                                        if (item.VouchersAmount > 0)
+                                                        {
+                                                            <br />
+                                                        }
+                                                        @:Discount: @Html.DisplayFor(modelItem => item.DiscountAmount)
+                                                    }
+                                                </td>
+                                                <td class="align-top text-right">@Html.DisplayFor(modelItem => item.TotalAmount)</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-form-label col-sm-2">Payment</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" id="modal_cancel-No" readonly />
+                        </div>
+
+                        <div class="d-md-flex flex-md-wrap">
+                            <div class="d-flex flex-wrap wmin-md-500">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr class="bg-grey-300" style="line-height:0;">
+                                                <th>Invoice</th>
+                                                <th class="text-right">Total</th>
+                                                <th class="text-right">Due</th>
+                                                <th class="text-right">Payment</th>
+                                                <th class="text-right">Remaining</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in PaymentItems)
+                                            {
+                                                <tr>
+                                                    <td>@Html.DisplayFor(modelItem => item.SaleInvoices_No)</td>
+                                                    <td class="text-right">@Html.DisplayFor(modelItem => item.SaleInvoices_Amount)</td>
+                                                    <td class="text-right">@Html.DisplayFor(modelItem => item.DueBefore)</td>
+                                                    <td class="text-right">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                                    <td class="text-right">@Html.DisplayFor(modelItem => item.DueAfter)</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-form-label col-sm-2">Notes</label>
-                                <div class="col-sm-10">
-                                    <textarea class="form-control" id="modal_cancel-Notes" rows="2" placeholder="Cancel Reason"></textarea>
+
+                            <div class="mx-auto"></div>
+
+                            <div class="wmin-md-200">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <tbody>
+                                            @if (Model.CashAmount > 0)
+                                            {
+                                                <tr>
+                                                    <th>CASH</th>
+                                                    <td class="text-right">@Html.DisplayFor(item => item.CashAmount)</td>
+                                                </tr>
+                                            }
+                                            @if (Model.DebitAmount > 0)
+                                            {
+                                                <tr>
+                                                    <th>DEBIT</th>
+                                                    <td class="text-right">@Html.DisplayFor(item => item.DebitAmount)</td>
+                                                </tr>
+                                            }
+                                            @if (Model.ConsignmentAmount > 0)
+                                            {
+                                                <tr>
+                                                    <th>@Html.DisplayFor(item => item.Consignments_Name)</th>
+                                                    <td class="text-right">@Html.DisplayFor(item => item.ConsignmentAmount)</td>
+                                                </tr>
+                                            }
+                                            <tr>
+                                                <th><h5>PAYMENT</h5></th>
+                                                <td class="text-right">
+                                                    <h5 class="font-weight-semibold text-primary">@string.Format("{0:N0}", ViewBag.TotalAmount)</h5>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn bg-success" onclick="Cancel()">Submit</button>
-                            <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                        <div>
+                            <span style="float: right" class="font-weight-semibold required">Uang yang sudah kami terima tidak dapat dikembalikan</span>
                         </div>
-                    </form>
+
+
+                        @if (!string.IsNullOrEmpty(Model.Notes))
+                        {
+                            <div class="d-md-flex flex-md-wrap">
+                                <div class="mr-auto">
+                                    <div class="font-weight-bold" style="border-bottom:1px solid lightgray;">NOTES</div>
+                                    <div>@Model.Notes</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="card-footer">
+                        <span class="text-muted">Thanks for your Payment.</span>
+                    </div>
                 </div>
+                <!-- /invoice template -->
             </div>
+            <!-- /content area -->
         </div>
-        <!-- /cancel form modal -->
-
+        <!-- /main content -->
     </div>
-    <!-- /content area -->
-</div>
+    <!-- /page content -->
 
+</body>
+</html>
 
 <script type="text/javascript">
 
     $(document).ready(function () {
-        setDateRangePicker('FILTER_DateFrom', '@string.Format("{0:yyyy/MM/dd}", DateTime.Today.AddMonths(-2))');
-        setDateRangePicker('FILTER_DateTo', '@string.Format("{0:yyyy/MM/dd}", DateTime.Today)');
+
     });
 
-    function UpdateApproval(control, id) {
-        AjaxUpdate('Update_Confirmed', '@ControllerName', id, control.checked);
-    }
-
     function applyLast() {
-        datatable.order([0, 'desc']).draw();
     }
 
-    // CANCEL PAYMENT ==============================================================================================================================================
+    function print_exec() {
+        var printContents = document.getElementById('print-area').innerHTML;
+        var originalContents = document.body.innerHTML;
 
-    function PopulateCancelModal(id, no) {
-        $('#modal_cancel-Id').val(id);
-        $('#modal_cancel-No').val(no);
-        $('#modal_cancel-Notes').val('');
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
     }
-
-    function Cancel() {
-        if (!event.detail || event.detail == 1) {
-            if ($('#modal_cancel-Notes').val() == '') {
-                showMessage('Please provide reason for cancellation.', 'modal_cancel-Notes');
-            }
-            else {
-                $.ajax({
-                    type: "POST",
-                    url: '@Url.Action("Update_Cancelled", ControllerName)',
-                    data: {
-                        id: $('#modal_cancel-Id').val(),
-                        notes: $('#modal_cancel-Notes').val()
-                    },
-                    success: function (data) {
-                        $('#LoadData').trigger('click');
-                    }, //end success
-                    error: function (data) {
-                        showMessage("ERROR: " + data.responseText);
-                    } //end error
-                }); //end ajax
-            }
-        }
-    }
-
-    $('#modal_cancel').on('shown.bs.modal', function () {
-        $('#modal_cancel-Notes').focus();
-    })
 
     //==============================================================================================================================================================
 

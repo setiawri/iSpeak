@@ -19,14 +19,17 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_ReferenceId = new ModelMember { Name = "ReferenceId" };
 
 
+        [DisplayFormat(DataFormatString = "{0:N0}")]
         public int Amount { get; set; }
         public static ModelMember COL_Amount = new ModelMember { Name = "Amount" };
 
 
+        [DisplayFormat(DataFormatString = "{0:N0}")]
         public int DueBefore { get; set; }
         public static ModelMember COL_DueBefore = new ModelMember { Name = "DueBefore" };
 
 
+        [DisplayFormat(DataFormatString = "{0:N0}")]
         public int DueAfter { get; set; }
         public static ModelMember COL_DueAfter = new ModelMember { Name = "DueAfter" };
 
@@ -34,6 +37,10 @@ namespace iSpeakWebApp.Models
         /******************************************************************************************************************************************************/
 
         public string SaleInvoices_No { get; set; }
+
+
+        [DisplayFormat(DataFormatString = "{0:N0}")]
+        public int SaleInvoices_Amount { get; set; }
 
     }
 }
