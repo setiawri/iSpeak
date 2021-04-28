@@ -136,7 +136,7 @@ namespace iSpeakWebApp.Controllers
 
         public static void setDropDownListViewBag(ControllerBase controller)
         {
-            controller.ViewBag.LessonPackages = new SelectList(get(1).OrderBy(x => x.Description), LessonPackagesModel.COL_Id.Name, LessonPackagesModel.COL_Description.Name);
+            controller.ViewBag.LessonPackages = new SelectList(get(1).OrderBy(x => x.DDLDescription), LessonPackagesModel.COL_Id.Name, LessonPackagesModel.COL_DDLDescription.Name);
         }
 
         public static void setViewBag(ControllerBase controller)
@@ -171,7 +171,7 @@ namespace iSpeakWebApp.Controllers
                         SELECT LessonPackages.*,
                             Languages.Name AS Languages_Name,
                             LessonTypes.Name AS LessonTypes_Name,
-                            '['+Languages.Name+': '+LessonTypes.Name+'] '+LessonPackages.Name+' ('+FORMAT(LessonPackages.SessionHours,'N0')+' hrs) '+FORMAT(LessonPackages.Price,'N0') AS Description
+                            '['+Languages.Name+': '+LessonTypes.Name+'] '+LessonPackages.Name+' ('+FORMAT(LessonPackages.SessionHours,'N0')+' hrs) '+FORMAT(LessonPackages.Price,'N0') AS DDLDescription
                         FROM LessonPackages
                             LEFT JOIN Languages ON Languages.Id = LessonPackages.Languages_Id
                             LEFT JOIN LessonTypes ON LessonTypes.Id = LessonPackages.LessonTypes_Id

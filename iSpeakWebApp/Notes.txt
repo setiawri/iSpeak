@@ -1,9 +1,14 @@
 ﻿
 TO DO:
+- Create inventory pages
+- SaleInvoiceItemsController.add(): decrease inventory if consist of product.
+- saleinvoice create page:
+	> add global discount and global voucher. currently applied per item.
+	> item amount after discount and voucher cannot be less than 0
+	> if voucher or discount is bigger than item amount, set amount to 0. on postback error, recalculate item amount according to this rule.
+	> bug: in httppost create method, all filters are empty
 - Petty Cash Records index: add button to edit expense categories and show the value
 - fix bug in saleinvoices index page : 
-	> doesn't retain datatables state. 
-	> filter date is not working properly: sometimes reset to current date.
 	> second page's checkboxes not check-styled
 	> selectfirstinputInModal() in Javascripts is not working
 - create user account info page

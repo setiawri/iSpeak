@@ -1,56 +1,13 @@
 ﻿<!-- hidden value to reset datatable state save -->
 <span id="removeDatatablesStateSave" class="d-none">@ViewBag.RemoveDatatablesStateSave</span>
 
-<!--================================================================================================================================================================
-FILTERING
-=================================================================================================================================================================-->
-
-<input type="hidden" id="returnurl" name="returnurl" value="@ViewBag.returnurl" />
-<input type="hidden" id="FILTER_Keyword" name="FILTER_Keyword" value="@ViewBag.FILTER_Keyword" />
-<input type="hidden" id="FILTER_Active" name="FILTER_Active" value="@ViewBag.FILTER_Active" />
-<input type="hidden" id="FILTER_Cancelled" name="FILTER_Cancelled" value="@ViewBag.FILTER_Cancelled" />
-<input type="hidden" id="FILTER_Approved" name="FILTER_Approved" value="@ViewBag.FILTER_Approved" />
-<input type="hidden" id="FILTER_Languages_Id" name="FILTER_Languages_Id" value="@ViewBag.FILTER_Languages_Id" />
-<input type="hidden" id="FILTER_LessonTypes_Id" name="FILTER_LessonTypes_Id" value="@ViewBag.FILTER_LessonTypes_Id" />
-<input type="hidden" id="FILTER_Branches_Id" name="FILTER_Branches_Id" value="@ViewBag.FILTER_Branches_Id" />
-<input type="hidden" id="FILTER_chkDateFrom" name="FILTER_chkDateFrom" value="@ViewBag.FILTER_chkDateFrom" />
-<input type="hidden" id="FILTER_DateFrom" name="FILTER_DateFrom" value="@ViewBag.FILTER_DateFrom" />
-<input type="hidden" id="FILTER_chkDateTo" name="FILTER_chkDateTo" value="@ViewBag.FILTER_chkDateTo" />
-<input type="hidden" id="FILTER_DateTo" name="FILTER_DateTo" value="@ViewBag.FILTER_DateTo" />
-<input type="hidden" id="FILTER_PaymentNo" name="FILTER_PaymentNo" value="@ViewBag.FILTER_PaymentNo" />
-<input type="hidden" id="FILTER_InvoiceNo" name="FILTER_InvoiceNo" value="@ViewBag.FILTER_InvoiceNo" />
-
 <script type="text/javascript">
 
-    $(document).ready(function () {
-
-        setFilter('returnurl', '@ViewBag.returnurl');
-        setFilter('FILTER_Keyword', '@ViewBag.FILTER_Keyword');
-        setFilter('FILTER_Active', '@ViewBag.FILTER_Active');
-        setFilter('FILTER_Cancelled', '@ViewBag.FILTER_Cancelled');
-        setFilter('FILTER_Approved', '@ViewBag.FILTER_Approved');
-        setFilter('FILTER_Status', '@ViewBag.FILTER_Status');
-        setFilter('FILTER_Languages_Id', '@ViewBag.FILTER_Languages_Id');
-        setFilter('FILTER_LessonTypes_Id', '@ViewBag.FILTER_LessonTypes_Id');
-        setFilter('FILTER_Branches_Id', '@ViewBag.FILTER_Branches_Id');
-        setFilter('FILTER_PaymentNo', '@ViewBag.FILTER_PaymentNo');
-        setFilter('FILTER_InvoiceNo', '@ViewBag.FILTER_InvoiceNo');
-
-        setCheckboxFilter('FILTER_chkDateFrom', '@ViewBag.FILTER_chkDateFrom');
-        setCheckboxFilter('FILTER_chkDateTo', '@ViewBag.FILTER_chkDateTo');
-
-        setDaterangepickerFilter('FILTER_DateFrom', '@string.Format("{0:yyyy/MM/dd}", ViewBag.FILTER_DateFrom ?? DateTime.Now)');
-        setDaterangepickerFilter('FILTER_DateTo', '@string.Format("{0:yyyy/MM/dd}", ViewBag.FILTER_DateTo ?? DateTime.Now)');
-    });
-
-    function setFilter(id, value) {
-        if (value != null)
-            $('#'+id).val(value);
-    }
+    // FILTERING ===================================================================================================================================================
 
     function setCheckboxFilter(id, value) {
         if (value != '') {
-            if ($('#'+id).is(":hidden"))
+            if ($('#' + id).is(":hidden"))
                 $('#' + id).val(value);
             else
                 setCheckboxState(id, value);
@@ -60,56 +17,6 @@ FILTERING
     function setDaterangepickerFilter(id, value) {
         if ($('#' + id).length != 0 && !$('#' + id).is(":hidden") && value != '')
             setDateRangePicker(id, value);
-    }
-
-    function getFilter(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id) {
-        var filter = $('#FILTER_Keyword').val();
-
-        if ($('#FILTER_Active') != null)
-            FILTER_Active = $('#FILTER_Active').val();
-        filter += appendFilter(FILTER_Active, "FILTER_Active");
-
-        if ($('#FILTER_Cancelled') != null)
-            FILTER_Cancelled = $('#FILTER_Cancelled').val();
-        filter += appendFilter(FILTER_Cancelled, "FILTER_Cancelled");
-
-        if ($('#FILTER_Approved') != null)
-            FILTER_Approved = $('#FILTER_Approved').val();
-        filter += appendFilter(FILTER_Approved, "FILTER_Approved");
-
-        if ($('#FILTER_Status') != null)
-            FILTER_Status = $('#FILTER_Status').val();
-        filter += appendFilter(FILTER_Status, "FILTER_Status");
-
-        if ($('#FILTER_Languages_Id') != null)
-            FILTER_Languages_Id = $('#FILTER_Languages_Id').val();
-        filter += appendFilter(FILTER_Languages_Id, "FILTER_Languages_Id");
-
-        if ($('#FILTER_LessonTypes_Id') != null)
-            FILTER_LessonTypes_Id = $('#FILTER_LessonTypes_Id').val();
-        filter += appendFilter(FILTER_LessonTypes_Id, "FILTER_LessonTypes_Id");
-
-        if ($('#FILTER_Branches_Id') != null)
-            FILTER_Branches_Id = $('#FILTER_Branches_Id').val();
-        filter += appendFilter(FILTER_Branches_Id, "FILTER_Branches_Id");
-
-        if ($('#FILTER_DateFrom') != null)
-            FILTER_DateFrom = $('#FILTER_DateFrom').val();
-        filter += appendFilter(FILTER_DateFrom, "FILTER_DateFrom");
-
-        if ($('#FILTER_DateTo') != null)
-            FILTER_DateTo = $('#FILTER_DateTo').val();
-        filter += appendFilter(FILTER_DateTo, "FILTER_DateTo");
-
-        if ($('#FILTER_chkDateFrom') != null)
-            FILTER_chkDateFrom = getCheckboxFilterValue('FILTER_chkDateFrom');
-        filter += appendFilter(FILTER_chkDateFrom, "FILTER_chkDateFrom");
-
-        if ($('#FILTER_chkDateTo') != null)
-            FILTER_chkDateTo = getCheckboxFilterValue('FILTER_chkDateTo');
-        filter += appendFilter(FILTER_chkDateTo, "FILTER_chkDateTo");
-
-        return filter;
     }
 
     function getCheckboxFilterValue(id) {
@@ -171,12 +78,13 @@ FILTERING
             $('input[aria-controls=DataTables_Table_0]').val(search).keyup();
     }
 
-</script>
+    // MISC ========================================================================================================================================================
 
-<!--================================================================================================================================================================
-OTHER
-=================================================================================================================================================================-->
-<script type="text/javascript">
+    function setValue(id, value) {
+        console.log(value);
+        if (value != null)
+            $('#' + id).val(value);
+    }
 
     // TEXTBOX =====================================================================================================================================================
 

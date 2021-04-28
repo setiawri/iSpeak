@@ -24,15 +24,13 @@ namespace iSpeakWebApp.Controllers
             if (!UserAccountsController.getUserAccess(Session).SaleInvoices_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            if (rss != null)
-            {
-                FILTER_chkDateFrom = true;
-                FILTER_DateFrom = DateTime.Today.AddMonths(-2);
-            }
-
             setViewBag(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
             if (rss == null || !string.IsNullOrEmpty(FILTER_Keyword))
-                return View(get(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo));
+            {
+                List<SaleInvoicesModel> models = get(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo)
+                    .OrderByDescending(x => x.No).ToList();
+                return View(models);
+            }
             else
             {
                 ViewBag.RemoveDatatablesStateSave = rss;
@@ -46,7 +44,9 @@ namespace iSpeakWebApp.Controllers
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
             setViewBag(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
-            return View(get(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo));
+            List<SaleInvoicesModel> models = get(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo)
+                .OrderByDescending(x => x.No).ToList();
+            return View(models);
         }
 
         /* CREATE *********************************************************************************************************************************************/
@@ -69,23 +69,56 @@ namespace iSpeakWebApp.Controllers
             string FILTER_Keyword, string FILTER_PaymentNo, int? FILTER_Cancelled, int? FILTER_Approved, 
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
-            if (ModelState.IsValid && !string.IsNullOrEmpty(JsonSaleInvoiceItems))
-            {                
-                add(model, JsonConvert.DeserializeObject<List<SaleInvoiceItemsModel>>(JsonSaleInvoiceItems));
-                return RedirectToAction(nameof(Index), new { 
-                    FILTER_Keyword = FILTER_Keyword,
-                    FILTER_PaymentNo = FILTER_PaymentNo,
-                    FILTER_Cancelled = FILTER_Cancelled,
-                    FILTER_Approved = FILTER_Approved,
-                    FILTER_chkDateFrom = FILTER_chkDateFrom,
-                    FILTER_DateFrom = FILTER_DateFrom,
-                    FILTER_chkDateTo = FILTER_chkDateTo,
-                    FILTER_DateTo = FILTER_DateTo
-                });
+            List<SaleInvoiceItemsModel> SaleInvoiceItems = new List<SaleInvoiceItemsModel>();
+            if(!string.IsNullOrEmpty(JsonSaleInvoiceItems))
+                SaleInvoiceItems = JsonConvert.DeserializeObject<List<SaleInvoiceItemsModel>>(JsonSaleInvoiceItems);
+
+            string errorMessage = "";
+            if (ModelState.IsValid)
+            {
+                if(SaleInvoiceItems.Count == 0)
+                    UtilWebMVC.setBootboxMessage(this, "Please add at least 1 item");
+                else if(!hasSufficientInventory(SaleInvoiceItems, out errorMessage))
+                    UtilWebMVC.setBootboxMessage(this, errorMessage); 
+                else
+                {
+                    add(model, SaleInvoiceItems);
+                    return RedirectToAction(nameof(Index), new { rss = 1 });
+
+                    //not working. all filter returns null
+                    //return RedirectToAction(nameof(Index), new
+                    //{
+                    //    FILTER_Keyword = FILTER_Keyword,
+                    //    FILTER_PaymentNo = FILTER_PaymentNo,
+                    //    FILTER_Cancelled = FILTER_Cancelled,
+                    //    FILTER_Approved = FILTER_Approved,
+                    //    FILTER_chkDateFrom = FILTER_chkDateFrom,
+                    //    FILTER_DateFrom = FILTER_DateFrom,
+                    //    FILTER_chkDateTo = FILTER_chkDateTo,
+                    //    FILTER_DateTo = FILTER_DateTo
+                    //});
+                }
             }
 
             setViewBag(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
+            ViewData["SaleInvoiceItems"] = SaleInvoiceItems;
             return View(model);
+        }
+
+        public bool hasSufficientInventory(List<SaleInvoiceItemsModel> SaleInvoiceItems, out string errorMessage)
+        {
+            errorMessage = "";
+            List<ProductsModel> products = ProductsController.get(1, 1);
+            foreach(SaleInvoiceItemsModel invoice in SaleInvoiceItems)
+            {
+                if (invoice.Products_Id != null && SaleInvoiceItems.Where(x => x.Products_Id == invoice.Products_Id).Sum(x => x.Qty) > products.Find(x => x.Id == invoice.Products_Id).AvailableQty)
+                {
+                    errorMessage = string.Format("Insufficient available quantity in inventory for {0}", products.Find(x => x.Id == invoice.Products_Id).Name);
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /* METHODS ********************************************************************************************************************************************/
@@ -104,7 +137,9 @@ namespace iSpeakWebApp.Controllers
             LessonPackagesController.setDropDownListViewBag(this);
             LessonPackagesController.setViewBag(this);
             ProductsController.setDropDownListViewBag(this);
+            ProductsController.setViewBag(this);
             ServicesController.setDropDownListViewBag(this);
+            ServicesController.setViewBag(this);
             VouchersController.setDropDownListViewBag(this);
             VouchersController.setViewBag(this);
         }

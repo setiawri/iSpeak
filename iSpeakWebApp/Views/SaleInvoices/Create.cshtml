@@ -1,4 +1,5 @@
 ﻿@model iSpeakWebApp.Models.SaleInvoicesModel
+@using iSpeakWebApp.Models
 
 @{
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
@@ -6,6 +7,8 @@
     ViewBag.SelectedNavigationMenu = "Sales";
     ViewBag.Title = "SALE INVOICES";
     ViewBag.Subtitle = "Create";
+
+    List<SaleInvoiceItemsModel> SaleInvoiceItems = (List<SaleInvoiceItemsModel>)ViewData["SaleInvoiceItems"];
 }
 
 <div class="content-wrapper">
@@ -117,14 +120,14 @@
                                     <div class="row ml-0 mr-2" style="width:100px">
                                         <label class="mb-0 required">Qty</label>
                                         <div>
-                                            @Html.Editor("Qty", new { htmlAttributes = new { @class = "form-control positiveintegeronly", Value = "1", type = "number" } })
+                                            @Html.Editor("Qty", new { htmlAttributes = new { @class = "form-control positiveintegeronly", Value = "1", type = "text" } })
                                         </div>
                                     </div>
 
                                     <div class="row ml-0 mr-2" style="width:150px">
                                         <label class="mb-0">Discount</label>
                                         <div>
-                                            @Html.Editor("Discount", new { htmlAttributes = new { @class = "form-control positiveintegeronly", @style = "width:150px", Value = "0", type = "number" } })
+                                            @Html.Editor("Discount", new { htmlAttributes = new { @class = "form-control positiveintegeronly", @style = "width:150px", Value = "0", type = "text" } })
                                         </div>
                                     </div>
 
@@ -163,6 +166,44 @@
                                     </tr>
                                 </thead>
                                 <tbody id="itemList">
+                                    @if (SaleInvoiceItems != null)
+                                    {
+                                        int item_no = 100;
+                                        foreach (SaleInvoiceItemsModel invoice in SaleInvoiceItems)
+                                        {
+                                            item_no += 1;
+                                        <tr id="item_@item_no">
+                                            <td class="align-top">
+                                                <a href="javascript:void(0)" onclick="RemoveItem('item_@item_no')" class="text-danger"><i class="fa fa-2x fa-times"></i></a>
+                                            </td>
+                                            <td class="align-top">
+                                                @invoice.Description
+                                                @if (!string.IsNullOrEmpty(invoice.VouchersName))
+                                                {
+                                                    <br/>@:Voucher: @invoice.VouchersName
+                                                } 
+                                                @if (!string.IsNullOrEmpty(invoice.Notes))
+                                                {
+                                                    <br/>@:Notes: @invoice.Notes
+                                                } 
+                                            </td>
+                                            <td class="align-top text-right">
+                                                Qty: @string.Format("{0:N0}", invoice.Qty) x @string.Format("{0:N0}", invoice.Price)
+                                                @if (invoice.TravelCost > 0)
+                                                {
+                                                    <br />@:Travel: @string.Format("{0:N0}", invoice.TravelCost) @("Tutor:") @string.Format("{0:N0}", invoice.TutorTravelCost) @(")")
+                                                }
+                                            </td>
+                                            <td class="align-top text-right">
+                                                Discount: @string.Format("{0:N0}", -1 * invoice.DiscountAmount)
+                                                <br/>Vouchers: @string.Format("{0:N0}", -1 * invoice.VouchersAmount)
+                                            </td>
+                                            <td class="align-top text-right">
+                                                <strong><span class="subtotal">@string.Format("{0:N0}", invoice.TotalAmount)</span></strong>
+                                            </td>
+                                        </tr>
+                                        }
+                                    }
                                 </tbody>
                                 <tfoot>
                                     <tr>
@@ -198,10 +239,25 @@
 <script type="text/javascript">
 
     var LessonPackagesModels = @Html.Raw(Json.Encode(ViewBag.LessonPackagesModels));
+    var ProductsModels = @Html.Raw(Json.Encode(ViewBag.ProductsModels));
+    var ServicesModels = @Html.Raw(Json.Encode(ViewBag.ServicesModels));
     var VouchersModels = @Html.Raw(Json.Encode(ViewBag.VouchersModels));
 
     $(document).ready(function () {
+        if ('@SaleInvoiceItems' != '') {
+            //setValue('Customer_UserAccounts_Id', '@Model.Customer_UserAccounts_Id'); //doesn't work because dropdownlist is not loaded yet until user click on it and search for a customer
+            setValue('Notes', '@Model.Notes');
+            saleinvoiceitems = @Html.Raw(Json.Encode(SaleInvoiceItems));
 
+            //add key id
+            $.each(saleinvoiceitems, function (index, item) {
+                item_no += 1;
+                item.id = getRowId(item_no);
+                console.log(item_no + ', id: ' + item.id);
+            });
+
+            CalculateTotalAmount();
+        }
     });
 
     function applyLast() {
@@ -214,6 +270,8 @@
     }
 
     function getSelectedLessonPackage() { return getSelectedItem('LessonPackages', LessonPackagesModels); }
+    function getSelectedProduct() { return getSelectedItem('Products', ProductsModels); }
+    function getSelectedService() { return getSelectedItem('Services', ServicesModels); }
     function getSelectedVouchers() { return getSelectedItems('Vouchers', VouchersModels); }
 
     //ITEM LIST ====================================================================================================================================================
@@ -225,8 +283,6 @@
         if ($('#Qty').val() == 0 || $('#Qty').val() == null) {
             showMessage('Please enter Qty', 'Qty');
         } else {
-            var saleinvoiceitem = [];
-
             var description = "";
             var sessionhours = 0;
             var price = 0;
@@ -281,9 +337,27 @@
                     setValue('TutorTravelCost', 0);
                 }
             } else if ($('.tab-content .active').attr('id') == 'nav-Inventory') {
-                itemRow += $('#Products option:selected').text();
+                var item = getSelectedProduct();
+                if (item == null) {
+                    return showMessage('Please select Product', 'Products');
+                } else if (item.AvailableQty < qty) {
+                    return showMessage('Insufficient quantity. Available: ' + item.AvailableQty, 'Qty');
+                } else {
+                    Products_Id = item.Id;
+                    description = item.Name;
+                    price = item.SellPrice;
+                    subtotal = (qty * price) - discount - voucheramount;
+                }
             } else if ($('.tab-content .active').attr('id') == 'nav-Services') {
-                itemRow += $('#Services option:selected').text();
+                var item = getSelectedService();
+                if (item == null) {
+                    return showMessage('Please select Service', 'Services');
+                } else {
+                    Services_Id = item.Id;
+                    description = item.Name;
+                    price = item.SellPrice;
+                    subtotal = (qty * price) - discount - voucheramount;
+                }
             }
 
             item_no += 1;
@@ -307,23 +381,21 @@
                     +   '       <br/>Vouchers: ' + formatN0(-1 * voucheramount)
                     +   '   </td>'
                     +   '   <td class="align-top text-right">'
-                    +   '       <strong>' + formatN0(subtotal) + '</strong>'
+                    +   '       <strong><span class="subtotal">' + formatN0(subtotal) + '</span></strong>'
                     +   '   </td>'
                     +   '</tr>'
                 );
-            addTotalAmount(subtotal);
 
             setValue('Qty', 1);
             setValue('Discount', 0);
             resetListbox('Vouchers');
             setValue('ItemNotes', '');
 
-
             var saleinvoiceitem = {
                 id: id,
                 Id: null,
-                Amount: subtotal,
-                notes: itemnotes,
+                TotalAmount: subtotal,
+                Notes: itemnotes,
                 SaleInvoices_Id: emptyGuid(),
                 Description: description,
                 Qty: qty,
@@ -341,6 +413,8 @@
                 TutorTravelCost: TutorTravelCost
             };
             saleinvoiceitems.push(saleinvoiceitem);
+
+            CalculateTotalAmount(subtotal);
         }
     }
 
@@ -348,18 +422,24 @@
         var subtotal = 0;
         $.each(saleinvoiceitems, function (index, item) {
             if (item.id == id) {
-                subtotal = item.amount;
+                subtotal = item.TotalAmount;
                 saleinvoiceitems.splice(index, 1);
                 return false;
             }
         });
 
-        addTotalAmount(-1 * subtotal);
+        CalculateTotalAmount();
         $('#' + id).remove();
     }
 
-    function addTotalAmount(value) {
-        var total = sum($('#totalAmount').text(), value);
+    function CalculateTotalAmount() {
+        var total = 0;
+        console.log(saleinvoiceitems.length);
+        $.each(saleinvoiceitems, function (index, item) {
+            total += item.TotalAmount;
+        });
+
+        console.log('TOTAL: ' +total);
         $('#totalAmount').text(formatN0(total));
         $('#Amount').val(total);
     }

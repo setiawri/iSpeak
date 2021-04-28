@@ -22,12 +22,6 @@ namespace iSpeakWebApp.Controllers
             if (!UserAccountsController.getUserAccess(Session).Payments_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            if (rss != null && FILTER_DateFrom == null)
-            {
-                FILTER_chkDateFrom = true;
-                FILTER_DateFrom = DateTime.Today.AddMonths(-2);
-            }
-
             setViewBag(FILTER_Keyword, FILTER_InvoiceNo, null, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
             if (rss != null)
             {
@@ -36,7 +30,9 @@ namespace iSpeakWebApp.Controllers
             }
             else
             {
-                return View(get(FILTER_Keyword, FILTER_InvoiceNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo));
+                List<PaymentsModel> models = get(FILTER_Keyword, FILTER_InvoiceNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo)
+                    .OrderByDescending(x => x.No).ToList();
+                return View(models);
             }
         }
 
@@ -46,7 +42,9 @@ namespace iSpeakWebApp.Controllers
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
             setViewBag(FILTER_Keyword, FILTER_InvoiceNo, null, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
-            return View(get(FILTER_Keyword, FILTER_InvoiceNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo));
+            List<PaymentsModel> models = get(FILTER_Keyword, FILTER_InvoiceNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo)
+                .OrderByDescending(x => x.No).ToList();
+            return View(models);
         }
 
         /* CREATE *********************************************************************************************************************************************/

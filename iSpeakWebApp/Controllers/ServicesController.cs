@@ -130,7 +130,12 @@ namespace iSpeakWebApp.Controllers
 
         public static void setDropDownListViewBag(ControllerBase controller)
         {
-            controller.ViewBag.Services = new SelectList(get(), ServicesModel.COL_Id.Name, ServicesModel.COL_Name.Name);
+            controller.ViewBag.Services = new SelectList(get(1, 1), ServicesModel.COL_Id.Name, ServicesModel.COL_DDLDescription.Name);
+        }
+
+        public static void setViewBag(ControllerBase controller)
+        {
+            controller.ViewBag.ServicesModels = get(1, 1);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
@@ -150,14 +155,16 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public List<ServicesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Active, FILTER_Keyword); }
-        public ServicesModel get(Guid Id) { return get(Id, null, null).FirstOrDefault(); }
-        public static List<ServicesModel> get() { return get(null, null, null); }
-        public static List<ServicesModel> get(Guid? Id, int? Active, string FILTER_Keyword)
+        public List<ServicesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Active, null, FILTER_Keyword); }
+        public ServicesModel get(Guid Id) { return get(Id, null, null, null).FirstOrDefault(); }
+        public static List<ServicesModel> get(int? Active, int? ForSale) { return get(null, Active, ForSale, null); }
+        public static List<ServicesModel> get() { return get(null, null, null, null); }
+        public static List<ServicesModel> get(Guid? Id, int? Active, int? ForSale, string FILTER_Keyword)
         {
             return new DBContext().Database.SqlQuery<ServicesModel>(@"
                     SELECT Services.*,
-                        Units.Name AS Units_Name
+                        Units.Name AS Units_Name,
+                        Services.Name + ' (' + FORMAT(Services.SellPrice,'N0') + ')' AS DDLDescription
                     FROM Services
                         LEFT JOIN Units ON Units.Id = Services.Units_Id
                     WHERE 1=1
@@ -165,11 +172,13 @@ namespace iSpeakWebApp.Controllers
 						AND (@Id IS NOT NULL OR (
                             (@Active IS NULL OR Services.Active = @Active)
     						AND (@FILTER_Keyword IS NULL OR (Services.Name LIKE '%'+@FILTER_Keyword+'%'))
+                            AND (@ForSale IS NULL OR Services.ForSale = @ForSale)
                         ))
 					ORDER BY Services.Name ASC
                 ",
                 DBConnection.getSqlParameter(ServicesModel.COL_Id.Name, Id),
                 DBConnection.getSqlParameter(ServicesModel.COL_Active.Name, Active),
+                DBConnection.getSqlParameter(ServicesModel.COL_ForSale.Name, ForSale),
                 DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
             ).ToList();
         }

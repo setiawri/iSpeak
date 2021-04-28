@@ -132,7 +132,12 @@ namespace iSpeakWebApp.Controllers
 
         public static void setDropDownListViewBag(ControllerBase controller)
         {
-            controller.ViewBag.Products = new SelectList(get(), ProductsModel.COL_Id.Name, ProductsModel.COL_Name.Name);
+            controller.ViewBag.Products = new SelectList(get(1, 1).OrderBy(x => x.Description), ProductsModel.COL_Id.Name, ProductsModel.COL_DDLDescription.Name);
+        }
+
+        public static void setViewBag(ControllerBase controller)
+        {
+            controller.ViewBag.ProductsModels = get(1, 1);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
@@ -152,26 +157,36 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public List<ProductsModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Active, FILTER_Keyword); }
-        public ProductsModel get(Guid Id) { return get(Id, null, null).FirstOrDefault(); }
-        public static List<ProductsModel> get() { return get(null, null, null); }
-        public static List<ProductsModel> get(Guid? Id, int? Active, string FILTER_Keyword)
+        public List<ProductsModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Active, null, FILTER_Keyword); }
+        public ProductsModel get(Guid Id) { return get(Id, null, null, null).FirstOrDefault(); }
+        public static List<ProductsModel> get(int? Active, int? ForSale) { return get(null, Active, ForSale, null); }
+        public static List<ProductsModel> get() { return get(null, null, null, null); }
+        public static List<ProductsModel> get(Guid? Id, int? Active, int? ForSale, string FILTER_Keyword)
         {
             return new DBContext().Database.SqlQuery<ProductsModel>(@"
                     SELECT Products.*,
-                        Units.Name AS Units_Name
+                        Units.Name AS Units_Name,
+                        ISNULL(InventoryCount.AvailableQty,0) AS AvailableQty,
+                        Products.Name + ' (Available: ' + FORMAT(ISNULL(InventoryCount.AvailableQty,0),'N0') + ') ' + FORMAT(Products.SellPrice,'N0') AS DDLDescription
                     FROM Products
                         LEFT JOIN Units ON Units.Id = Products.Units_Id
+                        LEFT JOIN (
+                                SELECT Inventory.Products_Id, SUM(Inventory.AvailableQty) AS AvailableQty
+                                FROM Inventory
+                                GROUP BY Products_Id
+                            ) InventoryCount ON InventoryCount.Products_Id = Products.Id
                     WHERE 1=1
 						AND (@Id IS NULL OR Products.Id = @Id)
 						AND (@Id IS NOT NULL OR (
                             (@Active IS NULL OR Products.Active = @Active)
     						AND (@FILTER_Keyword IS NULL OR (Products.Name LIKE '%'+@FILTER_Keyword+'%'))
+                            AND (@ForSale IS NULL OR Products.ForSale = @ForSale)
                         ))
 					ORDER BY Products.Name ASC
                 ",
                 DBConnection.getSqlParameter(ProductsModel.COL_Id.Name, Id),
                 DBConnection.getSqlParameter(ProductsModel.COL_Active.Name, Active),
+                DBConnection.getSqlParameter(ProductsModel.COL_ForSale.Name, ForSale),
                 DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
             ).ToList();
         }

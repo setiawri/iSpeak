@@ -84,6 +84,11 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_TravelCost.Name, model.TravelCost),
                     DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_TutorTravelCost.Name, model.TutorTravelCost)
                 );
+
+                if (model.Products_Id != null)
+                {
+
+                }
             }
         }
 
