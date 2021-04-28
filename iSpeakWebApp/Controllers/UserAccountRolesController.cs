@@ -223,6 +223,12 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.PettyCashRecords_View, model.PettyCashRecords_View, UserAccountRolesModel.COL_PettyCashRecords_View.LogDisplay);
                     log = Helper.append(log, originalModel.PettyCashRecords_Approve, model.PettyCashRecords_Approve, UserAccountRolesModel.COL_PettyCashRecords_Approve.LogDisplay);
 
+                    //Inventory
+                    log = Helper.append(log, originalModel.Inventory_Notes, model.Inventory_Notes, UserAccountRolesModel.COL_Inventory_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.Inventory_Add, model.Inventory_Add, UserAccountRolesModel.COL_Inventory_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.Inventory_Edit, model.Inventory_Edit, UserAccountRolesModel.COL_Inventory_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.Inventory_View, model.Inventory_View, UserAccountRolesModel.COL_Inventory_View.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -353,6 +359,11 @@ namespace iSpeakWebApp.Controllers
                 if (item.PettyCashRecords_Edit) model.PettyCashRecords_Edit = true;
                 if (item.PettyCashRecords_View) model.PettyCashRecords_View = true;
                 if (item.PettyCashRecords_Approve) model.PettyCashRecords_Approve = true;
+
+                //Inventory
+                if (item.Inventory_Add) model.Inventory_Add = true;
+                if (item.Inventory_Edit) model.Inventory_Edit = true;
+                if (item.Inventory_View) model.Inventory_View = true;
 
             }
 

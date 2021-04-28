@@ -373,7 +373,7 @@ namespace iSpeakWebApp.Models
         public bool Payments_Approve { get; set; }
         public static ModelMember COL_Payments_Approve = new ModelMember { Name = "Payments_Approve", Display = "Approve", LogDisplay = ActivityLogsController.editBooleanFormat("Payments Approve") };
 
-        /* SERVICES *******************************************************************************************************************************************/
+        /* PETTY CASH *****************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string PettyCashRecords_Notes { get; set; }
@@ -394,6 +394,24 @@ namespace iSpeakWebApp.Models
         [Display(Name = "Approve")]
         public bool PettyCashRecords_Approve { get; set; }
         public static ModelMember COL_PettyCashRecords_Approve = new ModelMember { Name = "PettyCashRecords_Approve", Display = "Approve", LogDisplay = ActivityLogsController.editBooleanFormat("PettyCashRecords Approve") };
+
+        /* INVENTORY ******************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string Inventory_Notes { get; set; }
+        public static ModelMember COL_Inventory_Notes = new ModelMember { Name = "Inventory_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Inventory Notes") };
+
+        [Display(Name = "Add")]
+        public bool Inventory_Add { get; set; }
+        public static ModelMember COL_Inventory_Add = new ModelMember { Name = "Inventory_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("Inventory Add") };
+
+        [Display(Name = "View")]
+        public bool Inventory_View { get; set; }
+        public static ModelMember COL_Inventory_View = new ModelMember { Name = "Inventory_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("Inventory View") };
+
+        [Display(Name = "Edit")]
+        public bool Inventory_Edit { get; set; }
+        public static ModelMember COL_Inventory_Edit = new ModelMember { Name = "Inventory_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Inventory Edit") };
 
         /******************************************************************************************************************************************************/
 
