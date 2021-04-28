@@ -5,7 +5,6 @@ using iSpeakWebApp.Controllers;
 
 namespace iSpeakWebApp.Models
 {
-    [Table("SaleInvoiceItems_Inventory")]
     public class SaleInvoiceItems_InventoryModel
     {
         [Key]
@@ -33,5 +32,6 @@ namespace iSpeakWebApp.Models
 
         /******************************************************************************************************************************************************/
 
+        public int Balance { get; set; } = 0;
     }
 }

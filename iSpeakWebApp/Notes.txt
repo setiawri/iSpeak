@@ -26,6 +26,11 @@ TO DO:
 
 IMPROVEMENTS:
 
+Inventory: 
+- remove availableqty and compute realtime
+- role access to buy price and edit buy price
+- add date and supplier filter
+
 PettyCashRecordsModel: UserAccounts_Id shoud not be nullable. there is a problem setting 2 null values in database
 
 Add Banks master data and role access

@@ -1,0 +1,99 @@
+﻿@model IEnumerable<iSpeakWebApp.Models.InventoryModel>
+
+@{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    string ControllerName = "Inventory";
+    ViewBag.SelectedNavigationMenu = "Inventory";
+    ViewBag.Title = "INVENTORY";
+    ViewBag.Subtitle = "Index";
+}
+
+<div class="content-wrapper">
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm("Index", ControllerName, FormMethod.Post))
+        {
+            <!-- Form inputs -->
+            <div class="card animated bounceInLeft">
+                <div class="card-header header-elements-inline pb-1">
+                    <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row mx-0">
+                        @if (access.Inventory_Add)
+                        {
+                            <div class="mr-2">
+                                <label class="mb-0">&nbsp;</label>
+                                <div><a href="javascript:void(0)" onclick="Action('Create', '@ControllerName')" class="btn btn-success">CREATE<i class="icon-plus22 ml-2"></i></a></div>
+                            </div>
+                        }
+                        <div class="row ml-0 mr-2" style="width:100px;">
+                            <label class="mb-0">Keyword</label>
+                            <div class="input-group">
+                                <input type="text" name="FILTER_Keyword" id="FILTER_Keyword" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="ml-0 mr-2">
+                            <label class="mb-0">&nbsp;</label>
+                            <button type="submit" onclick="showLoadingSpinner()" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>LOAD</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover datatable">
+                            <thead>
+                                <tr>
+                                    <th class="d-none">@Html.DisplayNameFor(model => model.InitialRowNumber)</th>
+                                    <th style="width:50px;">@Html.DisplayNameFor(model => model.ReceiveDate)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Products_Id)</th>
+                                    <th class="text-right" style="width:50px;">@Html.DisplayNameFor(model => model.GlobalAvailableQty)</th>
+                                    <th class="text-right" style="width:50px;">@Html.DisplayNameFor(model => model.AvailableQty)</th>
+                                    <th class="text-right" style="width:50px;">@Html.DisplayNameFor(model => model.BuyQty)</th>
+                                    <th style="width:50px;">@Html.DisplayNameFor(model => model.Suppliers_Id)</th>
+                                    <th class="text-right" style="width:50px;">@Html.DisplayNameFor(model => model.BuyPrice)</th>
+                                    <th class="non-searchable non-sortable" style="width:150px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="d-none">@Html.DisplayFor(modelItem => item.InitialRowNumber)</td>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.ReceiveDate)</td>
+                                            <td class="align-top">
+                                                @Html.DisplayFor(modelItem => item.Products_Name)
+                                                @if (!string.IsNullOrEmpty(item.Notes))
+                                                {
+                                                    <br />@:Notes: @item.Notes
+                                                }
+                                            </td>
+                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.GlobalAvailableQty)</td>
+                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.AvailableQty)</td>
+                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.BuyQty)</td>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Suppliers_Name)</td>
+                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.BuyPrice)</td>
+                                            <td>
+                                                <a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Inventory @item.Products_Name (Initial qty: @string.Format("{0:N0}",item.BuyQty))', 'medium', 'GetDetails', '@ControllerName')">Sales</a>
+                                                @if (access.Inventory_Edit)
+                                                {
+                                                    @:• <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a>
+                                                }
+                                                • <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- /form inputs -->
+        }
+    </div>
+    <!-- /content area -->
+</div>

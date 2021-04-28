@@ -1,0 +1,98 @@
+﻿@model iSpeakWebApp.Models.InventoryModel
+
+@{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    string ControllerName = "Inventory";
+    ViewBag.SelectedNavigationMenu = "Settings";
+    ViewBag.Title = "INVENTORY";
+    ViewBag.Subtitle = "Edit";
+}
+
+<div class="content-wrapper">
+
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.Branches_Id)
+            @Html.HiddenFor(model => model.AvailableQty)
+            <!-- Form inputs -->
+            <div class="card">
+                <div class="card-header header-elements-inline">
+                    <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
+                </div>
+                <div class="card-body">
+                    <fieldset class="mb-3">
+                        <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Subtitle</legend>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ReceiveDate, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
+                            <div class="col-lg-2">
+                                <div class="input-group">
+                                    @Html.EditorFor(model => model.ReceiveDate, new { htmlAttributes = new { @class = "form-control daterange-picker" } })
+                                    <span class="input-group-append">
+                                        <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                    </span>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.ReceiveDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.Products_Id, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
+                            <div class="col-lg-4">
+                                @Html.DropDownListFor(model => model.Products_Id, ViewBag.Products as SelectList, "Pilih", new { @class = "form-control select2" })
+                                @Html.ValidationMessageFor(model => model.Products_Id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.Suppliers_Id, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
+                            <div class="col-lg-4">
+                                @Html.DropDownListFor(model => model.Suppliers_Id, ViewBag.Suppliers as SelectList, "Pilih", new { @class = "form-control select2" })
+                                @Html.ValidationMessageFor(model => model.Suppliers_Id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.BuyQty, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                            <div class="col-lg-2">
+                                @Html.EditorFor(model => model.BuyQty, new { htmlAttributes = new { @class = "form-control positiveintegeronly", @type = "text" } })
+                                @Html.ValidationMessageFor(model => model.BuyQty, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.BuyPrice, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                            <div class="col-lg-2">
+                                @Html.EditorFor(model => model.BuyPrice, new { htmlAttributes = new { @class = "form-control positiveintegeronly", @type = "text" } })
+                                @Html.ValidationMessageFor(model => model.BuyPrice, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                            <div class="col-lg-2">
+                                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    </fieldset>
+
+                    @if (access.Inventory_Edit)
+                    {
+                        <div>
+                            <button type="submit" onclick="showLoadingSpinner()" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
+                            <a href="javascript:void(0)" onclick="Action('Index', '@ControllerName')" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
+                        </div>
+                    }
+                </div>
+            </div>
+            <!-- /form inputs -->
+        }
+    </div>
+    <!-- /content area -->
+</div>

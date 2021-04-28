@@ -128,6 +128,7 @@
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Controllers\ActivityLogsController.cs" />
+    <Compile Include="Controllers\SaleInvoiceItems_InventoryController.cs" />
     <Compile Include="Controllers\PaymentItemsController.cs" />
     <Compile Include="Controllers\PettyCashRecordsController.cs" />
     <Compile Include="Controllers\SaleInvoiceItemsController.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Controllers\ServicesController.cs" />
     <Compile Include="Controllers\ConsignmentsController.cs" />
     <Compile Include="Controllers\ExpenseCategoriesController.cs" />
+    <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\UnitsController.cs" />
     <Compile Include="Controllers\SuppliersController.cs" />
     <Compile Include="Controllers\VouchersController.cs" />
@@ -166,6 +168,7 @@
     <Compile Include="Models\ExpenseCategoriesModel.cs" />
     <Compile Include="Models\ProductsModel.cs" />
     <Compile Include="Models\ServicesModel.cs" />
+    <Compile Include="Models\InventoryModel.cs" />
     <Compile Include="Models\UnitsModel.cs" />
     <Compile Include="Models\SuppliersModel.cs" />
     <Compile Include="Models\VouchersModel.cs" />
@@ -253,6 +256,9 @@
     <Content Include="Views\Payments\Print.cshtml" />
     <Content Include="Views\PettyCashRecords\Index.cshtml" />
     <Content Include="Views\PettyCashRecords\Create.cshtml" />
+    <Content Include="Views\Inventory\Edit.cshtml" />
+    <Content Include="Views\Inventory\Index.cshtml" />
+    <Content Include="Views\Inventory\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -130,14 +130,16 @@ namespace iSpeakWebApp.Controllers
             UnitsController.setDropDownListViewBag(this);
         }
 
-        public static void setDropDownListViewBag(ControllerBase controller)
+        public static void setDropDownListViewBag(ControllerBase controller, string dataTextField) { setDropDownListViewBag(controller, dataTextField, null, null); }
+        public static void setDropDownListViewBag(ControllerBase controller, string dataTextField, int? Active, int? ForSale)
         {
-            controller.ViewBag.Products = new SelectList(get(1, 1).OrderBy(x => x.Description), ProductsModel.COL_Id.Name, ProductsModel.COL_DDLDescription.Name);
+            controller.ViewBag.Products = new SelectList(get(Active, ForSale).OrderBy(x => x.Description), ProductsModel.COL_Id.Name, dataTextField);
         }
 
-        public static void setViewBag(ControllerBase controller)
+        public static void setViewBag(ControllerBase controller) { setViewBag(controller, null, null); }
+        public static void setViewBag(ControllerBase controller, int? Active, int? ForSale)
         {
-            controller.ViewBag.ProductsModels = get(1, 1);
+            controller.ViewBag.ProductsModels = get(Active, ForSale);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/

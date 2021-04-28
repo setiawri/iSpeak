@@ -91,12 +91,16 @@
                         Sessions
                     </a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a href="@Url.Action("Index", "Inventory", new { rss=1 })" class="navbar-nav-link">
-                        <i class="icon-clipboard6 mr-2"></i>
-                        Inventory
-                    </a>
-                </li>
+                @if (access.Inventory_View)
+                {
+                    <li class="nav-item">
+                        <a href="@Url.Action("Index", "Inventory", new { rss=1 })" class="navbar-nav-link">
+                            <i class="icon-meter2 mr-2"></i>
+                            Inventory
+                        </a>
+                    </li>
+                }
+
                 @if (access.PettyCashRecords_View)
                 {
                     <li id="Menu_PettyCashRecords" class="nav-item dropdown">

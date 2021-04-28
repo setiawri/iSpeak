@@ -136,7 +136,7 @@ namespace iSpeakWebApp.Controllers
             ViewBag.FILTER_PaymentNo = FILTER_PaymentNo;
             LessonPackagesController.setDropDownListViewBag(this);
             LessonPackagesController.setViewBag(this);
-            ProductsController.setDropDownListViewBag(this);
+            ProductsController.setDropDownListViewBag(this, ProductsModel.COL_DDLDescription.Name, 1, 1);
             ProductsController.setViewBag(this);
             ServicesController.setDropDownListViewBag(this);
             ServicesController.setViewBag(this);
