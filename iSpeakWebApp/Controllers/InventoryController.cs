@@ -94,6 +94,7 @@ namespace iSpeakWebApp.Controllers
             if (ModelState.IsValid)
             {
                 InventoryModel originalModel = get(Session, modifiedModel.Id);
+                modifiedModel.AvailableQty += modifiedModel.BuyQty - originalModel.BuyQty;
 
                 string log = string.Empty;
                 log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, InventoryModel.COL_Notes.LogDisplay);
@@ -173,10 +174,11 @@ namespace iSpeakWebApp.Controllers
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public List<InventoryModel> get(HttpSessionStateBase Session, string FILTER_Keyword) { return get(Session, null, FILTER_Keyword); }
-        public InventoryModel get(HttpSessionStateBase Session, Guid Id) { return get(Session, Id, null).FirstOrDefault(); }
-        public static List<InventoryModel> get(HttpSessionStateBase Session) { return get(Session, null, null); }
-        public static List<InventoryModel> get(HttpSessionStateBase Session, Guid? Id, string FILTER_Keyword)
+        public static List<InventoryModel> get_by_Products_Id(HttpSessionStateBase Session, Guid Products_Id) { return get(Session, null, Products_Id, null); }
+        public List<InventoryModel> get(HttpSessionStateBase Session, string FILTER_Keyword) { return get(Session, null, null, FILTER_Keyword); }
+        public InventoryModel get(HttpSessionStateBase Session, Guid Id) { return get(Session, Id, null, null).FirstOrDefault(); }
+        public static List<InventoryModel> get(HttpSessionStateBase Session) { return get(Session, null, null, null); }
+        public static List<InventoryModel> get(HttpSessionStateBase Session, Guid? Id, Guid? Products_Id, string FILTER_Keyword)
         {
             return new DBContext().Database.SqlQuery<InventoryModel>(@"
                         SELECT Inventory.*,
@@ -198,11 +200,13 @@ namespace iSpeakWebApp.Controllers
 							AND (@Id IS NULL OR Inventory.Id = @Id)
 							AND (@Id IS NOT NULL OR (
     							(@FILTER_Keyword IS NULL OR (Products.Name LIKE '%'+@FILTER_Keyword+'%'))
+    							AND (@Products_Id IS NULL OR Inventory.Products_Id = @Products_Id)
                             ))
 						ORDER BY Inventory.ReceiveDate DESC
                     ",
                     DBConnection.getSqlParameter(InventoryModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(InventoryModel.COL_Branches_Id.Name, Helper.getActiveBranchId(Session)),
+                    DBConnection.getSqlParameter(InventoryModel.COL_Products_Id.Name, Products_Id),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
         }

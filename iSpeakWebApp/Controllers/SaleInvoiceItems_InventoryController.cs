@@ -40,7 +40,7 @@ namespace iSpeakWebApp.Controllers
                 ).ToList();
         }
 
-        public void add(SaleInvoiceItems_InventoryModel model)
+        public static void add(DBContext db, SaleInvoiceItems_InventoryModel model)
         {
             db.Database.ExecuteSqlCommand(@"
                 INSERT INTO SaleInvoiceItems_Inventory   (Id, SaleInvoiceItems_Id, Inventory_Id, Qty) 

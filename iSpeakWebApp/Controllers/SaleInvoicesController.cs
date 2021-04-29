@@ -406,7 +406,7 @@ namespace iSpeakWebApp.Controllers
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
             db.SaveChanges();
 
-            SaleInvoiceItemsController.add(SaleInvoiceItems, model.Id);
+            SaleInvoiceItemsController.add(Session, SaleInvoiceItems, model.Id);
         }
 
         /******************************************************************************************************************************************************/

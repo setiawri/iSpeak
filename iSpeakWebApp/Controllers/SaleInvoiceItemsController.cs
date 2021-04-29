@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data;
+using System.Web;
 using System.Linq;
 using System.Collections.Generic;
 using System.Web.Mvc;
@@ -55,39 +55,64 @@ namespace iSpeakWebApp.Controllers
             ).ToList();
         }
 
-        public static void add(List<SaleInvoiceItemsModel> models, Guid SaleInvoices_Id)
+        public static void add(HttpSessionStateBase Session, List<SaleInvoiceItemsModel> SaleInvoiceItems, Guid SaleInvoices_Id)
         {
             DBContext db = new DBContext();
             int rowNo = 0;
-            foreach(SaleInvoiceItemsModel model in models)
+            foreach(SaleInvoiceItemsModel saleInvoiceItem in SaleInvoiceItems)
             {
                 db.Database.ExecuteSqlCommand(@"
                         INSERT INTO SaleInvoiceItems   (Id, Notes, RowNo, SaleInvoices_Id, Description, Qty, Price, DiscountAmount, Vouchers, VouchersAmount, VouchersName, Products_Id, Services_Id, LessonPackages_Id, SessionHours, SessionHours_Remaining, TravelCost, TutorTravelCost) 
                                                 VALUES(@Id,@Notes,@RowNo,@SaleInvoices_Id,@Description,@Qty,@Price,@DiscountAmount,@Vouchers,@VouchersAmount,@VouchersName,@Products_Id,@Services_Id,@LessonPackages_Id,@SessionHours,@SessionHours_Remaining,@TravelCost,@TutorTravelCost);
                     ",
                     DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Id.Name, Guid.NewGuid()),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Notes.Name, model.Notes),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Notes.Name, saleInvoiceItem.Notes),
                     DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_RowNo.Name, ++rowNo),
                     DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SaleInvoices_Id.Name, SaleInvoices_Id),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Description.Name, model.Description),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Qty.Name, model.Qty),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Price.Name, model.Price),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_DiscountAmount.Name, model.DiscountAmount),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Vouchers.Name, model.Vouchers),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_VouchersName.Name, model.VouchersName),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_VouchersAmount.Name, model.VouchersAmount),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Products_Id.Name, model.Products_Id),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Services_Id.Name, model.Services_Id),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_LessonPackages_Id.Name, model.LessonPackages_Id),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SessionHours.Name, model.SessionHours),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SessionHours_Remaining.Name, model.SessionHours_Remaining),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_TravelCost.Name, model.TravelCost),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_TutorTravelCost.Name, model.TutorTravelCost)
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Description.Name, saleInvoiceItem.Description),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Qty.Name, saleInvoiceItem.Qty),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Price.Name, saleInvoiceItem.Price),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_DiscountAmount.Name, saleInvoiceItem.DiscountAmount),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Vouchers.Name, saleInvoiceItem.Vouchers),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_VouchersName.Name, saleInvoiceItem.VouchersName),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_VouchersAmount.Name, saleInvoiceItem.VouchersAmount),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Products_Id.Name, saleInvoiceItem.Products_Id),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Services_Id.Name, saleInvoiceItem.Services_Id),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_LessonPackages_Id.Name, saleInvoiceItem.LessonPackages_Id),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SessionHours.Name, saleInvoiceItem.SessionHours),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SessionHours_Remaining.Name, saleInvoiceItem.SessionHours_Remaining),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_TravelCost.Name, saleInvoiceItem.TravelCost),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_TutorTravelCost.Name, saleInvoiceItem.TutorTravelCost)
                 );
 
-                if (model.Products_Id != null)
+                if (saleInvoiceItem.Products_Id != null)
                 {
+                    int orderQty = saleInvoiceItem.Qty;
+                    List<InventoryModel> inventoryList = InventoryController.get_by_Products_Id(Session, (Guid)saleInvoiceItem.Products_Id)
+                        .Where(x => x.AvailableQty > 0)
+                        .OrderBy(x=>x.ReceiveDate)
+                        .ToList();
 
+                    int qty = 0;
+                    foreach (InventoryModel inventory in inventoryList)
+                    {
+                        if(inventory.AvailableQty >= orderQty)
+                            qty = orderQty;
+                        else
+                            qty = inventory.AvailableQty;
+
+                        SaleInvoiceItems_InventoryController.add(db, new SaleInvoiceItems_InventoryModel
+                        {
+                            Id = Guid.NewGuid(),
+                            SaleInvoiceItems_Id = saleInvoiceItem.Id,
+                            Inventory_Id = inventory.Id,
+                            Qty = qty
+                        });
+
+                        orderQty -= qty;
+                        if (orderQty == 0)
+                            break;
+                    }
                 }
             }
         }

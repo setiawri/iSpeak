@@ -12,6 +12,8 @@
 -- ALTER TABLE SaleInvoiceItems DROP SaleInvoiceItems_Vouchers_Id;
 -- DROP TABLE SaleInvoiceItems_Vouchers
 -- ALTER TABLE Payments DROP Notes_Cancel;
+-- ALTER TABLE Inventory DROP AvailableQty;
+GO
 
 -- MANUAL TABLE MODIFICATIONS ===========================================================================================
 
