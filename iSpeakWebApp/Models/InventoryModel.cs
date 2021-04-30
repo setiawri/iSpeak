@@ -63,5 +63,8 @@ namespace iSpeakWebApp.Models
         public int GlobalAvailableQty { get; set; } = 0;
 
         public long InitialRowNumber { get; set; } = 0;
+
+        [Display(Name = "Unit")]
+        public string Units_Name { get; set; } = string.Empty;
     }
 }

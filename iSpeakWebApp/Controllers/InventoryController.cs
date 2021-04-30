@@ -61,7 +61,6 @@ namespace iSpeakWebApp.Controllers
             if (ModelState.IsValid)
             {
                 model.Id = Guid.NewGuid();
-                model.AvailableQty = model.BuyQty;
                 model.Branches_Id = Helper.getActiveBranchId(Session);
                 add(model);
                 return RedirectToAction(nameof(Index), new { id = model.Id, FILTER_Keyword = FILTER_Keyword });
@@ -94,7 +93,6 @@ namespace iSpeakWebApp.Controllers
             if (ModelState.IsValid)
             {
                 InventoryModel originalModel = get(Session, modifiedModel.Id);
-                modifiedModel.AvailableQty += modifiedModel.BuyQty - originalModel.BuyQty;
 
                 string log = string.Empty;
                 log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, InventoryModel.COL_Notes.LogDisplay);
@@ -102,7 +100,6 @@ namespace iSpeakWebApp.Controllers
                 log = Helper.append<ProductsModel>(log, originalModel.Products_Id, modifiedModel.Products_Id, InventoryModel.COL_Products_Id.LogDisplay);
                 log = Helper.append(log, originalModel.ReceiveDate, modifiedModel.ReceiveDate, InventoryModel.COL_ReceiveDate.LogDisplay);
                 log = Helper.append(log, originalModel.BuyQty, modifiedModel.BuyQty, InventoryModel.COL_BuyQty.LogDisplay);
-                log = Helper.append(log, originalModel.AvailableQty, modifiedModel.AvailableQty, InventoryModel.COL_AvailableQty.LogDisplay);
                 log = Helper.append<SuppliersModel>(log, originalModel.Suppliers_Id, modifiedModel.Suppliers_Id, InventoryModel.COL_Suppliers_Id.LogDisplay);
                 log = Helper.append(log, originalModel.BuyPrice, modifiedModel.BuyPrice, InventoryModel.COL_BuyPrice.LogDisplay);
 
@@ -123,7 +120,7 @@ namespace iSpeakWebApp.Controllers
         public void setViewBag(string FILTER_Keyword)
         {
             ViewBag.FILTER_Keyword = FILTER_Keyword;
-            ProductsController.setDropDownListViewBag(this, ProductsModel.COL_Name.Name);
+            ProductsController.setDropDownListViewBag(Session, this, ProductsModel.COL_Name.Name);
             SuppliersController.setDropDownListViewBag(this);
         }
 
@@ -131,15 +128,15 @@ namespace iSpeakWebApp.Controllers
         {
             UserAccountRolesModel access = UserAccountsController.getUserAccess(Session);
 
-            List<SaleInvoiceItems_InventoryModel> models = SaleInvoiceItems_InventoryController.get(null, null, id);
+            List<SaleInvoiceItems_InventoryModel> models = SaleInvoiceItems_InventoryController.get(Session, null, null, id);
             string content = string.Format(@"
                     <div class='table-responsive'>
                         <table class='table table-striped table-bordered'>
                             <thead>
                                 <tr>
                                     <th>Invoice</th>
-                                    <th class='text-right'>Qty</th>
-                                    <th class='text-right'>Balance</th>
+                                    <th class='text-right' style='width:70px;'>Qty</th>
+                                    <th class='text-right' style='width:70px;'>Balance</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -153,12 +150,13 @@ namespace iSpeakWebApp.Controllers
 
                 content += string.Format(@"
                             <tr>
-                                <td>{0}</td>
-                                <td class='text-right'>{1:N0}</td>
+                                <td>{0}{1}</td>
                                 <td class='text-right'>{2:N0}</td>
+                                <td class='text-right'>{3:N0}</td>
                             </tr>
                         ",
                         saleInvoiceLink,
+                        !model.SaleInvoices_Cancelled ? string.Empty : "<span class='badge badge-warning ml-2' style='width:70px;'>CANCELLED</span>",
                         model.Qty,
                         model.Balance
                     );
@@ -181,19 +179,70 @@ namespace iSpeakWebApp.Controllers
         public static List<InventoryModel> get(HttpSessionStateBase Session, Guid? Id, Guid? Products_Id, string FILTER_Keyword)
         {
             return new DBContext().Database.SqlQuery<InventoryModel>(@"
+
                         SELECT Inventory.*,
                             Products.Name AS Products_Name,
+                            Units.Name AS Units_Name,
                             Suppliers.Name AS Suppliers_Name,
+                            ISNULL(Inventory.BuyQty,0) - ISNULL(SaleInvoiceItemsCount.SaleQty,0) + ISNULL(SaleReturnItemsCount.ReturnQty,0) AS AvailableQty,
                             ISNULL(GlobalInventory.AvailableQty,0) AS GlobalAvailableQty,
                             ROW_NUMBER() OVER (ORDER BY Inventory.ReceiveDate DESC) AS InitialRowNumber
                         FROM Inventory
                             LEFT JOIN Products ON Products.Id = Inventory.Products_Id
-                            LEFT JOIN Suppliers ON Suppliers.Id = Inventory.Suppliers_Id
+                            LEFT JOIN Units ON Units.Id = Products.Units_Id
+                            LEFT JOIN Suppliers ON Suppliers.Id = Inventory.Suppliers_Id     
                             LEFT JOIN (
-                                    SELECT Inventory.Products_Id, SUM(Inventory.AvailableQty) AS AvailableQty
-                                    FROM Inventory
-                                    WHERE Inventory.Branches_Id = @Branches_Id
-                                    GROUP BY Inventory.Products_Id
+                                    SELECT Inventory.Id AS Inventory_Id, SUM(SaleInvoiceItems_Inventory.Qty) AS SaleQty
+                                    FROM SaleInvoiceItems_Inventory
+                                        LEFT JOIN SaleInvoiceItems ON SaleInvoiceItems.Id = SaleInvoiceItems_Inventory.SaleInvoiceItems_Id
+                                        LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
+                                        LEFT JOIN Inventory ON Inventory.Id = SaleInvoiceItems_Inventory.Inventory_Id
+                                        LEFT JOIN Products ON Products.Id = Inventory.Products_Id
+                                    WHERE SaleInvoices.Cancelled = 0 
+                                        AND SaleInvoices.Branches_Id = @Branches_Id
+                                    GROUP BY Inventory.Id
+                                ) SaleInvoiceItemsCount ON SaleInvoiceItemsCount.Inventory_Id = Inventory.Id
+                            LEFT JOIN (
+                                    SELECT Inventory.Id AS Inventory_Id, SUM(SaleInvoiceItems_Inventory.Qty) AS ReturnQty
+                                    FROM SaleInvoiceItems_Inventory
+                                        LEFT JOIN SaleInvoiceItems ON SaleInvoiceItems.Id = SaleInvoiceItems_Inventory.SaleInvoiceItems_Id
+                                        LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
+                                        LEFT JOIN Inventory ON Inventory.Id = SaleInvoiceItems_Inventory.Inventory_Id
+                                        LEFT JOIN Products ON Products.Id = Inventory.Products_Id
+                                    WHERE SaleInvoices.Cancelled = 0 
+                                        AND SaleInvoices.Branches_Id = @Branches_Id
+                                        AND SaleInvoiceItems_Inventory.SaleInvoiceItems_Id IN (SELECT SaleReturnItems.SaleInvoiceItems_Id FROM SaleReturnItems)
+                                    GROUP BY Inventory.Id
+                                ) SaleReturnItemsCount ON SaleReturnItemsCount.Inventory_Id = Inventory.Id
+                            LEFT JOIN (
+                                    SELECT Products.Id AS Products_Id, 
+                                        ISNULL(InventoryCount.BuyQty,0) - ISNULL(SaleInvoiceItemsCount.SaleQty,0) + ISNULL(SaleReturnItemsCount.ReturnQty,0) AS AvailableQty
+                                    FROM Products
+                                        LEFT JOIN (
+                                                SELECT Inventory.Products_Id, SUM(Inventory.BuyQty) AS BuyQty
+                                                FROM Inventory
+                                                WHERE Inventory.Branches_Id = @Branches_Id
+                                                GROUP BY Products_Id
+                                            ) InventoryCount ON InventoryCount.Products_Id = Products.Id
+                                        LEFT JOIN (
+                                                SELECT Inventory.Products_Id, SUM(SaleInvoiceItems_Inventory.Qty) AS SaleQty
+                                                FROM SaleInvoiceItems_Inventory
+                                                    LEFT JOIN SaleInvoiceItems ON SaleInvoiceItems.Id = SaleInvoiceItems_Inventory.SaleInvoiceItems_Id
+                                                    LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
+                                                    LEFT JOIN Inventory ON Inventory.Id = SaleInvoiceItems_Inventory.Inventory_Id
+                                                    LEFT JOIN Products ON Products.Id = Inventory.Products_Id
+                                                WHERE SaleInvoices.Cancelled = 0 AND SaleInvoices.Branches_Id = @Branches_Id
+                                                GROUP BY Inventory.Products_Id
+                                            ) SaleInvoiceItemsCount ON SaleInvoiceItemsCount.Products_Id = Products.Id
+                                        LEFT JOIN (
+                                                SELECT Products.Id AS Products_Id, SUM(SaleReturnItems.Qty) AS ReturnQty
+                                                FROM SaleReturnItems
+                                                    LEFT JOIN SaleInvoiceItems ON SaleInvoiceItems.Id = SaleReturnItems.SaleInvoiceItems_Id
+                                                    LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
+                                                    LEFT JOIN Products ON Products.Id = SaleInvoiceItems.Products_Id
+                                                WHERE SaleInvoices.Branches_Id = @Branches_Id
+                                                GROUP BY Products.Id
+                                            ) SaleReturnItemsCount ON SaleReturnItemsCount.Products_Id = Products.Id
                                 ) GlobalInventory ON GlobalInventory.Products_Id = Inventory.Products_Id
                         WHERE 1=1
                             AND Inventory.Branches_Id = @Branches_Id
@@ -214,8 +263,8 @@ namespace iSpeakWebApp.Controllers
         public void add(InventoryModel model)
         {
             db.Database.ExecuteSqlCommand(@"
-                INSERT INTO Inventory   (Id, Notes, Branches_Id, Products_Id, ReceiveDate, BuyQty, AvailableQty, BuyPrice, Suppliers_Id) 
-                                 VALUES(@Id,@Notes,@Branches_Id,@Products_Id,@ReceiveDate,@BuyQty,@AvailableQty,@BuyPrice,@Suppliers_Id);
+                INSERT INTO Inventory   (Id, Notes, Branches_Id, Products_Id, ReceiveDate, BuyQty, BuyPrice, Suppliers_Id) 
+                                 VALUES(@Id,@Notes,@Branches_Id,@Products_Id,@ReceiveDate,@BuyQty,@BuyPrice,@Suppliers_Id);
             ",
                 DBConnection.getSqlParameter(InventoryModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(InventoryModel.COL_Notes.Name, model.Notes),
@@ -223,7 +272,6 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(InventoryModel.COL_Products_Id.Name, model.Products_Id),
                 DBConnection.getSqlParameter(InventoryModel.COL_ReceiveDate.Name, model.ReceiveDate),
                 DBConnection.getSqlParameter(InventoryModel.COL_BuyQty.Name, model.BuyQty),
-                DBConnection.getSqlParameter(InventoryModel.COL_AvailableQty.Name, model.AvailableQty),
                 DBConnection.getSqlParameter(InventoryModel.COL_Suppliers_Id.Name, model.Suppliers_Id),
                 DBConnection.getSqlParameter(InventoryModel.COL_BuyPrice.Name, model.BuyPrice)
             );
@@ -242,7 +290,6 @@ namespace iSpeakWebApp.Controllers
                     Products_Id = @Products_Id,
                     ReceiveDate = @ReceiveDate,
                     BuyQty = @BuyQty,
-                    AvailableQty = @AvailableQty,
                     Suppliers_Id = @Suppliers_Id,
                     BuyPrice = @BuyPrice
                 WHERE Inventory.Id = @Id;                
@@ -253,7 +300,6 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(InventoryModel.COL_Products_Id.Name, model.Products_Id),
                 DBConnection.getSqlParameter(InventoryModel.COL_ReceiveDate.Name, model.ReceiveDate),
                 DBConnection.getSqlParameter(InventoryModel.COL_BuyQty.Name, model.BuyQty),
-                DBConnection.getSqlParameter(InventoryModel.COL_AvailableQty.Name, model.AvailableQty),
                 DBConnection.getSqlParameter(InventoryModel.COL_Suppliers_Id.Name, model.Suppliers_Id),
                 DBConnection.getSqlParameter(InventoryModel.COL_BuyPrice.Name, model.BuyPrice)
             );

@@ -66,17 +66,18 @@
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.ReceiveDate)</td>
                                             <td class="align-top">
                                                 @Html.DisplayFor(modelItem => item.Products_Name)
+                                                <br />@item.Products_Id
                                                 @if (!string.IsNullOrEmpty(item.Notes))
                                                 {
                                                     <br />@:Notes: @item.Notes
                                                 }
                                             </td>
-                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.GlobalAvailableQty)</td>
+                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.GlobalAvailableQty) @Html.DisplayFor(modelItem => item.Units_Name)</td>
                                             <td class="align-top text-right">@Html.DisplayFor(modelItem => item.AvailableQty)</td>
                                             <td class="align-top text-right">@Html.DisplayFor(modelItem => item.BuyQty)</td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Suppliers_Name)</td>
                                             <td class="align-top text-right">@Html.DisplayFor(modelItem => item.BuyPrice)</td>
-                                            <td>
+                                            <td class="align-top">
                                                 <a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Inventory @item.Products_Name (Initial qty: @string.Format("{0:N0}",item.BuyQty))', 'medium', 'GetDetails', '@ControllerName')">Sales</a>
                                                 @if (access.Inventory_Edit)
                                                 {

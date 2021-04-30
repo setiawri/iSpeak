@@ -32,5 +32,7 @@ namespace iSpeakWebApp.Models
         /******************************************************************************************************************************************************/
 
         public int Balance { get; set; } = 0;
+
+        public bool SaleInvoices_Cancelled { get; set; } = false;
     }
 }

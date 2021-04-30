@@ -1,5 +1,7 @@
 ﻿
 TO DO:
+- saleinvoice with returned inventory cannot be cancelled
+- master layout: if user only has access to 1 branch, show a label instead of dropdownlist.
 - Create inventory pages
 - SaleInvoiceItemsController.add(): decrease inventory if consist of product.
 - saleinvoice create page:

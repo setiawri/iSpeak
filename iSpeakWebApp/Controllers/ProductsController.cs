@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Linq;
 using System.Collections.Generic;
 using System.Web.Mvc;
@@ -130,16 +131,16 @@ namespace iSpeakWebApp.Controllers
             UnitsController.setDropDownListViewBag(this);
         }
 
-        public static void setDropDownListViewBag(ControllerBase controller, string dataTextField) { setDropDownListViewBag(controller, dataTextField, null, null); }
-        public static void setDropDownListViewBag(ControllerBase controller, string dataTextField, int? Active, int? ForSale)
+        public static void setDropDownListViewBag(HttpSessionStateBase Session, ControllerBase controller, string dataTextField) { setDropDownListViewBag(Session, controller, dataTextField, null, null); }
+        public static void setDropDownListViewBag(HttpSessionStateBase Session, ControllerBase controller, string dataTextField, int? Active, int? ForSale)
         {
-            controller.ViewBag.Products = new SelectList(get(Active, ForSale).OrderBy(x => x.Description), ProductsModel.COL_Id.Name, dataTextField);
+            controller.ViewBag.Products = new SelectList(get(Session, Active, ForSale).OrderBy(x => x.Description), ProductsModel.COL_Id.Name, dataTextField);
         }
 
-        public static void setViewBag(ControllerBase controller) { setViewBag(controller, null, null); }
-        public static void setViewBag(ControllerBase controller, int? Active, int? ForSale)
+        public static void setViewBag(HttpSessionStateBase Session, ControllerBase controller) { setViewBag(Session, controller, null, null); }
+        public static void setViewBag(HttpSessionStateBase Session, ControllerBase controller, int? Active, int? ForSale)
         {
-            controller.ViewBag.ProductsModels = get(Active, ForSale);
+            controller.ViewBag.ProductsModels = get(Session, Active, ForSale);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
@@ -159,24 +160,48 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public List<ProductsModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Active, null, FILTER_Keyword); }
-        public ProductsModel get(Guid Id) { return get(Id, null, null, null).FirstOrDefault(); }
-        public static List<ProductsModel> get(int? Active, int? ForSale) { return get(null, Active, ForSale, null); }
-        public static List<ProductsModel> get() { return get(null, null, null, null); }
-        public static List<ProductsModel> get(Guid? Id, int? Active, int? ForSale, string FILTER_Keyword)
+        public List<ProductsModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(Session, null, FILTER_Active, null, FILTER_Keyword); }
+        public ProductsModel get(Guid Id) { return get(Session, Id, null, null, null).FirstOrDefault(); }
+        public static List<ProductsModel> get(HttpSessionStateBase Session, int? Active, int? ForSale) { return get(Session, null, Active, ForSale, null); }
+        public static List<ProductsModel> get(HttpSessionStateBase Session) { return get(Session, null, null, null, null); }
+        public static List<ProductsModel> get(HttpSessionStateBase Session, Guid? Id, int? Active, int? ForSale, string FILTER_Keyword)
         {
             return new DBContext().Database.SqlQuery<ProductsModel>(@"
                     SELECT Products.*,
                         Units.Name AS Units_Name,
-                        ISNULL(InventoryCount.AvailableQty,0) AS AvailableQty,
-                        Products.Name + ' (Available: ' + FORMAT(ISNULL(InventoryCount.AvailableQty,0),'N0') + ') ' + FORMAT(Products.SellPrice,'N0') AS DDLDescription
+                        ISNULL(InventoryCount.BuyQty,0) - ISNULL(SaleInvoiceItemsCount.SaleQty,0) + ISNULL(SaleReturnItemsCount.ReturnQty,0) AS AvailableQty,
+                        Products.Name + ' (Available: ' + FORMAT(
+                                ISNULL(InventoryCount.BuyQty,0)
+                                - ISNULL(SaleInvoiceItemsCount.SaleQty,0)
+                                + ISNULL(SaleReturnItemsCount.ReturnQty,0)
+                            ,'N0') + ') ' + FORMAT(Products.SellPrice,'N0') AS DDLDescription
                     FROM Products
                         LEFT JOIN Units ON Units.Id = Products.Units_Id
                         LEFT JOIN (
-                                SELECT Inventory.Products_Id, SUM(Inventory.AvailableQty) AS AvailableQty
+                                SELECT Inventory.Products_Id, SUM(Inventory.BuyQty) AS BuyQty
                                 FROM Inventory
+                                WHERE Inventory.Branches_Id = @Branches_Id
                                 GROUP BY Products_Id
                             ) InventoryCount ON InventoryCount.Products_Id = Products.Id
+                        LEFT JOIN (
+                                SELECT Inventory.Products_Id, SUM(SaleInvoiceItems_Inventory.Qty) AS SaleQty
+                                FROM SaleInvoiceItems_Inventory
+                                    LEFT JOIN SaleInvoiceItems ON SaleInvoiceItems.Id = SaleInvoiceItems_Inventory.SaleInvoiceItems_Id
+                                    LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
+                                    LEFT JOIN Inventory ON Inventory.Id = SaleInvoiceItems_Inventory.Inventory_Id
+                                    LEFT JOIN Products ON Products.Id = Inventory.Products_Id
+                                WHERE SaleInvoices.Cancelled = 0 AND SaleInvoices.Branches_Id = @Branches_Id
+                                GROUP BY Inventory.Products_Id
+                            ) SaleInvoiceItemsCount ON SaleInvoiceItemsCount.Products_Id = Products.Id
+                        LEFT JOIN (
+                                SELECT Products.Id AS Products_Id, SUM(SaleReturnItems.Qty) AS ReturnQty
+                                FROM SaleReturnItems
+                                    LEFT JOIN SaleInvoiceItems ON SaleInvoiceItems.Id = SaleReturnItems.SaleInvoiceItems_Id
+                                    LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
+                                    LEFT JOIN Products ON Products.Id = SaleInvoiceItems.Products_Id
+                                WHERE SaleInvoices.Branches_Id = @Branches_Id
+                                GROUP BY Products.Id
+                            ) SaleReturnItemsCount ON SaleReturnItemsCount.Products_Id = Products.Id
                     WHERE 1=1
 						AND (@Id IS NULL OR Products.Id = @Id)
 						AND (@Id IS NOT NULL OR (
@@ -189,7 +214,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(ProductsModel.COL_Id.Name, Id),
                 DBConnection.getSqlParameter(ProductsModel.COL_Active.Name, Active),
                 DBConnection.getSqlParameter(ProductsModel.COL_ForSale.Name, ForSale),
-                DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
+                DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
+                DBConnection.getSqlParameter("Branches_Id", Helper.getActiveBranchId(Session))
             ).ToList();
         }
 

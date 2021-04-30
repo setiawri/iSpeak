@@ -101,7 +101,7 @@ namespace iSpeakWebApp.Controllers
                         else
                             qty = inventory.AvailableQty;
 
-                        SaleInvoiceItems_InventoryController.add(db, new SaleInvoiceItems_InventoryModel
+                        SaleInvoiceItems_InventoryController.add(Session, db, new SaleInvoiceItems_InventoryModel
                         {
                             Id = Guid.NewGuid(),
                             SaleInvoiceItems_Id = saleInvoiceItem.Id,

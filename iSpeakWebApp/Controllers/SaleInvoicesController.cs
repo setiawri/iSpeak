@@ -108,7 +108,7 @@ namespace iSpeakWebApp.Controllers
         public bool hasSufficientInventory(List<SaleInvoiceItemsModel> SaleInvoiceItems, out string errorMessage)
         {
             errorMessage = "";
-            List<ProductsModel> products = ProductsController.get(1, 1);
+            List<ProductsModel> products = ProductsController.get(Session, 1, 1);
             foreach(SaleInvoiceItemsModel invoice in SaleInvoiceItems)
             {
                 if (invoice.Products_Id != null && SaleInvoiceItems.Where(x => x.Products_Id == invoice.Products_Id).Sum(x => x.Qty) > products.Find(x => x.Id == invoice.Products_Id).AvailableQty)
@@ -136,8 +136,8 @@ namespace iSpeakWebApp.Controllers
             ViewBag.FILTER_PaymentNo = FILTER_PaymentNo;
             LessonPackagesController.setDropDownListViewBag(this);
             LessonPackagesController.setViewBag(this);
-            ProductsController.setDropDownListViewBag(this, ProductsModel.COL_DDLDescription.Name, 1, 1);
-            ProductsController.setViewBag(this);
+            ProductsController.setDropDownListViewBag(Session, this, ProductsModel.COL_DDLDescription.Name, 1, 1);
+            ProductsController.setViewBag(Session, this);
             ServicesController.setDropDownListViewBag(this);
             ServicesController.setViewBag(this);
             VouchersController.setDropDownListViewBag(this);
