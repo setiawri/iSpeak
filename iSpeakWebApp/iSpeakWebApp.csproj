@@ -159,6 +159,7 @@
     </Compile>
     <Compile Include="Models\ActivityLogsModel.cs" />
     <Compile Include="Models\PaymentItemsModel.cs" />
+    <Compile Include="Models\LessonSessionsModel.cs" />
     <Compile Include="Models\PettyCashRecordsModel.cs" />
     <Compile Include="Models\SaleInvoiceItems_InventoryModel.cs" />
     <Compile Include="Models\SaleInvoiceItemsModel.cs" />

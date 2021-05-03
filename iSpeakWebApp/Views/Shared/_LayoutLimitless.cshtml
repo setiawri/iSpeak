@@ -71,7 +71,7 @@
                         {
                             <a href="@Url.Action("Index", "Payments", new { rss=1 })" class="dropdown-item">Payments</a>
                         }
-                        <a href="@Url.Action("Index", "Return", new { rss=1 })" class="dropdown-item">Returns</a>
+                        <a href="@Url.Action("Index", "SaleReturns", new { rss=1 })" class="dropdown-item">Returns</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -85,12 +85,15 @@
                         <a href="@Url.Action("StudentIndex", "Schedules", new { rss=1 })" class="dropdown-item">Student</a>
                     </div>
                 </li>
-                <li class="nav-item">
-                    <a href="@Url.Action("Index", "LessonSessions", new { rss=1 })" class="navbar-nav-link">
-                        <i class="icon-meter2 mr-2"></i>
-                        Sessions
-                    </a>
-                </li>
+                @if (access.LessonSessions_View)
+                {
+                    <li class="nav-item">
+                        <a href="@Url.Action("Index", "LessonSessions", new { rss=1 })" class="navbar-nav-link">
+                            <i class="icon-meter2 mr-2"></i>
+                            Sessions
+                        </a>
+                    </li>
+                }
                 @if (access.Inventory_View)
                 {
                     <li class="nav-item">

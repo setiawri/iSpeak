@@ -1,8 +1,10 @@
 ﻿
 TO DO:
+- payroll pages: payroll rates & payroll
+- create user account info page
 - saleinvoice with returned inventory cannot be cancelled
 - master layout: if user only has access to 1 branch, show a label instead of dropdownlist.
-- Create inventory pages
+- Create inventory return pages
 - SaleInvoiceItemsController.add(): decrease inventory if consist of product.
 - saleinvoice create page:
 	> add global discount and global voucher. currently applied per item.
@@ -13,9 +15,6 @@ TO DO:
 - fix bug in saleinvoices index page : 
 	> second page's checkboxes not check-styled
 	> selectfirstinputInModal() in Javascripts is not working
-- create user account info page
-- sale invoices create page: fix so inventory and services can be added
-- payroll pages: payroll rates & payroll
 - schedules
 - move button to scroll to bottom to javascripts file and set display to none. add javascript to display it on pages that requires it.
 - edit notes button in Settings > edit page is highlighted when cursor is hovering on the title.
@@ -80,6 +79,7 @@ SALES
 - valid to cancel if: 
 	> all payments are cancelled
 	> all sessions are cancelled
+- Invoice with returned inventory cannot be cancelled
 
 SALE PAYMENTS
 =============

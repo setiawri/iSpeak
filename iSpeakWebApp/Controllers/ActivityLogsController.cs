@@ -63,6 +63,7 @@ namespace iSpeakWebApp.Controllers
         public static string editListStringFormat(string fieldName) { return fieldName + ": {0}"; }
         public static string editStringFormat(string fieldName) { return fieldName + ": '{0}' to '{1}'"; }
         public static string editStringFormat2(string fieldName) { return fieldName + ": '{0}'"; }
+        public static string editStringFormat3(string fieldName) { return fieldName + ": '{1}'"; }
         public static string editIntFormat(string fieldName) { return fieldName + ": '{0:N0}' to '{1:N0}'"; }
         public static string editDateFormat(string fieldName) { return fieldName + ": '{0:dd/MM/yyyy}' to '{1:dd/MM/yyyy}'"; }
         public static string editDateTimeFormat(string fieldName) { return fieldName + ": '{0:dd/MM/yyyy HH:mm}' to '{1:dd/MM/yyyy HH:mm}'"; }

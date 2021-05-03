@@ -229,6 +229,12 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.Inventory_Edit, model.Inventory_Edit, UserAccountRolesModel.COL_Inventory_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.Inventory_View, model.Inventory_View, UserAccountRolesModel.COL_Inventory_View.LogDisplay);
 
+                    //LessonSessions
+                    log = Helper.append(log, originalModel.LessonSessions_Notes, model.LessonSessions_Notes, UserAccountRolesModel.COL_LessonSessions_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.LessonSessions_Add, model.LessonSessions_Add, UserAccountRolesModel.COL_LessonSessions_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.LessonSessions_Edit, model.LessonSessions_Edit, UserAccountRolesModel.COL_LessonSessions_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.LessonSessions_View, model.LessonSessions_View, UserAccountRolesModel.COL_LessonSessions_View.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -364,6 +370,11 @@ namespace iSpeakWebApp.Controllers
                 if (item.Inventory_Add) model.Inventory_Add = true;
                 if (item.Inventory_Edit) model.Inventory_Edit = true;
                 if (item.Inventory_View) model.Inventory_View = true;
+
+                //LessonSessions
+                if (item.LessonSessions_Add) model.LessonSessions_Add = true;
+                if (item.LessonSessions_Edit) model.LessonSessions_Edit = true;
+                if (item.LessonSessions_View) model.LessonSessions_View = true;
 
             }
 

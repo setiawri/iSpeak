@@ -413,6 +413,24 @@ namespace iSpeakWebApp.Models
         public bool Inventory_Edit { get; set; }
         public static ModelMember COL_Inventory_Edit = new ModelMember { Name = "Inventory_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Inventory Edit") };
 
+        /* LESSON SESSIONS ************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string LessonSessions_Notes { get; set; }
+        public static ModelMember COL_LessonSessions_Notes = new ModelMember { Name = "LessonSessions_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("LessonSessions Notes") };
+
+        [Display(Name = "Add")]
+        public bool LessonSessions_Add { get; set; }
+        public static ModelMember COL_LessonSessions_Add = new ModelMember { Name = "LessonSessions_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("LessonSessions Add") };
+
+        [Display(Name = "View")]
+        public bool LessonSessions_View { get; set; }
+        public static ModelMember COL_LessonSessions_View = new ModelMember { Name = "LessonSessions_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("LessonSessions View") };
+
+        [Display(Name = "Edit")]
+        public bool LessonSessions_Edit { get; set; }
+        public static ModelMember COL_LessonSessions_Edit = new ModelMember { Name = "LessonSessions_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("LessonSessions Edit") };
+
         /******************************************************************************************************************************************************/
 
     }
