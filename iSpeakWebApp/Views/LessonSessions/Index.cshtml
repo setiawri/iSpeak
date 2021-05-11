@@ -1,0 +1,239 @@
+﻿@model IEnumerable<iSpeakWebApp.Models.LessonSessionsModel>
+
+@{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    string ControllerName = "LessonSessions";
+    ViewBag.SelectedNavigationMenu = "Sessions";
+    ViewBag.Title = "Lesson Sessions";
+    ViewBag.Subtitle = "Index";
+}
+
+<div class="content-wrapper">
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm("Index", ControllerName, FormMethod.Post))
+        {
+            <!-- Form inputs -->
+            <div class="card animated bounceInLeft">
+                <div class="card-header header-elements-inline pb-1">
+                    <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row mx-0">
+                        @if (access.LessonSessions_Add)
+                        {
+                            <div class="mr-2">
+                                <label class="mb-0">&nbsp;</label>
+                                <div><a href="javascript:void(0)" onclick="Action('Create', '@ControllerName')" class="btn btn-success">CREATE<i class="icon-plus22 ml-2"></i></a></div>
+                            </div>
+                        }
+
+                        @*<div class="row ml-0 mr-2" style="width:100px;">
+                            <label class="mb-0">No</label>
+                            <div class="input-group">
+                                <input type="text" name="FILTER_Keyword" id="FILTER_Keyword" class="form-control" />
+                            </div>
+                        </div>*@
+
+                        <div class="row ml-0 mr-2" style="width:100px;">
+                            <label class="mb-0">Invoice</label>
+                            <div class="input-group">
+                                <input type="text" name="FILTER_InvoiceNo" id="FILTER_InvoiceNo" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:150px;">
+                            <label class="mb-0">Date From</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        @Html.CheckBox("FILTER_chkDateFrom", true, new { @class = "form-check-input check-styled" })
+                                    </div>
+                                </div>
+                                @Html.Editor("FILTER_DateFrom", new { htmlAttributes = new { @class = "form-control daterange-picker" } })
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:150px;">
+                            <label class="mb-0">Date To</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        @Html.CheckBox("FILTER_chkDateTo", true, new { @class = "form-check-input check-styled" })
+                                    </div>
+                                </div>
+                                @Html.Editor("FILTER_DateTo", new { htmlAttributes = new { @class = "form-control daterange-picker" } })
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:80px;">
+                            <label class="mb-0">Cancelled</label>
+                            <div class="input-group">
+                                <select id="FILTER_Cancelled" name="FILTER_Cancelled" class="custom-select">
+                                    <option value="" selected>ALL</option>
+                                    <option value="1">YES</option>
+                                    <option value="0">NO</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="ml-0 mr-2">
+                            <label class="mb-0">&nbsp;</label>
+                            <button type="submit" id="LoadData" onclick="showLoadingSpinner()" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>LOAD</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover datatable">
+                            <thead>
+                                <tr>
+                                    <th class="d-none">@Html.DisplayNameFor(model => model.InitialRowNumber)</th>
+                                    <th class="non-sortable" style="width:50px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
+                                    <th>@Html.DisplayNameFor(model => model.SaleInvoiceItems_Description)</th>
+                                    <th class="text-right" style="width:50px;">@Html.DisplayNameFor(model => model.SessionHours)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Student_UserAccounts_Fullname)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Tutor_UserAccounts_Id_TEMP)</th>
+                                    <th class="non-searchable non-sortable"></th>
+                                    <th class="non-searchable non-sortable" style="width:150px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="d-none">@Html.DisplayFor(modelItem => item.InitialRowNumber)</td>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
+                                            <td class="align-top">
+                                                @Html.DisplayFor(modelItem => item.SaleInvoiceItems_Description)
+                                                <br />Invoice: @Html.DisplayFor(modelItem => item.SaleInvoices_No)
+                                            </td>
+                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.SessionHours)</td>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Student_UserAccounts_Fullname)</td>
+                                            <td class="align-top">
+                                                @Html.DisplayFor(modelItem => item.Tutor_UserAccounts_Fullname)
+                                                <br />Travel: @Html.DisplayFor(modelItem => item.TutorTravelCost)
+                                            </td>
+                                            <td></td>
+                                            <td class="align-top">
+                                                @if (item.Deleted)
+                                                {
+                                                    <span class="badge badge-danger d-block mr-1">CANCELLED</span>
+                                                }
+                                                <a href="javascript:void(0)" onclick="Log('@item.Id')">Invoice</a>
+                                                @if (access.LessonSessions_Edit)
+                                                {
+                                                    @:• <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a>
+                                                }
+                                                • <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- /form inputs -->
+        }
+
+        <!-- Cancel form modal -->
+        <div id="modal_cancel" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-warning">
+                        <h6 class="modal-title">Cancel Payment</h6>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <form action="#" class="form-horizontal">
+                        <div class="modal-body">
+                            <div style="display: none">
+                                <input class="form-control" id="modal_cancel-Id" />
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2">Payment</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" id="modal_cancel-No" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2">Notes</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" id="modal_cancel-Notes" rows="2" placeholder="Cancel Reason"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn bg-success" onclick="Cancel()">Submit</button>
+                            <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- /cancel form modal -->
+
+    </div>
+    <!-- /content area -->
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        setDateRangePicker('FILTER_DateFrom', '@string.Format("{0:yyyy/MM/dd}", DateTime.Today.AddMonths(-2))');
+        setDateRangePicker('FILTER_DateTo', '@string.Format("{0:yyyy/MM/dd}", DateTime.Today)');
+    });
+
+    function UpdateApproval(control, id) {
+        AjaxUpdate('Update_Approval', '@ControllerName', id, control.checked);
+    }
+
+    function applyLast() {
+        //datatable.order([0, 'desc']).draw();
+    }
+
+    // CANCEL PAYMENT ==============================================================================================================================================
+
+    function PopulateCancelModal(id, no) {
+        $('#modal_cancel-Id').val(id);
+        $('#modal_cancel-No').val(no);
+        $('#modal_cancel-Notes').val('');
+    }
+
+    function Cancel() {
+        if (!event.detail || event.detail == 1) {
+            if ($('#modal_cancel-Notes').val() == '') {
+                showMessage('Please provide reason for cancellation.', 'modal_cancel-Notes');
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Update_Cancelled", ControllerName)',
+                    data: {
+                        id: $('#modal_cancel-Id').val(),
+                        notes: $('#modal_cancel-Notes').val()
+                    },
+                    success: function (data) {
+                        $('#LoadData').trigger('click');
+                    }, //end success
+                    error: function (data) {
+                        showMessage("ERROR: " + data.responseText);
+                    } //end error
+                }); //end ajax
+            }
+        }
+    }
+
+    $('#modal_cancel').on('shown.bs.modal', function () {
+        $('#modal_cancel-Notes').focus();
+    })
+
+    //==============================================================================================================================================================
+
+</script>

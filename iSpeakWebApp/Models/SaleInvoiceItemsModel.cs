@@ -123,7 +123,8 @@ namespace iSpeakWebApp.Models
         [Display(Name = "Customer")]
         public string Customer_UserAccounts_Name { get; set; }
 
-        /******************************************************************************************************************************************************/
+        public string DDLDescription { get; set; } = "";
+        public static ModelMember COL_DDLDescription = new ModelMember { Name = "DDLDescription" };
 
     }
 }

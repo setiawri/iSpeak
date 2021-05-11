@@ -1,5 +1,6 @@
 ﻿
 TO DO:
+- HourlyPayrate: if fulltimepayrate has value, cannot fill LessonPackages_Id and Rate
 - payroll pages: payroll rates & payroll
 - create user account info page
 - saleinvoice with returned inventory cannot be cancelled
@@ -26,6 +27,17 @@ TO DO:
 - mobile app
 
 IMPROVEMENTS:
+
+Javascripts file:
+- closeSpinner() is not working
+
+SaleInvoiceItems
+- remove SessionHours_Remaining column
+
+LessonSessions
+- remove Branches_Id column.
+- index: create link to invoice and user accounts
+- tutor dropdown should only load tutor accounts. Same thing with student dropdown
 
 Inventory: 
 - remove availableqty and compute realtime
@@ -85,5 +97,4 @@ SALE PAYMENTS
 =============
 - if cash, automatically create entry in petty cash
 - if partial payment, older sale invoices are paid first
-
 

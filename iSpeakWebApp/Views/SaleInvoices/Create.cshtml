@@ -253,7 +253,6 @@
             $.each(saleinvoiceitems, function (index, item) {
                 item_no += 1;
                 item.id = getRowId(item_no);
-                console.log(item_no + ', id: ' + item.id);
             });
 
             CalculateTotalAmount();
@@ -419,10 +418,8 @@
     }
 
     function RemoveItem(id) {
-        var subtotal = 0;
         $.each(saleinvoiceitems, function (index, item) {
             if (item.id == id) {
-                subtotal = item.TotalAmount;
                 saleinvoiceitems.splice(index, 1);
                 return false;
             }

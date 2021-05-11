@@ -81,7 +81,6 @@
     // MISC ========================================================================================================================================================
 
     function setValue(id, value) {
-        console.log(value);
         if (value != null)
             $('#' + id).val(value);
     }
@@ -224,6 +223,10 @@
         return $('#' + id + ' option:selected').val();
     }
 
+    function getDDLSelectedText(id) {
+        return $('#' + id + ' option:selected').text();
+    }
+
     function getSelectedItem(ddlid, models) {
         var result = getSelectedItems(ddlid, models);
         if (result.length > 0)
@@ -283,7 +286,10 @@
         });
     }
     function closeSpinner() {
-        spinnerDialog.modal('hide');
+        if (spinnerDialog != null) {
+            spinnerDialog.modal('hide'); //doesn't work
+            //bootbox.hideAll(); //not completely tested. might close other dialogs as well
+        }
     }
 
     // CALENDAR ====================================================================================================================================================
@@ -294,12 +300,22 @@
         daterangepickerCallback(start, end, label);
     });
 
+    $('.daterangepicker-withtime').daterangepicker({
+        singleDatePicker: true,
+        timePicker: true,
+        timePicker24Hour: true,
+        timePickerIncrement: 5,
+        locale: {
+            format: 'YYYY/MM/DD H:mm'
+        }
+    });
+
     //function setDateRangePicker(id, value) {
     //    $('#' + id).data('daterangepicker').setStartDate(value);
     //    $('#' + id).data('daterangepicker').setEndDate(value);
     //}
 
-    function setDateRangePickerWithStringDate(id, start, end) { setDateRangePicker(id, new Date(start), new Date(end)); }
+    function setDateRangePickerWithStringDate(id, start, end) { setDateRangePicker(id, parseJSONDate(start), parseJSONDate(end)); }
     function setDateRangePicker(id, start, end) {
         $('#' + id).data('daterangepicker').setStartDate(start);
         if (end != null)
@@ -351,7 +367,10 @@
     // DATE MANIPULATOR ============================================================================================================================================
 
     function parseJSONDate(value) {
-        return new Date(parseInt(value.replace("/Date(", "").replace(")/", ""), 10));
+        if (value == null)
+            return null
+        else
+            return new Date(parseInt(value.replace("/Date(", "").replace(")/", ""), 10));
         //return new Date(parseInt((value).match(/\d+/)[0])); //returns incorrect date when json date value is negative. (negative when earlier than year 1970)
     }
 
@@ -574,6 +593,12 @@
 
         //checkbox styling
         applyCheckboxStyling();
+
+        //popovers
+        $('[data-toggle="popover"]').popover({
+            html: true,
+            trigger: 'hover'
+        });
 
         selectFirstInput();
 

@@ -13,11 +13,13 @@
 -- DROP TABLE SaleInvoiceItems_Vouchers
 -- ALTER TABLE Payments DROP Notes_Cancel;
 -- ALTER TABLE Inventory DROP AvailableQty;
-GO
 
 -- MANUAL TABLE MODIFICATIONS ===========================================================================================
 
 -- TABLE PettyCashRecords: need to remove UserAccounts_Id (nvarchar) and rename UserAccounts_Id_TEMP(uniqueidentifier) to UserAccounts_Id
+-- TABLE LessonSessions: need to remove Tutor_UserAccounts_Id (nvarchar) and rename Tutor_UserAccounts_Id_TEMP(uniqueidentifier) to Tutor_UserAccounts_Id
+-- TABLE PayrollPaymentItems: need to remove UserAccounts_Id (nvarchar) and rename UserAccounts_Id_TEMP(uniqueidentifier) to UserAccounts_Id
+-- TABLE HourlyRates: need to remove UserAccounts_Id (nvarchar) and rename UserAccounts_Id_TEMP(uniqueidentifier) to UserAccounts_Id
 
 -- NEED TO DO AFTER SCRIPT IS RUN =======================================================================================
 
@@ -281,7 +283,33 @@ GO
 	GO
 	
 	UPDATE PettyCashRecords SET UserAccounts_Id_TEMP = CONVERT(UNIQUEIDENTIFIER, UserAccounts_Id)
+	
+-- LESSON SESSIONS ======================================================================================================
 
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Tutor_UserAccounts_Id_TEMP' AND TABLE_NAME = 'LessonSessions' AND TABLE_SCHEMA='dbo') 
+		ALTER TABLE LessonSessions ADD Tutor_UserAccounts_Id_TEMP uniqueidentifier NULL;
+	GO
+	
+	ALTER TABLE LessonSessions ALTER COLUMN Tutor_UserAccounts_Id nvarchar(128) NULL;	
+	UPDATE LessonSessions SET Tutor_UserAccounts_Id_TEMP = CONVERT(UNIQUEIDENTIFIER, Tutor_UserAccounts_Id)
+	ALTER TABLE LessonSessions ALTER COLUMN Tutor_UserAccounts_Id_TEMP uniqueidentifier NOT NULL;	
+	
+-- HOURLY PAYRATES ======================================================================================================
+
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'UserAccounts_Id_TEMP' AND TABLE_NAME = 'HourlyRates' AND TABLE_SCHEMA='dbo') 
+		ALTER TABLE HourlyRates ADD UserAccounts_Id_TEMP uniqueidentifier NULL;
+	GO
+	
+	UPDATE HourlyRates SET UserAccounts_Id_TEMP = CONVERT(UNIQUEIDENTIFIER, UserAccounts_Id)
+	
+-- PAYROLL PAYMENT ITEMS ================================================================================================
+
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'UserAccounts_Id_TEMP' AND TABLE_NAME = 'PayrollPaymentItems' AND TABLE_SCHEMA='dbo') 
+		ALTER TABLE PayrollPaymentItems ADD UserAccounts_Id_TEMP uniqueidentifier NULL;
+	GO
+	
+	UPDATE PayrollPaymentItems SET UserAccounts_Id_TEMP = CONVERT(UNIQUEIDENTIFIER, UserAccounts_Id)
+	
 -- ADD ROLE ACCESSES ====================================================================================================
 
 	--Reminders

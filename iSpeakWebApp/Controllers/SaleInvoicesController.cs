@@ -148,7 +148,7 @@ namespace iSpeakWebApp.Controllers
         {
             UserAccountRolesModel access = UserAccountsController.getUserAccess(Session);
 
-            List<SaleInvoiceItemsModel> models = SaleInvoiceItemsController.get(null, id, null, null);
+            List<SaleInvoiceItemsModel> models = SaleInvoiceItemsController.get_by_SaleInvoices_Id(id);
             string content = string.Format(@"
                     <div class='table-responsive'>
                         <table class='table table-striped table-bordered'>

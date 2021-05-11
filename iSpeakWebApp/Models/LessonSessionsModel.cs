@@ -1,11 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using iSpeakWebApp.Controllers;
 
 namespace iSpeakWebApp.Models
 {
-    [Table("LessonSessions")]
     public class LessonSessionsModel
     {
         [Key]
@@ -13,22 +11,24 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Id = new ModelMember { Name = "Id" };
 
 
-        public Guid? Branches_Id { get; set; }
+        public Guid? Branches_Id { get; set; } = new Guid();
         public static ModelMember COL_Branches_Id = new ModelMember { Name = "Branches_Id" };
 
 
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}")]
         public DateTime Timestamp { get; set; }
         public static ModelMember COL_Timestamp = new ModelMember { Name = "Timestamp", Display = "Timestamp", LogDisplay = ActivityLogsController.editDateTimeFormat("Timestamp") };
 
 
+        [Display(Name = "Package")]
         public Guid SaleInvoiceItems_Id { get; set; }
         public static ModelMember COL_SaleInvoiceItems_Id = new ModelMember { Name = "SaleInvoiceItems_Id" };
 
 
-        [Display(Name = "Hours")]
+        [Display(Name = "Duration")]
         [DisplayFormat(DataFormatString = "{0:N2}")]
         public decimal SessionHours { get; set; }
-        public static ModelMember COL_ = new ModelMember { Name = "SessionHours", Display = "Hours", LogDisplay = ActivityLogsController.editDecimalFormat("Hours") };
+        public static ModelMember COL_SessionHours = new ModelMember { Name = "SessionHours", Display = "Hours", LogDisplay = ActivityLogsController.editDecimalFormat("Hours") };
 
 
         public string Review { get; set; }
@@ -40,56 +40,74 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_InternalNotes = new ModelMember { Name = "InternalNotes", Display = "Internal Notes", LogDisplay = ActivityLogsController.editStringFormat("Internal Notes") };
 
 
-        public bool Deleted { get; set; }
+        public bool Deleted { get; set; } = false;
         public static ModelMember COL_Deleted = new ModelMember { Name = "Deleted", Display = "Deleted", LogDisplay = ActivityLogsController.editBooleanFormat("Deleted") };
 
+        public string Tutor_UserAccounts_Id { get; set; }
 
         [Required]
         [Display(Name = "Tutor")]
-        public string Tutor_UserAccounts_Id { get; set; }
-        public static ModelMember COL_Tutor_UserAccounts_Id = new ModelMember { Name = "Tutor_UserAccounts_Id", Display = "Tutor", LogDisplay = ActivityLogsController.editStringFormat("Tutor") };
+        public Guid Tutor_UserAccounts_Id_TEMP { get; set; } = new Guid();
+        public static ModelMember COL_Tutor_UserAccounts_Id_TEMP = new ModelMember { Name = "Tutor_UserAccounts_Id_TEMP", Display = "Tutor", LogDisplay = ActivityLogsController.editStringFormat("Tutor") };
+        public string Tutor_UserAccounts_Fullname { get; set; }
 
 
         [Display(Name = "Hourly Rate")]
         [DisplayFormat(DataFormatString = "{0:N0}")]
-        public decimal HourlyRates_Rate { get; set; }
+        public decimal HourlyRates_Rate { get; set; } = 0;
         public static ModelMember COL_HourlyRates_Rate = new ModelMember { Name = "HourlyRates_Rate", Display = "Hourly Rate", LogDisplay = ActivityLogsController.editDecimalFormat("Hourly Rate") };
 
 
         [Display(Name = "Travel Cost")]
         [DisplayFormat(DataFormatString = "{0:N0}")]
-        public int TravelCost { get; set; }
+        public int TravelCost { get; set; } = 0;
         public static ModelMember COL_TravelCost = new ModelMember { Name = "TravelCost", Display = "Travel Cost", LogDisplay = ActivityLogsController.editIntFormat("Travel Cost") };
 
 
         [Display(Name = "Tutor Travel Cost")]
         [DisplayFormat(DataFormatString = "{0:N0}")]
-        public int TutorTravelCost { get; set; }
+        public int TutorTravelCost { get; set; } = 0;
         public static ModelMember COL_TutorTravelCost = new ModelMember { Name = "TutorTravelCost", Display = "Tutor Travel Cost", LogDisplay = ActivityLogsController.editIntFormat("Tutor Travel Cost") };
 
 
         [DisplayFormat(DataFormatString = "{0:N0}")]
-        public decimal Adjustment { get; set; }
+        public decimal Adjustment { get; set; } = 0;
         public static ModelMember COL_Adjustment = new ModelMember { Name = "Adjustment", Display = "Adjustment", LogDisplay = ActivityLogsController.editDecimalFormat("Adjustment") };
 
 
-        public Guid? PayrollPaymentItems_Id { get; set; }
+        public Guid? PayrollPaymentItems_Id { get; set; } = null;
         public static ModelMember COL_PayrollPaymentItems_Id = new ModelMember { Name = "PayrollPaymentItems_Id" };
 
 
-        public string Notes_Cancel { get; set; }
+        public string Notes_Cancel { get; set; } = string.Empty;
         public static ModelMember COL_Notes_Cancel = new ModelMember { Name = "Notes_Cancel", Display = "Cancel Notes", LogDisplay = ActivityLogsController.editStringFormat("Cancelled. Notes") };
 
 
-        public bool IsScheduleChange { get; set; }
+        [Display(Name = "Schedule Change")]
+        public bool IsScheduleChange { get; set; } = false;
         public static ModelMember COL_IsScheduleChange = new ModelMember { Name = "IsScheduleChange", Display = "Schedule Change", LogDisplay = ActivityLogsController.editBooleanFormat("Schedule Change") };
 
 
-        public bool IsWaiveTutorFee { get; set; }
+        [Display(Name = "Waive Tutor Fee")]
+        public bool IsWaiveTutorFee { get; set; } = false;
         public static ModelMember COL_IsWaiveTutorFee = new ModelMember { Name = "IsWaiveTutorFee", Display = "Waive Tutor Fee", LogDisplay = ActivityLogsController.editBooleanFormat("Waive Tutor Fee") };
 
 
         /******************************************************************************************************************************************************/
+
+        public long InitialRowNumber { get; set; } = 0;
+
+
+        [Display(Name = "Lesson Package")]
+        public string SaleInvoiceItems_Description { get; set; } = string.Empty;
+
+
+        public string SaleInvoices_No { get; set; } = string.Empty;
+
+
+        public Guid? Student_UserAccounts_Id { get; set; } = null;
+        [Display(Name = "Student")]
+        public string Student_UserAccounts_Fullname { get; set; } = string.Empty;
 
     }
 
