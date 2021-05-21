@@ -128,6 +128,7 @@
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Controllers\ActivityLogsController.cs" />
+    <Compile Include="Controllers\PayrollPaymentsController.cs" />
     <Compile Include="Controllers\HourlyRatesController.cs" />
     <Compile Include="Controllers\LessonSessionsController.cs" />
     <Compile Include="Controllers\SaleInvoiceItems_InventoryController.cs" />
@@ -163,6 +164,7 @@
     <Compile Include="Models\HourlyRatesModel.cs" />
     <Compile Include="Models\PaymentItemsModel.cs" />
     <Compile Include="Models\LessonSessionsModel.cs" />
+    <Compile Include="Models\PayrollPaymentsModel.cs" />
     <Compile Include="Models\PayrollPaymentItemsModel.cs" />
     <Compile Include="Models\PettyCashRecordsModel.cs" />
     <Compile Include="Models\SaleInvoiceItems_InventoryModel.cs" />
@@ -270,6 +272,7 @@
     <Content Include="Views\HourlyRates\Create.cshtml" />
     <Content Include="Views\HourlyRates\Edit.cshtml" />
     <Content Include="Views\HourlyRates\Index.cshtml" />
+    <Content Include="Views\PayrollPayments\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

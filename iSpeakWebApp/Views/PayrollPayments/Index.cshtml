@@ -1,10 +1,10 @@
-﻿@model IEnumerable<iSpeakWebApp.Models.PaymentsModel>
+﻿@model IEnumerable<iSpeakWebApp.Models.PayrollPaymentsModel>
 
 @{
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
-    string ControllerName = "Payments";
-    ViewBag.SelectedNavigationMenu = "Sales";
-    ViewBag.Title = "PAYMENTS";
+    string ControllerName = "PayrollPayments";
+    ViewBag.SelectedNavigationMenu = "Internal";
+    ViewBag.Title = "PAYROLL PAYMENTS";
     ViewBag.Subtitle = "Index";
 }
 
@@ -25,13 +25,6 @@
                             <label class="mb-0">No</label>
                             <div class="input-group">
                                 <input type="text" name="FILTER_Keyword" id="FILTER_Keyword" class="form-control" />
-                            </div>
-                        </div>
-
-                        <div class="row ml-0 mr-2" style="width:100px;">
-                            <label class="mb-0">Invoice</label>
-                            <div class="input-group">
-                                <input type="text" name="FILTER_InvoiceNo" id="FILTER_InvoiceNo" class="form-control" />
                             </div>
                         </div>
 
@@ -58,7 +51,7 @@
                                 @Html.Editor("FILTER_DateTo", new { htmlAttributes = new { @class = "form-control daterange-picker" } })
                             </div>
                         </div>
-
+                        
                         <div class="row ml-0 mr-2" style="width:80px;">
                             <label class="mb-0">Cancelled</label>
                             <div class="input-group">
@@ -70,7 +63,7 @@
                             </div>
                         </div>
 
-                        @if (access.Payments_Approve)
+                        @if (access.PayrollPayments_Approve)
                         {
                             <div class="row ml-0 mr-2" style="width:80px;">
                                 <label class="mb-0">Approved</label>
@@ -95,11 +88,10 @@
                             <thead>
                                 <tr>
                                     <th style="width:50px;">@Html.DisplayNameFor(model => model.No)</th>
-                                    <th class="non-sortable" style="width:150px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
-                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.CashAmount)</th>
-                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.DebitNumber)</th>
-                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.ConsignmentAmount)</th>
-                                    @if (access.Payments_Approve)
+                                    <th style="width:80px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
+                                    <th>@Html.DisplayNameFor(model => model.UserAccounts_Fullname)</th>
+                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Amount)</th>
+                                    @if (access.PayrollPayments_Approve)
                                     {
                                         <th class="non-searchable non-sortable" style="width:0px;">Approval</th>
                                     }
@@ -116,36 +108,18 @@
                                         <tr>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.No)</td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
-                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.CashAmount)</td>
-                                            <td class="align-top text-right">
-                                                <div>@Html.DisplayFor(modelItem => item.DebitAmount)</div>
-                                                @if (item.DebitAmount > 0)
-                                                {
-                                                    <div>
-                                                        [@Html.DisplayFor(modelItem => item.DebitBank)]
-                                                        @if (!string.IsNullOrEmpty(item.DebitNumber) && item.DebitNumber.Length > 4)
-                                                        {
-                                                            @:*@item.DebitNumber.Substring(item.DebitNumber.Length - 4, 4)
-                                                        }
-                                                        else
-                                                        {
-                                                            @item.DebitNumber
-                                                        }
-                                                    </div>
-                                                    <div>@string.Format("{0}", item.DebitOwnerName.Split(' '))</div>
-                                                }
-                                            </td>
-                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.ConsignmentAmount)</td>
-                                            @if (access.Payments_Approve)
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.UserAccounts_Fullname)</td>
+                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                            @if (access.PayrollPayments_Approve)
                                             {
                                                 <td class="align-top" style="text-align:center;">
-                                                    @Html.CheckBoxFor(modelItem => item.Confirmed, new { @class = "check-styled", onclick = string.Format("UpdateApproval(this, '{0}')", item.Id) })
+                                                    @Html.CheckBoxFor(modelItem => item.IsChecked, new { @class = "check-styled", onclick = string.Format("UpdateApproval(this, '{0}')", item.Id) })
                                                 </td>
                                             }
-                                            <td class="align-top">                                                
-                                                @if (!string.IsNullOrEmpty(item.CancelNotes))
+                                            <td class="align-top">
+                                                @if (!string.IsNullOrEmpty(item.Notes_Cancel))
                                                 {
-                                                    <div><strong>Cancelled: </strong>@Html.DisplayFor(modelItem => item.CancelNotes)</div>
+                                                    <div><strong>Cancelled: </strong>@Html.DisplayFor(modelItem => item.Notes_Cancel)</div>
                                                 }
                                                 @Html.DisplayFor(modelItem => item.Notes)
                                             </td>
@@ -160,8 +134,7 @@
                                                 {
                                                     <div><span class="badge badge-danger d-block mr-1">CANCELLED</span></div>
                                                 }
-                                                @*<a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Payment @item.No', 'medium', 'GetDetails', '@ControllerName')">View</a> @:•*@
-                                                <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Print', '@ControllerName', 'true')">Receipt</a>
+                                                <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Print', '@ControllerName', 'true')">Print</a>
                                                 • <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                             </td>
                                         </tr>

@@ -27,14 +27,16 @@
     }
 
     function Action(action, controller, newwindow, returnurl) {
-        showLoadingSpinner();
+        if (newwindow == false)
+            showLoadingSpinner();
         var url = '@Url.Action("__action", "__controller", new { FILTER_Keyword = "__data" })';
         url = url.replace("__data", getFilter());
         ProcessAction(url, action, controller, newwindow, returnurl)
     }
 
     function ActionWithId(id, action, controller, newwindow, returnurl) {
-        showLoadingSpinner();
+        if(newwindow == false)
+            showLoadingSpinner();
         var url = '@Url.Action("__action", "__controller", new { id = "__data" })';
         url = url.replace("__data", id + "?FILTER_Keyword=" + getFilter());
         ProcessAction(url, action, controller, newwindow, returnurl)

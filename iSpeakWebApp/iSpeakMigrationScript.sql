@@ -312,6 +312,15 @@
 	UPDATE PayrollPaymentItems SET UserAccounts_Id_TEMP = CONVERT(UNIQUEIDENTIFIER, UserAccounts_Id)
 	ALTER TABLE PayrollPaymentItems ALTER COLUMN UserAccounts_Id nvarchar(128) NULL;	
 	
+-- PAYROLL PAYMENTS =====================================================================================================
+
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'UserAccounts_Id_TEMP' AND TABLE_NAME = 'PayrollPayments' AND TABLE_SCHEMA='dbo') 
+		ALTER TABLE PayrollPayments ADD UserAccounts_Id_TEMP uniqueidentifier NULL;
+	GO
+	
+	UPDATE PayrollPayments SET UserAccounts_Id_TEMP = CONVERT(UNIQUEIDENTIFIER, UserAccounts_Id)
+	ALTER TABLE PayrollPayments ALTER COLUMN UserAccounts_Id nvarchar(128) NULL;	
+	
 -- ADD ROLE ACCESSES ====================================================================================================
 
 	--Reminders
@@ -582,6 +591,8 @@
 	ALTER TABLE UserAccountRoles ADD PayrollPayments_View bit default 0 not null;
 	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'PayrollPayments_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
 	ALTER TABLE UserAccountRoles ADD PayrollPayments_Edit bit default 0 not null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'PayrollPayments_Approve' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD PayrollPayments_Approve bit default 0 not null;
 	GO
 	
 -- ======================================================================================================================

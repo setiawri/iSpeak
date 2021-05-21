@@ -467,6 +467,10 @@ namespace iSpeakWebApp.Models
         public bool PayrollPayments_Edit { get; set; }
         public static ModelMember COL_PayrollPayments_Edit = new ModelMember { Name = "PayrollPayments_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("PayrollPayments Edit") };
 
+        [Display(Name = "Approve")]
+        public bool PayrollPayments_Approve { get; set; }
+        public static ModelMember COL_PayrollPayments_Approve = new ModelMember { Name = "PayrollPayments_Approve", Display = "Approve", LogDisplay = ActivityLogsController.editBooleanFormat("PayrollPayments Approve") };
+
         /******************************************************************************************************************************************************/
 
     }

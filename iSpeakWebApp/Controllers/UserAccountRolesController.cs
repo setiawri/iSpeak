@@ -246,6 +246,7 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.PayrollPayments_Add, model.PayrollPayments_Add, UserAccountRolesModel.COL_PayrollPayments_Add.LogDisplay);
                     log = Helper.append(log, originalModel.PayrollPayments_Edit, model.PayrollPayments_Edit, UserAccountRolesModel.COL_PayrollPayments_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.PayrollPayments_View, model.PayrollPayments_View, UserAccountRolesModel.COL_PayrollPayments_View.LogDisplay);
+                    log = Helper.append(log, originalModel.PayrollPayments_Approve, model.PayrollPayments_Approve, UserAccountRolesModel.COL_PayrollPayments_Approve.LogDisplay);
 
                     if (!string.IsNullOrEmpty(log))
                     {
@@ -397,6 +398,7 @@ namespace iSpeakWebApp.Controllers
                 if (item.PayrollPayments_Add) model.PayrollPayments_Add = true;
                 if (item.PayrollPayments_Edit) model.PayrollPayments_Edit = true;
                 if (item.PayrollPayments_View) model.PayrollPayments_View = true;
+                if (item.PayrollPayments_Approve) model.PayrollPayments_Approve = true;
 
             }
 

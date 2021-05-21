@@ -128,8 +128,8 @@
                                 }
                                 @if (access.PayrollPayments_View)
                                 {
-                                    <a href="@Url.Action("Payroll", "Reports", new { rss=1 })" class="dropdown-item">Payroll</a>
-                                    <a href="@Url.Action("PayrollPayments", "Reports", new { rss=1 })" class="dropdown-item">Payments</a>
+                                    <a href="@Url.Action("Index", "PayrollPaymentItems", new { rss=1 })" class="dropdown-item">Payroll</a>
+                                    <a href="@Url.Action("Index", "PayrollPayments", new { rss=1 })" class="dropdown-item">Payments</a>
                                 }
                             </div>
                         </div>
