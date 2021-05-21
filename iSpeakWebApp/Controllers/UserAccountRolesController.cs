@@ -241,6 +241,12 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.HourlyRates_Edit, model.HourlyRates_Edit, UserAccountRolesModel.COL_HourlyRates_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.HourlyRates_View, model.HourlyRates_View, UserAccountRolesModel.COL_HourlyRates_View.LogDisplay);
 
+                    //PayrollPayments
+                    log = Helper.append(log, originalModel.PayrollPayments_Notes, model.PayrollPayments_Notes, UserAccountRolesModel.COL_PayrollPayments_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.PayrollPayments_Add, model.PayrollPayments_Add, UserAccountRolesModel.COL_PayrollPayments_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.PayrollPayments_Edit, model.PayrollPayments_Edit, UserAccountRolesModel.COL_PayrollPayments_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.PayrollPayments_View, model.PayrollPayments_View, UserAccountRolesModel.COL_PayrollPayments_View.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -386,6 +392,11 @@ namespace iSpeakWebApp.Controllers
                 if (item.HourlyRates_Add) model.HourlyRates_Add = true;
                 if (item.HourlyRates_Edit) model.HourlyRates_Edit = true;
                 if (item.HourlyRates_View) model.HourlyRates_View = true;
+
+                //PayrollPayments
+                if (item.PayrollPayments_Add) model.PayrollPayments_Add = true;
+                if (item.PayrollPayments_Edit) model.PayrollPayments_Edit = true;
+                if (item.PayrollPayments_View) model.PayrollPayments_View = true;
 
             }
 

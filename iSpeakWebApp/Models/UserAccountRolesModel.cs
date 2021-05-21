@@ -431,9 +431,7 @@ namespace iSpeakWebApp.Models
         public bool LessonSessions_Edit { get; set; }
         public static ModelMember COL_LessonSessions_Edit = new ModelMember { Name = "LessonSessions_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("LessonSessions Edit") };
 
-        /******************************************************************************************************************************************************/
-
-        /* LESSON SESSIONS ************************************************************************************************************************************/
+        /* HOURLY RATES ***************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string HourlyRates_Notes { get; set; }
@@ -450,6 +448,24 @@ namespace iSpeakWebApp.Models
         [Display(Name = "Edit")]
         public bool HourlyRates_Edit { get; set; }
         public static ModelMember COL_HourlyRates_Edit = new ModelMember { Name = "HourlyRates_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("HourlyRates Edit") };
+
+        /* PAYROLL PAYMENTS ***********************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string PayrollPayments_Notes { get; set; }
+        public static ModelMember COL_PayrollPayments_Notes = new ModelMember { Name = "PayrollPayments_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("PayrollPayments Notes") };
+
+        [Display(Name = "Add")]
+        public bool PayrollPayments_Add { get; set; }
+        public static ModelMember COL_PayrollPayments_Add = new ModelMember { Name = "PayrollPayments_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("PayrollPayments Add") };
+
+        [Display(Name = "View")]
+        public bool PayrollPayments_View { get; set; }
+        public static ModelMember COL_PayrollPayments_View = new ModelMember { Name = "PayrollPayments_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("PayrollPayments View") };
+
+        [Display(Name = "Edit")]
+        public bool PayrollPayments_Edit { get; set; }
+        public static ModelMember COL_PayrollPayments_Edit = new ModelMember { Name = "PayrollPayments_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("PayrollPayments Edit") };
 
         /******************************************************************************************************************************************************/
 

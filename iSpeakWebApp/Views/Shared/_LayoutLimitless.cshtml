@@ -122,12 +122,15 @@
                         <div class="dropdown-submenu">
                             <a href="#" class="dropdown-item dropdown-toggle">Payroll</a>
                             <div class="dropdown-menu">
-                                @if (access.Suppliers_View)
+                                @if (access.HourlyRates_View)
                                 {
-                                    <a href="@Url.Action("Index", "HourlyRates", new { rss=1 })" class="dropdown-item">Payrates</a>
+                                    <a href="@Url.Action("Index", "HourlyRates", new { rss=1 })" class="dropdown-item">Pay Rates</a>
                                 }
-                                <a href="@Url.Action("Payroll", "Reports", new { rss=1 })" class="dropdown-item">Payroll</a>
-                                <a href="@Url.Action("PayrollPayments", "Reports", new { rss=1 })" class="dropdown-item">Payments</a>
+                                @if (access.PayrollPayments_View)
+                                {
+                                    <a href="@Url.Action("Payroll", "Reports", new { rss=1 })" class="dropdown-item">Payroll</a>
+                                    <a href="@Url.Action("PayrollPayments", "Reports", new { rss=1 })" class="dropdown-item">Payments</a>
+                                }
                             </div>
                         </div>
                         <a href="@Url.Action("Index", "Expenses", new { rss=1 })" class="dropdown-item">Expenses</a>
