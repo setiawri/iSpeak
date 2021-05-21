@@ -86,7 +86,7 @@ namespace iSpeakWebApp.Controllers
                     return returnView(LessonSessions, string.Format("Insufficient remaining hours for student {0}", insufficientRemainingHours[0].Customer_UserAccounts_Name));
 
                 //set tutor pay rate
-                List<HourlyRatesModel> hourlyRates = db.HourlyRates.Where(x => x.UserAccounts_Id_TEMP == model.Tutor_UserAccounts_Id_TEMP).ToList();
+                List<HourlyRatesModel> hourlyRates = HourlyRatesController.get(null, null, model.Tutor_UserAccounts_Id_TEMP);
                 bool isFullTimeTutor = false;
                 foreach (HourlyRatesModel hourlyRate in hourlyRates)
                 {

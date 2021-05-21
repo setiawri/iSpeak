@@ -301,6 +301,7 @@
 	GO
 	
 	UPDATE HourlyRates SET UserAccounts_Id_TEMP = CONVERT(UNIQUEIDENTIFIER, UserAccounts_Id)
+	ALTER TABLE HourlyRates ALTER COLUMN UserAccounts_Id nvarchar(128) NULL;	
 	
 -- PAYROLL PAYMENT ITEMS ================================================================================================
 
@@ -309,6 +310,7 @@
 	GO
 	
 	UPDATE PayrollPaymentItems SET UserAccounts_Id_TEMP = CONVERT(UNIQUEIDENTIFIER, UserAccounts_Id)
+	ALTER TABLE PayrollPaymentItems ALTER COLUMN UserAccounts_Id nvarchar(128) NULL;	
 	
 -- ADD ROLE ACCESSES ====================================================================================================
 
@@ -558,6 +560,17 @@
 	ALTER TABLE UserAccountRoles ADD LessonSessions_View bit default 0 not null;
 	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'LessonSessions_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
 	ALTER TABLE UserAccountRoles ADD LessonSessions_Edit bit default 0 not null;
+	GO
+	
+	--HourlyRates
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'HourlyRates_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD HourlyRates_Notes varchar(MAX) null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'HourlyRates_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD HourlyRates_Add bit default 0 not null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'HourlyRates_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD HourlyRates_View bit default 0 not null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'HourlyRates_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD HourlyRates_Edit bit default 0 not null;
 	GO
 	
 -- ======================================================================================================================

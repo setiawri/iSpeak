@@ -29,7 +29,6 @@ namespace iSpeakWebApp
         public DbSet<UnitsModel> Units { get; set; }
         public DbSet<ExpenseCategoriesModel> ExpenseCategories { get; set; }
         public DbSet<PaymentsModel> Payments { get; set; }
-        public DbSet<HourlyRatesModel> HourlyRates { get; set; }
         public DbSet<PayrollPaymentItemsModel> PayrollPaymentItems { get; set; }
 
         /******************************************************************************************************************************************************/

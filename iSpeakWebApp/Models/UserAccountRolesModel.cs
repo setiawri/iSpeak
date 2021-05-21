@@ -433,5 +433,25 @@ namespace iSpeakWebApp.Models
 
         /******************************************************************************************************************************************************/
 
+        /* LESSON SESSIONS ************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string HourlyRates_Notes { get; set; }
+        public static ModelMember COL_HourlyRates_Notes = new ModelMember { Name = "HourlyRates_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("HourlyRates Notes") };
+
+        [Display(Name = "Add")]
+        public bool HourlyRates_Add { get; set; }
+        public static ModelMember COL_HourlyRates_Add = new ModelMember { Name = "HourlyRates_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("HourlyRates Add") };
+
+        [Display(Name = "View")]
+        public bool HourlyRates_View { get; set; }
+        public static ModelMember COL_HourlyRates_View = new ModelMember { Name = "HourlyRates_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("HourlyRates View") };
+
+        [Display(Name = "Edit")]
+        public bool HourlyRates_Edit { get; set; }
+        public static ModelMember COL_HourlyRates_Edit = new ModelMember { Name = "HourlyRates_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("HourlyRates Edit") };
+
+        /******************************************************************************************************************************************************/
+
     }
 }

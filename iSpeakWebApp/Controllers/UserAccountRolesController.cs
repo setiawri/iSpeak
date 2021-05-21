@@ -235,6 +235,12 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.LessonSessions_Edit, model.LessonSessions_Edit, UserAccountRolesModel.COL_LessonSessions_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.LessonSessions_View, model.LessonSessions_View, UserAccountRolesModel.COL_LessonSessions_View.LogDisplay);
 
+                    //HourlyRates
+                    log = Helper.append(log, originalModel.HourlyRates_Notes, model.HourlyRates_Notes, UserAccountRolesModel.COL_HourlyRates_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.HourlyRates_Add, model.HourlyRates_Add, UserAccountRolesModel.COL_HourlyRates_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.HourlyRates_Edit, model.HourlyRates_Edit, UserAccountRolesModel.COL_HourlyRates_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.HourlyRates_View, model.HourlyRates_View, UserAccountRolesModel.COL_HourlyRates_View.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -375,6 +381,11 @@ namespace iSpeakWebApp.Controllers
                 if (item.LessonSessions_Add) model.LessonSessions_Add = true;
                 if (item.LessonSessions_Edit) model.LessonSessions_Edit = true;
                 if (item.LessonSessions_View) model.LessonSessions_View = true;
+
+                //HourlyRates
+                if (item.HourlyRates_Add) model.HourlyRates_Add = true;
+                if (item.HourlyRates_Edit) model.HourlyRates_Edit = true;
+                if (item.HourlyRates_View) model.HourlyRates_View = true;
 
             }
 

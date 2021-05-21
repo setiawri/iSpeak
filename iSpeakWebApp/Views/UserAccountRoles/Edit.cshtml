@@ -705,6 +705,36 @@
 
                             <hr />
 
+                            <label class="h5 mb-0">TUTOR HOURLY RATES</label>
+                            <div class="pl-0">
+                                <div id="HourlyRates_Div">
+                                    <button id="HourlyRates" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                    <label id="HourlyRates_Label" class="col-form-label">@Model.HourlyRates_Notes</label>
+                                </div>
+                                <div id="HourlyRates_Edit" class="input-group d-none mb-1">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.HourlyRates_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes" } })
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    @Html.CheckBoxFor(model => model.HourlyRates_View)
+                                </div>
+                                <div class="input-group-append">
+                                    @Html.LabelFor(model => model.HourlyRates_View, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.HourlyRates_Add)
+                                    </div>
+                                    @Html.LabelFor(model => model.HourlyRates_Add, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.HourlyRates_Edit)
+                                    </div>
+                                    @Html.LabelFor(model => model.HourlyRates_Edit, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                </div>
+                            </div>
+
+                            <hr />
+
                         </fieldset>
 
                         @if (access.UserAccountRoles_Edit)
