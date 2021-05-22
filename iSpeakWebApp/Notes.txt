@@ -1,6 +1,8 @@
 ﻿
 TO DO:
-- Payroll: create form to add manual payroll item
+- Payroll: 
+	> create form to add manual payroll item. 
+	> Verify amount for full time employees
 - Payroll Receipt: make sure manual payroll item is displayed
 - HourlyPayrate: if fulltimepayrate has value, cannot fill LessonPackages_Id and Rate
 - payroll pages: payroll rates & payroll

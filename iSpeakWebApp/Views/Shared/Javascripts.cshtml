@@ -19,6 +19,30 @@
             setDateRangePicker(id, value);
     }
 
+    function setDatePeriodFilter(idFilter, idMonth, idYear, value) {
+        if ($('#' + idMonth) != null && $('#' + idYear) != null) {
+            var date = new Date(value);
+            setDDLSelectedValue('FILTER_DatePeriod_Month', (date.getMonth() + 1).toString());
+            setDDLSelectedValue('FILTER_DatePeriod_Year', date.getFullYear().toString());
+            updateFILTER_DatePeriod(idFilter, idMonth, idYear);
+        }
+    }
+
+    function updateFILTER_DatePeriod(idFilter,idMonth,idYear) {
+        $('#' + idFilter).val(formatDate(new Date($('#' + idYear).val(), getDDLSelectedValue(idMonth) - 1, 1, 0, 0, 0, 0), 'yyyy/MM/dd'));
+        
+    }
+
+    function updateFILTER_DatePeriod_Month(action, idFilter, idMonth, idYear) {
+        var date = new Date($('#' + idYear).val(), getDDLSelectedValue(idMonth) - 1, 1, 0, 0, 0, 0);
+        if (action == 'previous') {
+            date = addMonths(date, -1);
+        } else if (action == 'next') {
+            date = addMonths(date, 1);
+        }
+        setDatePeriodFilter(idFilter, idMonth, idYear, date.toString());
+    }
+
     function getCheckboxFilterValue(id) {
         if ($('#'+id).is(":hidden"))
             return $('#' + id).val();
@@ -221,6 +245,11 @@
         $('#'+id).val(value).trigger('change');
     }
 
+    //for select2
+    function setDDLSelectedValue(id, value) {
+        $('#' + id).val(value).trigger('change');
+    }
+
     function getDDLSelectedValue(id) {
         return $('#' + id + ' option:selected').val();
     }
@@ -319,11 +348,13 @@
 
     function setDateRangePickerWithStringDate(id, start, end) { setDateRangePicker(id, parseJSONDate(start), parseJSONDate(end)); }
     function setDateRangePicker(id, start, end) {
-        $('#' + id).data('daterangepicker').setStartDate(start);
-        if (end != null)
-            $('#' + id).data('daterangepicker').setEndDate(end);
-        else
-            $('#' + id).data('daterangepicker').setEndDate(start);
+        if ($('#' + id).is(":hidden") == false) {
+            $('#' + id).data('daterangepicker').setStartDate(start);
+            if (end != null)
+                $('#' + id).data('daterangepicker').setEndDate(end);
+            else
+                $('#' + id).data('daterangepicker').setEndDate(start);
+        }
     }
 
     function setDateRangePickerStartDate(id, daterangepickerId) { $('#' + id).val($('#' + daterangepickerId).val().split(' - ')[0]); }
@@ -408,8 +439,11 @@
                 result.push(value.getFullYear());
         }
 
+        var finalResult = result.filter(Boolean).join(delimiter);
+        if (delimiter != ' ')
+            finalResult = finalResult.replaceAll(' ', '');
 
-        return result.filter(Boolean).join(delimiter);
+        return finalResult;
     }
 
     function getDateDelimiter(value) {
@@ -419,6 +453,15 @@
             return "-";
         else if (value.split("/").length > 1)
             return "/";
+    }
+
+    function addMonths(date, value) {
+        var d = date.getDate();
+        date.setMonth(date.getMonth() + +value);
+        if (date.getDate() != d) {
+            date.setDate(0);
+        }
+        return date;
     }
 
     // STRING MANIPULATOR ==========================================================================================================================================

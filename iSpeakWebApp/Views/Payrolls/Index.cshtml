@@ -1,0 +1,194 @@
+﻿@model IEnumerable<iSpeakWebApp.Models.PayrollsModel>
+
+@{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    string ControllerName = "Payrolls";
+    ViewBag.SelectedNavigationMenu = "Internal";
+    ViewBag.Title = "PAYROLL";
+    ViewBag.Subtitle = "Index";
+}
+
+<div class="content-wrapper">
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm("Index", ControllerName, FormMethod.Post))
+        {
+            <input type="hidden" id="FILTER_DatePeriod" name="FILTER_DatePeriod" value="@ViewBag.FILTER_DatePeriod" />
+            <!-- Form inputs -->
+            <div class="card animated bounceInLeft">
+                <div class="card-header header-elements-inline pb-1">
+                    <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row mx-0">
+                        <div class="row ml-0 mr-2" style="width:300px;">
+                            <label class="mb-0">Date Period</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend" style="width:160px">
+                                    <button type="button" class="btn btn-light" onclick="updateFILTER_DatePeriod_Month('previous','FILTER_DatePeriod','FILTER_DatePeriod_Month','FILTER_DatePeriod_Year')">&lt;</button>
+                                    <select id="FILTER_DatePeriod_Month" class="form-control select2" onchange="updateFILTER_DatePeriod('FILTER_DatePeriod','FILTER_DatePeriod_Month','FILTER_DatePeriod_Year')">
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                </div>
+                                <input id="FILTER_DatePeriod_Year" name="FILTER_DatePeriod_Year" type="number" class="form-control text-center positiveintegeronly period-year" value="@DateTime.UtcNow.Year" onchange="updateFILTER_DatePeriod('FILTER_DatePeriod','FILTER_DatePeriod_Month','FILTER_DatePeriod_Year')">
+                                <button type="button" class="btn btn-light" onclick="updateFILTER_DatePeriod_Month('next','FILTER_DatePeriod','FILTER_DatePeriod_Month','FILTER_DatePeriod_Year')">&gt;</button>
+                            </div>
+                        </div>
+
+                        <div class="ml-0 mr-2">
+                            <label class="mb-0">&nbsp;</label>
+                            <button type="submit" id="LoadData" onclick="showLoadingSpinner()" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>LOAD</button>
+                        </div>
+
+                        <div class="ml-0 mr-2">
+                            <label class="mb-0">&nbsp;</label>
+                            <button type="button" id="LoadData" onclick="showLoadingSpinner()" class="btn btn-primary form-control"><i class="icon-plus22 mr-2"></i>ADD MANUAL</button>
+                        </div>
+
+                        <div class="ml-0 mr-2">
+                            <label class="mb-0">&nbsp;</label>
+                            <button type="button" id="LoadData" onclick="showLoadingSpinner()" class="btn btn-info form-control"><i class="icon-stack-text mr-2"></i>GENERATE FULL TIME PAYROLL</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover datatable">
+                            <thead>
+                                <tr>
+                                    <th>@Html.DisplayNameFor(model => model.Tutor_UserAccounts_Id_TEMP)</th>
+                                    <th class="text-right">@Html.DisplayNameFor(model => model.TotalHours)</th>
+                                    <th class="text-right">@Html.DisplayNameFor(model => model.PayableAmount)</th>
+                                    <th class="text-right">@Html.DisplayNameFor(model => model.DueAmount)</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.Tutor_UserAccounts_FullName)</td>
+                                            <td class="text-right">@Html.DisplayFor(modelItem => item.TotalHours)</td>
+                                            <td class="text-right">@Html.DisplayFor(modelItem => item.PayableAmount)</td>
+                                            <td class="text-right">@Html.DisplayFor(modelItem => item.DueAmount)</td>
+                                            <td><a href="javascript:void(0)" onclick="Details('@item.Tutor_UserAccounts_Id')">Details</a></td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <!-- /form inputs -->
+        }
+
+        <!-- Cancel form modal -->
+        <div id="modal_cancel" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-warning">
+                        <h6 class="modal-title">Cancel Payment</h6>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <form action="#" class="form-horizontal">
+                        <div class="modal-body">
+                            <div style="display: none">
+                                <input class="form-control" id="modal_cancel-Id" />
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2">Payment</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" id="modal_cancel-No" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2">Notes</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" id="modal_cancel-Notes" rows="2" placeholder="Cancel Reason"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn bg-success" onclick="Cancel()">Submit</button>
+                            <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- /cancel form modal -->
+
+    </div>
+    <!-- /content area -->
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+    });
+
+    function UpdateApproval(control, id) {
+        AjaxUpdate('Update_Approval', '@ControllerName', id, control.checked);
+    }
+
+    function applyLast() {
+        setDatePeriodFilter('FILTER_DatePeriod', 'FILTER_DatePeriod_Month', 'FILTER_DatePeriod_Year', '@string.Format("{0:MM/dd/yyyy}", ViewBag.FILTER_DatePeriod ?? DateTime.Now)');
+    }
+
+    // CANCEL PAYMENT ==============================================================================================================================================
+
+    function PopulateCancelModal(id, no) {
+        $('#modal_cancel-Id').val(id);
+        $('#modal_cancel-No').val(no);
+        $('#modal_cancel-Notes').val('');
+    }
+
+    function Cancel() {
+        if (!event.detail || event.detail == 1) {
+            if ($('#modal_cancel-Notes').val() == '') {
+                showMessage('Please provide reason for cancellation.', 'modal_cancel-Notes');
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Update_Cancelled", ControllerName)',
+                    data: {
+                        id: $('#modal_cancel-Id').val(),
+                        notes: $('#modal_cancel-Notes').val()
+                    },
+                    success: function (data) {
+                        $('#LoadData').trigger('click');
+                    }, //end success
+                    error: function (data) {
+                        showMessage("ERROR: " + data.responseText);
+                    } //end error
+                }); //end ajax
+            }
+        }
+    }
+
+    $('#modal_cancel').on('shown.bs.modal', function () {
+        $('#modal_cancel-Notes').focus();
+    })
+
+    //==============================================================================================================================================================
+
+</script>
