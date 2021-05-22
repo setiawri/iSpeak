@@ -41,6 +41,23 @@ namespace iSpeakWebApp.Controllers
             return View(get(FILTER_Keyword, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo));
         }
 
+        /* PRINT **********************************************************************************************************************************************/
+
+        // GET: Payments/Create
+        public ActionResult Print(Guid? id)
+        {
+            if (id == null || !UserAccountsController.getUserAccess(Session).Payments_View)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
+            PayrollPaymentsModel model = get((Guid)id);
+
+            ViewBag.InvoiceHeaderText = new BranchesController().get(Helper.getActiveBranchId(Session)).InvoiceHeaderText;
+            ViewData["PayrollPaymentItems"] = PayrollPaymentItemsController.get(null, model.Id);
+            ViewBag.TotalAmount = model.Amount;
+
+            return View(model);
+        }
+
         /* METHODS ********************************************************************************************************************************************/
 
         public void setViewBag(string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved,
@@ -86,7 +103,7 @@ namespace iSpeakWebApp.Controllers
                         WHERE 1=1
 							AND (@Id IS NULL OR PayrollPayments.Id = @Id)
 							AND (@Id IS NOT NULL OR (
-    							(@FILTER_Keyword IS NULL OR PayrollPayments.No LIKE '%'+@FILTER_Keyword+'%')
+    							(@FILTER_Keyword IS NULL OR (PayrollPayments.No LIKE '%'+@FILTER_Keyword+'%' OR UserAccounts.Fullname LIKE '%'+@FILTER_Keyword+'%'))
                                 AND (@FILTER_DateFrom IS NULL OR PayrollPayments.Timestamp >= @FILTER_DateFrom)
                                 AND (@FILTER_DateTo IS NULL OR PayrollPayments.Timestamp <= @FILTER_DateTo)
                                 AND (@Cancelled IS NULL OR PayrollPayments.Cancelled = @Cancelled)

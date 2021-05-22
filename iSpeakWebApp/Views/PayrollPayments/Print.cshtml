@@ -1,0 +1,152 @@
+﻿@model iSpeakWebApp.Models.PayrollPaymentsModel
+@using iSpeakWebApp.Models
+
+@{
+    Layout = null;
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    string ControllerName = "PayrollPayments";
+    ViewBag.SelectedNavigationMenu = "Sales";
+    ViewBag.Title = "PAYROLL RECEIPT";
+    ViewBag.Subtitle = "Print";
+
+    List<PayrollPaymentItemsModel> PayrollPaymentItems = (List<PayrollPaymentItemsModel>)ViewData["PayrollPaymentItems"];
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewBag.Title</title>
+    @Html.Partial("Scripts")
+</head>
+<body class="bg-slate-800">
+    <!-- Page content -->
+    <div class="page-content">
+        <!-- Main content -->
+        <div class="content-wrapper">
+            <!-- Content area -->
+            <div class="content">
+                <!-- Invoice template -->
+                <div class="card">
+                    <div class="card-header bg-transparent header-elements-inline">
+                        <h4 class="card-title">@ViewBag.Title</h4>
+                        <div class="header-elements">
+                            @*<button type="button" class="btn btn-light btn-sm ml-3" onclick="back_exec()"><i class="icon-circle-left2 mr-2"></i> Back</button>*@
+                            <button type="button" class="btn btn-light btn-sm ml-3" onclick="print_exec()"><i class="icon-printer mr-2"></i> Print</button>
+                        </div>
+                    </div>
+
+                    <div class="card-body" id="print-area">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div>
+                                    <h4 class="text-primary mb-2 mt-md-2">@Model.UserAccounts_Fullname</h4>
+                                    <ul class="list list-unstyled mb-0">
+                                        <li>Payroll Payment <span class="text-primary">@Model.No</span> on @string.Format("{0:dd/MM/yyyy}", TimeZoneInfo.ConvertTimeFromUtc(Model.Timestamp, TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time")))</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div style="float: right">
+                                    <img src="@Helper.getImageUrl("logo.png", Request, Server)" class="img-responsive" style="width: 150px" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-md-flex flex-md-wrap">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr class="bg-grey-300">
+                                            <th style="width:150px;">Timestamp</th>
+                                            <th>Student</th>
+                                            <th class="text-right" style="width:100px;">Duration</th>
+                                            <th class="text-right" style="width:80px;">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in PayrollPaymentItems)
+                                        {
+                                            <tr>
+                                                <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
+                                                <td class="align-top">@Html.DisplayFor(modelItem => item.UserAccounts_Fullname)</td>
+                                                <td class="align-top text-right">@Html.DisplayFor(modelItem => item.Hour)</td>
+                                                <td class="align-top text-right">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="d-md-flex flex-md-wrap">
+                            <div class="mx-auto"></div>
+
+                            <div class="wmin-md-200">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <th><h5>TOTAL:</h5></th>
+                                                <td class="text-right">
+                                                    <h5 class="font-weight-semibold text-primary">@string.Format("{0:N0}", ViewBag.TotalAmount)</h5>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.Notes))
+                        {
+                            <div class="d-md-flex flex-md-wrap">
+                                <div class="mr-auto">
+                                    <div class="font-weight-bold" style="border-bottom:1px solid lightgray;">NOTES</div>
+                                    <div>@Model.Notes</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="card-footer">
+                        <span class="text-muted">Please contact the manager for any question.</span>
+                    </div>
+                </div>
+                <!-- /invoice template -->
+            </div>
+            <!-- /content area -->
+        </div>
+        <!-- /main content -->
+    </div>
+    <!-- /page content -->
+
+</body>
+</html>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+    });
+
+    function applyLast() {
+    }
+
+    function print_exec() {
+        var printContents = document.getElementById('print-area').innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+    }
+
+    //==============================================================================================================================================================
+
+</script>

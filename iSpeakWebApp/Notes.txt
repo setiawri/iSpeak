@@ -1,6 +1,7 @@
 ﻿
 TO DO:
-- Payments Index: create print page.
+- Payroll: create form to add manual payroll item
+- Payroll Receipt: make sure manual payroll item is displayed
 - HourlyPayrate: if fulltimepayrate has value, cannot fill LessonPackages_Id and Rate
 - payroll pages: payroll rates & payroll
 - create user account info page
@@ -31,9 +32,6 @@ IMPROVEMENTS:
 
 Javascripts file:
 - closeSpinner() is not working
-
-PayrollPayments:
-- Index: create print page.
 
 SaleInvoiceItems
 - remove SessionHours_Remaining column
