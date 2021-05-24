@@ -193,7 +193,10 @@
     }
 
     function UpdateTutor_UserAccounts_Fullname() {
-        $('#Tutor_UserAccounts_Fullname').val(getDDLSelectedText('Tutor_UserAccounts_Id_TEMP'));
+        var Tutor_UserAccounts_Fullname = getDDLSelectedText('Tutor_UserAccounts_Id_TEMP');
+        $.each(lessonsessions, function (index, item) {
+            item.Tutor_UserAccounts_Fullname = Tutor_UserAccounts_Fullname;
+        });
     }
 
     //ITEM LIST ====================================================================================================================================================
