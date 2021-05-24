@@ -30,7 +30,7 @@
 
     function updateFILTER_DatePeriod(idFilter,idMonth,idYear) {
         $('#' + idFilter).val(formatDate(new Date($('#' + idYear).val(), getDDLSelectedValue(idMonth) - 1, 1, 0, 0, 0, 0), 'yyyy/MM/dd'));
-        
+
     }
 
     function updateFILTER_DatePeriod_Month(action, idFilter, idMonth, idYear) {
@@ -248,6 +248,12 @@
     //for select2
     function setDDLSelectedValue(id, value) {
         $('#' + id).val(value).trigger('change');
+    }
+
+    function appendAndSetSelect2SelectedValue(id, text, value, emptyFirst) {
+        if (emptyFirst == true)
+            $('#' + id).empty();
+        $('#' + id).append(new Option(text, value, false, false)).trigger('change');
     }
 
     function getDDLSelectedValue(id) {

@@ -20,6 +20,7 @@
             @Html.AntiForgeryToken()
             @Html.HiddenFor(model => model.Amount)
             @Html.HiddenFor(model => model.CancelNotes)
+            @Html.HiddenFor(model => model.Customer_UserAccounts_Name)
             <input type="hidden" id="JsonSaleInvoiceItems" name="JsonSaleInvoiceItems" />
             <!-- Form inputs -->
             <div class="card">
@@ -41,7 +42,7 @@
                             <div class="row ml-0 mr-2" style="width:300px;">
                                 <label class="mb-0">&nbsp;</label>
                                 <div class="input-group">
-                                    <select class="form-control" id="Customer_UserAccounts_Id" name="Customer_UserAccounts_Id"></select>
+                                    <select class="form-control" id="Customer_UserAccounts_Id" name="Customer_UserAccounts_Id" onchange="UpdateCustomer_UserAccounts_Name()"></select>
                                     @Html.ValidationMessageFor(model => model.Customer_UserAccounts_Id, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -172,36 +173,36 @@
                                         foreach (SaleInvoiceItemsModel invoice in SaleInvoiceItems)
                                         {
                                             item_no += 1;
-                                        <tr id="item_@item_no">
-                                            <td class="align-top">
-                                                <a href="javascript:void(0)" onclick="RemoveItem('item_@item_no')" class="text-danger"><i class="fa fa-2x fa-times"></i></a>
-                                            </td>
-                                            <td class="align-top">
-                                                @invoice.Description
-                                                @if (!string.IsNullOrEmpty(invoice.VouchersName))
-                                                {
-                                                    <br/>@:Voucher: @invoice.VouchersName
-                                                } 
-                                                @if (!string.IsNullOrEmpty(invoice.Notes))
-                                                {
-                                                    <br/>@:Notes: @invoice.Notes
-                                                } 
-                                            </td>
-                                            <td class="align-top text-right">
-                                                Qty: @string.Format("{0:N0}", invoice.Qty) x @string.Format("{0:N0}", invoice.Price)
-                                                @if (invoice.TravelCost > 0)
-                                                {
-                                                    <br />@:Travel: @string.Format("{0:N0}", invoice.TravelCost) @("Tutor:") @string.Format("{0:N0}", invoice.TutorTravelCost) @(")")
-                                                }
-                                            </td>
-                                            <td class="align-top text-right">
-                                                Discount: @string.Format("{0:N0}", -1 * invoice.DiscountAmount)
-                                                <br/>Vouchers: @string.Format("{0:N0}", -1 * invoice.VouchersAmount)
-                                            </td>
-                                            <td class="align-top text-right">
-                                                <strong><span class="subtotal">@string.Format("{0:N0}", invoice.TotalAmount)</span></strong>
-                                            </td>
-                                        </tr>
+                                            <tr id="item_@item_no">
+                                                <td class="align-top">
+                                                    <a href="javascript:void(0)" onclick="RemoveItem('item_@item_no')" class="text-danger"><i class="fa fa-2x fa-times"></i></a>
+                                                </td>
+                                                <td class="align-top">
+                                                    @invoice.Description
+                                                    @if (!string.IsNullOrEmpty(invoice.VouchersName))
+                                                    {
+                                                        <br />@:Voucher: @invoice.VouchersName
+                                                    }
+                                                    @if (!string.IsNullOrEmpty(invoice.Notes))
+                                                    {
+                                                        <br />@:Notes: @invoice.Notes
+                                                    }
+                                                </td>
+                                                <td class="align-top text-right">
+                                                    Qty: @string.Format("{0:N0}", invoice.Qty) x @string.Format("{0:N0}", invoice.Price)
+                                                    @if (invoice.TravelCost > 0)
+                                                    {
+                                                        <br />@:Travel: @string.Format("{0:N0}", invoice.TravelCost) @("Tutor:") @string.Format("{0:N0}", invoice.TutorTravelCost) @(")")
+                                                    }
+                                                </td>
+                                                <td class="align-top text-right">
+                                                    Discount: @string.Format("{0:N0}", -1 * invoice.DiscountAmount)
+                                                    <br />Vouchers: @string.Format("{0:N0}", -1 * invoice.VouchersAmount)
+                                                </td>
+                                                <td class="align-top text-right">
+                                                    <strong><span class="subtotal">@string.Format("{0:N0}", invoice.TotalAmount)</span></strong>
+                                                </td>
+                                            </tr>
                                         }
                                     }
                                 </tbody>
@@ -245,7 +246,8 @@
 
     $(document).ready(function () {
         if ('@SaleInvoiceItems' != '') {
-            //setValue('Customer_UserAccounts_Id', '@Model.Customer_UserAccounts_Id'); //doesn't work because dropdownlist is not loaded yet until user click on it and search for a customer
+
+            appendAndSetSelect2SelectedValue('Customer_UserAccounts_Id', '@Model.Customer_UserAccounts_Name', '@Model.Customer_UserAccounts_Id',true);
             setValue('Notes', '@Model.Notes');
             saleinvoiceitems = @Html.Raw(Json.Encode(SaleInvoiceItems));
 
@@ -431,14 +433,16 @@
 
     function CalculateTotalAmount() {
         var total = 0;
-        console.log(saleinvoiceitems.length);
         $.each(saleinvoiceitems, function (index, item) {
             total += item.TotalAmount;
         });
 
-        console.log('TOTAL: ' +total);
         $('#totalAmount').text(formatN0(total));
         $('#Amount').val(total);
+    }
+
+    function UpdateCustomer_UserAccounts_Name() {
+        $('#Customer_UserAccounts_Name').val(getDDLSelectedText('Customer_UserAccounts_Id'));
     }
 
     //SUBMISSION ===================================================================================================================================================

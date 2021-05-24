@@ -18,6 +18,7 @@
         {
             @Html.AntiForgeryToken()
             <input type="hidden" id="JsonLessonSessions" name="JsonLessonSessions" />
+            <input type="hidden" id="Tutor_UserAccounts_Fullname" name="Tutor_UserAccounts_Fullname" />
             <!-- Form inputs -->
             <div class="card animated bounceInLeft" style="min-height:600px;">
                 <div class="card-header header-elements-inline pb-1">
@@ -109,7 +110,7 @@
                         <div class="form-group row">
                             @Html.LabelFor(model => model.Tutor_UserAccounts_Id_TEMP, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
                             <div class="col-lg-4">
-                                <select class="form-control" id="Tutor_UserAccounts_Id_TEMP" name="Tutor_UserAccounts_Id_TEMP"></select>
+                                <select class="form-control" id="Tutor_UserAccounts_Id_TEMP" name="Tutor_UserAccounts_Id_TEMP" onchange="UpdateTutor_UserAccounts_Fullname()"></select>
                                 @Html.ValidationMessage("Tutor_UserAccounts_Id_TEMP", "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -191,6 +192,10 @@
         $("#SaleInvoiceItems_Id").append("<option value=''>Pilih</option");
     }
 
+    function UpdateTutor_UserAccounts_Fullname() {
+        $('#Tutor_UserAccounts_Fullname').val(getDDLSelectedText('Tutor_UserAccounts_Id_TEMP'));
+    }
+
     //ITEM LIST ====================================================================================================================================================
 
     var lessonsessions = [];
@@ -210,7 +215,9 @@
 
                 setCheckboxState('IsScheduleChange', item.IsScheduleChange);
                 setCheckboxState('IsWaiveTutorFee', item.IsWaiveTutorFee);
-                //setValue('Tutor_UserAccounts_Id_TEMP', 'item.Tutor_UserAccounts_Id_TEMP'); //doesn't work because dropdownlist is not loaded yet until user click on it and search for an item
+
+                if (getDDLSelectedValue('Tutor_UserAccounts_Id_TEMP') == null)
+                    appendAndSetSelect2SelectedValue('Tutor_UserAccounts_Id_TEMP', item.Tutor_UserAccounts_Fullname, item.Tutor_UserAccounts_Id_TEMP, true);
             });
         }
     }
@@ -307,6 +314,7 @@
             $.each(lessonsessions, function (index, item) {
                 item.Id = emptyGuid(); //change Id from local item_no to Guid
                 item.Timestamp = $('#Timestamp').val();
+                item.Tutor_UserAccounts_Fullname = getDDLSelectedText('Tutor_UserAccounts_Id_TEMP');
                 item.Tutor_UserAccounts_Id_TEMP = getDDLSelectedValue('Tutor_UserAccounts_Id_TEMP');
                 item.SessionHours = getDDLSelectedValue('SessionHours');
                 item.IsScheduleChange = getCheckboxValue('IsScheduleChange');
