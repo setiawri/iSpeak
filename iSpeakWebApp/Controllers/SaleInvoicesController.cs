@@ -267,7 +267,10 @@ namespace iSpeakWebApp.Controllers
                     WHERE 1=1
 						AND (@Id IS NULL OR SaleInvoices.Id = @Id)
 						AND (@Id IS NOT NULL OR (
-    						(@FILTER_Keyword IS NULL OR (SaleInvoices.No LIKE '%'+@FILTER_Keyword+'%'))
+    						(@FILTER_Keyword IS NULL OR (
+                                    SaleInvoices.No LIKE '%'+@FILTER_Keyword+'%'
+                                    OR Customer_UserAccounts.Fullname LIKE '%'+@FILTER_Keyword+'%'
+                                ))
     						AND (@FILTER_PaymentNo IS NULL OR (SaleInvoices.Id IN (                                
                                 SELECT SaleInvoices.Id
                                 FROM PaymentItems 
