@@ -54,7 +54,7 @@
 
                         <div class="ml-0 mr-2">
                             <label class="mb-0">&nbsp;</label>
-                            <button type="button" id="AddManualItem" onclick="AddManualItem()" class="btn btn-info form-control"><i class="icon-plus22 mr-2"></i>ADD MANUAL</button>
+                            <button type="button" id="AddManualItem" data-toggle='modal' data-target='#modal_manualitem' class="btn btn-info form-control"><i class="icon-plus22 mr-2"></i>ADD MANUAL</button>
                         </div>
 
                         <div class="ml-0 mr-2">
@@ -152,6 +152,61 @@
         </div>
         <!-- /payment form modal -->
 
+        <!-- Manual payroll item form modal -->
+        <div id="modal_manualitem" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-success">
+                        <h6 class="modal-title">MANUAL PAYROLL ITEM</h6>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <form action="#" class="form-horizontal">
+                        <div class="modal-body">
+                            <div style="display: none">
+                                <input class="form-control" id="modal_manualitem-UserAccounts_Id" />
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2">Date</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group">
+                                        <input id="modal_manualitem-Timestamp" type="datetime" class="form-control daterange-picker" />
+                                        <span class="input-group-append">
+                                            <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2">Amount</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control positiveintegeronly" id="modal_manualitem-Amount" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2">Employee</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" id="UserAccounts_Id" name="UserAccounts_Id"></select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2">Description</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" id="modal_manualitem-Description" rows="2" placeholder="Description"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button id="modal_manualitem-submit" type="button" class="btn bg-success" onclick="ManualItem()">Submit</button>
+                            <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- /manual payroll form modal -->
+
     </div>
     <!-- /content area -->
 </div>
@@ -167,11 +222,44 @@
     }
 
     function applyLast() {
+        AjaxGetDropdownlistData('UserAccounts_Id', 'GetDropDownListData', 'UserAccounts');
         setDatePeriodFilter('FILTER_DatePeriod', 'FILTER_DatePeriod_Month', 'FILTER_DatePeriod_Year', '@string.Format("{0:MM/dd/yyyy}", ViewBag.FILTER_DatePeriod ?? DateTime.Now)');
     }
 
     function generateFullTimePayroll() {
         AjaxExecute('GenerateFullTimePayroll', '@ControllerName', getValueString('FILTER_DatePeriod'), null, function () { $('#LoadData').trigger('click'); });
+    }
+
+    // MANUAL PAYROLL ITEM =========================================================================================================================================
+
+    function ManualItem() {
+        if (!event.detail || event.detail == 1) {
+            if (getValueString('modal_manualitem-Amount') == '') {
+            showMessage('Please provide amount', 'modal_manualitem-Amount');
+            } else if (getDDLSelectedValue('UserAccounts_Id') == null) {
+                showMessage('Please select employee', 'UserAccounts_Id');
+            } else if (getValueString('modal_manualitem-Description') == '') {
+                showMessage('Please provide description', 'modal_manualitem-Description');
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Create", "PayrollPaymentItems")',
+                    data: {
+                        UserAccounts_Id: getDDLSelectedValue('UserAccounts_Id'),
+                        Description: getValueString('modal_manualitem-Description'),
+                        Timestamp: getValueString('modal_manualitem-Timestamp'),
+                        Amount: getValueFloat('modal_manualitem-Amount')
+                    },
+                    success: function (data) {
+                        $('#LoadData').trigger('click');
+                    }, //end success
+                    error: function (data) {
+                        showMessage("ERROR: " + data.responseText);
+                    } //end error
+                }); //end ajax
+            }
+        }
     }
 
     // PAYMENT =====================================================================================================================================================
@@ -182,7 +270,7 @@
                 type: "POST",
                 url: '@Url.Action("Create", "PayrollPayments")',
                 data: {
-                    UserAccounts_Id: $('#modal_payment-UserAccounts_Id').val(),
+                    UserAccounts_Id: $('modal_payment-UserAccounts_Id').val(),
                     Notes: $('#modal_payment-Notes').val(),
                     Timestamp: getValueString('modal_payment-Timestamp'),
                     Amount: getValueFloat('modal_payment-Amount'),
@@ -209,7 +297,7 @@
         $('#modal_payment-Amount').val(formatN0(amount));
         $('#modal_payment-Notes').val('');
     }
-    
+
     function GetDetails(id, title) {
         var url = '@Url.Action("GetDetails", "PayrollPaymentItems")';
         $.ajax({

@@ -186,6 +186,38 @@ namespace iSpeakWebApp.Controllers
             return Json(new { Message = "Generated " + newItems + " payrolls" });
         }
 
+        public JsonResult Create(Guid? UserAccounts_Id, string Description, DateTime Timestamp, int Amount)
+        {
+            if(UserAccounts_Id == null)
+                UtilWebMVC.Json(Response, "Please select employee");
+            else if (string.IsNullOrEmpty(Description))
+                UtilWebMVC.Json(Response, "Please provide description");
+            else
+            {
+                Guid Id = Guid.NewGuid();
+                add(new PayrollPaymentItemsModel()
+                {
+                    Id = Id,
+                    PayrollPayments_Id = null,
+                    Timestamp = Timestamp,
+                    Description = Description,
+                    Hour = 0,
+                    HourlyRate = 0,
+                    TutorTravelCost = 0,
+                    Amount = Amount,
+                    UserAccounts_Id_TEMP = UserAccounts_Id.Value,
+                    CancelNotes = string.Empty,
+                    Branches_Id = Helper.getActiveBranchId(Session),
+                    IsFullTime = false
+                });
+
+                ActivityLogsController.AddCreateLog(db, Session, Id);
+                db.SaveChanges();
+            }
+
+            return Json(new { Message = "" });
+        }
+
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
         public static List<PayrollPaymentItemsModel> get(HttpSessionStateBase Session, Guid? UserAccounts_Id, DateTime? DatePeriod, bool? IsFullTime) { return get(Session, null, null, UserAccounts_Id, DatePeriod, IsFullTime); }

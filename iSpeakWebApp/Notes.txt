@@ -1,5 +1,6 @@
 ﻿
 TO DO:
+- lesson session index page: filter is not applie after creating new session
 - Test lesson session waive tutor fee and schedule change. check payrollpaymentitem is generated correctly.
 - Add branch name in payroll payment print page
 - Payroll: 
