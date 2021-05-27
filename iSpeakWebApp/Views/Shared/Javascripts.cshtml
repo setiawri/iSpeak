@@ -295,7 +295,7 @@
     function showMessage(message, idToSelectOnEscape) {
         if (message !== '') {
             message = message.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
-            bootbox.dialog({ backdrop: true, message: message, onEscape: function () { $('#'+idToSelectOnEscape).select(); } }); //.select() is not working
+            bootbox.dialog({ backdrop: true, message: message, onEscape: function () { $('#'+idToSelectOnEscape).select(); } }); ////.select() is not working
         }
     }
 
@@ -526,13 +526,29 @@
 
     // AJAX ========================================================================================================================================================
 
+    function AjaxExecute(action, controller, param1, callbackfunction, onEscapeFunction) {
+        var url = '@Url.Action("__action", "__controller")';
+        url = url.replace("__action", action).replace("__controller", controller);
+        $.ajax({
+            type: "POST", url: url, data: { param1: param1 },
+            success: function (data) {
+                if (data.Message != '')
+                    bootbox.dialog({ backdrop: true, message: data.Message, onEscape: function () { if (onEscapeFunction != null) onEscapeFunction(); } });
+
+                if (callbackfunction != null)
+                    callbackfunction();
+            },            
+            error: function (result) { bootbox.alert({ backdrop: true, message: "Error " + result }); }
+        });
+    }
+
     function AjaxUpdate(action, controller, id, value) {
         var url = '@Url.Action("__action", "__controller")';
         url = url.replace("__action", action).replace("__controller", controller);
         $.ajax({
             type: "POST", url: url, data: { id: id, value: value },
             success: function (data) {
-                if(data.Message != '')
+                if (data.Message != '')
                     bootbox.alert({ backdrop: true, message: data.Message });
             },
             error: function (result) { bootbox.alert({ backdrop: true, message: "Error " + result }); }

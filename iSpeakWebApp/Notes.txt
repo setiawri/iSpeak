@@ -1,6 +1,7 @@
 ﻿
 TO DO:
 - Test lesson session waive tutor fee and schedule change. check payrollpaymentitem is generated correctly.
+- Add branch name in payroll payment print page
 - Payroll: 
 	> create form to add manual payroll item. 
 	> Verify amount for full time employees

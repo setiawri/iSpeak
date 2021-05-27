@@ -74,7 +74,7 @@
                         <a href="@Url.Action("Index", "SaleReturns", new { rss=1 })" class="dropdown-item">Returns</a>
                     </div>
                 </li>
-                <li class="nav-item dropdown">
+                <li id="Menu_Schedules" class="nav-item dropdown">
                     <a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
                         <i class="icon-notebook mr-2"></i>
                         Schedules
@@ -128,7 +128,7 @@
                                 }
                                 @if (access.PayrollPayments_View)
                                 {
-                                    <a href="@Url.Action("Index", "Payrolls", new { rss=1 })" class="dropdown-item">Payroll</a>
+                                    <a href="@Url.Action("Index", "PayrollPaymentItems", new { rss=1 })" class="dropdown-item">Payroll</a>
                                     <a href="@Url.Action("Index", "PayrollPayments", new { rss=1 })" class="dropdown-item">Payments</a>
                                 }
                             </div>

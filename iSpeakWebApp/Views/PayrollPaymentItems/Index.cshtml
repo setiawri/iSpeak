@@ -2,7 +2,7 @@
 
 @{
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
-    string ControllerName = "Payrolls";
+    string ControllerName = "PayrollPaymentItems";
     ViewBag.SelectedNavigationMenu = "Internal";
     ViewBag.Title = "PAYROLL";
     ViewBag.Subtitle = "Index";
@@ -59,7 +59,7 @@
 
                         <div class="ml-0 mr-2">
                             <label class="mb-0">&nbsp;</label>
-                            <button type="button" id="GenerateFullTimePayroll" onclick="GenerateFullTimePayroll()" class="btn btn-primary form-control"><i class="icon-stack-text mr-2"></i>GENERATE FULL TIME PAYROLL</button>
+                            <button type="button" id="GenerateFullTimePayroll" onclick="generateFullTimePayroll()" class="btn btn-primary form-control"><i class="icon-stack-text mr-2"></i>GENERATE FULL TIME PAYROLL</button>
                         </div>
                     </div>
 
@@ -170,8 +170,8 @@
         setDatePeriodFilter('FILTER_DatePeriod', 'FILTER_DatePeriod_Month', 'FILTER_DatePeriod_Year', '@string.Format("{0:MM/dd/yyyy}", ViewBag.FILTER_DatePeriod ?? DateTime.Now)');
     }
 
-    function GenerateFullTimePayroll() {
-
+    function generateFullTimePayroll() {
+        AjaxExecute('GenerateFullTimePayroll', '@ControllerName', getValueString('FILTER_DatePeriod'), null, function () { $('#LoadData').trigger('click'); });
     }
 
     // PAYMENT =====================================================================================================================================================

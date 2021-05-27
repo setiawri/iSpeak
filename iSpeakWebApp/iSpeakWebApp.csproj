@@ -128,7 +128,6 @@
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Controllers\ActivityLogsController.cs" />
-    <Compile Include="Controllers\PayrollsController.cs" />
     <Compile Include="Controllers\PayrollPaymentItemsController.cs" />
     <Compile Include="Controllers\PayrollPaymentsController.cs" />
     <Compile Include="Controllers\HourlyRatesController.cs" />
@@ -277,7 +276,7 @@
     <Content Include="Views\HourlyRates\Index.cshtml" />
     <Content Include="Views\PayrollPayments\Index.cshtml" />
     <Content Include="Views\PayrollPayments\Print.cshtml" />
-    <Content Include="Views\Payrolls\Index.cshtml" />
+    <Content Include="Views\PayrollPaymentItems\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

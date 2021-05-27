@@ -55,6 +55,10 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Branches_Id = new ModelMember { Name = "Branches_Id" };
 
 
+        public bool IsFullTime { get; set; } = false;
+        public static ModelMember COL_IsFullTime = new ModelMember { Name = "IsFullTime" };
+
+
         /******************************************************************************************************************************************************/
 
         public string Student_UserAccounts_FirstName { get; set; }

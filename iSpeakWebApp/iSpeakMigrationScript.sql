@@ -312,6 +312,11 @@
 	UPDATE PayrollPaymentItems SET UserAccounts_Id_TEMP = CONVERT(UNIQUEIDENTIFIER, UserAccounts_Id)
 	ALTER TABLE PayrollPaymentItems ALTER COLUMN UserAccounts_Id nvarchar(128) NULL;	
 	
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IsFullTime' AND TABLE_NAME = 'PayrollPaymentItems' AND TABLE_SCHEMA='dbo') 
+		ALTER TABLE PayrollPaymentItems ADD IsFullTime bit NULL DEFAULT 0;
+	GO
+	UPDATE PayrollPaymentItems SET IsFullTime = 1 WHERE Description LIKE '%Payroll%'
+	
 -- PAYROLL PAYMENTS =====================================================================================================
 
 	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'UserAccounts_Id_TEMP' AND TABLE_NAME = 'PayrollPayments' AND TABLE_SCHEMA='dbo') 

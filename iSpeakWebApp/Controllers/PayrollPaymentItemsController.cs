@@ -5,16 +5,53 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using iSpeakWebApp.Models;
 using LIBUtil;
+using LIBWebMVC;
 
 namespace iSpeakWebApp.Controllers
 {
     public class PayrollPaymentItemsController : Controller
     {
+        private readonly DBContext db = new DBContext();
+
+        /* INDEX **********************************************************************************************************************************************/
+
+        // GET: Payrolls
+        public ActionResult Index(int? rss, DateTime? FILTER_DatePeriod)
+        {
+            if (!UserAccountsController.getUserAccess(Session).PayrollPayments_View)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
+            setViewBag(FILTER_DatePeriod);
+            ViewBag.RemoveDatatablesStateSave = rss;
+            return View();
+        }
+
+        // POST: Payrolls
+        [HttpPost]
+        public ActionResult Index(DateTime? FILTER_DatePeriod)
+        {
+            List<PayrollsModel> models = null;
+            setViewBag(FILTER_DatePeriod);
+            if (FILTER_DatePeriod != null)
+            {
+                models = getSummary(Util.getAsStartDate(FILTER_DatePeriod).Value, Util.getLastDayOfSelectedMonth(FILTER_DatePeriod.Value).Value);
+            }
+
+            return View(models);
+        }
+
+        /* METHODS ********************************************************************************************************************************************/
+
+        public void setViewBag(DateTime? FILTER_DatePeriod)
+        {
+            ViewBag.FILTER_DatePeriod = FILTER_DatePeriod ?? Util.getFirstDayOfSelectedMonth(DateTime.Now);
+        }
+
         public JsonResult GetDetails(Guid id, DateTime DatePeriod)
         {
             string content = "";
 
-            List<PayrollPaymentItemsModel> models = get(Session, id, DatePeriod);
+            List<PayrollPaymentItemsModel> models = get(Session, id, DatePeriod, null);
 
             if(models.Count > 0)
             {
@@ -110,10 +147,49 @@ namespace iSpeakWebApp.Controllers
             return combinedModels;
         }
 
+        public JsonResult GenerateFullTimePayroll(DateTime param1)
+        {
+            int newItems = 0;
+            DateTime DatePeriod = param1;
+
+            List<HourlyRatesModel> ActiveFullTimeEmployeePayrates = HourlyRatesController.getActiveFullTimeEmployeePayrates(Session);
+            List<PayrollPaymentItemsModel> FullTimePayrollPaymentItems = get(Session, null, DatePeriod, true);
+            DateTime Timestamp = Util.getLastDayOfSelectedMonth(DatePeriod).Value;
+            string Description = string.Format("Payroll {0:MMM yyyy}", Timestamp);
+
+            if(ActiveFullTimeEmployeePayrates.Count > 0)
+            {
+                foreach(HourlyRatesModel model in ActiveFullTimeEmployeePayrates)
+                {
+                    if (!FullTimePayrollPaymentItems.Exists(x => x.UserAccounts_Id_TEMP == model.UserAccounts_Id_TEMP))
+                    {
+                        add(new PayrollPaymentItemsModel()
+                        {
+                            Id = Guid.NewGuid(),
+                            PayrollPayments_Id = null,
+                            Timestamp = Timestamp,
+                            Description = Description,
+                            Hour = 0,
+                            HourlyRate = 0,
+                            TutorTravelCost = 0,
+                            Amount = model.FullTimeTutorPayrate,
+                            UserAccounts_Id_TEMP = model.UserAccounts_Id_TEMP,
+                            CancelNotes = string.Empty,
+                            Branches_Id = model.Branches_Id,
+                            IsFullTime = true
+                        });
+                        newItems++;
+                    }
+                }
+            }
+
+            return Json(new { Message = "Generated " + newItems + " payrolls" });
+        }
+
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public static List<PayrollPaymentItemsModel> get(HttpSessionStateBase Session, Guid? UserAccounts_Id, DateTime? DatePeriod) { return get(Session, null, null, UserAccounts_Id, DatePeriod); }
-        public static List<PayrollPaymentItemsModel> get(HttpSessionStateBase Session, Guid? Id, Guid? PayrollPayments_Id, Guid? UserAccounts_Id, DateTime? DatePeriod)
+        public static List<PayrollPaymentItemsModel> get(HttpSessionStateBase Session, Guid? UserAccounts_Id, DateTime? DatePeriod, bool? IsFullTime) { return get(Session, null, null, UserAccounts_Id, DatePeriod, IsFullTime); }
+        public static List<PayrollPaymentItemsModel> get(HttpSessionStateBase Session, Guid? Id, Guid? PayrollPayments_Id, Guid? UserAccounts_Id, DateTime? DatePeriod, bool? IsFullTime)
         {
             return new DBContext().Database.SqlQuery<PayrollPaymentItemsModel>(@"
                     SELECT PayrollPaymentItems.*,
@@ -136,6 +212,7 @@ namespace iSpeakWebApp.Controllers
                             AND (@PayrollPayments_Id IS NULL OR PayrollPaymentItems.PayrollPayments_Id = @PayrollPayments_Id)
                             AND (@UserAccounts_Id_TEMP IS NULL OR PayrollPaymentItems.UserAccounts_Id_TEMP = @UserAccounts_Id_TEMP)
                             AND (@DatePeriod IS NULL OR (MONTH(PayrollPaymentItems.Timestamp) = MONTH(@DatePeriod) AND YEAR(PayrollPaymentItems.Timestamp) = YEAR(@DatePeriod)))
+                            AND (@IsFullTime IS NULL OR PayrollPaymentItems.IsFullTime = @IsFullTime)
                         ))
 					ORDER BY PayrollPaymentItems.Timestamp ASC, UserAccounts.Fullname ASC
                 ",
@@ -143,6 +220,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Branches_Id.Name, Helper.getActiveBranchId(Session)),
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_PayrollPayments_Id.Name, PayrollPayments_Id),
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_UserAccounts_Id_TEMP.Name, UserAccounts_Id),
+                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_IsFullTime.Name, IsFullTime),
                 DBConnection.getSqlParameter("DatePeriod", DatePeriod)
             ).ToList();
         }
@@ -150,8 +228,8 @@ namespace iSpeakWebApp.Controllers
         public static void add(PayrollPaymentItemsModel model)
         {
             new DBContext().Database.ExecuteSqlCommand(@"
-                    INSERT INTO PayrollPaymentItems (Id, PayrollPayments_Id, Timestamp, Description, Hour, HourlyRate, TutorTravelCost, Amount, UserAccounts_Id_TEMP, CancelNotes, Branches_Id) 
-                                             VALUES(@Id,@PayrollPayments_Id,@Timestamp,@Description,@Hour,@HourlyRate,@TutorTravelCost,@Amount,@UserAccounts_Id_TEMP,@CancelNotes,@Branches_Id);
+                    INSERT INTO PayrollPaymentItems (Id, PayrollPayments_Id, Timestamp, Description, Hour, HourlyRate, TutorTravelCost, Amount, UserAccounts_Id_TEMP, CancelNotes, Branches_Id, IsFullTime) 
+                                             VALUES(@Id,@PayrollPayments_Id,@Timestamp,@Description,@Hour,@HourlyRate,@TutorTravelCost,@Amount,@UserAccounts_Id_TEMP,@CancelNotes,@Branches_Id,@IsFullTime);
                 ",
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_PayrollPayments_Id.Name, model.PayrollPayments_Id),
@@ -163,7 +241,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Amount.Name, model.Amount),
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_UserAccounts_Id_TEMP.Name, model.UserAccounts_Id_TEMP),
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_CancelNotes.Name, model.CancelNotes),
-                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Branches_Id.Name, model.Branches_Id)
+                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Branches_Id.Name, model.Branches_Id),
+                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_IsFullTime.Name, model.IsFullTime)
             );
         }
 
@@ -180,6 +259,42 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_PayrollPayments_Id.Name, PayrollPayments_Id)
                 );
             }
+        }
+
+        private List<PayrollsModel> getSummary(DateTime StartDate, DateTime EndDate)
+        {
+            List<PayrollsModel> models = db.Database.SqlQuery<PayrollsModel>(@"
+                        SELECT Payrolls.*,
+                            '' AS Tutor_UserAccounts_Id,
+							ISNULL(Due.Amount,0) AS DueAmount,
+							UserAccounts.Fullname AS Tutor_UserAccounts_FullName
+						FROM (
+								SELECT UserAccounts_Id_TEMP AS Tutor_UserAccounts_Id_TEMP,
+									SUM(Hour) AS TotalHours,
+									SUM(Amount) AS PayableAmount
+								FROM PayrollPaymentItems
+								WHERE PayrollPaymentItems.Timestamp >= @StartDate AND PayrollPaymentItems.Timestamp <= @EndDate
+                                    AND PayrollPaymentItems.Branches_Id = @Branches_Id
+								GROUP BY UserAccounts_Id_TEMP						
+							) Payrolls
+							LEFT JOIN UserAccounts ON UserAccounts.Id = Payrolls.Tutor_UserAccounts_Id_TEMP
+							LEFT JOIN (
+									SELECT UserAccounts_Id_TEMP AS Tutor_UserAccounts_Id_TEMP,
+										SUM(Amount) AS Amount
+									FROM PayrollPaymentItems
+									WHERE PayrollPaymentItems.Timestamp >= @StartDate AND PayrollPaymentItems.Timestamp <= @EndDate
+                                        AND PayrollPaymentItems.Branches_Id = @Branches_Id
+										AND PayrollPayments_Id IS NULL
+									GROUP BY UserAccounts_Id_TEMP						
+								) Due ON Due.Tutor_UserAccounts_Id_TEMP = Payrolls.Tutor_UserAccounts_Id_TEMP
+						ORDER BY UserAccounts.Fullname ASC
+                    ",
+                    DBConnection.getSqlParameter("Branches_Id", Helper.getActiveBranchId(Session)),
+                    DBConnection.getSqlParameter("StartDate", StartDate),
+                    DBConnection.getSqlParameter("EndDate", EndDate)
+                ).ToList();
+
+            return models;
         }
 
         /******************************************************************************************************************************************************/

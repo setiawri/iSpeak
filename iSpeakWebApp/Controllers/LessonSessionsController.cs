@@ -154,7 +154,8 @@ namespace iSpeakWebApp.Controllers
                         TutorTravelCost = model.TutorTravelCost,
                         Amount = model.IsWaiveTutorFee ? 0 : (model.SessionHours * HourlyRate) + model.TutorTravelCost,
                         UserAccounts_Id_TEMP = model.Tutor_UserAccounts_Id_TEMP,
-                        Branches_Id = model.Branches_Id
+                        Branches_Id = model.Branches_Id,
+                        IsFullTime = false
                     });
                 }
 

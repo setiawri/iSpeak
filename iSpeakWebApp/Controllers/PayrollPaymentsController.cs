@@ -53,7 +53,7 @@ namespace iSpeakWebApp.Controllers
             PayrollPaymentsModel model = get((Guid)id);
 
             ViewBag.InvoiceHeaderText = new BranchesController().get(Helper.getActiveBranchId(Session)).InvoiceHeaderText;
-            ViewData["PayrollPaymentItems"] = PayrollPaymentItemsController.get(Session, null, model.Id, null, null);
+            ViewData["PayrollPaymentItems"] = PayrollPaymentItemsController.get(Session, null, model.Id, null, null, null);
             ViewBag.TotalAmount = model.Amount;
 
             return View(model);
@@ -85,7 +85,7 @@ namespace iSpeakWebApp.Controllers
 
         public JsonResult Create(Guid UserAccounts_Id, string Notes, DateTime Timestamp, decimal Amount, DateTime DatePeriod)
         {
-            List<PayrollPaymentItemsModel> PayrollPaymentItems = PayrollPaymentItemsController.combineClassSesions(PayrollPaymentItemsController.get(Session, UserAccounts_Id, DatePeriod));
+            List<PayrollPaymentItemsModel> PayrollPaymentItems = PayrollPaymentItemsController.combineClassSesions(PayrollPaymentItemsController.get(Session, UserAccounts_Id, DatePeriod, null));
 
             if (Amount != PayrollPaymentItems.Where(x => x.PayrollPayments_Id == null).Sum(x => x.Amount))
                 return UtilWebMVC.Json(Response, "Due amount has changed. Please reload list and try again.");

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Linq;
 using System.Collections.Generic;
 using System.Web.Mvc;
@@ -231,6 +232,22 @@ namespace iSpeakWebApp.Controllers
 
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
             db.SaveChanges();
+        }
+
+        public static List<HourlyRatesModel> getActiveFullTimeEmployeePayrates(HttpSessionStateBase Session)
+        {
+            return new DBContext().Database.SqlQuery<HourlyRatesModel>(@"
+                        SELECT HourlyRates.*,
+							UserAccounts.Fullname AS UserAccounts_FullName
+						FROM HourlyRates
+							LEFT JOIN UserAccounts ON UserAccounts.Id = HourlyRates.UserAccounts_Id_TEMP
+						WHERE HourlyRates.FullTimeTutorPayrate > 0
+							AND UserAccounts.Active = 1
+							AND UserAccounts.Branches_Id = @Branches_Id
+						ORDER BY UserAccounts.Fullname ASC
+                    ",
+                    DBConnection.getSqlParameter("Branches_Id", Helper.getActiveBranchId(Session))
+                ).ToList();
         }
 
         /******************************************************************************************************************************************************/
