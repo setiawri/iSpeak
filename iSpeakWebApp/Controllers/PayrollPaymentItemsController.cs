@@ -118,16 +118,17 @@ namespace iSpeakWebApp.Controllers
             return new DBContext().Database.SqlQuery<PayrollPaymentItemsModel>(@"
                     SELECT PayrollPaymentItems.*,
                         UserAccounts.Fullname AS UserAccounts_Fullname,
-                        CASE CHARINDEX(' ', StudentUserAccounts.Fullname, 1)
-                             WHEN 0 THEN StudentUserAccounts.Fullname
-                             ELSE SUBSTRING(StudentUserAccounts.Fullname, 1, CHARINDEX(' ', StudentUserAccounts.Fullname, 1) - 1)
+                        Student_UserAccounts.Fullname AS Student_UserAccounts_Fullname,
+                        CASE CHARINDEX(' ', Student_UserAccounts.Fullname, 1)
+                             WHEN 0 THEN Student_UserAccounts.Fullname
+                             ELSE SUBSTRING(Student_UserAccounts.Fullname, 1, CHARINDEX(' ', Student_UserAccounts.Fullname, 1) - 1)
                         END AS Student_UserAccounts_FirstName
                     FROM PayrollPaymentItems
                         LEFT JOIN LessonSessions ON LessonSessions.PayrollPaymentItems_Id = PayrollPaymentItems.Id
                         LEFT JOIN SaleInvoiceItems ON SaleInvoiceItems.Id = LessonSessions.SaleInvoiceItems_Id
                         LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
                         LEFT JOIN UserAccounts ON UserAccounts.Id = PayrollPaymentItems.UserAccounts_Id_TEMP
-						LEFT JOIN UserAccounts StudentUserAccounts ON StudentUserAccounts.Id = SaleInvoices.Customer_UserAccounts_Id
+						LEFT JOIN UserAccounts Student_UserAccounts ON Student_UserAccounts.Id = SaleInvoices.Customer_UserAccounts_Id
                     WHERE 1=1
 						AND (@Id IS NULL OR PayrollPaymentItems.Id = @Id)
 						AND (@Id IS NOT NULL OR (
@@ -146,13 +147,23 @@ namespace iSpeakWebApp.Controllers
             ).ToList();
         }
 
-        public static void add(DBContext db, Guid PayrollPayments_Id, PayrollPaymentItemsModel model)
+        public static void add(PayrollPaymentItemsModel model)
         {
-            db.Database.ExecuteSqlCommand(@"
-                    INSERT INTO PayrollPaymentItems   (Id, PayrollPayments_Id, ReferenceId, Amount, DueBefore, DueAfter) 
-                                        VALUES(@Id,@PayrollPayments_Id,@ReferenceId,@Amount,@DueBefore,@DueAfter);
+            new DBContext().Database.ExecuteSqlCommand(@"
+                    INSERT INTO PayrollPaymentItems (Id, PayrollPayments_Id, Timestamp, Description, Hour, HourlyRate, TutorTravelCost, Amount, UserAccounts_Id_TEMP, CancelNotes, Branches_Id) 
+                                             VALUES(@Id,@PayrollPayments_Id,@Timestamp,@Description,@Hour,@HourlyRate,@TutorTravelCost,@Amount,@UserAccounts_Id_TEMP,@CancelNotes,@Branches_Id);
                 ",
-                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Id.Name, Guid.NewGuid())
+                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Id.Name, model.Id),
+                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_PayrollPayments_Id.Name, model.PayrollPayments_Id),
+                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Timestamp.Name, model.Timestamp),
+                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Description.Name, model.Description),
+                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Hour.Name, model.Hour),
+                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_HourlyRate.Name, model.HourlyRate),
+                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_TutorTravelCost.Name, model.TutorTravelCost),
+                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Amount.Name, model.Amount),
+                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_UserAccounts_Id_TEMP.Name, model.UserAccounts_Id_TEMP),
+                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_CancelNotes.Name, model.CancelNotes),
+                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Branches_Id.Name, model.Branches_Id)
             );
         }
 

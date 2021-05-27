@@ -10,7 +10,7 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Id = new ModelMember { Name = "Id" };
 
 
-        public Guid? PayrollPayments_Id { get; set; }
+        public Guid? PayrollPayments_Id { get; set; } = null;
         public static ModelMember COL_PayrollPayments_Id = new ModelMember { Name = "PayrollPayments_Id" };
 
 
@@ -47,7 +47,7 @@ namespace iSpeakWebApp.Models
         public string UserAccounts_Fullname { get; set; }
 
 
-        public string CancelNotes { get; set; }
+        public string CancelNotes { get; set; } = string.Empty;
         public static ModelMember COL_CancelNotes = new ModelMember { Name = "CancelNotes" };
 
 
@@ -58,6 +58,7 @@ namespace iSpeakWebApp.Models
         /******************************************************************************************************************************************************/
 
         public string Student_UserAccounts_FirstName { get; set; }
+        public string Student_UserAccounts_FullName { get; set; }
     }
 
 }

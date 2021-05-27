@@ -143,21 +143,20 @@ namespace iSpeakWebApp.Controllers
                         }
                     }
 
-                    db.PayrollPaymentItems.Add(new PayrollPaymentItemsModel()
+                    PayrollPaymentItemsController.add(new PayrollPaymentItemsModel()
                     {
                         Id = PayrollPaymentItems_Id,
+                        PayrollPayments_Id = null,
                         Timestamp = model.Timestamp,
                         Description = null,
                         Hour = model.IsWaiveTutorFee ? 0 : model.SessionHours,
-                        UserAccounts_Id_TEMP = model.Tutor_UserAccounts_Id_TEMP,
-                        Branches_Id = model.Branches_Id,
-                        TutorTravelCost = model.TutorTravelCost,
                         HourlyRate = HourlyRate,
-                        Amount = model.IsWaiveTutorFee ? 0 : (model.SessionHours * HourlyRate) + model.TutorTravelCost
+                        TutorTravelCost = model.TutorTravelCost,
+                        Amount = model.IsWaiveTutorFee ? 0 : (model.SessionHours * HourlyRate) + model.TutorTravelCost,
+                        UserAccounts_Id_TEMP = model.Tutor_UserAccounts_Id_TEMP,
+                        Branches_Id = model.Branches_Id
                     });
                 }
-
-                db.SaveChanges();
 
                 return RedirectToAction(nameof(Index), new
                 {

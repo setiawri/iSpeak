@@ -1,6 +1,6 @@
 ﻿
 TO DO:
-- PayrollPaymentItemsController: add() is not used yet.
+- Test lesson session waive tutor fee and schedule change. check payrollpaymentitem is generated correctly.
 - Payroll: 
 	> create form to add manual payroll item. 
 	> Verify amount for full time employees
