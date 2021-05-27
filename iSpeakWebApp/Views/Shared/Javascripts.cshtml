@@ -104,13 +104,6 @@
             $('input[aria-controls=DataTables_Table_0]').val(search).keyup();
     }
 
-    // MISC ========================================================================================================================================================
-
-    function setValue(id, value) {
-        if (value != null)
-            $('#' + id).val(value);
-    }
-
     // TEXTBOX =====================================================================================================================================================
 
     function getValueString(id) {
@@ -124,7 +117,7 @@
     }
 
     function getValueFloat(id) {
-        return parseFloat(getDefaultIfEmpty($('#' + id).val(), 0));
+        return parseFloat(convertFormattedStringToFloat(getDefaultIfEmpty(getValueString(id), 0)));
     }
 
     function setValue(id, value) { $('#' + id).val(value); }
@@ -210,6 +203,10 @@
 
     function convertFormattedStringToInt(value) {
         return parseInt(value.replace(/,/g, ''));
+    }
+
+    function convertFormattedStringToFloat(value) {
+        return parseFloat(value.replace(/,/g, ''));
     }
 
     // BUTTONS =====================================================================================================================================================
@@ -629,8 +626,19 @@
         $(this).blur();
     });
 
+    // MISCLEANEOUS ================================================================================================================================================
+
+    function setValue(id, value) {
+        if (value != null)
+            $('#' + id).val(value);
+    }
+
     function disableDivElements(id, value) {
         $('#' + id + ' :input').attr("disabled", value);
+    }
+
+    function disableElement(id, value) {
+        $('#' + id).prop('disabled', value);
     }
 
     //==============================================================================================================================================================

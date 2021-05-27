@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using iSpeakWebApp.Models;
 using LIBUtil;
+using LIBWebMVC;
 
 namespace iSpeakWebApp.Controllers
 {
@@ -43,7 +44,7 @@ namespace iSpeakWebApp.Controllers
 
         /* PRINT **********************************************************************************************************************************************/
 
-        // GET: Payments/Create
+        // GET: Payments/Print
         public ActionResult Print(Guid? id)
         {
             if (id == null || !UserAccountsController.getUserAccess(Session).Payments_View)
@@ -52,7 +53,7 @@ namespace iSpeakWebApp.Controllers
             PayrollPaymentsModel model = get((Guid)id);
 
             ViewBag.InvoiceHeaderText = new BranchesController().get(Helper.getActiveBranchId(Session)).InvoiceHeaderText;
-            ViewData["PayrollPaymentItems"] = PayrollPaymentItemsController.get(null, model.Id);
+            ViewData["PayrollPaymentItems"] = PayrollPaymentItemsController.get(Session, null, model.Id, null, null);
             ViewBag.TotalAmount = model.Amount;
 
             return View(model);
@@ -82,10 +83,30 @@ namespace iSpeakWebApp.Controllers
             return Json(new { Message = "" });
         }
 
+        public JsonResult Create(Guid UserAccounts_Id, string Notes, DateTime Timestamp, decimal Amount, DateTime DatePeriod)
+        {
+            List<PayrollPaymentItemsModel> PayrollPaymentItems = PayrollPaymentItemsController.combineClassSesions(PayrollPaymentItemsController.get(Session, UserAccounts_Id, DatePeriod));
+
+            if (Amount != PayrollPaymentItems.Where(x => x.PayrollPayments_Id == null).Sum(x => x.Amount))
+                return UtilWebMVC.Json(Response, "Due amount has changed. Please reload list and try again.");
+
+            add(new PayrollPaymentsModel
+            {
+                Id = Guid.NewGuid(),
+                Timestamp = Timestamp,
+                Amount = Amount,
+                Notes = Notes,
+                UserAccounts_Id_TEMP = UserAccounts_Id,
+                UserAccounts_Id = UserAccounts_Id.ToString()
+            }, PayrollPaymentItems);
+
+            return Json(new { Message = "" });
+        }
+
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
         public List<PayrollPaymentsModel> get(string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo) { return get(null, FILTER_Keyword, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo); }
-        public PayrollPaymentsModel get(Guid Id) { return get(Id, null, null, null, null, null, null, null).FirstOrDefault(); }
+        public static PayrollPaymentsModel get(Guid Id) { return get(Id, null, null, null, null, null, null, null).FirstOrDefault(); }
         public static List<PayrollPaymentsModel> get(Guid? Id, string FILTER_Keyword, int? Cancelled, int? Approved,
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
@@ -120,7 +141,7 @@ namespace iSpeakWebApp.Controllers
                 ).ToList();
         }
 
-        public void add(PayrollPaymentsModel model)
+        public void add(PayrollPaymentsModel model, List<PayrollPaymentItemsModel> items)
         {
             model.Id = Guid.NewGuid();
 
@@ -136,17 +157,19 @@ namespace iSpeakWebApp.Controllers
                                      VALUES(@Id,@NewNo,@Timestamp,@UserAccounts_Id_TEMP,@Amount,@IsChecked,@Cancelled,@Notes_Cancel,@Notes);
             ",
                 DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, model.Id),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, model.Timestamp),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, model.No),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, model.UserAccounts_Id_TEMP),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, model.Amount),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, model.IsChecked),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, model.Cancelled),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, model.Notes_Cancel),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, model.Notes)
+                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Timestamp.Name, model.Timestamp),
+                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_No.Name, model.No),
+                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_UserAccounts_Id_TEMP.Name, model.UserAccounts_Id_TEMP),
+                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Amount.Name, model.Amount),
+                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_IsChecked.Name, model.IsChecked),
+                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Cancelled.Name, model.Cancelled),
+                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Notes_Cancel.Name, model.Notes_Cancel),
+                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Notes.Name, model.Notes)
             );
-
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
+
+            PayrollPaymentItemsController.update(db, Session, model.Id, items);
+
             db.SaveChanges();
         }
 
@@ -169,6 +192,8 @@ namespace iSpeakWebApp.Controllers
         public void update_CancelNotes(Guid Id, string CancelNotes)
         {
             db.Database.ExecuteSqlCommand(@"
+                UPDATE PayrollPaymentItems SET PayrollPayments_Id = NULL WHERE PayrollPayments_Id = @Id;
+
                 UPDATE PayrollPayments 
                 SET
                     Cancelled = 1,

@@ -54,12 +54,12 @@
 
                         <div class="ml-0 mr-2">
                             <label class="mb-0">&nbsp;</label>
-                            <button type="button" id="LoadData" onclick="showLoadingSpinner()" class="btn btn-primary form-control"><i class="icon-plus22 mr-2"></i>ADD MANUAL</button>
+                            <button type="button" id="AddManualItem" onclick="AddManualItem()" class="btn btn-info form-control"><i class="icon-plus22 mr-2"></i>ADD MANUAL</button>
                         </div>
 
                         <div class="ml-0 mr-2">
                             <label class="mb-0">&nbsp;</label>
-                            <button type="button" id="LoadData" onclick="showLoadingSpinner()" class="btn btn-info form-control"><i class="icon-stack-text mr-2"></i>GENERATE FULL TIME PAYROLL</button>
+                            <button type="button" id="GenerateFullTimePayroll" onclick="GenerateFullTimePayroll()" class="btn btn-primary form-control"><i class="icon-stack-text mr-2"></i>GENERATE FULL TIME PAYROLL</button>
                         </div>
                     </div>
 
@@ -68,10 +68,10 @@
                             <thead>
                                 <tr>
                                     <th>@Html.DisplayNameFor(model => model.Tutor_UserAccounts_Id_TEMP)</th>
-                                    <th class="text-right">@Html.DisplayNameFor(model => model.TotalHours)</th>
-                                    <th class="text-right">@Html.DisplayNameFor(model => model.PayableAmount)</th>
-                                    <th class="text-right">@Html.DisplayNameFor(model => model.DueAmount)</th>
-                                    <th>Action</th>
+                                    <th class="text-right" style="width:100px;">@Html.DisplayNameFor(model => model.TotalHours)</th>
+                                    <th class="text-right" style="width:100px;">@Html.DisplayNameFor(model => model.PayableAmount)</th>
+                                    <th class="text-right" style="width:100px;">@Html.DisplayNameFor(model => model.DueAmount)</th>
+                                    <th style="width:100px;"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -84,7 +84,7 @@
                                             <td class="text-right">@Html.DisplayFor(modelItem => item.TotalHours)</td>
                                             <td class="text-right">@Html.DisplayFor(modelItem => item.PayableAmount)</td>
                                             <td class="text-right">@Html.DisplayFor(modelItem => item.DueAmount)</td>
-                                            <td><a href="javascript:void(0)" onclick="Details('@item.Tutor_UserAccounts_Id')">Details</a></td>
+                                            <td><a href="javascript:void(0)" onclick="GetDetails('@item.Tutor_UserAccounts_Id_TEMP', '@item.Tutor_UserAccounts_FullName')">Details</a></td>
                                         </tr>
                                     }
                                 }
@@ -97,43 +97,60 @@
             <!-- /form inputs -->
         }
 
-        <!-- Cancel form modal -->
-        <div id="modal_cancel" class="modal fade" tabindex="-1">
+        <!-- Payment form modal -->
+        <div id="modal_payment" class="modal fade" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header bg-warning">
-                        <h6 class="modal-title">Cancel Payment</h6>
+                    <div class="modal-header bg-success">
+                        <h6 class="modal-title">PAYMENT</h6>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
 
                     <form action="#" class="form-horizontal">
                         <div class="modal-body">
                             <div style="display: none">
-                                <input class="form-control" id="modal_cancel-Id" />
+                                <input class="form-control" id="modal_payment-UserAccounts_Id" />
                             </div>
                             <div class="form-group row">
-                                <label class="col-form-label col-sm-2">Payment</label>
+                                <label class="col-form-label col-sm-2">Employee</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control" id="modal_cancel-No" readonly />
+                                    <input class="form-control" id="modal_payment-UserAccounts_Fullname" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2">Amount</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" id="modal_payment-Amount" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2">Date</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <input id="modal_payment-Timestamp" type="datetime" class="form-control daterange-picker" />
+                                        <span class="input-group-append">
+                                            <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-form-label col-sm-2">Notes</label>
                                 <div class="col-sm-10">
-                                    <textarea class="form-control" id="modal_cancel-Notes" rows="2" placeholder="Cancel Reason"></textarea>
+                                    <textarea class="form-control" id="modal_payment-Notes" rows="2" placeholder="Notes"></textarea>
                                 </div>
                             </div>
                         </div>
 
                         <div class="modal-footer">
-                            <button type="button" class="btn bg-success" onclick="Cancel()">Submit</button>
+                            <button id="modal_payment-submit" type="button" class="btn bg-success" onclick="Payment()">Submit</button>
                             <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        <!-- /cancel form modal -->
+        <!-- /payment form modal -->
 
     </div>
     <!-- /content area -->
@@ -153,42 +170,53 @@
         setDatePeriodFilter('FILTER_DatePeriod', 'FILTER_DatePeriod_Month', 'FILTER_DatePeriod_Year', '@string.Format("{0:MM/dd/yyyy}", ViewBag.FILTER_DatePeriod ?? DateTime.Now)');
     }
 
-    // CANCEL PAYMENT ==============================================================================================================================================
+    function GenerateFullTimePayroll() {
 
-    function PopulateCancelModal(id, no) {
-        $('#modal_cancel-Id').val(id);
-        $('#modal_cancel-No').val(no);
-        $('#modal_cancel-Notes').val('');
     }
 
-    function Cancel() {
+    // PAYMENT =====================================================================================================================================================
+
+    function Payment() {
         if (!event.detail || event.detail == 1) {
-            if ($('#modal_cancel-Notes').val() == '') {
-                showMessage('Please provide reason for cancellation.', 'modal_cancel-Notes');
-            }
-            else {
-                $.ajax({
-                    type: "POST",
-                    url: '@Url.Action("Update_Cancelled", ControllerName)',
-                    data: {
-                        id: $('#modal_cancel-Id').val(),
-                        notes: $('#modal_cancel-Notes').val()
-                    },
-                    success: function (data) {
-                        $('#LoadData').trigger('click');
-                    }, //end success
-                    error: function (data) {
-                        showMessage("ERROR: " + data.responseText);
-                    } //end error
-                }); //end ajax
-            }
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Create", "PayrollPayments")',
+                data: {
+                    UserAccounts_Id: $('#modal_payment-UserAccounts_Id').val(),
+                    Notes: $('#modal_payment-Notes').val(),
+                    Timestamp: getValueString('modal_payment-Timestamp'),
+                    Amount: getValueFloat('modal_payment-Amount'),
+                    DatePeriod: getValueString('FILTER_DatePeriod'),
+                },
+                success: function (data) {
+                    $('#LoadData').trigger('click');
+                }, //end success
+                error: function (data) {
+                    showMessage("ERROR: " + data.responseText);
+                } //end error
+            }); //end ajax
         }
     }
 
-    $('#modal_cancel').on('shown.bs.modal', function () {
-        $('#modal_cancel-Notes').focus();
+    $('#modal_payment').on('shown.bs.modal', function () {
+        $('#modal_payment-Notes').focus();
     })
 
-    //==============================================================================================================================================================
+    function ClosePayrollItemsDialog(id, name, amount) {
+        $('.PayrollItemsDialog').modal('hide');
+        $('#modal_payment-UserAccounts_Id').val(id);
+        $('#modal_payment-UserAccounts_Fullname').val(name);
+        $('#modal_payment-Amount').val(formatN0(amount));
+        $('#modal_payment-Notes').val('');
+    }
+    
+    function GetDetails(id, title) {
+        var url = '@Url.Action("GetDetails", "PayrollPaymentItems")';
+        $.ajax({
+            type: "POST", url: url, data: { id: id, DatePeriod: getValueString('FILTER_DatePeriod') },
+            success: function (data) { bootbox.dialog({ backdrop: true, onEscape: true, title: title, size: 'large', message: data.content, className:'PayrollItemsDialog' }); },
+            error: function (result) { bootbox.alert({ backdrop: true, message: "Error " + result }); }
+        });
+    }
 
 </script>

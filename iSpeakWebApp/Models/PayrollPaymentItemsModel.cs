@@ -42,7 +42,6 @@ namespace iSpeakWebApp.Models
 
         public string UserAccounts_Id { get; set; }
 
-
         public Guid UserAccounts_Id_TEMP { get; set; }
         public static ModelMember COL_UserAccounts_Id_TEMP = new ModelMember { Name = "UserAccounts_Id_TEMP" };
         public string UserAccounts_Fullname { get; set; }
@@ -57,6 +56,8 @@ namespace iSpeakWebApp.Models
 
 
         /******************************************************************************************************************************************************/
+
+        public string Student_UserAccounts_FirstName { get; set; }
     }
 
 }
