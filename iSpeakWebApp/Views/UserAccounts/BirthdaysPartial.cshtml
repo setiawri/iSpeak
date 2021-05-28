@@ -4,7 +4,7 @@
 }
 
 <div class="row">
-    <div class="row ml-2 mr-0">
+    <div class="row ml-2 mr-0" style="width:170px;">
         <label class="mb-0">Month</label>
         <div class="input-group">
             <div class="input-group-prepend">
@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    <div class="row ml-1">
+    <div class="row ml-1" style="width:200px;">
         <label class="mb-0">Role</label>
         <div class="input-group">
             @Html.DropDownList("UserAccountRoles", ViewBag.UserAccountRoles as SelectList, "ALL", new { @class = "select2", @style = "height:auto;" })
@@ -46,9 +46,9 @@
         <thead>
             <tr>
                 <th></th>
-                <th></th>
+                <th style="width:100px"></th>
+                <th style="width:150px">Date</th>
                 <th>Fullname</th>
-                <th>Date</th>
             </tr>
         </thead>
         <tbody>
@@ -68,6 +68,7 @@
     });
 
     function LoadBirthdays() {
+        var isCurrentMonth = getValueInt('MonthsDropdown') == ((new Date()).getMonth() + 1);
         $.ajax({
             type: "POST",
             url: '@Url.Action("GetBirthdayData", "UserAccounts")',
@@ -77,7 +78,7 @@
             },
             success: function (data) {
                 var datatable = $('#datatableBirthday').DataTable();
-                datatable.clear().draw();
+                datatable.clear();
                 var remainingDayCount = 0;
                 var todayDate = (new Date()).getDate();
                 var birthday;
@@ -86,31 +87,36 @@
                 $.each(data.result, function (index, row) {
                     birthday = parseJSONDate(row.Birthday);
                     remainingDayCount = birthday.getDate() - todayDate;
-                    if (remainingDayCount == 0) {
-                        badge = '<span class="badge badge-success">Today</span>';
-                    } else {
-                        badge = '<span class="badge badge-primary">In ' + remainingDayCount + ' days</span>';
+
+                    badge = '';
+                    if (isCurrentMonth) {
+                        if (remainingDayCount == 0) {
+                            badge = '<span style="width:70px;" class="badge badge-success">Today</span>';
+                        } else {
+                            badge = '<span style="width:70px;" class="badge badge-primary">In ' + remainingDayCount + ' days</span>';
+                        } 
                     }
 
                     datatable.row.add([
                         remainingDayCount,
                         badge,
-                        row.Fullname,
-                        formatDate(birthday, 'dd MMM yyyy')
+                        formatDate(birthday, 'dd MMM yyyy'),
+                        row.Fullname
 
-                    ]).draw();
-                    //datatable.row.add([
-                    //    0,
-                    //    row.Fullname,
-                    //    row.Birthday,
-                    //    ''
-                    //]).draw();
+                    ]);
                 });
+                datatable.draw();
             }, //end success
             error: function (result) {
                 bootbox.alert({ backdrop: true, message: "Error " + result });
             } //end error
         }); //end ajax
+
+        if (isCurrentMonth) {
+            $('#datatableBirthday').DataTable().column(1).visible(true);
+        } else {
+            $('#datatableBirthday').DataTable().column(1).visible(false);
+        }
     }
 
 </script>

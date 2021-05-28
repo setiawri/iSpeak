@@ -13,7 +13,14 @@
         </div>
     }
 
-    <div class="row ml-0 mr-2">
+    <div class="row ml-0 mr-2" style="width:100px;">
+        <label class="mb-0">Keyword</label>
+        <div class="input-group">
+            <input type="text" name="FILTER_Keyword" id="FILTER_Keyword" class="form-control" />
+        </div>
+    </div>
+
+    <div class="row ml-0 mr-2" style="width:150px;">
         <label class="mb-0">Status</label>
         <div class="input-group">
             @Html.DropDownList("ReminderStatus", EnumHelper.GetSelectList(typeof(EnumReminderStatuses)), "Incomplete", new { @class = "select2", @style = "height:auto;" })
@@ -32,7 +39,7 @@
         <thead>
             <tr>
                 <th></th>
-                <th>Date</th>
+                <th style="width:120px;">Date</th>
                 <th>Description</th>
                 <th>Status</th>
                 <th class="non-searchable non-sortable"></th>
@@ -48,7 +55,6 @@
     $(document).ready(function () {
         LoadReminders();
         $('#datatableReminder').DataTable().column(0).visible(false);
-
         UpdateReminderCount('@ViewBag.ReminderCount');
     });
 
@@ -57,13 +63,13 @@
             type: "POST",
             url: '@Url.Action("GetData", "Reminders")',
             data: {
+                FILTER_Keyword: getValueString('FILTER_Keyword'),
                 status: $('#ReminderStatus').val()
             },
             success: function (data) {
                 var datatable = $('#datatableReminder').DataTable();
-                datatable.clear().draw();
+                datatable.clear();
                 $.each(data.result, function (index, row) {
-
                     var status = '';
                     if (row.Status_enumid == '@((int)EnumReminderStatuses.New)')
                         status = '<span class="badge badge-dark d-block">New</span>';
@@ -80,17 +86,18 @@
 
                     var actionLinks = '';
                     if ('@access.Reminders_Edit' == 'True')
-                        actionLinks += '<a href="javascript:void(0)" onclick="Edit(ViewBag\'' + row.Id + '\')">Edit</a>'
+                        actionLinks += '<a href="javascript:void(0)" onclick="Edit(\'' + row.Id + '\')">Edit</a>'
                     actionLinks = appendWithDelimiter(actionLinks, '<a href="javascript:void(0)" onclick="Log(\'' + row.Id + '\')">Log</a>', ' • ');
 
                     datatable.row.add([
                         formatDate(parseJSONDate(row.Timestamp), 'yyyy MM dd'),
-                        formatDate(parseJSONDate(row.Timestamp), 'dd MMM yyyy'),
+                        formatDate(parseJSONDate(row.Timestamp), 'dd/MM/yyyy'),
                         row.Description,
                         status,
                         actionLinks
-                    ]).draw();
+                    ]);
                 });
+                datatable.draw();
             }, //end success
             error: function (result) {
                 bootbox.alert({ backdrop: true, message: "Error " + result });

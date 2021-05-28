@@ -19,7 +19,7 @@ namespace iSpeakWebApp.Controllers
         {
             ViewBag.RemoveDatatablesStateSave = rss;
 
-            var models = getReminders(Helper.getActiveBranchId(Session), null);
+            var models = get(Helper.getActiveBranchId(Session), null, null);
             ViewBag.ReminderCount = models.Count;
 
             return PartialView("IndexPartial", models);
@@ -87,30 +87,24 @@ namespace iSpeakWebApp.Controllers
 
         /* METHODS ********************************************************************************************************************************************/
 
-        public JsonResult GetData(int? status)
+        public JsonResult GetData(string FILTER_Keyword, int? status)
         {
-            EnumReminderStatuses? reminderStatus;
-            if (status == null)
-                reminderStatus = null;
-            else
-                reminderStatus = Util.parseEnum<EnumReminderStatuses>(status);
-
-            List<RemindersModel> models = new RemindersController().getReminders(Helper.getActiveBranchId(Session), reminderStatus);
-
+            List<RemindersModel> models = new RemindersController().get(Helper.getActiveBranchId(Session), Util.parseEnum<EnumReminderStatuses>(status), FILTER_Keyword);
             return Json(new { result = models, count = models.Count }, JsonRequestBehavior.AllowGet);
         }
 
-        public List<RemindersModel> getReminders(Guid Branches_Id, EnumReminderStatuses? status) { return get(Branches_Id, null, status); }
-        public List<RemindersModel> get(Guid? Branches_Id, Guid? Id, EnumReminderStatuses? status)
+        public List<RemindersModel> get(Guid Branches_Id, EnumReminderStatuses? status, string FILTER_Keyword) { return get(Branches_Id, null, status, FILTER_Keyword); }
+        public List<RemindersModel> get(Guid? Branches_Id, Guid? Id, EnumReminderStatuses? status, string FILTER_Keyword)
         {
             return new DBContext().Reminders.AsNoTracking()
                 .Where(x => x.Branches_Id == Branches_Id
                     && (status == null || x.Status_enumid == status)
                     && (status != null || (
-                        x.Status_enumid != EnumReminderStatuses.Completed
-                        && x.Status_enumid != EnumReminderStatuses.Cancel
-                    ))
-                ).ToList();
+                            x.Status_enumid != EnumReminderStatuses.Completed
+                            && x.Status_enumid != EnumReminderStatuses.Cancel
+                        ))
+                    && (string.IsNullOrEmpty(FILTER_Keyword) || x.Description.Contains(FILTER_Keyword))
+                ).OrderBy(x=>x.Timestamp).ToList();
         }
 
         /******************************************************************************************************************************************************/

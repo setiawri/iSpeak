@@ -1,8 +1,5 @@
 ﻿using System.ComponentModel;
-using System.Web.Mvc;
-using System.Web.Mvc.Html;
-using System.Collections.Generic;
-using LIBUtil;
+using System.ComponentModel.DataAnnotations;
 
 namespace iSpeakWebApp
 {
@@ -10,8 +7,10 @@ namespace iSpeakWebApp
     {
         New,
         [Description("In Progress")]
+        [Display(Name = "In Progress")]
         InProgress,
         [Description("On Hold")]
+        [Display(Name = "On Hold")]
         OnHold,
         Waiting,
         Completed,

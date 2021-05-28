@@ -433,7 +433,7 @@
                 if (format[i] == 'MMM') {
                     month = monthNames[value.getMonth()];
                 } else if (format[i] == 'MM') {
-                    month = (('' + value.getMonth()).length < 2 ? '0' : '') + (value.getMonth()+1) + ' ';
+                    month = (('' + (value.getMonth() + 1)).length < 2 ? '0' : '') + (value.getMonth()+1) + ' ';
                 }
                 result.push(month);
             }
@@ -589,7 +589,7 @@
     var datatable = $('.datatable').DataTable({
         autoWidth: false,
         pagingType: 'full_numbers',
-        order: [[0, 'asc']],
+        //order: [[0, 'asc']],
         bStateSave: true,
         stateSaveCallback: function (settings, data) {
             localStorage.setItem('DataTables_' + settings.sInstance, JSON.stringify(data))

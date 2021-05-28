@@ -16,7 +16,7 @@
                         {
                             <a class="nav-item nav-link active" id="nav-reminders-tab" data-toggle="tab" href="#nav-reminders" role="tab" aria-controls="nav-reminders" aria-selected="true" onclick="document.activeElement.blur();">Reminders (<label id="ReminderCount"></label>)</a>
                         }
-                        <a class="nav-item nav-link" id="nav-birthdays-tab" data-toggle="tab" href="#nav-birthdays" role="tab" aria-controls="nav-birthdays" aria-selected="false" onclick="document.activeElement.blur();">Birthdays (<label id="BirthdayCount"></label>)</a>
+                        <a class="nav-item nav-link" id="nav-birthdays-tab" data-toggle="tab" href="#nav-birthdays" role="tab" aria-controls="nav-birthdays" aria-selected="false" onclick="document.activeElement.blur(); LoadBirthdays();">Birthdays (<label id="BirthdayCount"></label>)</a>
                     </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
@@ -52,4 +52,5 @@
     function UpdateBirthdayCount(value) {
         $('#BirthdayCount').text(value);
     }
+
 </script>
