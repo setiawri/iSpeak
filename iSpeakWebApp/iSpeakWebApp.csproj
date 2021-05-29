@@ -209,6 +209,7 @@
     <Content Include="assets\img\happy_bday.jpg" />
     <Content Include="assets\img\landing_page.jpg" />
     <Content Include="assets\img\logo.png" />
+    <Content Include="assets\img\LogoWithBorder.png" />
     <Content Include="assets\img\no-image.jpg" />
     <Content Include="assets\img\profile.png" />
     <Content Include="assets\js\app.js" />

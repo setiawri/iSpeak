@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Linq;
 using System.Collections.Generic;
 using System.Web.Mvc;
@@ -50,7 +51,7 @@ namespace iSpeakWebApp.Controllers
             if (id == null || !UserAccountsController.getUserAccess(Session).Payments_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            PayrollPaymentsModel model = get((Guid)id);
+            PayrollPaymentsModel model = get(Session, (Guid)id);
 
             ViewBag.InvoiceHeaderText = new BranchesController().get(Helper.getActiveBranchId(Session)).InvoiceHeaderText;
             ViewData["PayrollPaymentItems"] = PayrollPaymentItemsController.get(Session, null, model.Id, null, null, null);
@@ -105,9 +106,9 @@ namespace iSpeakWebApp.Controllers
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public List<PayrollPaymentsModel> get(string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo) { return get(null, FILTER_Keyword, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo); }
-        public static PayrollPaymentsModel get(Guid Id) { return get(Id, null, null, null, null, null, null, null).FirstOrDefault(); }
-        public static List<PayrollPaymentsModel> get(Guid? Id, string FILTER_Keyword, int? Cancelled, int? Approved,
+        public List<PayrollPaymentsModel> get(string FILTER_Keyword, int? FILTER_Cancelled, int? FILTER_Approved, bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo) { return get(Session, null, FILTER_Keyword, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo); }
+        public static PayrollPaymentsModel get(HttpSessionStateBase Session, Guid Id) { return get(Session, Id, null, null, null, null, null, null, null).FirstOrDefault(); }
+        public static List<PayrollPaymentsModel> get(HttpSessionStateBase Session, Guid? Id, string FILTER_Keyword, int? Cancelled, int? Approved,
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
             if (FILTER_chkDateFrom == null || !(bool)FILTER_chkDateFrom)
@@ -118,13 +119,17 @@ namespace iSpeakWebApp.Controllers
 
             return new DBContext().Database.SqlQuery<PayrollPaymentsModel>(@"
                         SELECT PayrollPayments.*,
-                            UserAccounts.Fullname AS UserAccounts_Fullname
+                            UserAccounts.Fullname AS UserAccounts_Fullname,
+                            Branches.Id AS Branches_Id,
+                            Branches.Name AS Branches_Name
                         FROM PayrollPayments
                             LEFT JOIN UserAccounts ON UserAccounts.Id = PayrollPayments.UserAccounts_Id_TEMP
+                            LEFT JOIN Branches ON Branches.Id = (SELECT TOP(1) Branches_Id FROM PayrollPaymentItems WHERE PayrollPayments_Id=PayrollPayments.Id)
                         WHERE 1=1
 							AND (@Id IS NULL OR PayrollPayments.Id = @Id)
 							AND (@Id IS NOT NULL OR (
-    							(@FILTER_Keyword IS NULL OR (PayrollPayments.No LIKE '%'+@FILTER_Keyword+'%' OR UserAccounts.Fullname LIKE '%'+@FILTER_Keyword+'%'))
+                                Branches.Id = @Branches_Id
+    							AND (@FILTER_Keyword IS NULL OR (PayrollPayments.No LIKE '%'+@FILTER_Keyword+'%' OR UserAccounts.Fullname LIKE '%'+@FILTER_Keyword+'%'))
                                 AND (@FILTER_DateFrom IS NULL OR PayrollPayments.Timestamp >= @FILTER_DateFrom)
                                 AND (@FILTER_DateTo IS NULL OR PayrollPayments.Timestamp <= @FILTER_DateTo)
                                 AND (@Cancelled IS NULL OR PayrollPayments.Cancelled = @Cancelled)
@@ -136,6 +141,7 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
                     DBConnection.getSqlParameter("FILTER_DateFrom", FILTER_DateFrom),
                     DBConnection.getSqlParameter("FILTER_DateTo", Util.getAsEndDate(FILTER_DateTo)),
+                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Branches_Id.Name, Helper.getActiveBranchId(Session)),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Cancelled.Name, Cancelled),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_IsChecked.Name, Approved)
                 ).ToList();

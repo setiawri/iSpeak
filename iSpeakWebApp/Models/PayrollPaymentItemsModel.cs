@@ -14,7 +14,7 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_PayrollPayments_Id = new ModelMember { Name = "PayrollPayments_Id" };
 
 
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yy HH:mm}")]
         public DateTime? Timestamp { get; set; }
         public static ModelMember COL_Timestamp = new ModelMember { Name = "Timestamp" };
 
@@ -63,6 +63,8 @@ namespace iSpeakWebApp.Models
 
         public string Student_UserAccounts_FirstName { get; set; }
         public string Student_UserAccounts_FullName { get; set; }
+
+        public long InitialRowNumber { get; set; } = 0;
     }
 
 }

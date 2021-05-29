@@ -153,7 +153,7 @@ namespace iSpeakWebApp.Controllers
             DateTime DatePeriod = param1;
 
             List<HourlyRatesModel> ActiveFullTimeEmployeePayrates = HourlyRatesController.getActiveFullTimeEmployeePayrates(Session);
-            List<PayrollPaymentItemsModel> FullTimePayrollPaymentItems = get(Session, null, DatePeriod, true);
+            List<PayrollPaymentItemsModel> FullTimePayrollPaymentItems = get(Session, null, DatePeriod, 1);
             DateTime Timestamp = Util.getLastDayOfSelectedMonth(DatePeriod).Value;
             string Description = string.Format("Payroll {0:MMM yyyy}", Timestamp);
 
@@ -220,8 +220,8 @@ namespace iSpeakWebApp.Controllers
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public static List<PayrollPaymentItemsModel> get(HttpSessionStateBase Session, Guid? UserAccounts_Id, DateTime? DatePeriod, bool? IsFullTime) { return get(Session, null, null, UserAccounts_Id, DatePeriod, IsFullTime); }
-        public static List<PayrollPaymentItemsModel> get(HttpSessionStateBase Session, Guid? Id, Guid? PayrollPayments_Id, Guid? UserAccounts_Id, DateTime? DatePeriod, bool? IsFullTime)
+        public static List<PayrollPaymentItemsModel> get(HttpSessionStateBase Session, Guid? UserAccounts_Id, DateTime? DatePeriod, int? IsFullTime) { return get(Session, null, null, UserAccounts_Id, DatePeriod, IsFullTime); }
+        public static List<PayrollPaymentItemsModel> get(HttpSessionStateBase Session, Guid? Id, Guid? PayrollPayments_Id, Guid? UserAccounts_Id, DateTime? DatePeriod, int? IsFullTime)
         {
             return new DBContext().Database.SqlQuery<PayrollPaymentItemsModel>(@"
                     SELECT PayrollPaymentItems.*,
@@ -230,7 +230,8 @@ namespace iSpeakWebApp.Controllers
                         CASE CHARINDEX(' ', Student_UserAccounts.Fullname, 1)
                              WHEN 0 THEN Student_UserAccounts.Fullname
                              ELSE SUBSTRING(Student_UserAccounts.Fullname, 1, CHARINDEX(' ', Student_UserAccounts.Fullname, 1) - 1)
-                        END AS Student_UserAccounts_FirstName
+                        END AS Student_UserAccounts_FirstName,
+                        ROW_NUMBER() OVER (ORDER BY PayrollPaymentItems.Timestamp ASC, UserAccounts.Fullname ASC) AS InitialRowNumber
                     FROM PayrollPaymentItems
                         LEFT JOIN LessonSessions ON LessonSessions.PayrollPaymentItems_Id = PayrollPaymentItems.Id
                         LEFT JOIN SaleInvoiceItems ON SaleInvoiceItems.Id = LessonSessions.SaleInvoiceItems_Id

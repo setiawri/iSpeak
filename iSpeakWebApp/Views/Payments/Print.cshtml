@@ -126,70 +126,72 @@
                             </div>
                         </div>
 
-                        <div class="d-md-flex flex-md-wrap">
-                            <div class="d-flex flex-wrap wmin-md-500">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr class="bg-grey-300" style="line-height:0;">
-                                                <th>Invoice</th>
-                                                <th class="text-right">Total</th>
-                                                <th class="text-right">Due</th>
-                                                <th class="text-right">Payment</th>
-                                                <th class="text-right">Remaining</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var item in PaymentItems)
-                                            {
-                                                <tr>
-                                                    <td>@Html.DisplayFor(modelItem => item.SaleInvoices_No)</td>
-                                                    <td class="text-right">@Html.DisplayFor(modelItem => item.SaleInvoices_Amount)</td>
-                                                    <td class="text-right">@Html.DisplayFor(modelItem => item.DueBefore)</td>
-                                                    <td class="text-right">@Html.DisplayFor(modelItem => item.Amount)</td>
-                                                    <td class="text-right">@Html.DisplayFor(modelItem => item.DueAfter)</td>
+                        <div class="col-lg-12 mt-1 pr-0 row">
+                            <div class="ml-0 mr-auto">
+                                <div class="d-flex flex-wrap wmin-md-500">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr class="bg-grey-300" style="line-height:0;">
+                                                    <th>Invoice</th>
+                                                    <th class="text-right">Total</th>
+                                                    <th class="text-right">Due</th>
+                                                    <th class="text-right">Payment</th>
+                                                    <th class="text-right">Remaining</th>
                                                 </tr>
-                                            }
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in PaymentItems)
+                                                {
+                                                    <tr>
+                                                        <td>@Html.DisplayFor(modelItem => item.SaleInvoices_No)</td>
+                                                        <td class="text-right">@Html.DisplayFor(modelItem => item.SaleInvoices_Amount)</td>
+                                                        <td class="text-right">@Html.DisplayFor(modelItem => item.DueBefore)</td>
+                                                        <td class="text-right">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                                        <td class="text-right">@Html.DisplayFor(modelItem => item.DueAfter)</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="mx-auto"></div>
-
-                            <div class="wmin-md-200">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <tbody>
-                                            @if (Model.CashAmount > 0)
-                                            {
+                            <div class="float-right mr-0">
+                                <div class="wmin-md-200">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tbody>
+                                                @if (Model.CashAmount > 0)
+                                                {
+                                                    <tr>
+                                                        <th>CASH</th>
+                                                        <td class="text-right">@Html.DisplayFor(item => item.CashAmount)</td>
+                                                    </tr>
+                                                }
+                                                @if (Model.DebitAmount > 0)
+                                                {
+                                                    <tr>
+                                                        <th>DEBIT</th>
+                                                        <td class="text-right">@Html.DisplayFor(item => item.DebitAmount)</td>
+                                                    </tr>
+                                                }
+                                                @if (Model.ConsignmentAmount > 0)
+                                                {
+                                                    <tr>
+                                                        <th>@Html.DisplayFor(item => item.Consignments_Name)</th>
+                                                        <td class="text-right">@Html.DisplayFor(item => item.ConsignmentAmount)</td>
+                                                    </tr>
+                                                }
                                                 <tr>
-                                                    <th>CASH</th>
-                                                    <td class="text-right">@Html.DisplayFor(item => item.CashAmount)</td>
+                                                    <th><h5>PAYMENT</h5></th>
+                                                    <td class="text-right">
+                                                        <h5 class="font-weight-semibold text-primary">@string.Format("{0:N0}", ViewBag.TotalAmount)</h5>
+                                                    </td>
                                                 </tr>
-                                            }
-                                            @if (Model.DebitAmount > 0)
-                                            {
-                                                <tr>
-                                                    <th>DEBIT</th>
-                                                    <td class="text-right">@Html.DisplayFor(item => item.DebitAmount)</td>
-                                                </tr>
-                                            }
-                                            @if (Model.ConsignmentAmount > 0)
-                                            {
-                                                <tr>
-                                                    <th>@Html.DisplayFor(item => item.Consignments_Name)</th>
-                                                    <td class="text-right">@Html.DisplayFor(item => item.ConsignmentAmount)</td>
-                                                </tr>
-                                            }
-                                            <tr>
-                                                <th><h5>PAYMENT</h5></th>
-                                                <td class="text-right">
-                                                    <h5 class="font-weight-semibold text-primary">@string.Format("{0:N0}", ViewBag.TotalAmount)</h5>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -239,9 +241,7 @@
         var originalContents = document.body.innerHTML;
 
         document.body.innerHTML = printContents;
-
         window.print();
-
         document.body.innerHTML = originalContents;
     }
 

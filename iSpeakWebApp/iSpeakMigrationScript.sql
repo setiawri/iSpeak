@@ -316,6 +316,7 @@
 		ALTER TABLE PayrollPaymentItems ADD IsFullTime bit NULL DEFAULT 0;
 	GO
 	UPDATE PayrollPaymentItems SET IsFullTime = 1 WHERE Description LIKE '%Payroll%'
+	UPDATE PayrollPaymentItems SET IsFullTime = 0 WHERE IsFullTime IS NULL
 	
 -- PAYROLL PAYMENTS =====================================================================================================
 

@@ -2,7 +2,7 @@
 - run migration script
 - manually set roles to all users except students
 - 
-
+FINAL: check for UTC date conversion
 
 TO DO:
 - lesson session index page: filter is not applied after creating new session
@@ -35,7 +35,29 @@ TO DO:
 	> new students
 	> 
 - promotion emails
-- mobile app
+
+- Payroll Payments: 1 payroll payment has items from more than 1 branch. Should create new payment to separate them.
+		select 
+			PayrollPayments.Id AS PayrollPayments_Id, 
+			PayrollPayments.No, 
+			AspNetUsers.Firstname + ' ' + COALESCE(AspNetUsers.Middlename,'') + ' ' + COALESCE(AspNetUsers.Lastname,'') AS Name,
+			PayrollPayments.UserAccounts_Id
+		from PayrollPayments 
+		left join AspNetUsers ON AspNetUsers.Id = PayrollPayments.UserAccounts_Id
+		where PayrollPayments.Id IN (
+				SELECT PayrollPayments_Id 
+				FROM (
+					SELECT PayrollPayments_Id, COUNT(PayrollPayments_Id) AS DuplicateCount
+					FROM (
+						select PayrollPayments_Id, Branches_Id, SUM(Amount) AS ItemAmount
+						from PayrollPaymentItems
+						group by PayrollPayments_Id, Branches_Id
+					) compile
+					GROUP BY compile.PayrollPayments_Id
+				) summary
+				WHERE summary.DuplicateCount > 1
+			)
+
 
 IMPROVEMENTS:
 
@@ -94,6 +116,8 @@ on password reset, generate random password and send to user's Whatsapp number.
 create mailing list on whatsapp. create mechanism to allow user to unsubscribe
 
 happy birthday greetings on home page on user birthday date
+
+MOBILE APP
 
 =====================================================================================================================================================================
 SOP

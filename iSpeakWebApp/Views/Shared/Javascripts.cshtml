@@ -642,6 +642,18 @@
         $(this).blur();
     });
 
+    // PRINTING ====================================================================================================================================================
+
+    ////cannot be used because need to figure out how to render partial from different folder to shared folder
+    function print(id) {
+        var printContents = document.getElementById(id).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+    }
+
     // MISCLEANEOUS ================================================================================================================================================
 
     function setValue(id, value) {
@@ -660,7 +672,7 @@
     //==============================================================================================================================================================
 
     $(document).ready(function () {
-        setNavigationMenuVisibility();
+        setNavigationMenuVisibility(); console.log('aaaaa');
 
         $("input").attr("autocomplete", "off"); //turn off autocomplete
         $('.form-input-styled').uniform(); //??
