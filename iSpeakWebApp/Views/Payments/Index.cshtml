@@ -16,7 +16,10 @@
             <!-- Form inputs -->
             <div class="card animated bounceInLeft">
                 <div class="card-header header-elements-inline pb-1">
-                    <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
+                    <h5 class="card-title text-uppercase">
+                        @ViewBag.Title
+                    </h5>
+                    <i class="icon-info22 text-primary ml-2" data-container="body" data-toggle="popover" data-placement="left" data-content="Approved items cannot be cancelled"></i>
                 </div>
                 <div class="card-body">
 
@@ -111,8 +114,10 @@
                             <tbody>
                                 @if (Model != null)
                                 {
+                                    var rowno = 0;
                                     foreach (var item in Model)
                                     {
+                                        rowno++;
                                         <tr>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.No)</td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
@@ -139,7 +144,7 @@
                                             @if (access.Payments_Approve)
                                             {
                                                 <td class="align-top" style="text-align:center;">
-                                                    @Html.CheckBoxFor(modelItem => item.Confirmed, new { @class = "check-styled", onclick = string.Format("UpdateApproval(this, '{0}')", item.Id) })
+                                                    <input type="checkbox" id='@("chkApprove_" + rowno)' onclick="UpdateApproval(this, '@item.Id')" @(item.Confirmed ? "checked" : "") />
                                                 </td>
                                             }
                                             <td class="align-top">                                                
@@ -152,7 +157,7 @@
                                             <td class="align-top">
                                                 @if (!item.Cancelled)
                                                 {
-                                                    <a href="javascript:void(0)"><span class="badge badge-warning d-block mr-1" style="width:50px;" data-toggle="modal" data-target="#modal_cancel" onclick="PopulateCancelModal('@item.Id','@item.No')">CANCEL</span></a>
+                                                    <a href="javascript:void(0)" id='@("lnkCancel_" + rowno)' class='@(item.Confirmed ? "d-none" : "")'><span class="badge badge-warning d-block mr-1" style="width:50px;" data-toggle="modal" data-target="#modal_cancel" onclick="PopulateCancelModal('@item.Id','@item.No')">CANCEL</span></a>
                                                 }
                                             </td>
                                             <td class="align-top">
@@ -226,7 +231,9 @@
     });
 
     function UpdateApproval(control, id) {
-        AjaxUpdate('Update_Approval', '@ControllerName', id, control.checked);
+        AjaxUpdate('UpdateApproval', '@ControllerName', id, control.checked, function () {
+            toggleVisibility('lnkCancel_' + getRowNo(control));
+        });
     }
 
     function applyLast() {

@@ -66,6 +66,7 @@
                                     <th>@Html.DisplayNameFor(model => model.Username)</th>
                                     <th>Phone</th>
                                     <th>@Html.DisplayNameFor(model => model.Email)</th>
+                                    <th class="non-searchable non-sortable" style="width:100px;"></th>
                                     <th class="non-searchable non-sortable" style="width:200px;"></th>
                                 </tr>
                             </thead>
@@ -82,7 +83,7 @@
                                                 <div>@Html.DisplayFor(modelItem => item.Phone2)</div>
                                             </td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Email)</td>
-                                            <td class="align-top">
+                                            <td>
                                                 @if (item.Active)
                                                 {
                                                     <span class="badge badge-success d-block" style="width:100px;">ACTIVE</span>
@@ -91,6 +92,8 @@
                                                 {
                                                     <span class="badge badge-dark d-block" style="width:100px;">NOT ACTIVE</span>
                                                 }
+                                            </td>
+                                            <td class="align-top">
                                                 @if (access.UserAccounts_Edit)
                                                 {
                                                     <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a> @:•

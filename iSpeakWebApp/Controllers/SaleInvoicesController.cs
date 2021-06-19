@@ -223,7 +223,7 @@ namespace iSpeakWebApp.Controllers
             return Json(new { content = content }, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult Update_IsChecked(Guid id, bool value)
+        public JsonResult UpdateApproval(Guid id, bool value)
         {
             update_IsChecked(id, value);
             return Json(new { Message = "" });

@@ -1,13 +1,15 @@
-﻿DB MIGRATION
+﻿===============================================================================================================================================================
+DB MIGRATION
+------------
 - run migration script
 - manually set roles to all users except students
 - 
 FINAL: check for UTC date conversion
+===============================================================================================================================================================
 
 TO DO:
 - lesson session index page: filter is not applied after creating new session
 - Test lesson session waive tutor fee and schedule change. check payrollpaymentitem is generated correctly.
-- Add branch name in payroll payment print page
 - Payroll: 
 	> Verify amount for full time employees
 - Payroll Receipt: make sure manual payroll item is displayed
@@ -15,7 +17,10 @@ TO DO:
 - payroll pages: payroll rates & payroll
 - create user account info page
 - saleinvoice with returned inventory cannot be cancelled
-- master layout: if user only has access to 1 branch, show a label instead of dropdownlist.
+- master layout
+	> populate branches dropdownlist using column branches in UserAccounts table. 
+	> if user only has access to 1 branch, show a label instead of dropdownlist. 
+	> add field branch in user accounts create/edit page. 
 - Create inventory return pages
 - SaleInvoiceItemsController.add(): decrease inventory if consist of product.
 - saleinvoice create page:

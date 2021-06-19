@@ -388,6 +388,13 @@
         return $('#' + id).prop('checked');
     }
 
+    function toggleCheckboxValue(id) {
+        if (getCheckboxValue(id))
+            setCheckboxState(id, false);
+        else
+            setCheckboxState(id, true);
+    }
+
     function getSelectedCheckboxesId(datatablebody, checkboxClassname) {
         var idList = '';
         $('#' + datatablebody + ' tr').find('.' + checkboxClassname).each(function () {
@@ -542,14 +549,17 @@
         });
     }
 
-    function AjaxUpdate(action, controller, id, value) {
+    function AjaxUpdate(action, controller, id, value, executeIfSuccess) {
         var url = '@Url.Action("__action", "__controller")';
         url = url.replace("__action", action).replace("__controller", controller);
         $.ajax({
             type: "POST", url: url, data: { id: id, value: value },
             success: function (data) {
-                if (data.Message != '')
+                if (data.Message != '') {
                     bootbox.alert({ backdrop: true, message: data.Message });
+                } else {
+                    executeIfSuccess();
+                }
             },
             error: function (result) { bootbox.alert({ backdrop: true, message: "Error " + result }); }
         });
@@ -590,6 +600,7 @@
         autoWidth: false,
         pagingType: 'full_numbers',
         //order: [[0, 'asc']],
+        ordering: false,
         bStateSave: true,
         stateSaveCallback: function (settings, data) {
             localStorage.setItem('DataTables_' + settings.sInstance, JSON.stringify(data))
@@ -669,10 +680,26 @@
         $('#' + id).prop('disabled', value);
     }
 
+    function toggleVisibility(id) {
+        if ($('#' + id).hasClass('d-none'))
+            $('#' + id).removeClass('d-none');
+        else
+            $('#' + id).addClass('d-none');
+    }
+
+    function getRowNo(control) {
+        var id = getElementId(control);
+        return id.substring(id.indexOf('_') + 1, id.length);
+    }
+
+    function getElementId(control) {
+        return $(control).prop('id');
+    }
+
     //==============================================================================================================================================================
 
     $(document).ready(function () {
-        setNavigationMenuVisibility(); console.log('aaaaa');
+        setNavigationMenuVisibility(); 
 
         $("input").attr("autocomplete", "off"); //turn off autocomplete
         $('.form-input-styled').uniform(); //??

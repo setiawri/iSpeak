@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using iSpeakWebApp.Models;
 using Newtonsoft.Json;
 using LIBUtil;
+using LIBWebMVC;
 
 namespace iSpeakWebApp.Controllers
 {
@@ -69,7 +70,7 @@ namespace iSpeakWebApp.Controllers
             {
                 PaymentsModel payment = JsonConvert.DeserializeObject<PaymentsModel>(JsonPayments);
                 payment.Id = Guid.NewGuid();
-                payment.No = Util.incrementHexNumber(db.Payments.Max(x => x.No));
+                payment.No = Util.incrementHexNumber(getLastNo());
                 payment.Timestamp = DateTime.Now;
 
                 if (payment.DebitAmount == 0)
@@ -137,8 +138,7 @@ namespace iSpeakWebApp.Controllers
                     });
                 }
 
-                db.Payments.Add(payment);
-                db.SaveChanges();
+                add(payment);
 
                 return RedirectToAction(nameof(Print), new { id = payment.Id });
             }
@@ -166,7 +166,7 @@ namespace iSpeakWebApp.Controllers
 
         /* PRINT **********************************************************************************************************************************************/
 
-        // GET: Payments/Create
+        // GET: Payments/Print
         public ActionResult Print(Guid? id)
         {
             if (id == null || !UserAccountsController.getUserAccess(Session).Payments_View)
@@ -254,7 +254,7 @@ namespace iSpeakWebApp.Controllers
             return Json(new { content = content }, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult Update_Approval(Guid id, bool value)
+        public JsonResult UpdateApproval(Guid id, bool value)
         {
             update_Confirmed(id, value);
             return Json(new { Message = "" });
@@ -316,35 +316,57 @@ namespace iSpeakWebApp.Controllers
             ).ToList();
         }
 
+        public string getLastNo()
+        {
+            return db.Database.SqlQuery<PaymentsModel>(@"
+                        SELECT Payments.*
+                        FROM Payments
+                        WHERE Payments.No = (SELECT MAX(Payments.No) FROM Payments)
+                    "
+                ).FirstOrDefault().No;
+        }
+
+        public void add(PaymentsModel model)
+        {
+            WebDBConnection.Insert(db.Database, "Payments",
+                    DBConnection.getSqlParameter(PaymentsModel.COL_Id.Name, model.Id),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_No.Name, model.No),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_Timestamp.Name, model.Timestamp),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_CashAmount.Name, model.CashAmount),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_DebitAmount.Name, model.DebitAmount),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_DebitBank.Name, model.DebitBank),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_DebitOwnerName.Name, model.DebitOwnerName),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_DebitNumber.Name, model.DebitNumber),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_DebitRefNo.Name, model.DebitRefNo),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_Consignments_Id.Name, model.Consignments_Id),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_ConsignmentAmount.Name, model.ConsignmentAmount),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_Notes.Name, model.Notes),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_Cancelled.Name, model.Cancelled),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_Confirmed.Name, model.Confirmed),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_IsTransfer.Name, model.IsTransfer),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_CancelNotes.Name, model.CancelNotes)
+                );
+            ActivityLogsController.AddCreateLog(db, Session, model.Id);
+            db.SaveChanges();
+        }
+
         public void update_Confirmed(Guid Id, bool value)
         {
-            db.Database.ExecuteSqlCommand(@"
-                UPDATE Payments 
-                SET
-                    Confirmed = @Confirmed
-                WHERE Payments.Id = @Id;                
-            ",
-                DBConnection.getSqlParameter(PaymentsModel.COL_Id.Name, Id),
-                DBConnection.getSqlParameter(PaymentsModel.COL_Confirmed.Name, value)
-            );
-
+            WebDBConnection.Update(db.Database, "Payments",
+                    DBConnection.getSqlParameter(PaymentsModel.COL_Id.Name, Id),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_Confirmed.Name, value)
+                );
             ActivityLogsController.AddEditLog(db, Session, Id, string.Format(PaymentsModel.COL_Confirmed.LogDisplay, null, value));
             db.SaveChanges();
         }
 
         public void update_CancelNotes(Guid Id, string CancelNotes)
         {
-            db.Database.ExecuteSqlCommand(@"
-                UPDATE Payments 
-                SET
-                    Cancelled = 1,
-                    CancelNotes = @CancelNotes
-                WHERE Payments.Id = @Id;                
-            ",
-                DBConnection.getSqlParameter(PaymentsModel.COL_Id.Name, Id),
-                DBConnection.getSqlParameter(PaymentsModel.COL_CancelNotes.Name, CancelNotes)
-            );
-
+            WebDBConnection.Update(db.Database, "Payments",
+                    DBConnection.getSqlParameter(PaymentsModel.COL_Id.Name, Id),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_Cancelled.Name, 1),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_CancelNotes.Name, CancelNotes)
+                );
             ActivityLogsController.AddEditLog(db, Session, Id, string.Format(PaymentsModel.COL_CancelNotes.LogDisplay, CancelNotes));
             db.SaveChanges();
         }

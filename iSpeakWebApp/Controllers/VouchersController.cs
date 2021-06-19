@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using iSpeakWebApp.Models;
 using LIBUtil;
+using LIBWebMVC;
 
 namespace iSpeakWebApp.Controllers
 {
@@ -74,9 +75,7 @@ namespace iSpeakWebApp.Controllers
                 {
                     model.Id = Guid.NewGuid();
                     model.Active = true;
-                    db.Vouchers.Add(model);
-                    ActivityLogsController.AddCreateLog(db, Session, model.Id);
-                    db.SaveChanges(); 
+                    add(model);
                     return RedirectToAction(nameof(Index), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
                 }
             }
@@ -111,7 +110,7 @@ namespace iSpeakWebApp.Controllers
                     ModelState.AddModelError(VouchersModel.COL_Code.Name, $"{modifiedModel.Code} sudah terdaftar");
                 else
                 {
-                    VouchersModel originalModel = db.Vouchers.AsNoTracking().Where(x => x.Id == modifiedModel.Id).FirstOrDefault();
+                    VouchersModel originalModel = get(modifiedModel.Id);
 
                     string log = string.Empty;
                     log = Helper.append(log, originalModel.Code, modifiedModel.Code, VouchersModel.COL_Code.LogDisplay);
@@ -121,9 +120,7 @@ namespace iSpeakWebApp.Controllers
 
                     if (!string.IsNullOrEmpty(log))
                     {
-                        db.Entry(modifiedModel).State = EntityState.Modified;
-                        ActivityLogsController.AddEditLog(db, Session, modifiedModel.Id, log);
-                        db.SaveChanges();
+                        update(modifiedModel, log);
                     }
 
                     return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
@@ -138,7 +135,7 @@ namespace iSpeakWebApp.Controllers
 
         public static void setDropDownListViewBag(ControllerBase controller)
         {
-            controller.ViewBag.Vouchers = new SelectList(get(1), VouchersModel.COL_Id.Name, VouchersModel.COL_Code.Name);
+            controller.ViewBag.Vouchers = new SelectList(get(1), VouchersModel.COL_Id.Name, VouchersModel.COL_DDLDescription.Name);
         }
 
         public static void setViewBag(ControllerBase controller)
@@ -151,7 +148,8 @@ namespace iSpeakWebApp.Controllers
         public bool isExists(Guid? Id, string Code)
         {
             return db.Database.SqlQuery<VouchersModel>(@"
-                        SELECT Vouchers.*
+                        SELECT Vouchers.*,
+                            '' AS DDLDescription
                         FROM Vouchers
                         WHERE 1=1 
 							AND (@Id IS NOT NULL OR Vouchers.Code = @Code)
@@ -168,7 +166,8 @@ namespace iSpeakWebApp.Controllers
         public static List<VouchersModel> get(Guid? Id, string FILTER_Keyword, int? Active)
         {
             return new DBContext().Database.SqlQuery<VouchersModel>(@"
-                        SELECT Vouchers.*
+                        SELECT Vouchers.*,
+                            Vouchers.Code + ' (' + FORMAT(Vouchers.Amount,'N0') + ')' AS DDLDescription
                         FROM Vouchers
                         WHERE 1=1
 							AND (@Id IS NULL OR Vouchers.Id = @Id)
@@ -182,6 +181,32 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(VouchersModel.COL_Active.Name, Active),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
+        }
+
+        public void update(VouchersModel model, string log)
+        {
+            WebDBConnection.Update(db.Database, "Vouchers",
+                    DBConnection.getSqlParameter(VouchersModel.COL_Id.Name, model.Id),
+                    DBConnection.getSqlParameter(VouchersModel.COL_Active.Name, model.Active),
+                    DBConnection.getSqlParameter(VouchersModel.COL_Code.Name, model.Code),
+                    DBConnection.getSqlParameter(VouchersModel.COL_Description.Name, model.Description),
+                    DBConnection.getSqlParameter(VouchersModel.COL_Amount.Name, model.Amount)
+                );
+            ActivityLogsController.AddEditLog(db, Session, model.Id, log);
+            db.SaveChanges();
+        }
+
+        public void add(VouchersModel model)
+        {
+            WebDBConnection.Insert(db.Database, "Vouchers",
+                    DBConnection.getSqlParameter(VouchersModel.COL_Id.Name, model.Id),
+                    DBConnection.getSqlParameter(VouchersModel.COL_Active.Name, model.Active),
+                    DBConnection.getSqlParameter(VouchersModel.COL_Code.Name, model.Code),
+                    DBConnection.getSqlParameter(VouchersModel.COL_Description.Name, model.Description),
+                    DBConnection.getSqlParameter(VouchersModel.COL_Amount.Name, model.Amount)
+                );
+            ActivityLogsController.AddCreateLog(db, Session, model.Id);
+            db.SaveChanges();
         }
 
         /******************************************************************************************************************************************************/

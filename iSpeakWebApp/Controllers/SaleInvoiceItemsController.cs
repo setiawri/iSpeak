@@ -82,11 +82,12 @@ namespace iSpeakWebApp.Controllers
             int rowNo = 0;
             foreach(SaleInvoiceItemsModel saleInvoiceItem in SaleInvoiceItems)
             {
+                saleInvoiceItem.Id = Guid.NewGuid();
                 db.Database.ExecuteSqlCommand(@"
                         INSERT INTO SaleInvoiceItems   (Id, Notes, RowNo, SaleInvoices_Id, Description, Qty, Price, DiscountAmount, Vouchers, VouchersAmount, VouchersName, Products_Id, Services_Id, LessonPackages_Id, SessionHours, SessionHours_Remaining, TravelCost, TutorTravelCost) 
                                                 VALUES(@Id,@Notes,@RowNo,@SaleInvoices_Id,@Description,@Qty,@Price,@DiscountAmount,@Vouchers,@VouchersAmount,@VouchersName,@Products_Id,@Services_Id,@LessonPackages_Id,@SessionHours,@SessionHours_Remaining,@TravelCost,@TutorTravelCost);
                     ",
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Id.Name, Guid.NewGuid()),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Id.Name, saleInvoiceItem.Id),
                     DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Notes.Name, saleInvoiceItem.Notes),
                     DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_RowNo.Name, ++rowNo),
                     DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SaleInvoices_Id.Name, SaleInvoices_Id),

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using iSpeakWebApp.Controllers;
 
 namespace iSpeakWebApp.Models
 {
-    [Table("Vouchers")]
     public class VouchersModel
     {
         [Key]
@@ -26,5 +24,12 @@ namespace iSpeakWebApp.Models
         [DisplayFormat(DataFormatString = "{0:N0}")]
         public int Amount { get; set; } = 0;
         public static ModelMember COL_Amount = new ModelMember { Name = "Amount", Display = "Amount", LogDisplay = ActivityLogsController.editIntFormat("Amount") };
+
+
+        /******************************************************************************************************************************************************/
+
+        public string DDLDescription { get; set; } = string.Empty;
+        public static ModelMember COL_DDLDescription = new ModelMember { Name = "DDLDescription" };
+
     }
 }

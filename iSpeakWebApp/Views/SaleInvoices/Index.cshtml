@@ -126,8 +126,10 @@
                             <tbody id="datatable-body">
                                 @if (Model != null)
                                 {
+                                    var rowno = 0;
                                     foreach (var item in Model)
                                     {
+                                        rowno++;
                                         <tr>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.No)</td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
@@ -152,19 +154,19 @@
                                             <td class="align-top pl-0">
                                                 @if (item.Due > 0 && !item.Cancelled)
                                                 {
-                                                    <input type="checkbox" class="check-styled due-checkbox" id="@item.Id" />
+                                                    <input type="checkbox" class="due-checkbox" id="@item.Id" />
                                                 }
                                             </td>
                                             @if (access.SaleInvoices_Approve)
                                             {
                                                 <td class="align-top" style="text-align:center;">
-                                                    @Html.CheckBoxFor(modelItem => item.IsChecked, new { @class = "check-styled", onclick = string.Format("UpdateApproval(this, '{0}')", item.Id) })
+                                                    <input type="checkbox" id='@("chkApprove_" + rowno)' onclick="UpdateApproval(this, '@item.Id')" @(item.IsChecked ? "checked" : "") />
                                                 </td>
                                             }
                                             <td class="align-top">
                                                 @if (!item.Cancelled)
                                                 {
-                                                    <a href="javascript:void(0)"><span class="badge badge-warning d-block mr-1" style="width:50px;" data-toggle="modal" data-target="#modal_cancel" onclick="PopulateCancelModal('@item.Id','@item.No')">CANCEL</span></a>
+                                                    <a href="javascript:void(0)" id='@("lnkCancel_" + rowno)' class='@(item.IsChecked ? "d-none" : "")'><span class="badge badge-warning d-block mr-1" style="width:50px;" data-toggle="modal" data-target="#modal_cancel" onclick="PopulateCancelModal('@item.Id','@item.No')">CANCEL</span></a>
                                                 }
                                             </td>
                                             <td class="align-top">
@@ -244,7 +246,9 @@
     });
 
     function UpdateApproval(control, id) {
-        AjaxUpdate('Update_IsChecked', '@ControllerName', id, control.checked);
+        AjaxUpdate('UpdateApproval', '@ControllerName', id, control.checked, function () {
+            toggleVisibility('lnkCancel_' + getRowNo(control));
+        });
     }
 
     function applyLast() {        

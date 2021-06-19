@@ -39,7 +39,7 @@
 		[Fullname]             VARCHAR (MAX)   NOT NULL,
 		[Roles]				   VARCHAR (MAX)   NULL,
 		[Birthday]             DATE             NOT NULL,
-		[Branches_Id]  UNIQUEIDENTIFIER NOT NULL,
+		[Branches_Id]		   UNIQUEIDENTIFIER NOT NULL,
 		[Active]               BIT              DEFAULT ((1)) NOT NULL,
 		[ResetPassword]		   BIT				DEFAULT ((0)) NOT NULL,
 		[Address]              VARCHAR (MAX)   NULL,
@@ -48,6 +48,7 @@
 		[Notes]                VARCHAR (MAX)   NULL,
 		[Email]                VARCHAR (MAX)   NULL,
 		[Interest]             VARCHAR (MAX)   NULL,
+		[Branches]             VARCHAR (MAX)   NULL,
 		[PromotionEvents_Id]   UNIQUEIDENTIFIER NULL
 	);
 	GO
@@ -99,6 +100,9 @@
 	GO
 
 	update UserAccounts set Roles='7FFE2278-1C25-4FAC-80F4-74BD26A63D96', ResetPassword=0 where fullname = 'ricky'
+	GO
+
+	UPDATE UserAccounts SET Branches = Branches_Id
 	GO
 
 -- USER ACCOUNT ROLES ===================================================================================================
