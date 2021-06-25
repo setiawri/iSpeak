@@ -72,7 +72,7 @@
                                     </div>
 
                                     <div class="form-group row">
-                                        @Html.Label("Session Hours", htmlAttributes: new { @class = "col-form-label required", @style = "width:150px;" })
+                                        @Html.Label("Session Hours / qty", htmlAttributes: new { @class = "col-form-label required", @style = "width:150px;" })
                                         <div style="width:150px">
                                             @Html.Editor("SessionHours", new { htmlAttributes = new { @class = "form-control positivenumericonly", Value = "0" } })
                                             @Html.ValidationMessage("SessionHours", "", new { @class = "text-danger" })
@@ -80,7 +80,7 @@
                                     </div>
 
                                     <div class="form-group row">
-                                        @Html.Label("Travel Cost", htmlAttributes: new { @class = "col-form-label required", @style = "width:150px;" })
+                                        @Html.Label("Travel Cost / qty", htmlAttributes: new { @class = "col-form-label required", @style = "width:150px;" })
                                         <div style="width:150px">
                                             @Html.Editor("TravelCost", new { htmlAttributes = new { @class = "form-control positiveintegeronly", Value = "0", type = "number" } })
                                             @Html.ValidationMessage("TravelCost", "", new { @class = "text-danger" })
@@ -88,7 +88,7 @@
                                     </div>
 
                                     <div class="form-group row">
-                                        @Html.Label("Tutor Travel", htmlAttributes: new { @class = "col-form-label required", @style = "width:150px;" })
+                                        @Html.Label("Tutor Travel / qty", htmlAttributes: new { @class = "col-form-label required", @style = "width:150px;" })
                                         <div class="" style="width:150px">
                                             @Html.Editor("TutorTravelCost", new { htmlAttributes = new { @class = "form-control positiveintegeronly", Value = "0", type = "number" } })
                                             @Html.ValidationMessage("TutorTravelCost", "", new { @class = "text-danger" })
@@ -323,12 +323,12 @@
                 } else {
                     LessonPackages_Id = item.Id;
                     description = '[' + item.Languages_Name + ': ' + item.LessonTypes_Name + '] ' + item.Name;
-                    sessionhours = getValueFloat('SessionHours');
+                    sessionhours = getValueFloat('SessionHours') * qty;
                     if (sessionhours > 0)
-                        description += ' (' + sessionhours + ' hrs)';
+                        description += ' (' + getValueFloat('SessionHours') + ' hrs)';
                     price = item.Price;
-                    TravelCost = getValueInt('TravelCost');
-                    TutorTravelCost = getValueInt('TutorTravelCost');
+                    TravelCost = getValueInt('TravelCost') * qty;
+                    TutorTravelCost = getValueInt('TutorTravelCost') * qty;
                     travelcoststring = '<br/>Travel: ' + formatN0(TravelCost) + ' (Tutor: ' + formatN0(TutorTravelCost) + ')';
                     subtotal = (qty * price) + TravelCost - discount - voucheramount;
 

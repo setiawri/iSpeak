@@ -66,7 +66,7 @@
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.ReceiveDate)</td>
                                             <td class="align-top">
                                                 @Html.DisplayFor(modelItem => item.Products_Name)
-                                                <br />@item.Products_Id
+                                                @*<br />@item.Products_Id*@
                                                 @if (!string.IsNullOrEmpty(item.Notes))
                                                 {
                                                     <br />@:Notes: @item.Notes

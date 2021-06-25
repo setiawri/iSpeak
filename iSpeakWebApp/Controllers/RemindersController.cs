@@ -89,7 +89,7 @@ namespace iSpeakWebApp.Controllers
 
         public JsonResult GetData(string FILTER_Keyword, int? status)
         {
-            List<RemindersModel> models = new RemindersController().get(Helper.getActiveBranchId(Session), Util.parseEnum<EnumReminderStatuses>(status), FILTER_Keyword);
+            List<RemindersModel> models = new RemindersController().get(Helper.getActiveBranchId(Session), status == null ? (EnumReminderStatuses?)null : (EnumReminderStatuses)status, FILTER_Keyword);
             return Json(new { result = models, count = models.Count }, JsonRequestBehavior.AllowGet);
         }
 
@@ -104,7 +104,7 @@ namespace iSpeakWebApp.Controllers
                             && x.Status_enumid != EnumReminderStatuses.Cancel
                         ))
                     && (string.IsNullOrEmpty(FILTER_Keyword) || x.Description.Contains(FILTER_Keyword))
-                ).OrderBy(x=>x.Timestamp).ToList();
+                ).OrderBy(x => x.Timestamp).ToList();
         }
 
         /******************************************************************************************************************************************************/

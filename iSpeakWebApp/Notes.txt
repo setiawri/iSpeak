@@ -13,10 +13,12 @@ TO DO:
 	> create categories for vouchers to separate lesson package, inventory, services. show only relevant vouchers for selected tab
 	> when adding new item, check to make sure subtotal is not less than 0
 	> create mechanism to add lesson trial
+	> on clicking add new account button, add returnUrl to send user back to this form.
 - lesson session index page: filter is not applied after creating new session
 - create new lesson session: show only tutor in tutor ddl
 - Lesson Sesion Index: FILTER_Invoice is not passed to HttpGet Create in controller
 - Test lesson session waive tutor fee and schedule change. check payrollpaymentitem is generated correctly.
+- Add No to Lesson Session in order to track easier
 - Payroll: 
 	> Verify amount for full time employees
 - Payroll Receipt: make sure manual payroll item is displayed

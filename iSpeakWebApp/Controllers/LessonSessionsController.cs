@@ -23,8 +23,7 @@ namespace iSpeakWebApp.Controllers
             if (!UserAccountsController.getUserAccess(Session).LessonSessions_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            if(FILTER_Keyword == null && FILTER_InvoiceNo == null && FILTER_Cancelled == null && 
-                FILTER_chkDateFrom == null && FILTER_DateFrom == null && FILTER_chkDateTo == null && FILTER_DateTo == null)
+            if (UtilWebMVC.hasNoFilter(FILTER_Keyword, FILTER_InvoiceNo, FILTER_Cancelled, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo))
             {
                 FILTER_chkDateFrom = true;
                 FILTER_DateFrom = DateTime.Now;

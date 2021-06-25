@@ -50,7 +50,10 @@ namespace iSpeakWebApp.Controllers
             }
             else
             {
-                return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id));
+                if (LIBWebMVC.UtilWebMVC.hasNoFilter(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id))
+                    return View();
+                else
+                    return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id));
             }
         }
 

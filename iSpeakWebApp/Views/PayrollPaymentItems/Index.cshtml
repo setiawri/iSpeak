@@ -270,7 +270,7 @@
                 type: "POST",
                 url: '@Url.Action("Create", "PayrollPayments")',
                 data: {
-                    UserAccounts_Id: $('modal_payment-UserAccounts_Id').val(),
+                    UserAccounts_Id: $('#modal_payment-UserAccounts_Id').val(),
                     Notes: $('#modal_payment-Notes').val(),
                     Timestamp: getValueString('modal_payment-Timestamp'),
                     Amount: getValueFloat('modal_payment-Amount'),
@@ -299,6 +299,7 @@
     }
 
     function GetDetails(id, title) {
+        setValue('modal_payment-UserAccounts_Id', id);
         var url = '@Url.Action("GetDetails", "PayrollPaymentItems")';
         $.ajax({
             type: "POST", url: url, data: { id: id, DatePeriod: getValueString('FILTER_DatePeriod') },

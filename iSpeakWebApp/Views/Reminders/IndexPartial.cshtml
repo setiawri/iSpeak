@@ -41,8 +41,8 @@
                 <th></th>
                 <th style="width:120px;">Date</th>
                 <th>Description</th>
-                <th>Status</th>
-                <th class="non-searchable non-sortable"></th>
+                <th style="width:150px;">Status</th>
+                <th class="non-searchable non-sortable" style="width:100px;"></th>
             </tr>
         </thead>
         <tbody>
@@ -59,12 +59,13 @@
     });
 
     function LoadReminders() {
+        console.log(getDDLSelectedValue('ReminderStatus'));
         $.ajax({
             type: "POST",
             url: '@Url.Action("GetData", "Reminders")',
             data: {
                 FILTER_Keyword: getValueString('FILTER_Keyword'),
-                status: $('#ReminderStatus').val()
+                status: getDDLSelectedValue('ReminderStatus')
             },
             success: function (data) {
                 var datatable = $('#datatableReminder').DataTable();
