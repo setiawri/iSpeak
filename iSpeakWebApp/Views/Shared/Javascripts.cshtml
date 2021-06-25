@@ -599,8 +599,8 @@
     var datatable = $('.datatable').DataTable({
         autoWidth: false,
         pagingType: 'full_numbers',
-        //order: [[0, 'asc']],
-        ordering: false,
+        order: [[0, 'asc']],
+        //ordering: false,
         bStateSave: true,
         stateSaveCallback: function (settings, data) {
             localStorage.setItem('DataTables_' + settings.sInstance, JSON.stringify(data))

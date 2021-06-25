@@ -230,6 +230,7 @@
     }
 
     $('#modal_payment').on('shown.bs.modal', function () {
+        calculateAmount();
         $('#DebitAmount').select();
     })
 

@@ -23,6 +23,13 @@ namespace iSpeakWebApp.Controllers
             if (!UserAccountsController.getUserAccess(Session).Payments_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
+            if (FILTER_Keyword == null && FILTER_InvoiceNo == null && FILTER_Cancelled == null && FILTER_Approved  == null && 
+                FILTER_chkDateFrom == null && FILTER_DateFrom == null && FILTER_chkDateTo == null && FILTER_DateTo == null)
+            {
+                FILTER_chkDateFrom = true;
+                FILTER_DateFrom = DateTime.Now;
+            }
+
             setViewBag(FILTER_Keyword, FILTER_InvoiceNo, null, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
             if (rss != null)
             {
@@ -148,7 +155,7 @@ namespace iSpeakWebApp.Controllers
 
         public ActionResult setCreateViewBagsAndReturn(string saleInvoiceIdList)
         {
-            List<SaleInvoiceItemsModel> SaleInvoiceItems = SaleInvoiceItemsController.get(null, null, saleInvoiceIdList, null, null, null, null)
+            List<SaleInvoiceItemsModel> SaleInvoiceItems = SaleInvoiceItemsController.get(null, null, saleInvoiceIdList, null, null, null, null, null)
                 .OrderBy(x => x.SaleInvoices_No)
                 .ThenBy(x => x.RowNo)
                 .ToList();
@@ -175,7 +182,7 @@ namespace iSpeakWebApp.Controllers
             PaymentsModel model = get((Guid)id);
 
             ViewBag.InvoiceHeaderText = new BranchesController().get(Helper.getActiveBranchId(Session)).InvoiceHeaderText;
-            ViewData["SaleInvoiceItems"] = SaleInvoiceItemsController.get(null, null, null, model.Id, null, null, null)
+            ViewData["SaleInvoiceItems"] = SaleInvoiceItemsController.get(null, null, null, model.Id, null, null, null, null)
                 .OrderBy(x => x.SaleInvoices_No)
                 .ThenBy(x => x.RowNo)
                 .ToList(); 
@@ -319,7 +326,8 @@ namespace iSpeakWebApp.Controllers
         public string getLastNo()
         {
             return db.Database.SqlQuery<PaymentsModel>(@"
-                        SELECT Payments.*
+                        SELECT Payments.*,
+                            '' AS Consignments_Name
                         FROM Payments
                         WHERE Payments.No = (SELECT MAX(Payments.No) FROM Payments)
                     "

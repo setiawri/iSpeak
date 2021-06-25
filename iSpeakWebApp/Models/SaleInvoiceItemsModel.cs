@@ -119,7 +119,6 @@ namespace iSpeakWebApp.Models
         [DisplayFormat(DataFormatString = "{0:N0}")]
         public int TotalAmount { get; set; } = 0;
 
-
         [Display(Name = "Customer")]
         public string Customer_UserAccounts_Name { get; set; }
 

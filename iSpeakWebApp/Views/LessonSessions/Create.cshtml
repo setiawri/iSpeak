@@ -124,7 +124,10 @@
                                     <div class="input-group-append">
                                         <label class="input-group-text">
                                             @Html.DisplayNameFor(model => model.IsScheduleChange)
-                                            <i class="icon-help text-primary ml-2" data-container="body" data-toggle="popover" data-placement="bottom" data-content="No tutor fee.<br/>Session hour is 0."></i>
+                                            <i class="icon-help text-primary ml-2" data-container="body" data-toggle="popover" data-placement="bottom" data-content="
+                                                No Tutor Fee and Session hour is set to 0.
+                                                <br />> Student has 3 chances to change schedule with 2 hours notice before the scheduled session time.
+                                            "></i>
                                         </label>
                                     </div>
                                 </div>
@@ -137,7 +140,11 @@
                                     <div class="input-group-append">
                                         <label class="input-group-text">
                                             @Html.DisplayNameFor(model => model.IsWaiveTutorFee)
-                                            <i class="icon-help text-primary ml-2" data-container="body" data-toggle="popover" data-placement="bottom" data-content="No tutor fee.<br/>Reduce hours as selected (for expired schedule)."></i>
+                                            <i class="icon-help text-primary ml-2" data-container="body" data-toggle="popover" data-placement="bottom" data-content="
+                                                No Tutor Fee.
+                                                <br />> Expired sessions
+                                                <br />> Student has used up all 3 chances to change schedule and student cancels the scheduled session. Tutor was given notice and has not arrived at the location.
+                                            "></i>
                                         </label>
                                     </div>
                                 </div>

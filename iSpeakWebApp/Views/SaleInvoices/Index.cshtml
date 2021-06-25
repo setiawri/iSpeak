@@ -17,6 +17,7 @@
             <div class="card animated bounceInLeft">
                 <div class="card-header header-elements-inline pb-1">
                     <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
+                    <i class="icon-info22 text-primary ml-2" data-container="body" data-toggle="popover" data-placement="left" data-content="Approved items cannot be cancelled"></i>
                 </div>
                 <div class="card-body">
 
@@ -109,6 +110,7 @@
                         <table class="table table-hover datatable">
                             <thead>
                                 <tr>
+                                    <th class="d-none">@Html.DisplayNameFor(model => model.InitialRowNumber)</th>
                                     <th style="width:50px;">@Html.DisplayNameFor(model => model.No)</th>
                                     <th class="non-sortable" style="width:150px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
                                     <th>@Html.DisplayNameFor(model => model.Customer_UserAccounts_Id)</th>
@@ -131,6 +133,7 @@
                                     {
                                         rowno++;
                                         <tr>
+                                            <td class="d-none">@Html.DisplayFor(modelItem => item.InitialRowNumber)</td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.No)</td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
                                             <td class="align-top">

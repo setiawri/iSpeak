@@ -24,6 +24,13 @@ namespace iSpeakWebApp.Controllers
             if (!UserAccountsController.getUserAccess(Session).SaleInvoices_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
+            if (FILTER_Keyword == null && FILTER_PaymentNo == null && FILTER_Cancelled == null && FILTER_Approved == null && 
+                FILTER_chkDateFrom == null && FILTER_DateFrom == null && FILTER_chkDateTo == null && FILTER_DateTo == null)
+            {
+                FILTER_chkDateFrom = true;
+                FILTER_DateFrom = DateTime.Now;
+            }
+
             setViewBag(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
             if (rss == null || !string.IsNullOrEmpty(FILTER_Keyword))
             {
@@ -260,7 +267,8 @@ namespace iSpeakWebApp.Controllers
             string sql = string.Format(@"
                     SELECT SaleInvoices.*,
                         Branches.Name AS Branches_Name,
-                        Customer_UserAccounts.Fullname AS Customer_UserAccounts_Name
+                        Customer_UserAccounts.Fullname AS Customer_UserAccounts_Name,
+                        ROW_NUMBER() OVER (ORDER BY SaleInvoices.No DESC) AS InitialRowNumber
                     FROM SaleInvoices
                         LEFT JOIN Branches ON Branches.Id = SaleInvoices.Branches_Id
                         LEFT JOIN UserAccounts Customer_UserAccounts ON Customer_UserAccounts.Id = SaleInvoices.Customer_UserAccounts_Id

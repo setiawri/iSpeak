@@ -34,8 +34,9 @@
                     <div class="card-header bg-transparent header-elements-inline">
                         <h4 class="card-title">@ViewBag.Title</h4>
                         <div class="header-elements">
-                            @*<button type="button" class="btn btn-light btn-sm ml-3" onclick="back_exec()"><i class="icon-circle-left2 mr-2"></i>Back</button>*@
-                            <button type="button" class="btn btn-light btn-sm ml-3" onclick="print_exec()"><i class="icon-printer mr-2"></i>Print</button>
+                            <button type="button" class="btn btn-light btn-sm ml-2" onclick="print_exec()"><i class="icon-printer mr-2"></i>Print</button>
+                            <a class="btn btn-light btn-sm ml-2" href="@Url.Action("Index", "SaleInvoices", new { rss=1 })"><i class="icon-circle-left2 mr-2"></i>Invoices</a>
+                            <a class="btn btn-light btn-sm ml-2" href="@Url.Action("Index", "Payments", new { rss=1 })"><i class="icon-circle-left2 mr-2"></i>Payments</a>
                         </div>
                     </div>
 

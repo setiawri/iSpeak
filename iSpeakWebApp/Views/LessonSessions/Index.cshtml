@@ -122,7 +122,7 @@
                                                 {
                                                     <span class="badge badge-danger d-block mr-1">CANCELLED</span>
                                                 }
-                                                <a href="javascript:void(0)" onclick="Log('@item.Id')">Invoice</a>
+                                                <a href='/SaleInvoices?FILTER_chkDateFrom=false&FILTER_chkDateTo=false&FILTER_Keyword=@item.SaleInvoices_No' target='_blank'>Invoice</a>
                                                 @if (access.LessonSessions_Edit)
                                                 {
                                                     @:• <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a>

@@ -8,7 +8,14 @@ FINAL: check for UTC date conversion
 ===============================================================================================================================================================
 
 TO DO:
+- SaleInvoiceItemsModel: remove field Due and calculate on the fly. Calculation is done and put into DueAmount. Need to implement this everywhere
+- create new sale invoice
+	> create categories for vouchers to separate lesson package, inventory, services. show only relevant vouchers for selected tab
+	> when adding new item, check to make sure subtotal is not less than 0
+	> create mechanism to add lesson trial
 - lesson session index page: filter is not applied after creating new session
+- create new lesson session: show only tutor in tutor ddl
+- Lesson Sesion Index: FILTER_Invoice is not passed to HttpGet Create in controller
 - Test lesson session waive tutor fee and schedule change. check payrollpaymentitem is generated correctly.
 - Payroll: 
 	> Verify amount for full time employees

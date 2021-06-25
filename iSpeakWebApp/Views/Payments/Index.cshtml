@@ -16,9 +16,7 @@
             <!-- Form inputs -->
             <div class="card animated bounceInLeft">
                 <div class="card-header header-elements-inline pb-1">
-                    <h5 class="card-title text-uppercase">
-                        @ViewBag.Title
-                    </h5>
+                    <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
                     <i class="icon-info22 text-primary ml-2" data-container="body" data-toggle="popover" data-placement="left" data-content="Approved items cannot be cancelled"></i>
                 </div>
                 <div class="card-body">
@@ -137,7 +135,7 @@
                                                             @item.DebitNumber
                                                         }
                                                     </div>
-                                                    <div>@string.Format("{0}", item.DebitOwnerName.Split(' '))</div>
+                                                    <div>@(item.DebitOwnerName == null ? "" : string.Format("{0}", item.DebitOwnerName.Split(' ')))</div>
                                                 }
                                             </td>
                                             <td class="align-top text-right">@Html.DisplayFor(modelItem => item.ConsignmentAmount)</td>

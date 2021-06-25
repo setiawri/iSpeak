@@ -23,10 +23,10 @@ namespace iSpeakWebApp.Controllers
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public static List<SaleInvoiceItemsModel> getActiveLessonPackages(Guid Customer_UserAccounts_Id, int? hasLessonHours) { return get(null, null, null, null, Customer_UserAccounts_Id, hasLessonHours, null); }
-        public static List<SaleInvoiceItemsModel> get_by_SaleInvoices_Id(Guid SaleInvoices_Id) { return get(null, SaleInvoices_Id, null, null, null, null, null); }
-        public static List<SaleInvoiceItemsModel> get_by_IdList(string IdList) { return get(null, null, null, null, null, null, IdList); }
-        public static List<SaleInvoiceItemsModel> get(Guid? Id, Guid? SaleInvoices_Id, string SaleInvoices_IdList, Guid? Payments_Id, Guid? Customer_UserAccounts_Id, int? hasLessonHours, string IdList)
+        public static List<SaleInvoiceItemsModel> getActiveLessonPackages(Guid Customer_UserAccounts_Id, int? hasLessonHours) { return get(null, null, null, null, Customer_UserAccounts_Id, hasLessonHours, 1, null); }
+        public static List<SaleInvoiceItemsModel> get_by_SaleInvoices_Id(Guid SaleInvoices_Id) { return get(null, SaleInvoices_Id, null, null, null, null, null, null); }
+        public static List<SaleInvoiceItemsModel> get_by_IdList(string IdList) { return get(null, null, null, null, null, null, null, IdList); }
+        public static List<SaleInvoiceItemsModel> get(Guid? Id, Guid? SaleInvoices_Id, string SaleInvoices_IdList, Guid? Payments_Id, Guid? Customer_UserAccounts_Id, int? hasLessonHours, int? isFullyPaid, string IdList)
         {
             string IdList_Clause = "";
             if (!string.IsNullOrEmpty(IdList))
@@ -44,13 +44,20 @@ namespace iSpeakWebApp.Controllers
                         Services.Name AS Services_Name,
                         Products.Name AS Products_Name,
                         (SaleInvoiceItems.Qty * SaleInvoiceItems.Price) + COALESCE(SaleInvoiceItems.TravelCost,0) - COALESCE(SaleInvoiceItems.DiscountAmount,0) - COALESCE(SaleInvoiceItems.VouchersAmount,0) AS TotalAmount,
-                        SaleInvoiceItems.Description + ', Available: ' + FORMAT(SaleInvoiceItems.SessionHours_Remaining,'N2') + ' hours' AS DDLDescription
+                        SaleInvoiceItems.Description + ', Available: ' + FORMAT(SaleInvoiceItems.SessionHours_Remaining,'N2') + ' hours, Invoice ' + SaleInvoices.No AS DDLDescription
                     FROM SaleInvoiceItems
                         LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
                         LEFT JOIN LessonPackages ON LessonPackages.Id = SaleInvoiceItems.LessonPackages_Id
                         LEFT JOIN Services ON Services.Id = SaleInvoiceItems.Services_Id
                         LEFT JOIN Products ON Products.Id = SaleInvoiceItems.Products_Id
                         LEFT JOIN UserAccounts Customer_UserAccounts ON Customer_UserAccounts.Id = SaleInvoices.Customer_UserAccounts_Id
+                        LEFT JOIN (
+                                SELECT PaymentItems.ReferenceId AS SaleInvoices, SUM(PaymentItems.Amount) AS Amount
+                                FROM PaymentItems
+                                    LEFT JOIN Payments ON Payments.Id = PaymentItems.Payments_Id
+                                WHERE Payments.Cancelled = 0
+                                GROUP BY PaymentItems.ReferenceId
+                            ) Payments ON Payments.SaleInvoices = SaleInvoices.Id
                     WHERE 1=1
 						AND (@Id IS NULL OR SaleInvoiceItems.Id = @Id)
 						AND (@Id IS NOT NULL OR (
@@ -61,7 +68,16 @@ namespace iSpeakWebApp.Controllers
 				                WHERE PaymentItems.Payments_Id = @Payments_Id
                             )))
                             AND (@Customer_UserAccounts_Id IS NULL OR SaleInvoices.Customer_UserAccounts_Id = @Customer_UserAccounts_Id)
-                            AND (@hasLessonHours IS NULL OR SaleInvoiceItems.SessionHours_Remaining > 0)
+                            AND (
+                                    @hasLessonHours IS NULL 
+                                    OR (@hasLessonHours = 0 AND SaleInvoiceItems.SessionHours_Remaining = 0)
+                                    OR (@hasLessonHours = 1 AND SaleInvoiceItems.SessionHours_Remaining > 0) 
+                                )
+                            AND (
+                                    @isFullyPaid IS NULL 
+                                    OR (@isFullyPaid = 0 AND SaleInvoices.Amount - COALESCE(Payments.Amount,0) > 0)
+                                    OR (@isFullyPaid = 1 AND SaleInvoices.Amount - COALESCE(Payments.Amount,0) = 0)
+                                )
                             {0}{1}
                         ))
 					ORDER BY SaleInvoiceItems.RowNo ASC
@@ -72,7 +88,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter("Payments_Id", Payments_Id),
                 DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SaleInvoices_Id.Name, SaleInvoices_Id),
                 DBConnection.getSqlParameter("Customer_UserAccounts_Id", Customer_UserAccounts_Id),
-                DBConnection.getSqlParameter("hasLessonHours", hasLessonHours)
+                DBConnection.getSqlParameter("hasLessonHours", hasLessonHours),
+                DBConnection.getSqlParameter("isFullyPaid", isFullyPaid)
             ).ToList();
         }
 
