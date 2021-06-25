@@ -278,6 +278,7 @@
     <Content Include="Views\PayrollPayments\Index.cshtml" />
     <Content Include="Views\PayrollPayments\Print.cshtml" />
     <Content Include="Views\PayrollPaymentItems\Index.cshtml" />
+    <Content Include="Views\LessonSessions\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

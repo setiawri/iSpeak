@@ -1,0 +1,86 @@
+﻿@model iSpeakWebApp.Models.LessonSessionsModel
+@using iSpeakWebApp.Models
+
+@{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    string ControllerName = "LessonSessions";
+    ViewBag.SelectedNavigationMenu = "Sessions";
+    ViewBag.Title = "LESSON SESSIONS";
+    ViewBag.Subtitle = "Edit";
+
+    List<LessonSessionsModel> LessonSessions = (List<LessonSessionsModel>)ViewData["LessonSessions"];
+}
+
+<div class="content-wrapper">
+
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.Id)
+            <!-- Form inputs -->
+            <div class="card">
+                <div class="card-header header-elements-inline">
+                    <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
+                </div>
+                <div class="card-body">
+                    <fieldset class="mb-3">
+                        <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Subtitle</legend>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.HourlyRates_Rate, htmlAttributes: new { @class = "col-form-label col-lg-2 required" })
+                            <div class="col-lg-2">
+                                @Html.EditorFor(model => model.HourlyRates_Rate, new { htmlAttributes = new { @class = "form-control positiveintegeronly", @type = "text" } })
+                                @Html.ValidationMessageFor(model => model.HourlyRates_Rate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.TravelCost, htmlAttributes: new { @class = "col-form-label col-lg-2 required" })
+                            <div class="col-lg-2">
+                                @Html.EditorFor(model => model.TravelCost, new { htmlAttributes = new { @class = "form-control positiveintegeronly", @type = "text" } })
+                                @Html.ValidationMessageFor(model => model.TravelCost, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.TutorTravelCost, htmlAttributes: new { @class = "col-form-label col-lg-2 required" })
+                            <div class="col-lg-2">
+                                @Html.EditorFor(model => model.TutorTravelCost, new { htmlAttributes = new { @class = "form-control positiveintegeronly", @type = "text" } })
+                                @Html.ValidationMessageFor(model => model.TutorTravelCost, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.Review, htmlAttributes: new { @class = "col-form-label col-lg-2 required" })
+                            <div class="col-lg-4">
+                                @Html.TextAreaFor(model => model.Review, new { @class = "form-control", @rows = 3, @placeholder = "Visible to everybody" })
+                                @Html.ValidationMessageFor(model => model.Review, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.InternalNotes, htmlAttributes: new { @class = "col-form-label col-lg-2" })
+                            <div class="col-lg-4">
+                                @Html.TextAreaFor(model => model.InternalNotes, new { @class = "form-control", @rows = 3, @placeholder = "Visible only to iSpeak staff and tutor" })
+                                @Html.ValidationMessageFor(model => model.InternalNotes, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    </fieldset>
+
+                    @if (access.LessonSessions_Edit)
+                    {
+                        <div>
+                            <button type="submit" onclick="showLoadingSpinner()" class="btn btn-primary"><i class="icon-paperplane mr-2"></i>Submit</button>
+                            <a href="javascript:void(0)" onclick="Action('Index', '@ControllerName')" class="btn btn-warning"><i class="icon-cross2 mr-2"></i>Cancel</a>
+                        </div>
+                    }
+                </div>
+            </div>
+            <!-- /form inputs -->
+        }
+    </div>
+    <!-- /content area -->
+</div>

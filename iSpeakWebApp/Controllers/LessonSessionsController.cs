@@ -112,6 +112,7 @@ namespace iSpeakWebApp.Controllers
                     session.Id = Guid.NewGuid();
                     session.Branches_Id = model.Branches_Id;
                     session.HourlyRates_Rate = 0;
+                    session.SessionHours = session.IsScheduleChange ? 0 : session.SessionHours;
                     session.TravelCost = session.IsScheduleChange ? 0 : (int)Math.Ceiling((saleInvoiceItem.TravelCost / saleInvoiceItem.SessionHours) * session.SessionHours);
                     session.TutorTravelCost = session.IsScheduleChange ? 0 : (int)Math.Ceiling((saleInvoiceItem.TutorTravelCost / saleInvoiceItem.SessionHours) * session.SessionHours);
                     session.PayrollPaymentItems_Id = session.IsScheduleChange ? (Guid?)null : PayrollPaymentItems_Id;
@@ -193,11 +194,57 @@ namespace iSpeakWebApp.Controllers
 
         /* EDIT ***********************************************************************************************************************************************/
 
+        // GET: LessonSessions/Edit/{id}
+        public ActionResult Edit(Guid? id, string FILTER_Keyword, string FILTER_InvoiceNo, int? FILTER_Cancelled,
+            bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
+        {
+            if (!UserAccountsController.getUserAccess(Session).LessonSessions_Edit)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
 
+            if (id == null)
+                return RedirectToAction(nameof(Index));
 
+            setViewBag(FILTER_Keyword, FILTER_InvoiceNo, FILTER_Cancelled, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
+            return View(get(id.Value));
+        }
 
+        // POST: LessonSessions/Edit/{id}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(LessonSessionsModel modifiedModel, string FILTER_Keyword, string FILTER_InvoiceNo, int? FILTER_Cancelled,
+            bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
+        {
+            if (ModelState.IsValid)
+            {
+                LessonSessionsModel originalModel = get(modifiedModel.Id);
 
+                string log = string.Empty;
+                log = Helper.append(log, originalModel.HourlyRates_Rate, modifiedModel.HourlyRates_Rate, LessonSessionsModel.COL_HourlyRates_Rate.LogDisplay);
+                log = Helper.append(log, originalModel.TravelCost, modifiedModel.TravelCost, LessonSessionsModel.COL_TravelCost.LogDisplay);
+                log = Helper.append(log, originalModel.TutorTravelCost, modifiedModel.TutorTravelCost, LessonSessionsModel.COL_TutorTravelCost.LogDisplay);
+                log = Helper.append(log, originalModel.Review, modifiedModel.Review, LessonSessionsModel.COL_Review.LogDisplay);
+                log = Helper.append(log, originalModel.InternalNotes, modifiedModel.InternalNotes, LessonSessionsModel.COL_InternalNotes.LogDisplay);
 
+                if (!string.IsNullOrEmpty(log))
+                {
+                    update(modifiedModel, log);
+                }
+
+                return RedirectToAction(nameof(Index), new
+                {
+                    FILTER_Keyword = FILTER_Keyword,
+                    FILTER_InvoiceNo = FILTER_InvoiceNo,
+                    FILTER_Cancelled = FILTER_Cancelled,
+                    FILTER_chkDateFrom = FILTER_chkDateFrom,
+                    FILTER_DateFrom = FILTER_DateFrom,
+                    FILTER_chkDateTo = FILTER_chkDateTo,
+                    FILTER_DateTo = FILTER_DateTo
+                });
+            }
+
+            setViewBag(FILTER_Keyword, FILTER_InvoiceNo, FILTER_Cancelled, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
+            return View(modifiedModel);
+        }
 
         /* METHODS ********************************************************************************************************************************************/
 
@@ -302,6 +349,20 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
+        }
+
+        public void update(LessonSessionsModel model, string log)
+        {
+            WebDBConnection.Update(db.Database, "LessonSessions",
+                    DBConnection.getSqlParameter(LessonSessionsModel.COL_Id.Name, model.Id),
+                    DBConnection.getSqlParameter(LessonSessionsModel.COL_HourlyRates_Rate.Name, model.HourlyRates_Rate),
+                    DBConnection.getSqlParameter(LessonSessionsModel.COL_TravelCost.Name, model.TravelCost),
+                    DBConnection.getSqlParameter(LessonSessionsModel.COL_TutorTravelCost.Name, model.TutorTravelCost),
+                    DBConnection.getSqlParameter(LessonSessionsModel.COL_Review.Name, model.Review),
+                    DBConnection.getSqlParameter(LessonSessionsModel.COL_InternalNotes.Name, model.InternalNotes)
+                );
+            ActivityLogsController.AddEditLog(db, Session, model.Id, log);
+            db.SaveChanges();
         }
 
         public void update_Deleted(Guid Id, bool value, string CancelNotes)

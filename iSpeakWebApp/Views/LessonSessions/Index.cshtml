@@ -109,6 +109,10 @@
                                             <td class="align-top">
                                                 @Html.DisplayFor(modelItem => item.SaleInvoiceItems_Description)
                                                 <br />Invoice: @Html.DisplayFor(modelItem => item.SaleInvoices_No)
+                                                @if(item.IsWaiveTutorFee) 
+                                                {
+                                                    @(", Tutor Fee Waived")
+                                                }
                                             </td>
                                             <td class="align-top text-right">@Html.DisplayFor(modelItem => item.SessionHours)</td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Student_UserAccounts_Fullname)</td>
