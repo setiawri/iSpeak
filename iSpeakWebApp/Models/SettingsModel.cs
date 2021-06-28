@@ -8,7 +8,7 @@ namespace iSpeakWebApp.Models
     {
         [Required]
         [Display(Name = "Auto Entry For Cash Payments")]
-        public Guid AutoEntryForCashPayments { get; set; }
+        public Guid? AutoEntryForCashPayments { get; set; }
         public static ModelMember COL_AutoEntryForCashPayments = new ModelMember { Name = "AutoEntryForCashPayments", Id = new Guid("5c62ee59-03a9-453a-95c9-a234f537adf1") };
         public string AutoEntryForCashPayments_Notes { get; set; }
         public static ModelMember COL_AutoEntryForCashPayments_Notes = new ModelMember { Name = "AutoEntryForCashPayments_Notes" };
@@ -16,10 +16,26 @@ namespace iSpeakWebApp.Models
 
         [Required]
         [Display(Name = "User Set Role Allowed")]
-        public Guid UserSetRoleAllowed { get; set; }
-        public static ModelMember COL_UserSetRoleAllowed = new ModelMember { Name = "UserSetRoleAllowed", Id = new Guid("25f53554-3b9d-4d3b-a8e5-58d921950987") };
+        public Guid? UserSetRoleAllowed { get; set; }
+        public static ModelMember COL_UserSetRoleAllowed = new ModelMember { Name = "UserSetRoleAllowed", Display = "User Set Role Allowed", Id = new Guid("25f53554-3b9d-4d3b-a8e5-58d921950987") };
         public string UserSetRoleAllowed_Notes { get; set; }
         public static ModelMember COL_UserSetRoleAllowed_Notes = new ModelMember { Name = "UserSetRoleAllowed_Notes" };
+
+
+        [Required]
+        [Display(Name = "Student Role")]
+        public Guid? StudentRole { get; set; }
+        public static ModelMember COL_StudentRole = new ModelMember { Name = "StudentRole", Display = "Student Role", Id = new Guid("A94B2FFC-3547-40CB-96CD-F82729768926") };
+        public string StudentRole_Notes { get; set; }
+        public static ModelMember COL_StudentRole_Notes = new ModelMember { Name = "StudentRole_Notes" };
+
+
+        [Required]
+        [Display(Name = "Tutor Role")]
+        public Guid? TutorRole { get; set; }
+        public static ModelMember COL_TutorRole = new ModelMember { Name = "TutorRole", Display="Tutor Role", Id = new Guid("20D2F1DA-2ACC-4E92-850C-2B260848FB8F") };
+        public string TutorRole_Notes { get; set; }
+        public static ModelMember COL_TutorRole_Notes = new ModelMember { Name = "TutorRole_Notes" };
 
 
         [Required]

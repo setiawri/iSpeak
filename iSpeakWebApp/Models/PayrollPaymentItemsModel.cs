@@ -40,10 +40,8 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Amount = new ModelMember { Name = "Amount" };
 
 
-        public string UserAccounts_Id { get; set; }
-
-        public Guid UserAccounts_Id_TEMP { get; set; }
-        public static ModelMember COL_UserAccounts_Id_TEMP = new ModelMember { Name = "UserAccounts_Id_TEMP" };
+        public Guid UserAccounts_Id { get; set; }
+        public static ModelMember COL_UserAccounts_Id = new ModelMember { Name = "UserAccounts_Id" };
         public string UserAccounts_Fullname { get; set; }
 
 

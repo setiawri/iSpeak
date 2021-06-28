@@ -9,6 +9,10 @@
     ViewBag.Subtitle = "Create";
 
     List<LessonSessionsModel> LessonSessions = (List<LessonSessionsModel>)ViewData["LessonSessions"];
+
+    SettingsModel settings = iSpeakWebApp.Controllers.SettingsController.get();
+    string StudentRole = settings.StudentRole.Value.ToString();
+    string TutorRole = settings.TutorRole.Value.ToString();
 }
 
 <div class="content-wrapper">
@@ -29,7 +33,12 @@
                         <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Subtitle</legend>
 
                         <div class="form-group row">
-                            @Html.Label("Student", htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
+                            <div class="col-form-label col-lg-1 required">
+                                @Html.Label("Student", htmlAttributes: new { @class = "" })
+                                <i class="icon-help text-primary ml-1" data-container="body" data-toggle="popover" data-placement="right" data-content="
+                                   Shows only students that has been assigned to the selected branch
+                                "></i>
+                            </div>
                             <div class="col-lg-4">
                                 <select class="form-control" id="Customer_UserAccounts_Id" name="Customer_UserAccounts_Id" onchange="LoadSaleInvoices()"></select>
                                 @Html.ValidationMessage("Customer_UserAccounts_Id", "", new { @class = "text-danger" })
@@ -108,10 +117,15 @@
                         </div>
 
                         <div class="form-group row">
-                            @Html.LabelFor(model => model.Tutor_UserAccounts_Id_TEMP, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
+                            <div class="col-form-label col-lg-1 required">
+                                @Html.LabelFor(model => model.Tutor_UserAccounts_Id, htmlAttributes: new { @class = "" })
+                                <i class="icon-help text-primary ml-1" data-container="body" data-toggle="popover" data-placement="right" data-content="
+                                   Shows only tutors that has been assigned to the selected branch
+                                "></i>
+                            </div>
                             <div class="col-lg-4">
-                                <select class="form-control" id="Tutor_UserAccounts_Id_TEMP" name="Tutor_UserAccounts_Id_TEMP" onchange="UpdateTutor_UserAccounts_Fullname()"></select>
-                                @Html.ValidationMessage("Tutor_UserAccounts_Id_TEMP", "", new { @class = "text-danger" })
+                                <select class="form-control" id="Tutor_UserAccounts_Id" name="Tutor_UserAccounts_Id" onchange="UpdateTutor_UserAccounts_Fullname()"></select>
+                                @Html.ValidationMessage("Tutor_UserAccounts_Id", "", new { @class = "text-danger" })
                             </div>
                         </div>
 
@@ -178,8 +192,8 @@
     });
 
     function applyLast() {
-        AjaxGetDropdownlistData('Customer_UserAccounts_Id', 'GetDropDownListData', 'UserAccounts');
-        AjaxGetDropdownlistData('Tutor_UserAccounts_Id_TEMP', 'GetDropDownListData', 'UserAccounts');
+        AjaxGetDropdownlistData('Customer_UserAccounts_Id', 'GetDropDownListData', 'UserAccounts', '@StudentRole');
+        AjaxGetDropdownlistData('Tutor_UserAccounts_Id', 'GetDropDownListData', 'UserAccounts', '@TutorRole');
     }
 
     function LoadSaleInvoices() {
@@ -200,7 +214,7 @@
     }
 
     function UpdateTutor_UserAccounts_Fullname() {
-        var Tutor_UserAccounts_Fullname = getDDLSelectedText('Tutor_UserAccounts_Id_TEMP');
+        var Tutor_UserAccounts_Fullname = getDDLSelectedText('Tutor_UserAccounts_Id');
         $.each(lessonsessions, function (index, item) {
             item.Tutor_UserAccounts_Fullname = Tutor_UserAccounts_Fullname;
         });
@@ -226,8 +240,8 @@
                 setCheckboxState('IsScheduleChange', item.IsScheduleChange);
                 setCheckboxState('IsWaiveTutorFee', item.IsWaiveTutorFee);
 
-                if (getDDLSelectedValue('Tutor_UserAccounts_Id_TEMP') == null)
-                    appendAndSetSelect2SelectedValue('Tutor_UserAccounts_Id_TEMP', item.Tutor_UserAccounts_Fullname, item.Tutor_UserAccounts_Id_TEMP, true);
+                if (getDDLSelectedValue('Tutor_UserAccounts_Id') == null)
+                    appendAndSetSelect2SelectedValue('Tutor_UserAccounts_Id', item.Tutor_UserAccounts_Fullname, item.Tutor_UserAccounts_Id, true);
             });
         }
     }
@@ -313,8 +327,8 @@
 
         if (lessonsessions.length == 0) {
             showMessage("Please insert a session to list", 'Customer_UserAccounts_Id');
-        } else if (getDDLSelectedValue('Tutor_UserAccounts_Id_TEMP') == null) {
-            showMessage('Please select Tutor', 'Tutor_UserAccounts_Id_TEMP');
+        } else if (getDDLSelectedValue('Tutor_UserAccounts_Id') == null) {
+            showMessage('Please select Tutor', 'Tutor_UserAccounts_Id');
         } else if (getDDLSelectedValue('SessionHours') == null) {
             showMessage('Please select session duration', 'SessionHours');
         } else {
@@ -324,8 +338,8 @@
             $.each(lessonsessions, function (index, item) {
                 item.Id = emptyGuid(); //change Id from local item_no to Guid
                 item.Timestamp = $('#Timestamp').val();
-                item.Tutor_UserAccounts_Fullname = getDDLSelectedText('Tutor_UserAccounts_Id_TEMP');
-                item.Tutor_UserAccounts_Id_TEMP = getDDLSelectedValue('Tutor_UserAccounts_Id_TEMP');
+                item.Tutor_UserAccounts_Fullname = getDDLSelectedText('Tutor_UserAccounts_Id');
+                item.Tutor_UserAccounts_Id = getDDLSelectedValue('Tutor_UserAccounts_Id');
                 item.SessionHours = getDDLSelectedValue('SessionHours');
                 item.IsScheduleChange = getCheckboxValue('IsScheduleChange');
                 item.IsWaiveTutorFee = getCheckboxValue('IsWaiveTutorFee');

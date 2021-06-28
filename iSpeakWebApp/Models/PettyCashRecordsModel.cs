@@ -49,12 +49,10 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_IsChecked = new ModelMember { Name = "IsChecked", Display = "IsChecked", LogDisplay = ActivityLogsController.editBooleanFormat("Approval") };
 
 
-        public string UserAccounts_Id { get; set; }
-
 
         [Display(Name = "Name")]
-        public Guid? UserAccounts_Id_TEMP { get; set; }
-        public static ModelMember COL_UserAccounts_Id_TEMP = new ModelMember { Name = "UserAccounts_Id_TEMP" };
+        public Guid? UserAccounts_Id { get; set; }
+        public static ModelMember COL_UserAccounts_Id = new ModelMember { Name = "UserAccounts_Id" };
         public string UserAccounts_Firstname { get; set; }
 
 

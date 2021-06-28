@@ -72,7 +72,7 @@ namespace iSpeakWebApp.Controllers
                 model.Id = Guid.NewGuid();
                 model.Branches_Id = Helper.getActiveBranchId(Session);
                 model.Timestamp = DateTime.Now;
-                model.UserAccounts_Id_TEMP = (Guid)UserAccountsController.getUserId(Session);
+                model.UserAccounts_Id = (Guid)UserAccountsController.getUserId(Session);
                 add(db, model);
 
                 return RedirectToAction(nameof(Index), new
@@ -142,7 +142,7 @@ namespace iSpeakWebApp.Controllers
                         InitialBalance.Amount + (SUM(PettyCashRecords.Amount) OVER(ORDER BY PettyCashRecords.Timestamp ASC)) AS Balance
                     FROM PettyCashRecords
                         LEFT JOIN PettyCashRecordsCategories ON PettyCashRecordsCategories.Id = PettyCashRecords.PettyCashRecordsCategories_Id
-                        LEFT JOIN UserAccounts ON UserAccounts.Id = PettyCashRecords.UserAccounts_Id_TEMP
+                        LEFT JOIN UserAccounts ON UserAccounts.Id = PettyCashRecords.UserAccounts_Id
                         LEFT JOIN (
                                 SELECT 1 AS Id, SUM(PettyCashRecords.Amount) AS Amount
                                 FROM PettyCashRecords
@@ -178,8 +178,8 @@ namespace iSpeakWebApp.Controllers
 	                SELECT @LastHex_Int = CONVERT(INT, CONVERT(VARBINARY, REPLICATE('0', LEN(@LastHex_String)%2) + @LastHex_String, 2)) --@LastHex_String length must be even number of digits to convert to int
 	                SET @NewNo = RIGHT(CONVERT(NVARCHAR(10), CONVERT(VARBINARY(8), @LastHex_Int + 1), 1),@HexLength)
 
-                    INSERT INTO PettyCashRecords   (Id, Branches_Id, RefId, No,    Timestamp, PettyCashRecordsCategories_Id, Notes, Amount, IsChecked, UserAccounts_Id_TEMP, ExpenseCategories_Id) 
-                                            VALUES(@Id,@Branches_Id,@RefId,@NewNo,@Timestamp,@PettyCashRecordsCategories_Id,@Notes,@Amount,@IsChecked,@UserAccounts_Id_TEMP,@ExpenseCategories_Id);
+                    INSERT INTO PettyCashRecords   (Id, Branches_Id, RefId, No,    Timestamp, PettyCashRecordsCategories_Id, Notes, Amount, IsChecked, UserAccounts_Id, ExpenseCategories_Id) 
+                                            VALUES(@Id,@Branches_Id,@RefId,@NewNo,@Timestamp,@PettyCashRecordsCategories_Id,@Notes,@Amount,@IsChecked,@UserAccounts_Id,@ExpenseCategories_Id);
                 ",
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Branches_Id.Name, model.Branches_Id),
@@ -189,7 +189,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Notes.Name, model.Notes),
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Amount.Name, model.Amount),
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_IsChecked.Name, model.IsChecked),
-                DBConnection.getSqlParameter(PettyCashRecordsModel.COL_UserAccounts_Id_TEMP.Name, model.UserAccounts_Id_TEMP),
+                DBConnection.getSqlParameter(PettyCashRecordsModel.COL_UserAccounts_Id.Name, model.UserAccounts_Id),
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_ExpenseCategories_Id.Name, model.ExpenseCategories_Id)
             );
         }

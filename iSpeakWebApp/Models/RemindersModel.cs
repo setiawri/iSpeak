@@ -16,7 +16,7 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Branches_Id = new ModelMember { Name = "Branches_Id", Display = "Branch", LogDisplay = ActivityLogsController.editStringFormat("Branch") };
 
         [Display(Name = "Date")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yy}")]
         public DateTime Timestamp { get; set; }
         public static ModelMember COL_Timestamp = new ModelMember { Name = "Timestamp", Display = "Date", LogDisplay = ActivityLogsController.editDateFormat("Date") };
 

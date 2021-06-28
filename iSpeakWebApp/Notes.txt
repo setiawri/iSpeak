@@ -2,12 +2,15 @@
 DB MIGRATION
 ------------
 - run migration script
-- manually set roles to all users except students
-- 
+- all users will be prompted for password change
+
 FINAL: check for UTC date conversion
 ===============================================================================================================================================================
 
 TO DO:
+- trim useraccounts name on edit/add
+- UserAccounts controller: method get(). fix issues regarding branches_id and branches
+- Sale Invoices index: add link to user accounts page for student and tutor. Change tutor name to only first name
 - SaleInvoiceItemsModel: remove field Due and calculate on the fly. Calculation is done and put into DueAmount. Need to implement this everywhere
 - create new sale invoice
 	> create categories for vouchers to separate lesson package, inventory, services. show only relevant vouchers for selected tab
@@ -50,7 +53,9 @@ TO DO:
 	> 
 - promotion emails
 
-- Payroll Payments: 1 payroll payment has items from more than 1 branch. Should create new payment to separate them.
+- Payroll Payments: 
+	> Descrition for payroll details consists of student names. this should be saved in a column in database.
+	> 1 payroll payment has items from more than 1 branch. Should create new payment to separate them.
 		select 
 			PayrollPayments.Id AS PayrollPayments_Id, 
 			PayrollPayments.No, 
@@ -74,6 +79,8 @@ TO DO:
 
 
 IMPROVEMENTS:
+
+- add mechanism to insert GUID into Settings table when Id is not yet in table
 
 Javascripts file:
 - closeSpinner() is not working

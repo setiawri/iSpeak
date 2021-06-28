@@ -51,9 +51,55 @@
                             </div>
                         </div>
                         <div class="input-group col-lg-6 pl-0">
-                            @Html.DropDownListFor(model => model.AutoEntryForCashPayments, ViewBag.PettyCashRecordsCategories as SelectList, "Select Category", new { @class = "form-control select2" })
+                            @Html.DropDownListFor(model => model.AutoEntryForCashPayments, ViewBag.PettyCashRecordsCategories as SelectList, "Select one", new { @class = "form-control select2" })
                         </div>
                         @Html.ValidationMessage("AutoEntryForCashPayments", "", new { @class = "text-danger" })
+
+                        <hr />
+
+                        @Html.LabelFor(model => model.StudentRole, htmlAttributes: new { @class = "h5 mb-0 required" })
+                        <div class="row pl-0">
+                            <div>
+                                <button type="button" class="btn mb-1 ml-2 mr-1 px-1 icon-notebook" onclick="Log('@SettingsModel.COL_StudentRole.Id')"></button>
+                            </div>
+                            <div id="StudentRole_Div">
+                                <button id="StudentRole" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                <label id="StudentRole_Label" class="col-form-label">@Model.StudentRole_Notes</label>
+                            </div>
+                            <div class="col-lg-11 pl-0">
+                                <div id="StudentRole_Edit" class="input-group d-none mb-1 ml-0 pl-0">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.StudentRole_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes", @title = Model.StudentRole_Notes } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group col-lg-6 pl-0">
+                            @Html.DropDownListFor(model => model.StudentRole, ViewBag.UserAccountRoles as SelectList, "Select one", new { @class = "form-control select2" })
+                        </div>
+                        @Html.ValidationMessage("StudentRole", "", new { @class = "text-danger" })
+
+                        <hr />
+
+                        @Html.LabelFor(model => model.TutorRole, htmlAttributes: new { @class = "h5 mb-0 required" })
+                        <div class="row pl-0">
+                            <div>
+                                <button type="button" class="btn mb-1 ml-2 mr-1 px-1 icon-notebook" onclick="Log('@SettingsModel.COL_TutorRole.Id')"></button>
+                            </div>
+                            <div id="TutorRole_Div">
+                                <button id="TutorRole" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                <label id="TutorRole_Label" class="col-form-label">@Model.TutorRole_Notes</label>
+                            </div>
+                            <div class="col-lg-11 pl-0">
+                                <div id="TutorRole_Edit" class="input-group d-none mb-1 ml-0 pl-0">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.TutorRole_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes", @title = Model.TutorRole_Notes } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group col-lg-6 pl-0">
+                            @Html.DropDownListFor(model => model.TutorRole, ViewBag.UserAccountRoles as SelectList, "Select one", new { @class = "form-control select2" })
+                        </div>
+                        @Html.ValidationMessage("TutorRole", "", new { @class = "text-danger" })
 
                         <hr />
 
@@ -74,7 +120,7 @@
                             </div>
                         </div>
                         <div class="input-group col-lg-6 pl-0">
-                            @Html.DropDownListFor(model => model.UserSetRoleAllowed, ViewBag.UserAccountRoles as SelectList, "Select Category", new { @class = "form-control select2" })
+                            @Html.DropDownListFor(model => model.UserSetRoleAllowed, ViewBag.UserAccountRoles as SelectList, "Select one", new { @class = "form-control select2" })
                         </div>
                         @Html.ValidationMessage("UserSetRoleAllowed", "", new { @class = "text-danger" })
 

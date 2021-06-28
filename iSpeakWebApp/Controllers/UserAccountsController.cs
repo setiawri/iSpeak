@@ -53,7 +53,7 @@ namespace iSpeakWebApp.Controllers
                 if (LIBWebMVC.UtilWebMVC.hasNoFilter(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id))
                     return View();
                 else
-                    return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id));
+                    return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, null));
             }
         }
 
@@ -62,7 +62,7 @@ namespace iSpeakWebApp.Controllers
         public ActionResult Index(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
         {
             setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id);
-            return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id));
+            return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, null));
         }
 
         /* CREATE *********************************************************************************************************************************************/
@@ -144,6 +144,7 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, UserAccountsModel.COL_Notes.LogDisplay);
                     log = Helper.append<PromotionEventsModel>(log, originalModel.PromotionEvents_Id, modifiedModel.PromotionEvents_Id, UserAccountsModel.COL_PromotionEvents_Id.LogDisplay);
 
+                    log = Helper.addLogForList<BranchesModel>(log, originalModel.Branches_List, modifiedModel.Branches_List, UserAccountsModel.COL_Branches.LogDisplay);
                     log = Helper.addLogForList<UserAccountRolesModel>(log, originalModel.Roles_List, modifiedModel.Roles_List, UserAccountsModel.COL_Roles.LogDisplay);
                     log = Helper.addLogForList<LanguagesModel>(log, originalModel.Interest_List, modifiedModel.Interest_List, UserAccountsModel.COL_Interest.LogDisplay);
 
@@ -351,7 +352,7 @@ namespace iSpeakWebApp.Controllers
             {
                 Session[SESSION_UserAccount] = model;
                 Session[SESSION_ActiveBranches_Id] = model.Branches_Id;
-                Session[SESSION_UserAccountAccess] = UserAccountRolesController.getAccesses(model.Id);
+                Session[SESSION_UserAccountAccess] = UserAccountRolesController.getAccesses(model);
             }
         }
 
@@ -393,10 +394,10 @@ namespace iSpeakWebApp.Controllers
                 Birthday.Month);
         }
 
-        public JsonResult GetDropDownListData(string keyword, int page, int take)
+        public JsonResult GetDropDownListData(string keyword, int page, int take, string key)
         {
             int skip = take * (page - 1);
-            List<UserAccountsModel> models = get(skip, take, keyword, 1, null);
+            List<UserAccountsModel> models = get(skip, take, keyword, 1, null, key);
 
             List<Select2Pagination.Select2Results> results = new List<Select2Pagination.Select2Results>();
             results.AddRange(models.Select(model => new Select2Pagination.Select2Results
@@ -442,42 +443,52 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public UserAccountsModel get(string Username, string Password) { return get(null, null, null, null, Username, Password, null, null, null, null, null).FirstOrDefault(); }
-        public List<UserAccountsModel> getBirthdays(Guid Branches_Id, Guid? UserAccountRoles_Id, int BirthdayListMonth) { return get(null, null, Branches_Id, null, null, null, 1, UserAccountRoles_Id, BirthdayListMonth, null, null); }
-        public List<UserAccountsModel> get(int? skip, int? take, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id) { return get(skip, take, null, null, null, null, FILTER_Active, null, null, FILTER_Keyword, FILTER_Languages_Id); }
-        public UserAccountsModel get(Guid Id) { return get(null, null, null, Id, null, null, null, null, null, null, null).FirstOrDefault(); }
-        public List<UserAccountsModel> get(int? skip, int? take, Guid? Branches_Id, Guid? Id, string Username, string Password, int? Active, Guid? UserAccountRoles_Id, int? BirthdayListMonth, string FILTER_Keyword, Guid? Language_Id)
+        public UserAccountsModel get(string Username, string Password) { return get(null, null, null, true, null, Username, Password, null, null, null, null, null, null).FirstOrDefault(); }
+        public List<UserAccountsModel> getBirthdays(Guid Branches_Id, Guid? UserAccountRoles_Id, int BirthdayListMonth) { return get(null, null, Branches_Id, false, null, null, null, 1, UserAccountRoles_Id, BirthdayListMonth, null, null, null); }
+        public List<UserAccountsModel> get(int? skip, int? take, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, string Role) { return get(skip, take, null, false, null, null, null, FILTER_Active, null, null, FILTER_Keyword, FILTER_Languages_Id, Role); }
+        public UserAccountsModel get(Guid Id) { return get(null, null, null, true, Id, null, null, null, null, null, null, null, null).FirstOrDefault(); }
+        public List<UserAccountsModel> get(int? skip, int? take, Guid? Default_Branches_Id, bool showAllBranches, Guid? Id, string Username, string Password, int? Active, Guid? UserAccountRoles_Id, int? BirthdayListMonth, string FILTER_Keyword, Guid? Language_Id, string Role)
         {
-            if (Branches_Id == null && Helper.isActiveBranchAvailable(Session))
-                Branches_Id = Helper.getActiveBranchId(Session);
+            string BranchClause = null;
+            if (!showAllBranches)
+                BranchClause = string.Format(" AND Branches LIKE '%{0}%' ", Helper.getActiveBranchId(Session));
 
-            List<UserAccountsModel> models = db.Database.SqlQuery<UserAccountsModel>(@"
+            string RoleClause = null;
+            if (!string.IsNullOrEmpty(Role))
+                RoleClause = string.Format(" AND Roles LIKE '%{0}%' ", Role);
+
+            string sql = string.Format(@"
                         SELECT UserAccounts.*
                         FROM UserAccounts
                         WHERE 1=1
 							AND (@Id IS NULL OR UserAccounts.Id = @Id)
-							AND (@Username IS NULL OR UserAccounts.Username = @Username)
-							AND (@Password IS NULL OR UserAccounts.Password = @Password)
-							AND (@Branches_Id IS NULL OR UserAccounts.Branches_Id = @Branches_Id)
-							AND (@Languages_Id IS NULL OR UserAccounts.Interest LIKE '%'+CONVERT(varchar(MAX),@Languages_Id)+'%')
-							AND (@Active IS NULL OR UserAccounts.Active = @Active)
-							AND (@UserAccountRoles_Id IS NULL OR UserAccounts.Roles LIKE '%'+CONVERT(varchar(MAX),@UserAccountRoles_Id)+'%')
-							AND (@BirthdayListMonth IS NULL OR (
-									MONTH(UserAccounts.Birthday) = @BirthdayListMonth
-									AND (MONTH(GETDATE()) <> @BirthdayListMonth OR DAY(UserAccounts.Birthday) >= DAY(GETDATE()))
-								)
-							)
-							AND (@FILTER_Keyword IS NULL OR (UserAccounts.Fullname LIKE '%'+@FILTER_Keyword+'%' OR UserAccounts.Username LIKE '%'+@FILTER_Keyword+'%'))
+                            AND (@Id IS NOT NULL OR (
+                                @Username IS NULL OR UserAccounts.Username = @Username)
+							    AND (@Password IS NULL OR UserAccounts.Password = @Password)
+							    AND (@Branches_Id IS NULL OR UserAccounts.Branches_Id = @Branches_Id)
+							    AND (@Languages_Id IS NULL OR UserAccounts.Interest LIKE '%'+CONVERT(varchar(MAX),@Languages_Id)+'%')
+							    AND (@Active IS NULL OR UserAccounts.Active = @Active)
+							    AND (@UserAccountRoles_Id IS NULL OR UserAccounts.Roles LIKE '%'+CONVERT(varchar(MAX),@UserAccountRoles_Id)+'%')
+							    AND (@BirthdayListMonth IS NULL OR (
+									    MONTH(UserAccounts.Birthday) = @BirthdayListMonth
+									    AND (MONTH(GETDATE()) <> @BirthdayListMonth OR DAY(UserAccounts.Birthday) >= DAY(GETDATE()))
+								    )
+							    )
+							    AND (@FILTER_Keyword IS NULL OR (UserAccounts.Fullname LIKE '%'+@FILTER_Keyword+'%' OR UserAccounts.Username LIKE '%'+@FILTER_Keyword+'%'))
+                                {0}{1}
+                            )
 						ORDER BY UserAccounts.Fullname ASC
                         OFFSET COALESCE(@SKIP,0) ROWS
                         FETCH NEXT COALESCE(CONVERT(int, @TAKE),0x7ffffff) ROWS ONLY
-                    ",
+                    ", BranchClause, RoleClause
+                );
+
+            List<UserAccountsModel> models = db.Database.SqlQuery<UserAccountsModel>(sql,
                     DBConnection.getSqlParameter(UserAccountsModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(UserAccountsModel.COL_Username.Name, Username),
                     DBConnection.getSqlParameter(UserAccountsModel.COL_Password.Name, Password),
                     DBConnection.getSqlParameter(UserAccountsModel.COL_Active.Name, Active),
-                    DBConnection.getSqlParameter(UserAccountsModel.COL_Branches_Id.Name, Branches_Id),
-                    DBConnection.getSqlParameter(UserAccountsModel.COL_Roles.Name, Branches_Id),
+                    DBConnection.getSqlParameter(UserAccountsModel.COL_Branches_Id.Name, Default_Branches_Id),
                     DBConnection.getSqlParameter("BirthdayListMonth", BirthdayListMonth),
                     DBConnection.getSqlParameter("UserAccountRoles_Id", UserAccountRoles_Id),
                     DBConnection.getSqlParameter("Languages_Id", Language_Id),
@@ -488,8 +499,9 @@ namespace iSpeakWebApp.Controllers
 
             foreach (UserAccountsModel model in models)
             {
-                if(!string.IsNullOrEmpty(model.Roles)) model.Roles_List = model.Roles.Split(',').ToList();
+                if (!string.IsNullOrEmpty(model.Roles)) model.Roles_List = model.Roles.Split(',').ToList();
                 if (!string.IsNullOrEmpty(model.Interest)) model.Interest_List = model.Interest.Split(',').ToList();
+                if (!string.IsNullOrEmpty(model.Branches)) model.Branches_List = model.Branches.Split(',').ToList();
             }
 
             return models;
@@ -517,6 +529,7 @@ namespace iSpeakWebApp.Controllers
         {
             if(model.Roles_List != null) model.Roles = string.Join(",", model.Roles_List.ToArray());
             if(model.Interest_List != null) model.Interest = string.Join(",", model.Interest_List.ToArray());
+            if (model.Branches_List != null) model.Branches = string.Join(",", model.Branches_List.ToArray());
 
             db.Database.ExecuteSqlCommand(@"
                 UPDATE UserAccounts 
@@ -526,6 +539,7 @@ namespace iSpeakWebApp.Controllers
                     Fullname = @Fullname,
                     Birthday = @Birthday,
                     Branches_Id = @Branches_Id,
+                    Branches = @Branches,
                     Active = @Active,
                     ResetPassword = @ResetPassword,
                     Email = @Email,
@@ -544,6 +558,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Fullname.Name, model.Fullname),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Birthday.Name, model.Birthday),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Branches_Id.Name, model.Branches_Id),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Branches.Name, model.Branches),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Active.Name, model.Active),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_ResetPassword.Name, model.ResetPassword),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Email.Name, model.Email),

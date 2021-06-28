@@ -93,9 +93,9 @@
                                     <th>@Html.DisplayNameFor(model => model.SaleInvoiceItems_Description)</th>
                                     <th class="text-right" style="width:50px;">@Html.DisplayNameFor(model => model.SessionHours)</th>
                                     <th>@Html.DisplayNameFor(model => model.Student_UserAccounts_Fullname)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Tutor_UserAccounts_Id_TEMP)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Tutor_UserAccounts_Id)</th>
                                     <th class="non-searchable non-sortable"></th>
-                                    <th class="non-searchable non-sortable" style="width:150px;"></th>
+                                    <th class="non-searchable non-sortable" style="width:100px;"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -108,8 +108,8 @@
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
                                             <td class="align-top">
                                                 @Html.DisplayFor(modelItem => item.SaleInvoiceItems_Description)
-                                                <br />Invoice: @Html.DisplayFor(modelItem => item.SaleInvoices_No)
-                                                @if(item.IsWaiveTutorFee) 
+                                                <br />Invoice: <a href='/SaleInvoices?FILTER_chkDateFrom=false&FILTER_chkDateTo=false&FILTER_Keyword=@item.SaleInvoices_No' target='_blank'>@item.SaleInvoices_No</a>
+                                                @if (item.IsWaiveTutorFee)
                                                 {
                                                     @(", Tutor Fee Waived")
                                                 }
@@ -126,12 +126,11 @@
                                                 {
                                                     <span class="badge badge-danger d-block mr-1">CANCELLED</span>
                                                 }
-                                                <a href='/SaleInvoices?FILTER_chkDateFrom=false&FILTER_chkDateTo=false&FILTER_Keyword=@item.SaleInvoices_No' target='_blank'>Invoice</a>
                                                 @if (access.LessonSessions_Edit)
                                                 {
-                                                    @:• <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a>
+                                                    <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a> @:•
                                                 }
-                                                • <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                                <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                             </td>
                                         </tr>
                                     }

@@ -144,6 +144,12 @@ namespace iSpeakWebApp
 
         public static string addLogForList<T>(string log, List<string> oldValue, List<string> newValue, string format)
         {
+            if (newValue != null)
+                newValue = newValue.ConvertAll(d => d.ToUpper());
+
+            if (oldValue != null)
+                oldValue = oldValue.ConvertAll(d => d.ToUpper());
+
             string addedlog = string.Empty;
             if (newValue != null)
             {

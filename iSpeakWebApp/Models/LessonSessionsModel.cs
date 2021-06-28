@@ -15,6 +15,7 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Branches_Id = new ModelMember { Name = "Branches_Id" };
 
 
+        [Display(Name = "Date")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}")]
         public DateTime Timestamp { get; set; }
         public static ModelMember COL_Timestamp = new ModelMember { Name = "Timestamp", Display = "Timestamp", LogDisplay = ActivityLogsController.editDateTimeFormat("Timestamp") };
@@ -43,12 +44,11 @@ namespace iSpeakWebApp.Models
         public bool Deleted { get; set; } = false;
         public static ModelMember COL_Deleted = new ModelMember { Name = "Deleted", Display = "Deleted", LogDisplay = ActivityLogsController.editBooleanFormat("Deleted") };
 
-        public string Tutor_UserAccounts_Id { get; set; }
 
         [Required]
         [Display(Name = "Tutor")]
-        public Guid Tutor_UserAccounts_Id_TEMP { get; set; } = new Guid();
-        public static ModelMember COL_Tutor_UserAccounts_Id_TEMP = new ModelMember { Name = "Tutor_UserAccounts_Id_TEMP", Display = "Tutor", LogDisplay = ActivityLogsController.editStringFormat("Tutor") };
+        public Guid Tutor_UserAccounts_Id { get; set; } = new Guid();
+        public static ModelMember COL_Tutor_UserAccounts_Id = new ModelMember { Name = "Tutor_UserAccounts_Id", Display = "Tutor", LogDisplay = ActivityLogsController.editStringFormat("Tutor") };
         public string Tutor_UserAccounts_Fullname { get; set; }
 
 

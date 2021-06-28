@@ -575,7 +575,7 @@
         });
     }
 
-    function AjaxGetDropdownlistData(id, action, controller) {
+    function AjaxGetDropdownlistData(id, action, controller, key) {
         var url = '@Url.Action("__action", "__controller")';
         url = url.replace("__action", action).replace("__controller", controller);
         $('#'+id).select2({
@@ -586,7 +586,8 @@
                     var query = {
                         keyword: params.term,
                         page: params.page || 1,
-                        take: 20
+                        take: 20,
+                        key: key
                     }
                     return query;
                 }

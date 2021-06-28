@@ -1,25 +1,16 @@
 
 -- NEED TO EXECUTE AFTER MIGRATION COMPLETE ==============================================================================
 
---DROP TABLE AspNetUsers
+
 --DROP TABLE AspNetUserRoles
 --DROP TABLE AspNetUserLogins
 --DROP TABLE AspNetUserClaims
---DROP TABLE AspNetUserRoles
 --DROP TABLE __MigrationHistory
+--DROP TABLE AspNetUsers
 --DROP TABLE MasterMenu
 --DROP TABLE RoleAccessMenu
--- ALTER TABLE SaleInvoiceItems DROP SaleInvoiceItems_Vouchers_Id;
--- DROP TABLE SaleInvoiceItems_Vouchers
--- ALTER TABLE Payments DROP Notes_Cancel;
--- ALTER TABLE Inventory DROP AvailableQty;
+--DROP TABLE SaleInvoiceItems_Vouchers
 
--- MANUAL TABLE MODIFICATIONS ===========================================================================================
-
--- TABLE PettyCashRecords: need to remove UserAccounts_Id (nvarchar) and rename UserAccounts_Id_TEMP(uniqueidentifier) to UserAccounts_Id
--- TABLE LessonSessions: need to remove Tutor_UserAccounts_Id (nvarchar) and rename Tutor_UserAccounts_Id_TEMP(uniqueidentifier) to Tutor_UserAccounts_Id
--- TABLE PayrollPaymentItems: need to remove UserAccounts_Id (nvarchar) and rename UserAccounts_Id_TEMP(uniqueidentifier) to UserAccounts_Id
--- TABLE HourlyRates: need to remove UserAccounts_Id (nvarchar) and rename UserAccounts_Id_TEMP(uniqueidentifier) to UserAccounts_Id
 
 -- NEED TO DO AFTER SCRIPT IS RUN =======================================================================================
 
@@ -87,7 +78,7 @@
 				(SELECT Email FROM #TEMP_INPUTARRAY WHERE Id=@Iteration_Id),
 				(SELECT REPLACE(REPLACE(REPLACE(Interest, '[{"Languages_Id":"', ''), '"},{"Languages_Id":"', ','), '"}]', '') FROM #TEMP_INPUTARRAY WHERE Id=@Iteration_Id),
 				(SELECT PromotionEvents_Id FROM #TEMP_INPUTARRAY WHERE Id=@Iteration_Id),
-				'A6DCC946-9AC7-4C07-A367-23D5ED91493D'
+				NULL
 			)
 
 		
@@ -99,13 +90,84 @@
 	DROP TABLE #TEMP_INPUTARRAY;
 	GO
 
-	update UserAccounts set Roles='7FFE2278-1C25-4FAC-80F4-74BD26A63D96', ResetPassword=0 where fullname = 'ricky'
-	GO
-
 	UPDATE UserAccounts SET Branches = Branches_Id
+	UPDATE UserAccounts SET Interest = TRIM(Interest)
+	UPDATE UserAccounts SET Interest = NULL WHERE Interest = ''
 	GO
+	
+-- UPDATE USER ACCOUNT ROLES ============================================================================================
 
--- USER ACCOUNT ROLES ===================================================================================================
+	-- drop table if already exists
+	IF(SELECT object_id('TempDB..#TEMP_INPUTARRAY')) IS NOT NULL
+		DROP TABLE #TEMP_INPUTARRAY
+		
+	SELECT * INTO #TEMP_INPUTARRAY FROM (
+			SELECT TOP 2000 AspNetUserRoles.*, 
+				ROW_NUMBER() OVER (ORDER BY AspNetUserRoles.UserId ASC) AS InitialRowNumber
+			FROM AspNetUserRoles
+			ORDER BY AspNetUserRoles.UserId ASC
+		) AS x
+	
+	DECLARE @InitialRowNumber int;
+	DECLARE @UserId varchar(128);
+	DECLARE @RoleId varchar(128);
+	DECLARE @RolesList varchar(MAX);
+	WHILE EXISTS(SELECT * FROM #TEMP_INPUTARRAY)
+	BEGIN
+		SELECT TOP 1 @InitialRowNumber = InitialRowNumber FROM #TEMP_INPUTARRAY
+		SELECT @UserId = UserId, @RoleId = RoleId FROM #TEMP_INPUTARRAY WHERE InitialRowNumber = @InitialRowNumber
+
+		SELECT @RolesList = Roles FROM UserAccounts WHERE Id = CONVERT(UNIQUEIDENTIFIER, @UserId)
+		IF @RolesList = '' OR @RolesList IS NULL
+			SET @RolesList = @RoleId;
+		ELSE
+			SET @RolesList = @RolesList + ',' + @RoleId
+
+		--SELECT @UserId AS UserId, @RoleId AS RoleId, @RolesList AS RolesList
+		--BREAK;
+
+		-- add operation here
+		UPDATE UserAccounts SET Roles = @RolesList WHERE Id = CONVERT(UNIQUEIDENTIFIER, @UserId)
+		
+		-- remove row to iterate to the next row
+		DELETE #TEMP_INPUTARRAY WHERE InitialRowNumber = @InitialRowNumber
+	END
+	
+	-- clean up
+	DROP TABLE #TEMP_INPUTARRAY;
+	GO
+	
+-- UPDATE USER ACCOUNT BRANCHES =========================================================================================
+
+	-- drop table if already exists
+	IF(SELECT object_id('TempDB..#TEMP_INPUTARRAY')) IS NOT NULL
+		DROP TABLE #TEMP_INPUTARRAY
+		
+	SELECT * INTO #TEMP_INPUTARRAY FROM (SELECT * FROM UserAccounts) AS x
+	
+	DECLARE @Id uniqueidentifier;
+	DECLARE @SecondBranch uniqueidentifier;
+	DECLARE @Branches varchar(MAX);
+	WHILE EXISTS(SELECT * FROM #TEMP_INPUTARRAY)
+	BEGIN
+		SELECT TOP 1 @Id = Id, @Branches = Branches FROM #TEMP_INPUTARRAY
+		
+		SELECT @SecondBranch = MAX(Branches_Id) from PayrollPaymentItems where UserAccounts_Id = @Id AND Branches_Id NOT IN (SELECT Branches_Id FROM UserAccounts WHERE Id = @Id)
+		IF @SecondBranch IS NOT NULL
+			SET @Branches = @Branches + ',' + CONVERT(VARCHAR(1000),@SecondBranch)
+
+		-- add operation here
+		UPDATE UserAccounts SET Branches = @Branches WHERE Id = @Id
+		
+		-- remove row to iterate to the next row
+		DELETE #TEMP_INPUTARRAY WHERE Id = @Id
+	END
+	
+	-- clean up
+	DROP TABLE #TEMP_INPUTARRAY;
+	GO
+	
+-- USER ACCOUNT ROLES MASTER DATA =======================================================================================
 
 	IF (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND  TABLE_NAME = 'UserAccountRoles'))
 		DROP TABLE UserAccountRoles;
@@ -203,9 +265,11 @@
 	BEGIN	
 		ALTER TABLE Services ADD [Name] varchar(MAX) NULL;
 		ALTER TABLE Services ALTER COLUMN Description varchar(MAX) NULL;
-		UPDATE Services SET Name=Description, Description = NULL;
-		ALTER TABLE Services ALTER COLUMN [Name] varchar(MAX) NOT NULL;
 	END
+	GO
+
+	UPDATE Services SET Name=Description, Description = NULL;
+	ALTER TABLE Services ALTER COLUMN [Name] varchar(MAX) NOT NULL;
 	GO
 	
 -- PRODUCTS =============================================================================================================
@@ -214,15 +278,18 @@
 	BEGIN
 		ALTER TABLE Products ADD [Name] varchar(MAX) NULL;
 		ALTER TABLE Products ALTER COLUMN Description varchar(MAX) NULL;	
-		UPDATE Products SET Name=Description, Description = NULL;	
-		ALTER TABLE Products ALTER COLUMN [Name] varchar(MAX) NOT NULL;	
 	END
 	GO
-	
+
+	UPDATE Products SET Name=Description, Description = NULL;	
+	ALTER TABLE Products ALTER COLUMN [Name] varchar(MAX) NOT NULL;	
+	GO
+		
 -- SALE INVOICES AND SALE INVOICE ITEMS =================================================================================
 
 	ALTER TABLE SaleInvoiceItems ALTER COLUMN RowNo int NOT NULL;
 	ALTER TABLE SaleInvoiceItems ALTER COLUMN DiscountAmount int NOT NULL;
+	ALTER TABLE SaleInvoiceItems ADD Vouchers varchar(MAX) NULL;
 	ALTER TABLE SaleInvoiceItems ADD VouchersName varchar(MAX) NULL;
 	ALTER TABLE Vouchers ALTER COLUMN Amount int NOT NULL;
 	ALTER TABLE SaleInvoices ALTER COLUMN Customer_UserAccounts_Id uniqueidentifier NOT NULL;
@@ -232,6 +299,7 @@
 		ALTER TABLE SaleInvoiceItems ADD Vouchers varchar(MAX) NULL;
 	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'VouchersAmount' AND TABLE_NAME = 'SaleInvoiceItems' AND TABLE_SCHEMA='dbo') 
 		ALTER TABLE SaleInvoiceItems ADD VouchersAmount int NULL DEFAULT 0;
+	GO
 
 	UPDATE SaleInvoiceItems SET VouchersAmount=0;
 	
@@ -605,8 +673,120 @@
 	ALTER TABLE UserAccountRoles ADD PayrollPayments_Approve bit default 0 not null;
 	GO
 	
+	--set all access to role superuser
+	update UserAccountRoles set
+		Reminders_Add=1,
+		Reminders_Edit=1,
+		Reminders_View=1,
+		UserAccounts_Add=1,
+		UserAccounts_Edit=1,
+		UserAccounts_View=1,
+		UserAccountRoles_Add=1,
+		UserAccountRoles_Edit=1,
+		UserAccountRoles_View=1,
+		Settings_Edit=1,
+		Settings_View=1,
+		Branches_Add=1,
+		Branches_Edit=1,
+		Branches_View=1,
+		PromotionEvents_Add=1,
+		PromotionEvents_Edit=1,
+		PromotionEvents_View=1,
+		PettyCashRecords_Add=1,
+		PettyCashRecords_Approve=1,
+		PettyCashRecords_Edit=1,
+		PettyCashRecords_View=1,
+		PettyCashRecordsCategories_Add=1,
+		PettyCashRecordsCategories_Edit=1,
+		PettyCashRecordsCategories_View=1,
+		Languages_Add=1,
+		Languages_Edit=1,
+		Languages_View=1,
+		LessonTypes_Add=1,
+		LessonTypes_Edit=1,
+		LessonTypes_View=1,
+		LessonPackages_Add=1,
+		LessonPackages_Edit=1,
+		LessonPackages_View=1,
+		Consignments_Add=1,
+		Consignments_Edit=1,
+		Consignments_View=1,
+		Vouchers_Add=1,
+		Vouchers_Edit=1,
+		Vouchers_View=1,
+		Suppliers_Add=1,
+		Suppliers_Edit=1,
+		Suppliers_View=1,
+		Units_Add=1,
+		Units_Edit=1,
+		Units_View=1,
+		ExpenseCategories_Add=1,
+		ExpenseCategories_Edit=1,
+		ExpenseCategories_View=1,
+		Services_Add=1,
+		Services_Edit=1,
+		Services_View=1,
+		Products_Add=1,
+		Products_Edit=1,
+		Products_View=1,
+		SaleInvoices_Add=1,
+		SaleInvoices_Approve=1,
+		SaleInvoices_Edit=1,
+		SaleInvoices_TutorTravelCost_View=1,
+		SaleInvoices_View=1,
+		Payments_Add=1,
+		Payments_Approve=1,
+		Payments_Edit=1,
+		Payments_View=1,
+		Inventory_Add=1,
+		Inventory_Edit=1,
+		Inventory_View=1,
+		LessonSessions_Add=1,
+		LessonSessions_Edit=1,
+		LessonSessions_View=1,
+		HourlyRates_Add=1,
+		HourlyRates_Edit=1,
+		HourlyRates_View=1,
+		PayrollPayments_Add=1,
+		PayrollPayments_Approve=1,
+		PayrollPayments_Edit=1,
+		PayrollPayments_View=1	
+	where id='7FFE2278-1C25-4FAC-80F4-74BD26A63D96'
+	GO
 -- ======================================================================================================================
 
+update saleinvoices set CancelNotes=Notes where Cancelled = 1
+update saleinvoices set Notes=null where Cancelled = 1
+GO
 
 
+update UserAccounts set Fullname = TRIM(Fullname) 
+GO
+
+ALTER TABLE SaleInvoiceItems DROP COLUMN SaleInvoiceItems_Vouchers_Id;
+
+ALTER TABLE PettyCashRecords DROP COLUMN UserAccounts_Id;
+EXEC sp_RENAME 'PettyCashRecords.UserAccounts_Id_TEMP' , 'UserAccounts_Id', 'COLUMN'
+
+ALTER TABLE LessonSessions DROP COLUMN Tutor_UserAccounts_Id;
+EXEC sp_RENAME 'LessonSessions.Tutor_UserAccounts_Id_TEMP' , 'Tutor_UserAccounts_Id', 'COLUMN'
+
+ALTER TABLE PayrollPayments DROP COLUMN UserAccounts_Id;
+EXEC sp_RENAME 'PayrollPayments.UserAccounts_Id_TEMP' , 'UserAccounts_Id', 'COLUMN'
+
+ALTER TABLE PayrollPaymentItems DROP COLUMN UserAccounts_Id;
+EXEC sp_RENAME 'PayrollPaymentItems.UserAccounts_Id_TEMP' , 'UserAccounts_Id', 'COLUMN'
+
+ALTER TABLE HourlyRates DROP COLUMN UserAccounts_Id;
+EXEC sp_RENAME 'HourlyRates.UserAccounts_Id_TEMP' , 'UserAccounts_Id', 'COLUMN'
+
+GO
+
+ALTER TABLE Payments DROP COLUMN Notes_Cancel;
+ALTER TABLE Inventory DROP COLUMN AvailableQty;
+GO
+
+INSERT INTO Settings (Id, Value_Guid) VALUES('A94B2FFC-3547-40CB-96CD-F82729768926', 'A6DCC946-9AC7-4C07-A367-23D5ED91493D');
+INSERT INTO Settings (Id, Value_Guid) VALUES('20D2F1DA-2ACC-4E92-850C-2B260848FB8F', '305678D6-7100-4D7E-8264-569E2491EB12');
+GO
 

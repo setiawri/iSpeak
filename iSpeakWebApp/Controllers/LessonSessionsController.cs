@@ -93,7 +93,7 @@ namespace iSpeakWebApp.Controllers
                     return returnView(LessonSessions, string.Format("Insufficient remaining hours for student {0}", insufficientRemainingHours[0].Customer_UserAccounts_Name));
 
                 //set tutor pay rate
-                List<HourlyRatesModel> hourlyRates = HourlyRatesController.get(null, null, model.Tutor_UserAccounts_Id_TEMP);
+                List<HourlyRatesModel> hourlyRates = HourlyRatesController.get(null, null, model.Tutor_UserAccounts_Id);
                 bool isFullTimeTutor = false;
                 foreach (HourlyRatesModel hourlyRate in hourlyRates)
                 {
@@ -161,7 +161,7 @@ namespace iSpeakWebApp.Controllers
                         HourlyRate = HourlyRate,
                         TutorTravelCost = model.TutorTravelCost,
                         Amount = model.IsWaiveTutorFee ? 0 : (model.SessionHours * HourlyRate) + model.TutorTravelCost,
-                        UserAccounts_Id_TEMP = model.Tutor_UserAccounts_Id_TEMP,
+                        UserAccounts_Id = model.Tutor_UserAccounts_Id,
                         Branches_Id = model.Branches_Id,
                         IsFullTime = false
                     });
@@ -294,7 +294,7 @@ namespace iSpeakWebApp.Controllers
                         LEFT JOIN SaleInvoiceItems ON SaleInvoiceItems.Id = LessonSessions.SaleInvoiceItems_Id
                         LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
                         LEFT JOIN UserAccounts Student_UserAccounts ON Student_UserAccounts.Id = SaleInvoices.Customer_UserAccounts_Id
-                        LEFT JOIN UserAccounts Tutor_UserAccounts ON Tutor_UserAccounts.Id = LessonSessions.Tutor_UserAccounts_Id_TEMP
+                        LEFT JOIN UserAccounts Tutor_UserAccounts ON Tutor_UserAccounts.Id = LessonSessions.Tutor_UserAccounts_Id
                     WHERE 1=1
 						AND (@Id IS NULL OR LessonSessions.Id = @Id)
 						AND (@Id IS NOT NULL OR (
@@ -325,8 +325,8 @@ namespace iSpeakWebApp.Controllers
         public void add(LessonSessionsModel model)
         {
             db.Database.ExecuteSqlCommand(@"                
-                INSERT INTO LessonSessions   (Id, Branches_Id, Timestamp, SaleInvoiceItems_Id, SessionHours, Review, InternalNotes, Deleted, Tutor_UserAccounts_Id_TEMP, HourlyRates_Rate, TravelCost, TutorTravelCost, Adjustment, PayrollPaymentItems_Id, Notes_Cancel, IsScheduleChange, IsWaiveTutorFee) 
-                                      VALUES(@Id,@Branches_Id,@Timestamp,@SaleInvoiceItems_Id,@SessionHours,@Review,@InternalNotes,@Deleted,@Tutor_UserAccounts_Id_TEMP,@HourlyRates_Rate,@TravelCost,@TutorTravelCost,@Adjustment,@PayrollPaymentItems_Id,@Notes_Cancel,@IsScheduleChange,@IsWaiveTutorFee);
+                INSERT INTO LessonSessions   (Id, Branches_Id, Timestamp, SaleInvoiceItems_Id, SessionHours, Review, InternalNotes, Deleted, Tutor_UserAccounts_Id, HourlyRates_Rate, TravelCost, TutorTravelCost, Adjustment, PayrollPaymentItems_Id, Notes_Cancel, IsScheduleChange, IsWaiveTutorFee) 
+                                      VALUES(@Id,@Branches_Id,@Timestamp,@SaleInvoiceItems_Id,@SessionHours,@Review,@InternalNotes,@Deleted,@Tutor_UserAccounts_Id,@HourlyRates_Rate,@TravelCost,@TutorTravelCost,@Adjustment,@PayrollPaymentItems_Id,@Notes_Cancel,@IsScheduleChange,@IsWaiveTutorFee);
             ",
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Branches_Id.Name, model.Branches_Id),
@@ -336,7 +336,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Review.Name, model.Review),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_InternalNotes.Name, model.InternalNotes),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Deleted.Name, model.Deleted),
-                DBConnection.getSqlParameter(LessonSessionsModel.COL_Tutor_UserAccounts_Id_TEMP.Name, model.Tutor_UserAccounts_Id_TEMP),
+                DBConnection.getSqlParameter(LessonSessionsModel.COL_Tutor_UserAccounts_Id.Name, model.Tutor_UserAccounts_Id),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_HourlyRates_Rate.Name, model.HourlyRates_Rate),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_TravelCost.Name, model.TravelCost),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_TutorTravelCost.Name, model.TutorTravelCost),

@@ -35,9 +35,15 @@ namespace iSpeakWebApp.Models
 
 
         [Required]
-        [Display(Name = "Default Branch")]
+        [Display(Name = "Default")]
         public Guid Branches_Id { get; set; } = new Guid();
         public static ModelMember COL_Branches_Id = new ModelMember { Name = "Branches_Id", Display = "Branch", LogDisplay = ActivityLogsController.editStringFormat("Branch") };
+
+
+        public string Branches { get; set; } = string.Empty;
+        public static ModelMember COL_Branches = new ModelMember { Name = "Branches", Display = "Branches", LogDisplay = ActivityLogsController.editListStringFormat("Branches") };
+        public List<string> Branches_List { get; set; }
+        public static ModelMember COL_Branches_List = new ModelMember { Name = "Branches_List" };
 
 
         public bool Active { get; set; } = true;

@@ -135,11 +135,11 @@ namespace iSpeakWebApp.Controllers
                         RefId = payment.Id,
                         No = "",
                         Timestamp = payment.Timestamp,
-                        PettyCashRecordsCategories_Id = SettingsController.get().AutoEntryForCashPayments,
+                        PettyCashRecordsCategories_Id = SettingsController.get().AutoEntryForCashPayments.Value,
                         Notes = "Cash Payment [" + payment.No + "]",
                         Amount = payment.CashAmount,
                         IsChecked = false,
-                        UserAccounts_Id_TEMP = (Guid)UserAccountsController.getUserId(Session),
+                        UserAccounts_Id = (Guid)UserAccountsController.getUserId(Session),
                         ExpenseCategories_Id = null
                     });
                 }

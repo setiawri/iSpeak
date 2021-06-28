@@ -113,7 +113,7 @@ namespace iSpeakWebApp.Controllers
                     string log = string.Empty;
                     log = Helper.append<BranchesModel>(log, originalModel.Branches_Id, modifiedModel.Branches_Id, HourlyRatesModel.COL_Branches_Id.LogDisplay);
                     log = Helper.append<LessonPackagesModel>(log, originalModel.LessonPackages_Id, modifiedModel.LessonPackages_Id, HourlyRatesModel.COL_LessonPackages_Id.LogDisplay);
-                    log = Helper.append<UserAccountsModel>(log, originalModel.UserAccounts_Id_TEMP, modifiedModel.UserAccounts_Id_TEMP, HourlyRatesModel.COL_UserAccounts_Id_TEMP.LogDisplay);
+                    log = Helper.append<UserAccountsModel>(log, originalModel.UserAccounts_Id, modifiedModel.UserAccounts_Id, HourlyRatesModel.COL_UserAccounts_Id.LogDisplay);
                     log = Helper.append(log, originalModel.Rate, modifiedModel.Rate, HourlyRatesModel.COL_Rate.LogDisplay);
                     log = Helper.append(log, originalModel.FullTimeTutorPayrate, modifiedModel.FullTimeTutorPayrate, HourlyRatesModel.COL_FullTimeTutorPayrate.LogDisplay);
                     log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, HourlyRatesModel.COL_Notes.LogDisplay);
@@ -141,7 +141,7 @@ namespace iSpeakWebApp.Controllers
                         WHERE 1=1                             
 							AND (@Id IS NULL OR HourlyRates.Id <> @Id)
 							AND (@Branches_Id IS NULL OR HourlyRates.Branches_Id = Branches_Id)
-                            AND (@UserAccounts_Id_TEMP IS NULL OR HourlyRates.UserAccounts_Id_TEMP = @UserAccounts_Id_TEMP)
+                            AND (@UserAccounts_Id IS NULL OR HourlyRates.UserAccounts_Id = @UserAccounts_Id)
                             AND (@LessonPackages_Id IS NULL OR HourlyRates.LessonPackages_Id = @LessonPackages_Id)
                             AND (@Rate = 0 OR HourlyRates.Rate > 0)
                             AND (@Rate > 0 OR HourlyRates.Rate = 0)
@@ -150,7 +150,7 @@ namespace iSpeakWebApp.Controllers
                     ",
                     DBConnection.getSqlParameter(HourlyRatesModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(HourlyRatesModel.COL_Branches_Id.Name, model.Branches_Id),
-                    DBConnection.getSqlParameter(HourlyRatesModel.COL_UserAccounts_Id_TEMP.Name, model.UserAccounts_Id_TEMP),
+                    DBConnection.getSqlParameter(HourlyRatesModel.COL_UserAccounts_Id.Name, model.UserAccounts_Id),
                     DBConnection.getSqlParameter(HourlyRatesModel.COL_LessonPackages_Id.Name, model.LessonPackages_Id),
                     DBConnection.getSqlParameter(HourlyRatesModel.COL_Rate.Name, model.Rate),
                     DBConnection.getSqlParameter(HourlyRatesModel.COL_FullTimeTutorPayrate.Name, model.FullTimeTutorPayrate)
@@ -159,7 +159,7 @@ namespace iSpeakWebApp.Controllers
 
         public List<HourlyRatesModel> get(string FILTER_Keyword) { return get(null, FILTER_Keyword, null); }
         public HourlyRatesModel get(Guid Id) { return get(Id, null, null).FirstOrDefault(); }
-        public static List<HourlyRatesModel> get(Guid? Id, string FILTER_Keyword, Guid? UserAccounts_Id_TEMP)
+        public static List<HourlyRatesModel> get(Guid? Id, string FILTER_Keyword, Guid? UserAccounts_Id)
         {
             return new DBContext().Database.SqlQuery<HourlyRatesModel>(@"
                         SELECT HourlyRates.*,
@@ -167,7 +167,7 @@ namespace iSpeakWebApp.Controllers
                             LessonPackages.Name AS LessonPackages_Name,
                             Branches.Name AS Branches_Name
                         FROM HourlyRates
-                            LEFT JOIN UserAccounts ON UserAccounts.Id = HourlyRates.UserAccounts_Id_TEMP
+                            LEFT JOIN UserAccounts ON UserAccounts.Id = HourlyRates.UserAccounts_Id
                             LEFT JOIN LessonPackages ON LessonPackages.Id = HourlyRates.LessonPackages_Id
                             LEFT JOIN Branches ON Branches.Id = HourlyRates.Branches_Id
                         WHERE 1=1
@@ -177,13 +177,13 @@ namespace iSpeakWebApp.Controllers
                                     UserAccounts.Fullname LIKE '%'+@FILTER_Keyword+'%'
                                     OR LessonPackages.Name LIKE '%'+@FILTER_Keyword+'%'
                                 ))
-    							AND (@UserAccounts_Id_TEMP IS NULL OR UserAccounts.Id = @UserAccounts_Id_TEMP)
+    							AND (@UserAccounts_Id IS NULL OR UserAccounts.Id = @UserAccounts_Id)
                             ))
 						ORDER BY UserAccounts.Fullname ASC
                     ",
                     DBConnection.getSqlParameter(HourlyRatesModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
-                    DBConnection.getSqlParameter(HourlyRatesModel.COL_UserAccounts_Id_TEMP.Name, UserAccounts_Id_TEMP)
+                    DBConnection.getSqlParameter(HourlyRatesModel.COL_UserAccounts_Id.Name, UserAccounts_Id)
                 ).ToList();
         }
 
@@ -195,7 +195,7 @@ namespace iSpeakWebApp.Controllers
                     Branches_Id = @Branches_Id,
                     Notes = @Notes,
                     LessonPackages_Id = @LessonPackages_Id,
-                    UserAccounts_Id_TEMP = @UserAccounts_Id_TEMP,
+                    UserAccounts_Id = @UserAccounts_Id,
                     Rate = @Rate,
                     FullTimeTutorPayrate = @FullTimeTutorPayrate
                 WHERE HourlyRates.Id = @Id;                
@@ -203,7 +203,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_Branches_Id.Name, model.Branches_Id),
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_LessonPackages_Id.Name, model.LessonPackages_Id),
-                DBConnection.getSqlParameter(HourlyRatesModel.COL_UserAccounts_Id_TEMP.Name, model.UserAccounts_Id_TEMP),
+                DBConnection.getSqlParameter(HourlyRatesModel.COL_UserAccounts_Id.Name, model.UserAccounts_Id),
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_Rate.Name, model.Rate),
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_FullTimeTutorPayrate.Name, model.FullTimeTutorPayrate),
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_Notes.Name, model.Notes)
@@ -218,13 +218,13 @@ namespace iSpeakWebApp.Controllers
             model.Id = Guid.NewGuid();
 
             db.Database.ExecuteSqlCommand(@"
-                INSERT INTO HourlyRates (Id, Branches_Id, LessonPackages_Id, UserAccounts_Id_TEMP, Rate, FullTimeTutorPayrate, Notes) 
-                                 VALUES(@Id,@Branches_Id,@LessonPackages_Id,@UserAccounts_Id_TEMP,@Rate,@FullTimeTutorPayrate,@Notes);
+                INSERT INTO HourlyRates (Id, Branches_Id, LessonPackages_Id, UserAccounts_Id, Rate, FullTimeTutorPayrate, Notes) 
+                                 VALUES(@Id,@Branches_Id,@LessonPackages_Id,@UserAccounts_Id,@Rate,@FullTimeTutorPayrate,@Notes);
             ",
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_Branches_Id.Name, model.Branches_Id),
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_LessonPackages_Id.Name, model.LessonPackages_Id),
-                DBConnection.getSqlParameter(HourlyRatesModel.COL_UserAccounts_Id_TEMP.Name, model.UserAccounts_Id_TEMP),
+                DBConnection.getSqlParameter(HourlyRatesModel.COL_UserAccounts_Id.Name, model.UserAccounts_Id),
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_Rate.Name, model.Rate),
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_FullTimeTutorPayrate.Name, model.FullTimeTutorPayrate),
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_Notes.Name, model.Notes)
@@ -240,7 +240,7 @@ namespace iSpeakWebApp.Controllers
                         SELECT HourlyRates.*,
 							UserAccounts.Fullname AS UserAccounts_FullName
 						FROM HourlyRates
-							LEFT JOIN UserAccounts ON UserAccounts.Id = HourlyRates.UserAccounts_Id_TEMP
+							LEFT JOIN UserAccounts ON UserAccounts.Id = HourlyRates.UserAccounts_Id
 						WHERE HourlyRates.FullTimeTutorPayrate > 0
 							AND UserAccounts.Active = 1
 							AND UserAccounts.Branches_Id = @Branches_Id

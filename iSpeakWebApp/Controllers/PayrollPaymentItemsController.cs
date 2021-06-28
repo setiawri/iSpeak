@@ -55,7 +55,7 @@ namespace iSpeakWebApp.Controllers
 
             if(models.Count > 0)
             {
-                Guid Tutor_UserAccounts_Id = models[0].UserAccounts_Id_TEMP;
+                Guid Tutor_UserAccounts_Id = models[0].UserAccounts_Id;
                 string Tutor_UserAccounts_Fullname = models[0].UserAccounts_Fullname;
 
                 List<PayrollPaymentItemsModel> combinedModels = combineClassSesions(models);
@@ -161,7 +161,7 @@ namespace iSpeakWebApp.Controllers
             {
                 foreach(HourlyRatesModel model in ActiveFullTimeEmployeePayrates)
                 {
-                    if (!FullTimePayrollPaymentItems.Exists(x => x.UserAccounts_Id_TEMP == model.UserAccounts_Id_TEMP))
+                    if (!FullTimePayrollPaymentItems.Exists(x => x.UserAccounts_Id == model.UserAccounts_Id))
                     {
                         add(new PayrollPaymentItemsModel()
                         {
@@ -173,7 +173,7 @@ namespace iSpeakWebApp.Controllers
                             HourlyRate = 0,
                             TutorTravelCost = 0,
                             Amount = model.FullTimeTutorPayrate,
-                            UserAccounts_Id_TEMP = model.UserAccounts_Id_TEMP,
+                            UserAccounts_Id = model.UserAccounts_Id,
                             CancelNotes = string.Empty,
                             Branches_Id = model.Branches_Id,
                             IsFullTime = true
@@ -205,7 +205,7 @@ namespace iSpeakWebApp.Controllers
                     HourlyRate = 0,
                     TutorTravelCost = 0,
                     Amount = Amount,
-                    UserAccounts_Id_TEMP = UserAccounts_Id.Value,
+                    UserAccounts_Id = UserAccounts_Id.Value,
                     CancelNotes = string.Empty,
                     Branches_Id = Helper.getActiveBranchId(Session),
                     IsFullTime = false
@@ -236,14 +236,14 @@ namespace iSpeakWebApp.Controllers
                         LEFT JOIN LessonSessions ON LessonSessions.PayrollPaymentItems_Id = PayrollPaymentItems.Id
                         LEFT JOIN SaleInvoiceItems ON SaleInvoiceItems.Id = LessonSessions.SaleInvoiceItems_Id
                         LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
-                        LEFT JOIN UserAccounts ON UserAccounts.Id = PayrollPaymentItems.UserAccounts_Id_TEMP
+                        LEFT JOIN UserAccounts ON UserAccounts.Id = PayrollPaymentItems.UserAccounts_Id
 						LEFT JOIN UserAccounts Student_UserAccounts ON Student_UserAccounts.Id = SaleInvoices.Customer_UserAccounts_Id
                     WHERE 1=1
 						AND (@Id IS NULL OR PayrollPaymentItems.Id = @Id)
 						AND (@Id IS NOT NULL OR (
                             PayrollPaymentItems.Branches_Id = @Branches_Id
                             AND (@PayrollPayments_Id IS NULL OR PayrollPaymentItems.PayrollPayments_Id = @PayrollPayments_Id)
-                            AND (@UserAccounts_Id_TEMP IS NULL OR PayrollPaymentItems.UserAccounts_Id_TEMP = @UserAccounts_Id_TEMP)
+                            AND (@UserAccounts_Id IS NULL OR PayrollPaymentItems.UserAccounts_Id = @UserAccounts_Id)
                             AND (@DatePeriod IS NULL OR (MONTH(PayrollPaymentItems.Timestamp) = MONTH(@DatePeriod) AND YEAR(PayrollPaymentItems.Timestamp) = YEAR(@DatePeriod)))
                             AND (@IsFullTime IS NULL OR PayrollPaymentItems.IsFullTime = @IsFullTime)
                         ))
@@ -252,7 +252,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Id.Name, Id),
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Branches_Id.Name, Helper.getActiveBranchId(Session)),
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_PayrollPayments_Id.Name, PayrollPayments_Id),
-                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_UserAccounts_Id_TEMP.Name, UserAccounts_Id),
+                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_UserAccounts_Id.Name, UserAccounts_Id),
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_IsFullTime.Name, IsFullTime),
                 DBConnection.getSqlParameter("DatePeriod", DatePeriod)
             ).ToList();
@@ -261,8 +261,8 @@ namespace iSpeakWebApp.Controllers
         public static void add(PayrollPaymentItemsModel model)
         {
             new DBContext().Database.ExecuteSqlCommand(@"
-                    INSERT INTO PayrollPaymentItems (Id, PayrollPayments_Id, Timestamp, Description, Hour, HourlyRate, TutorTravelCost, Amount, UserAccounts_Id_TEMP, CancelNotes, Branches_Id, IsFullTime) 
-                                             VALUES(@Id,@PayrollPayments_Id,@Timestamp,@Description,@Hour,@HourlyRate,@TutorTravelCost,@Amount,@UserAccounts_Id_TEMP,@CancelNotes,@Branches_Id,@IsFullTime);
+                    INSERT INTO PayrollPaymentItems (Id, PayrollPayments_Id, Timestamp, Description, Hour, HourlyRate, TutorTravelCost, Amount, UserAccounts_Id, CancelNotes, Branches_Id, IsFullTime) 
+                                             VALUES(@Id,@PayrollPayments_Id,@Timestamp,@Description,@Hour,@HourlyRate,@TutorTravelCost,@Amount,@UserAccounts_Id,@CancelNotes,@Branches_Id,@IsFullTime);
                 ",
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_PayrollPayments_Id.Name, model.PayrollPayments_Id),
@@ -272,7 +272,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_HourlyRate.Name, model.HourlyRate),
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_TutorTravelCost.Name, model.TutorTravelCost),
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Amount.Name, model.Amount),
-                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_UserAccounts_Id_TEMP.Name, model.UserAccounts_Id_TEMP),
+                DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_UserAccounts_Id.Name, model.UserAccounts_Id),
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_CancelNotes.Name, model.CancelNotes),
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Branches_Id.Name, model.Branches_Id),
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_IsFullTime.Name, model.IsFullTime)
@@ -302,24 +302,24 @@ namespace iSpeakWebApp.Controllers
 							ISNULL(Due.Amount,0) AS DueAmount,
 							UserAccounts.Fullname AS Tutor_UserAccounts_FullName
 						FROM (
-								SELECT UserAccounts_Id_TEMP AS Tutor_UserAccounts_Id_TEMP,
+								SELECT UserAccounts_Id AS Tutor_UserAccounts_Id,
 									SUM(Hour) AS TotalHours,
 									SUM(Amount) AS PayableAmount
 								FROM PayrollPaymentItems
 								WHERE PayrollPaymentItems.Timestamp >= @StartDate AND PayrollPaymentItems.Timestamp <= @EndDate
                                     AND PayrollPaymentItems.Branches_Id = @Branches_Id
-								GROUP BY UserAccounts_Id_TEMP						
+								GROUP BY UserAccounts_Id					
 							) Payrolls
-							LEFT JOIN UserAccounts ON UserAccounts.Id = Payrolls.Tutor_UserAccounts_Id_TEMP
+							LEFT JOIN UserAccounts ON UserAccounts.Id = Payrolls.Tutor_UserAccounts_Id
 							LEFT JOIN (
-									SELECT UserAccounts_Id_TEMP AS Tutor_UserAccounts_Id_TEMP,
+									SELECT UserAccounts_Id AS Tutor_UserAccounts_Id,
 										SUM(Amount) AS Amount
 									FROM PayrollPaymentItems
 									WHERE PayrollPaymentItems.Timestamp >= @StartDate AND PayrollPaymentItems.Timestamp <= @EndDate
                                         AND PayrollPaymentItems.Branches_Id = @Branches_Id
 										AND PayrollPayments_Id IS NULL
-									GROUP BY UserAccounts_Id_TEMP						
-								) Due ON Due.Tutor_UserAccounts_Id_TEMP = Payrolls.Tutor_UserAccounts_Id_TEMP
+									GROUP BY UserAccounts_Id						
+								) Due ON Due.Tutor_UserAccounts_Id = Payrolls.Tutor_UserAccounts_Id
 						ORDER BY UserAccounts.Fullname ASC
                     ",
                     DBConnection.getSqlParameter("Branches_Id", Helper.getActiveBranchId(Session)),

@@ -97,8 +97,7 @@ namespace iSpeakWebApp.Controllers
                 Timestamp = Timestamp,
                 Amount = Amount,
                 Notes = Notes,
-                UserAccounts_Id_TEMP = UserAccounts_Id,
-                UserAccounts_Id = UserAccounts_Id.ToString()
+                UserAccounts_Id = UserAccounts_Id
             }, PayrollPaymentItems);
 
             return Json(new { Message = "" });
@@ -123,7 +122,7 @@ namespace iSpeakWebApp.Controllers
                             Branches.Id AS Branches_Id,
                             Branches.Name AS Branches_Name
                         FROM PayrollPayments
-                            LEFT JOIN UserAccounts ON UserAccounts.Id = PayrollPayments.UserAccounts_Id_TEMP
+                            LEFT JOIN UserAccounts ON UserAccounts.Id = PayrollPayments.UserAccounts_Id
                             LEFT JOIN Branches ON Branches.Id = (SELECT TOP(1) Branches_Id FROM PayrollPaymentItems WHERE PayrollPayments_Id=PayrollPayments.Id)
                         WHERE 1=1
 							AND (@Id IS NULL OR PayrollPayments.Id = @Id)
@@ -159,13 +158,13 @@ namespace iSpeakWebApp.Controllers
 	                SELECT @LastHex_Int = CONVERT(INT, CONVERT(VARBINARY, REPLICATE('0', LEN(@LastHex_String)%2) + @LastHex_String, 2)) --@LastHex_String length must be even number of digits to convert to int
 	                SET @NewNo = RIGHT(CONVERT(NVARCHAR(10), CONVERT(VARBINARY(8), @LastHex_Int + 1), 1),@HexLength)
 
-                INSERT INTO PayrollPayments (Id, No,    Timestamp, UserAccounts_Id_TEMP, Amount, IsChecked, Cancelled, Notes_Cancel, Notes) 
-                                     VALUES(@Id,@NewNo,@Timestamp,@UserAccounts_Id_TEMP,@Amount,@IsChecked,@Cancelled,@Notes_Cancel,@Notes);
+                INSERT INTO PayrollPayments (Id, No,    Timestamp, UserAccounts_Id, Amount, IsChecked, Cancelled, Notes_Cancel, Notes) 
+                                     VALUES(@Id,@NewNo,@Timestamp,@UserAccounts_Id,@Amount,@IsChecked,@Cancelled,@Notes_Cancel,@Notes);
             ",
                 DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Timestamp.Name, model.Timestamp),
                 DBConnection.getSqlParameter(PayrollPaymentsModel.COL_No.Name, model.No),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_UserAccounts_Id_TEMP.Name, model.UserAccounts_Id_TEMP),
+                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_UserAccounts_Id.Name, model.UserAccounts_Id),
                 DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Amount.Name, model.Amount),
                 DBConnection.getSqlParameter(PayrollPaymentsModel.COL_IsChecked.Name, model.IsChecked),
                 DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Cancelled.Name, model.Cancelled),

@@ -9,6 +9,8 @@
     ViewBag.Subtitle = "Create";
 
     List<SaleInvoiceItemsModel> SaleInvoiceItems = (List<SaleInvoiceItemsModel>)ViewData["SaleInvoiceItems"];
+
+    string StudentRole = iSpeakWebApp.Controllers.SettingsController.get().StudentRole.Value.ToString();
 }
 
 <div class="content-wrapper">
@@ -262,7 +264,7 @@
     });
 
     function applyLast() {
-        AjaxGetDropdownlistData('Customer_UserAccounts_Id', 'GetDropDownListData', 'UserAccounts');
+        AjaxGetDropdownlistData('Customer_UserAccounts_Id', 'GetDropDownListData', 'UserAccounts', '@StudentRole');
     }
 
     function UpdateLessonSessionHours() {

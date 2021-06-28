@@ -271,10 +271,10 @@ namespace iSpeakWebApp.Controllers
             controller.ViewBag.UserAccountRoles = new SelectList(get(), UserAccountRolesModel.COL_Id.Name, UserAccountRolesModel.COL_Name.Name);
         }
 
-        public static UserAccountRolesModel getAccesses(Guid? UserAccounts_Id) 
+        public static UserAccountRolesModel getAccesses(UserAccountsModel UserAccount) 
         {
             UserAccountRolesModel model = new UserAccountRolesModel();
-            foreach( UserAccountRolesModel item in get(null, UserAccounts_Id))
+            foreach( UserAccountRolesModel item in get(null, UserAccount))
             {
                 //Reminders
                 if (item.Reminders_Add) model.Reminders_Add = true;
@@ -417,23 +417,26 @@ namespace iSpeakWebApp.Controllers
 
         public static List<UserAccountRolesModel> get() { return get(null, null); }
         public static UserAccountRolesModel get(Guid? Id) { return get(Id, null).FirstOrDefault(); }
-        public static List<UserAccountRolesModel> get(Guid? Id, Guid? UserAccounts_Id)
+        public static List<UserAccountRolesModel> get(Guid? Id, UserAccountsModel UserAccount)
         {
-            return new DBContext().Database.SqlQuery<UserAccountRolesModel>(@"
+            string UserAccountRolesClause = "";
+            if (UserAccount != null && !string.IsNullOrEmpty(UserAccount.Roles))
+                UserAccountRolesClause = string.Format(" AND UserAccountRoles.Id IN ({0}) ", LIBWebMVC.UtilWebMVC.convertToSqlIdList(UserAccount.Roles));
+
+            string sql = string.Format(@"
                         SELECT UserAccountRoles.*
                         FROM UserAccountRoles
                         WHERE 1=1
 							AND (@Id IS NULL OR UserAccountRoles.Id = @Id)
-							AND (@UserAccounts_Id IS NULL OR UserAccountRoles.Id IN (
-									SELECT UserAccounts.Roles
-									FROM UserAccounts 
-									WHERE UserAccounts.Id = @UserAccounts_Id
-								)
-							)
+                            AND (@Id IS NOT NULL OR (
+                                1=1
+                                {0}
+                            ))
 						ORDER BY UserAccountRoles.Name ASC
-                    ",
-                    DBConnection.getSqlParameter(UserAccountRolesModel.COL_Id.Name, Id),
-                    DBConnection.getSqlParameter("UserAccounts_Id", UserAccounts_Id)
+                    ", UserAccountRolesClause);
+
+            return new DBContext().Database.SqlQuery<UserAccountRolesModel>(sql,
+                    DBConnection.getSqlParameter(UserAccountRolesModel.COL_Id.Name, Id)
                 ).ToList();
         }
 

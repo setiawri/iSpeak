@@ -23,12 +23,10 @@ namespace iSpeakWebApp.Models
         public string LessonPackages_Name { get; set; }
 
 
-        public string UserAccounts_Id { get; set; }
-
         [Required]
         [Display(Name = "Employee")]
-        public Guid UserAccounts_Id_TEMP { get; set; }
-        public static ModelMember COL_UserAccounts_Id_TEMP = new ModelMember { Name = "UserAccounts_Id_TEMP", Display = "Employee", LogDisplay = ActivityLogsController.editStringFormat("Employee") };
+        public Guid UserAccounts_Id { get; set; }
+        public static ModelMember COL_UserAccounts_Id = new ModelMember { Name = "UserAccounts_Id", Display = "Employee", LogDisplay = ActivityLogsController.editStringFormat("Employee") };
         public string UserAccounts_Fullname { get; set; }
 
 
