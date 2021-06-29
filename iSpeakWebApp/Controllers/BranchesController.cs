@@ -8,25 +8,6 @@ using LIBUtil;
 
 namespace iSpeakWebApp.Controllers
 {
-    public static class BranchSelectLists
-    {
-        static SelectList BranchList; //for global branch dropdownlist
-
-        public static SelectList get()
-        {
-            if (BranchList == null)
-                update();
-
-            return BranchList;
-        }
-
-        //always call this method when branches table change so global branch ddl is updated
-        public static void update()
-        {
-            BranchList = new SelectList(BranchesController.get(null, 1, null).Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Name.ToString() }), "Value", "Text");
-        }
-    }
-
     public class BranchesController : Controller
     {
         private readonly DBContext db = new DBContext();
@@ -95,7 +76,6 @@ namespace iSpeakWebApp.Controllers
                     db.Branches.Add(model);
                     ActivityLogsController.AddCreateLog(db, Session, model.Id);
                     db.SaveChanges();
-                    BranchSelectLists.update();
                     return RedirectToAction(nameof(Index), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
                 }
             }
@@ -145,7 +125,6 @@ namespace iSpeakWebApp.Controllers
                         db.Entry(modifiedModel).State = EntityState.Modified;
                         ActivityLogsController.AddEditLog(db, Session, modifiedModel.Id, log);
                         db.SaveChanges();
-                        BranchSelectLists.update();
                     }
 
                     return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
@@ -179,12 +158,17 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public List<BranchesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Active, FILTER_Keyword); }
-        public BranchesModel get(Guid Id) { return get(Id, null, null).FirstOrDefault(); }
-        public static List<BranchesModel> get() { return get(null, null, null); }
-        public static List<BranchesModel> get(Guid? Id, int? FILTER_Active, string FILTER_Keyword)
+        public static List<BranchesModel> get(int? FILTER_Active, string IdList) { return get(null, FILTER_Active, null, IdList); }
+        public List<BranchesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Active, FILTER_Keyword, null); }
+        public BranchesModel get(Guid Id) { return get(Id, null, null, null).FirstOrDefault(); }
+        public static List<BranchesModel> get() { return get(null, null, null, null); }
+        public static List<BranchesModel> get(Guid? Id, int? FILTER_Active, string FILTER_Keyword, string IdList)
         {
-            return new DBContext().Database.SqlQuery<BranchesModel>(@"
+            string IdListClause = "";
+            if (!string.IsNullOrEmpty(IdList))
+                IdListClause = string.Format(" AND Branches.Id IN ({0}) ", LIBWebMVC.UtilWebMVC.convertToSqlIdList(IdList));
+
+            string sql = string.Format(@"
                         SELECT Branches.*
                         FROM Branches
                         WHERE 1=1
@@ -192,12 +176,16 @@ namespace iSpeakWebApp.Controllers
 							AND (@Id IS NOT NULL OR (
                                 (@Active IS NULL OR Branches.Active = @Active)
     							AND (@FILTER_Keyword IS NULL OR (Branches.Name LIKE '%'+@FILTER_Keyword+'%'))
+                                {0}
                             ))
 						ORDER BY Branches.Name ASC
-                    ",
+                    ", IdListClause);
+
+            return new DBContext().Database.SqlQuery<BranchesModel>(sql,
                     DBConnection.getSqlParameter(BranchesModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(BranchesModel.COL_Active.Name, FILTER_Active),
-                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
+                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
+                    DBConnection.getSqlParameter("IdList", IdList)
                 ).ToList();
         }
 

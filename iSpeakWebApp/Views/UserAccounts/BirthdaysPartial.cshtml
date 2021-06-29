@@ -1,10 +1,12 @@
 ﻿@model IEnumerable<iSpeakWebApp.Models.UserAccountsModel>
 @{
     ViewBag.SelectedNavigationMenu = "Home";
+
+    List<iSpeakWebApp.Models.UserAccountRolesModel> UserAccountRoles = iSpeakWebApp.Controllers.UserAccountRolesController.get();
 }
 
 <div class="row">
-    <div class="row ml-2 mr-0" style="width:170px;">
+    <div class="row ml-2 mr-0" style="width:190px;">
         <label class="mb-0">Month</label>
         <div class="input-group">
             <div class="input-group-prepend">
@@ -46,9 +48,12 @@
         <thead>
             <tr>
                 <th></th>
-                <th style="width:100px"></th>
-                <th style="width:150px">Date</th>
-                <th>Fullname</th>
+                <th style="width:100px;"></th>
+                <th style="width:150px;">Birthday</th>
+                <th style="width:150px;">Active Lesson</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Roles</th>
             </tr>
         </thead>
         <tbody>
@@ -57,6 +62,8 @@
 </div>
 
 <script type="text/javascript">
+
+    var UserAccountRolesModel = @Html.Raw(Json.Encode(UserAccountRoles));
 
     $(document).ready(function () {
 
@@ -93,16 +100,18 @@
                         if (remainingDayCount == 0) {
                             badge = '<span style="width:70px;" class="badge badge-success">Today</span>';
                         } else {
-                            badge = '<span style="width:70px;" class="badge badge-primary">In ' + remainingDayCount + ' days</span>';
-                        } 
+                            badge = '<span style="width:70px;" class="badge badge-primary">In ' + remainingDayCount + ' day'+ (remainingDayCount > 1 ? 's' : '')+'</span>';
+                        }
                     }
 
                     datatable.row.add([
                         remainingDayCount,
                         badge,
                         formatDate(birthday, 'dd MMM yyyy'),
-                        row.Fullname
-
+                        row.ActiveLessonPackages,
+                        row.Fullname,
+                        row.Phone1,
+                        getUserAccountRolesName(row.Roles)
                     ]);
                 });
                 datatable.draw();
@@ -118,5 +127,20 @@
             $('#datatableBirthday').DataTable().column(1).visible(false);
         }
     }
+
+    function getUserAccountRolesName(idList) {
+        var roles = '';
+        $.each(idList.split(','), function (index, id) {
+            $.each(UserAccountRolesModel, function (modelIndex, models) {
+                if (models.Id == id) {
+                    roles = appendWithDelimiter(roles,
+                        '<span style="width:70px;" class="badge ' + badgeColors[modelIndex]+ '">'+models.Name+'</span>'
+                        , ' ');
+                }
+            });
+        });
+        return roles;
+    }
+
 
 </script>

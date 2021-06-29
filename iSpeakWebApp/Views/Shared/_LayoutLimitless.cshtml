@@ -21,11 +21,11 @@
         </div>
         <div class="collapse navbar-collapse" id="navbar-mobile">
             @*<span class="navbar-text ml-md-3 mr-md-auto h1 my-0 py-1">@Helper.COMPANYNAME</span>*@                                
-            <img src="@Helper.getImageUrl("LogoWithBorder.png", Request, Server)" class="navbar-text ml-md-0 mr-md-auto h1 my-0 py-0" style="width:110px;" />
+            <img src="@Helper.getImageUrl("LogoWithBorder.png", Request, Server)" class="navbar-text ml-md-0 mr-md-auto h1 my-0 py-0" style="width:110px;" onclick="Action('LandingPage','LandingPage')" />
             <span class="navbar-text">
             </span>
-            <span class="navbar-text">
-                @Html.DropDownList("BranchId", new SelectList(BranchSelectLists.get(), "Value", "Text", Helper.getActiveBranchId(Session).ToString()), new { @class = "select2", @onchange = "updateActiveBranch()" })
+            <span class="navbar-text" style="width:120px;">
+                @Html.DropDownList("BranchId", UserAccountsController.getDDLBranches(Session) as SelectList, new { @class = "select2", @onchange = "updateActiveBranch()" })
             </span>
             <ul class="navbar-nav">
                 <li class="nav-item dropdown dropdown-user">
@@ -72,7 +72,10 @@
                         {
                             <a href="@Url.Action("Index", "Payments", new { rss=1 })" class="dropdown-item">Payments</a>
                         }
-                        <a href="@Url.Action("Index", "SaleReturns", new { rss=1 })" class="dropdown-item">Returns</a>
+                        @if (false)
+                        {
+                            <a href="@Url.Action("Index", "SaleReturns", new { rss=1 })" class="dropdown-item">Returns</a>
+                        }
                     </div>
                 </li>
                 <li id="Menu_Schedules" class="nav-item dropdown">
@@ -81,9 +84,18 @@
                         Schedules
                     </a>
                     <div class="dropdown-menu">
-                        <a href="@Url.Action("Search", "Schedules", new { rss=1 })" class="dropdown-item">Search</a>
-                        <a href="@Url.Action("TutorIndex", "Schedules", new { rss=1 })" class="dropdown-item">Tutor</a>
-                        <a href="@Url.Action("StudentIndex", "Schedules", new { rss=1 })" class="dropdown-item">Student</a>
+                        @if (false)
+                        {
+                            <a href="@Url.Action("Search", "Schedules", new { rss=1 })" class="dropdown-item">Search</a>
+                        }
+                        @if (false)
+                        {
+                            <a href="@Url.Action("TutorIndex", "Schedules", new { rss=1 })" class="dropdown-item">Tutor</a>
+                        }
+                        @if (false)
+                        {
+                            <a href="@Url.Action("StudentIndex", "Schedules", new { rss=1 })" class="dropdown-item">Student</a>
+                        }
                     </div>
                 </li>
                 @if (access.LessonSessions_View)
@@ -134,10 +146,22 @@
                                 }
                             </div>
                         </div>
-                        <a href="@Url.Action("Index", "Expenses", new { rss=1 })" class="dropdown-item">Expenses</a>
-                        <a href="@Url.Action("NewStudent", "Reports", new { rss=1 })" class="dropdown-item">New Student</a>
-                        <a href="@Url.Action("ProfitLoss", "Reports", new { rss=1 })" class="dropdown-item">Profit &amp; Loss</a>
-                        <a href="@Url.Action("SendEmails", "Reports", new { rss=1 })" class="dropdown-item">Send Emails</a>
+                        @if (false)
+                        {
+                            <a href="@Url.Action("Index", "Expenses", new { rss=1 })" class="dropdown-item">Expenses</a>
+                        }
+                        @if (false)
+                        {
+                            <a href="@Url.Action("NewStudent", "Reports", new { rss=1 })" class="dropdown-item">New Student</a>
+                        }
+                        @if (false)
+                        {
+                            <a href="@Url.Action("ProfitLoss", "Reports", new { rss=1 })" class="dropdown-item">Profit &amp; Loss</a>
+                        }
+                        @if (false)
+                        {
+                            <a href="@Url.Action("SendEmails", "Reports", new { rss=1 })" class="dropdown-item">Send Emails</a>
+                        }
                     </div>
                 </li>
                 <li id="Menu_Settings" class="nav-item dropdown">
@@ -226,12 +250,15 @@
                         </a>
                     </li>
                 }
-                <li class="nav-item dropdown">
-                    <a href="@Url.Action("Index", "Files", new { rss=1 })" class="navbar-nav-link">
-                        <i class="icon-file-upload2 mr-2"></i>
-                        Files
-                    </a>
-                </li>
+                @if (false)
+                {
+                    <li class="nav-item dropdown">
+                        <a href="@Url.Action("Index", "Files", new { rss=1 })" class="navbar-nav-link">
+                            <i class="icon-file-upload2 mr-2"></i>
+                            Files
+                        </a>
+                    </li>
+                }
             </ul>
         </div>
     </div>

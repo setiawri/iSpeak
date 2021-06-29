@@ -22,19 +22,30 @@ namespace iSpeakWebApp.Models
 
         [Display(Name = "Notes")]
         public string Reminders_Notes { get; set; }
-        public static ModelMember COL_Reminders_Notes = new ModelMember { Name = "Reminders_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Reminder Notes") };
+        public static ModelMember COL_Reminders_Notes = new ModelMember { Name = "Reminders_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Reminders Notes") };
 
         [Display(Name = "Add")]
         public bool Reminders_Add { get; set; }
-        public static ModelMember COL_Reminders_Add = new ModelMember { Name = "Reminders_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("Reminder Add") };
+        public static ModelMember COL_Reminders_Add = new ModelMember { Name = "Reminders_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("Reminders Add") };
 
         [Display(Name = "View")]
         public bool Reminders_View { get; set; }
-        public static ModelMember COL_Reminders_View = new ModelMember { Name = "Reminders_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("Reminder View") };
+        public static ModelMember COL_Reminders_View = new ModelMember { Name = "Reminders_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("Reminders View") };
 
         [Display(Name = "Edit")]
         public bool Reminders_Edit { get; set; }
-        public static ModelMember COL_Reminders_Edit = new ModelMember { Name = "Reminders_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Reminder Edit") };
+        public static ModelMember COL_Reminders_Edit = new ModelMember { Name = "Reminders_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Reminders Edit") };
+
+
+        /* BIRTHDAYS ******************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string Birthdays_Notes { get; set; }
+        public static ModelMember COL_Birthdays_Notes = new ModelMember { Name = "Birthdays_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Birthdays Notes") };
+
+        [Display(Name = "View")]
+        public bool Birthdays_View { get; set; }
+        public static ModelMember COL_Birthdays_View = new ModelMember { Name = "Birthdays_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("Birthdays View") };
 
 
         /* USER ACCOUNTS **************************************************************************************************************************************/

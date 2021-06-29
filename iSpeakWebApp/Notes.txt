@@ -8,6 +8,10 @@ FINAL: check for UTC date conversion
 ===============================================================================================================================================================
 
 TO DO:
+- admin should not see tutors in list of accounts
+- birthdays: show students with active lesson packages
+- navigation menu: for students, do not show menu Sales. maybe create a new one just for students?
+- tutors can only see their payroll information. related to settings value can only see own data
 - trim useraccounts name on edit/add
 - UserAccounts controller: method get(). fix issues regarding branches_id and branches
 - Sale Invoices index: add link to user accounts page for student and tutor. Change tutor name to only first name
@@ -79,6 +83,8 @@ TO DO:
 
 
 IMPROVEMENTS:
+
+- auto send happy birthday message to users
 
 - add mechanism to insert GUID into Settings table when Id is not yet in table
 

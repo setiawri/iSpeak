@@ -17,6 +17,7 @@ namespace iSpeakWebApp.Controllers
         public const string SESSION_UserAccount = "UserAccount";
         public const string SESSION_UserAccountAccess = "UserAccountAccess";
         public const string SESSION_ActiveBranches_Id = "ActiveBranches_Id";
+        public const string SESSION_Branches_Models = "Branches_Models";
 
 
         private readonly DBContext db = new DBContext();
@@ -336,6 +337,11 @@ namespace iSpeakWebApp.Controllers
             return (UserAccountRolesModel)Session[SESSION_UserAccountAccess];
         }
 
+        public static SelectList getDDLBranches(HttpSessionStateBase Session)
+        {
+            return new SelectList((List<BranchesModel>)Session[SESSION_Branches_Models], BranchesModel.COL_Id.Name, BranchesModel.COL_Name.Name, Helper.getActiveBranchId(Session).ToString());
+        }
+
         public static bool isLoggedIn(HttpSessionStateBase Session)
         {
             return getUserAccount(Session) != null;
@@ -352,6 +358,7 @@ namespace iSpeakWebApp.Controllers
             {
                 Session[SESSION_UserAccount] = model;
                 Session[SESSION_ActiveBranches_Id] = model.Branches_Id;
+                Session[SESSION_Branches_Models] = BranchesController.get(1, model.Branches);
                 Session[SESSION_UserAccountAccess] = UserAccountRolesController.getAccesses(model);
             }
         }
@@ -458,8 +465,16 @@ namespace iSpeakWebApp.Controllers
                 RoleClause = string.Format(" AND Roles LIKE '%{0}%' ", Role);
 
             string sql = string.Format(@"
-                        SELECT UserAccounts.*
+                        SELECT UserAccounts.*,
+                            COALESCE(LessonPackages.ActiveLessonPackages,0) AS ActiveLessonPackages
                         FROM UserAccounts
+							LEFT JOIN (
+									SELECT SaleInvoices.Customer_UserAccounts_Id, COUNT(SaleInvoiceItems.Id) AS ActiveLessonPackages
+									FROM SaleInvoiceItems
+										LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
+									WHERE SaleInvoiceItems.SessionHours_Remaining > 0
+									GROUP BY SaleInvoices.Customer_UserAccounts_Id
+								) LessonPackages ON LessonPackages.Customer_UserAccounts_Id = UserAccounts.Id
                         WHERE 1=1
 							AND (@Id IS NULL OR UserAccounts.Id = @Id)
                             AND (@Id IS NOT NULL OR (
@@ -535,7 +550,6 @@ namespace iSpeakWebApp.Controllers
                 UPDATE UserAccounts 
                 SET
                     Username = @Username,
-                    Password = @Password,
                     Fullname = @Fullname,
                     Birthday = @Birthday,
                     Branches_Id = @Branches_Id,
@@ -554,7 +568,6 @@ namespace iSpeakWebApp.Controllers
             ",
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Username.Name, model.Username),
-                DBConnection.getSqlParameter(UserAccountsModel.COL_Password.Name, model.Password),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Fullname.Name, model.Fullname),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Birthday.Name, model.Birthday),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Branches_Id.Name, model.Branches_Id),

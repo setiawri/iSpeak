@@ -41,7 +41,7 @@
                 <th></th>
                 <th style="width:120px;">Date</th>
                 <th>Description</th>
-                <th style="width:150px;">Status</th>
+                <th class="text-center" style="width:150px;">Status</th>
                 <th class="non-searchable non-sortable" style="width:100px;"></th>
             </tr>
         </thead>
@@ -59,7 +59,6 @@
     });
 
     function LoadReminders() {
-        console.log(getDDLSelectedValue('ReminderStatus'));
         $.ajax({
             type: "POST",
             url: '@Url.Action("GetData", "Reminders")',

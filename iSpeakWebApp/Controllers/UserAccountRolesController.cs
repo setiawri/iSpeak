@@ -106,6 +106,10 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.Reminders_Edit, model.Reminders_Edit, UserAccountRolesModel.COL_Reminders_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.Reminders_View, model.Reminders_View, UserAccountRolesModel.COL_Reminders_View.LogDisplay);
 
+                    //Birthdays
+                    log = Helper.append(log, originalModel.Birthdays_Notes, model.Birthdays_Notes, UserAccountRolesModel.COL_Birthdays_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.Birthdays_View, model.Birthdays_View, UserAccountRolesModel.COL_Birthdays_View.LogDisplay);
+
                     //UserAccounts
                     log = Helper.append(log, originalModel.UserAccounts_Notes, model.UserAccounts_Notes, UserAccountRolesModel.COL_UserAccounts_Notes.LogDisplay);
                     log = Helper.append(log, originalModel.UserAccounts_Add, model.UserAccounts_Add, UserAccountRolesModel.COL_UserAccounts_Add.LogDisplay);
@@ -271,6 +275,11 @@ namespace iSpeakWebApp.Controllers
             controller.ViewBag.UserAccountRoles = new SelectList(get(), UserAccountRolesModel.COL_Id.Name, UserAccountRolesModel.COL_Name.Name);
         }
 
+        public static void setViewBag(ControllerBase controller)
+        {
+            controller.ViewBag.UserAccountRolesModels = get();
+        }
+
         public static UserAccountRolesModel getAccesses(UserAccountsModel UserAccount) 
         {
             UserAccountRolesModel model = new UserAccountRolesModel();
@@ -280,6 +289,9 @@ namespace iSpeakWebApp.Controllers
                 if (item.Reminders_Add) model.Reminders_Add = true;
                 if (item.Reminders_Edit) model.Reminders_Edit = true;
                 if (item.Reminders_View) model.Reminders_View = true;
+
+                //Birthdays
+                if (item.Birthdays_View) model.Birthdays_View = true;
 
                 //UserAccounts
                 if (item.UserAccounts_Add) model.UserAccounts_Add = true;

@@ -96,5 +96,8 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Roles = new ModelMember { Name = "Roles", LogDisplay = ActivityLogsController.editListStringFormat("Roles") };
         public List<string> Roles_List { get; set; }
         public static ModelMember COL_Roles_List = new ModelMember { Name = "Roles_List" };
+
+        [Display(Name = "Active Lesson")]
+        public int ActiveLessonPackages { get; set; } = 0;
     }
 }

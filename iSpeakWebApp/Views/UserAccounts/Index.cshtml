@@ -6,6 +6,8 @@
     ViewBag.SelectedNavigationMenu = "Accounts";
     ViewBag.Title = "ACCOUNTS";
     ViewBag.Subtitle = "Index";
+
+    List<iSpeakWebApp.Models.UserAccountRolesModel> UserAccountRoles = iSpeakWebApp.Controllers.UserAccountRolesController.get();
 }
 
 <div class="content-wrapper">
@@ -17,6 +19,7 @@
             <div class="card animated bounceInLeft">
                 <div class="card-header header-elements-inline pb-1">
                     <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
+                    <i class="icon-info22 text-primary ml-2" data-container="body" data-toggle="popover" data-placement="left" data-content="Shows only accounts that has been assigned to the selected branch"></i>
                 </div>
                 <div class="card-body">
                     <div class="row mx-0">
@@ -63,37 +66,54 @@
                             <thead>
                                 <tr>
                                     <th>@Html.DisplayNameFor(model => model.Fullname)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Username)</th>
-                                    <th>Phone</th>
-                                    <th>@Html.DisplayNameFor(model => model.Email)</th>
-                                    <th class="non-searchable non-sortable" style="width:100px;"></th>
+                                    <th>Info</th>
+                                    <th class="text-right" style="width:50px;">@Html.DisplayNameFor(model => model.ActiveLessonPackages)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Roles)</th>
                                     <th class="non-searchable non-sortable" style="width:200px;"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @if (Model != null)
                                 {
+                                    string[] badgeColors = { "badge-primary", "badge-secondary", "badge-info", "badge-success", "badge-dark", "badge-warning", "badge-danger", "badge-light" };
                                     foreach (var item in Model)
                                     {
                                         <tr>
-                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Fullname)</td>
-                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Username)</td>
                                             <td class="align-top">
+                                                <div>@Html.DisplayFor(modelItem => item.Fullname)</div>
+                                                <div>Username: @Html.DisplayFor(modelItem => item.Username)</div>
+                                            </td>
+                                            <td class="align-top">
+                                                <div>@Html.DisplayFor(modelItem => item.Email)</div>
                                                 <div>@Html.DisplayFor(modelItem => item.Phone1)</div>
                                                 <div>@Html.DisplayFor(modelItem => item.Phone2)</div>
                                             </td>
-                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Email)</td>
-                                            <td>
-                                                @if (item.Active)
-                                                {
-                                                    <span class="badge badge-success d-block" style="width:100px;">ACTIVE</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="badge badge-dark d-block" style="width:100px;">NOT ACTIVE</span>
+                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.ActiveLessonPackages)</td>
+                                            <td class="align-top">
+                                                @{
+                                                    foreach (string Roles_Id in item.Roles_List)
+                                                    {
+                                                        Guid Id = new Guid(Roles_Id);
+                                                        for(int i=0; i< UserAccountRoles.Count; i++)
+                                                        {
+                                                            if (UserAccountRoles[i].Id == Id)
+                                                            {
+                                                                <span class="badge @(badgeColors[i])" style="width:70px;">@(UserAccountRoles[i].Name)</span>
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
                                                 }
                                             </td>
                                             <td class="align-top">
+                                                @if (item.Active)
+                                                {
+                                                    <span class="badge badge-success d-block">ACTIVE</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-dark d-block">NOT ACTIVE</span>
+                                                }
                                                 @if (access.UserAccounts_Edit)
                                                 {
                                                     <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a> @:•

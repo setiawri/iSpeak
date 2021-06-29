@@ -9,27 +9,38 @@
     <div class="content">
         <!-- Form inputs -->
         <div class="card animated bounceInLeft">
-            <div class="card-body">
-                <nav>
-                    <div class="nav nav-tabs" id="nav-tab" role="tablist">                        
+            <div class="card-body" style="min-height:400px;">
+                @if (access.Reminders_View || access.Birthdays_View)
+                {
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            @if (access.Reminders_View)
+                            {
+                                <a class="nav-item nav-link active" id="nav-reminders-tab" data-toggle="tab" href="#nav-reminders" role="tab" aria-controls="nav-reminders" aria-selected="true" onclick="document.activeElement.blur();">Reminders (<label id="ReminderCount"></label>)</a>
+                            }
+                            @if (access.Birthdays_View)
+                            {
+                                <a class="nav-item nav-link" id="nav-birthdays-tab" data-toggle="tab" href="#nav-birthdays" role="tab" aria-controls="nav-birthdays" aria-selected="false" onclick="document.activeElement.blur(); LoadBirthdays();">Birthdays (<label id="BirthdayCount"></label>)</a>
+                            }
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
                         @if (access.Reminders_View)
                         {
-                            <a class="nav-item nav-link active" id="nav-reminders-tab" data-toggle="tab" href="#nav-reminders" role="tab" aria-controls="nav-reminders" aria-selected="true" onclick="document.activeElement.blur();">Reminders (<label id="ReminderCount"></label>)</a>
+                            <div class="tab-pane fade show active" id="nav-reminders" role="tabpanel" aria-labelledby="nav-reminders-tab">
+                                @{Html.RenderAction("IndexPartial", "Reminders");}
+                            </div>
                         }
-                        <a class="nav-item nav-link" id="nav-birthdays-tab" data-toggle="tab" href="#nav-birthdays" role="tab" aria-controls="nav-birthdays" aria-selected="false" onclick="document.activeElement.blur(); LoadBirthdays();">Birthdays (<label id="BirthdayCount"></label>)</a>
+                        @if (access.Birthdays_View)
+                        {
+                            <div class="tab-pane fade" id="nav-birthdays" role="tabpanel" aria-labelledby="nav-birthdays-tab">
+                                @{Html.RenderAction("BirthdaysPartial", "UserAccounts");}
+                            </div>
+                        }
                     </div>
-                </nav>
-                <div class="tab-content" id="nav-tabContent">
-                    @if (access.Reminders_View)
-                    {
-                        <div class="tab-pane fade show active" id="nav-reminders" role="tabpanel" aria-labelledby="nav-reminders-tab">
-                            @{Html.RenderAction("IndexPartial", "Reminders");}
-                        </div>
-                    }
-                    <div class="tab-pane fade" id="nav-birthdays" role="tabpanel" aria-labelledby="nav-birthdays-tab">
-                        @{Html.RenderAction("BirthdaysPartial", "UserAccounts");}
-                    </div>
-                </div>
+                } else { 
+                    <label class="text-primary col-form-label col-lg-12 text-center"><h3>Welcome to iSpeak website</h3></label>                    
+                }
             </div>
         </div>
         <!-- /form inputs -->
