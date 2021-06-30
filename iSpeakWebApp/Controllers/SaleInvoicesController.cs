@@ -263,6 +263,10 @@ namespace iSpeakWebApp.Controllers
             if (!string.IsNullOrEmpty(SaleInvoiceItemIdList))
                 SaleInvoiceItemIdListClause = string.Format("AND SaleInvoices.Id IN ({0})", UtilWebMVC.convertToSqlIdList(SaleInvoiceItemIdList));
 
+            string ShowOnlyOwnUserDataClause = "";
+            if (UserAccountsController.getShowOnlyUserData(Session))
+                ShowOnlyOwnUserDataClause = string.Format(" AND Customer_UserAccounts.Id = '{0}' ", UserAccountsController.getUserId(Session));
+
             string sql = string.Format(@"
                     SELECT SaleInvoices.*,
                         Branches.Name AS Branches_Name,
@@ -290,10 +294,10 @@ namespace iSpeakWebApp.Controllers
                             AND (@Cancelled IS NULL OR SaleInvoices.Cancelled = @Cancelled)
                             AND (@IsChecked IS NULL OR SaleInvoices.IsChecked = @IsChecked)
                             AND (@Branches_Id IS NULL OR SaleInvoices.Branches_Id = @Branches_Id)
-                            {0}
+                            {0}{1}
                         ))
 					ORDER BY SaleInvoices.No DESC
-                ", SaleInvoiceItemIdListClause);
+                ", SaleInvoiceItemIdListClause, ShowOnlyOwnUserDataClause);
 
             return new DBContext().Database.SqlQuery<SaleInvoicesModel>(sql,
                 DBConnection.getSqlParameter(SaleInvoicesModel.COL_Id.Name, Id),

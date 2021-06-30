@@ -80,7 +80,7 @@
                                     foreach (var item in Model)
                                     {
                                         <tr>
-                                            <td>@Html.DisplayFor(modelItem => item.Tutor_UserAccounts_FullName)</td>
+                                            <td>@Html.ActionLink(item.Tutor_UserAccounts_FullName, "Index", "UserAccounts", new { FILTER_Keyword = @item.Tutor_UserAccounts_FullName }, new { @target = "_blank" })</td>
                                             <td class="text-right">@Html.DisplayFor(modelItem => item.TotalHours)</td>
                                             <td class="text-right">@Html.DisplayFor(modelItem => item.PayableAmount)</td>
                                             <td class="text-right">@Html.DisplayFor(modelItem => item.DueAmount)</td>

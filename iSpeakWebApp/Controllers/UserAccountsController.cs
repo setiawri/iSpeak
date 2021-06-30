@@ -18,6 +18,7 @@ namespace iSpeakWebApp.Controllers
         public const string SESSION_UserAccountAccess = "UserAccountAccess";
         public const string SESSION_ActiveBranches_Id = "ActiveBranches_Id";
         public const string SESSION_Branches_Models = "Branches_Models";
+        public const string SESSION_ShowOnlyUserData = "ShowOnlyUserData";
 
 
         private readonly DBContext db = new DBContext();
@@ -324,6 +325,11 @@ namespace iSpeakWebApp.Controllers
                 return getUserAccount(Session).Id;
         }
 
+        public static bool getShowOnlyUserData(HttpSessionStateBase Session)
+        {
+            return (bool)Session[SESSION_ShowOnlyUserData];
+        }
+
         public static UserAccountsModel getUserAccount(HttpSessionStateBase Session)
         {
             if (Session[SESSION_UserAccount] == null)
@@ -360,6 +366,18 @@ namespace iSpeakWebApp.Controllers
                 Session[SESSION_ActiveBranches_Id] = model.Branches_Id;
                 Session[SESSION_Branches_Models] = BranchesController.get(1, model.Branches);
                 Session[SESSION_UserAccountAccess] = UserAccountRolesController.getAccesses(model);
+
+                Session[SESSION_ShowOnlyUserData] = true;
+                string ShowOnlyOwnUserData = SettingsController.get().ShowOnlyOwnUserData;
+                string Roles = model.Roles;
+                foreach(string role in Roles.Split(','))
+                {
+                    if(!ShowOnlyOwnUserData.Contains(role))
+                    {
+                        Session[SESSION_ShowOnlyUserData] = false;
+                        break;
+                    }
+                }
             }
         }
 

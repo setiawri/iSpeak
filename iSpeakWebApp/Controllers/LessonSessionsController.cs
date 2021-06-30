@@ -283,7 +283,11 @@ namespace iSpeakWebApp.Controllers
             if (FILTER_chkDateTo == null || !(bool)FILTER_chkDateTo)
                 FILTER_DateTo = null;
 
-            return new DBContext().Database.SqlQuery<LessonSessionsModel>(@"
+            string ShowOnlyOwnUserDataClause = "";
+            if (UserAccountsController.getShowOnlyUserData(Session))
+                ShowOnlyOwnUserDataClause = string.Format(" AND (Student_UserAccounts.Id = '{0}' OR Tutor_UserAccounts.Id = '{0}')", UserAccountsController.getUserId(Session));
+
+            string sql = string.Format(@"
                     SELECT LessonSessions.*,
                         SaleInvoices.No AS SaleInvoices_No,
                         SaleInvoiceItems.Description AS SaleInvoiceItems_Description,
@@ -309,9 +313,12 @@ namespace iSpeakWebApp.Controllers
 	                                LEFT JOIN SaleInvoices ON Saleinvoices.Id = SaleInvoiceItems.SaleInvoices_Id
                                 WHERE SaleInvoices.No = @FILTER_InvoiceNo
                             )))
+                            {0}
                         ))
 					ORDER BY LessonSessions.Timestamp DESC
-                ",
+                ", ShowOnlyOwnUserDataClause);
+
+            return new DBContext().Database.SqlQuery<LessonSessionsModel>(sql,
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Id.Name, Id),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Branches_Id.Name, Branches_Id),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Deleted.Name, Cancelled),
