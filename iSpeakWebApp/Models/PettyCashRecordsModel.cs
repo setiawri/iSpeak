@@ -53,7 +53,8 @@ namespace iSpeakWebApp.Models
         [Display(Name = "Name")]
         public Guid? UserAccounts_Id { get; set; }
         public static ModelMember COL_UserAccounts_Id = new ModelMember { Name = "UserAccounts_Id" };
-        public string UserAccounts_Firstname { get; set; }
+        public string UserAccounts_Firstname { get; set; } = string.Empty;
+        public string UserAccounts_Fullname { get; set; } = string.Empty;
 
 
         [Display(Name = "Expense Category")]

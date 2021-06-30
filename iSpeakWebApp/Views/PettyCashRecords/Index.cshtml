@@ -113,7 +113,7 @@
                                             <td class="align-top tablecellwrap">@Html.DisplayFor(modelItem => item.Notes)</td>
                                             <td class="align-top text-right">@Html.DisplayFor(modelItem => item.Amount)</td>
                                             <td class="align-top text-right">@Html.DisplayFor(modelItem => item.Balance)</td>
-                                            <td class="align-top">@Html.DisplayFor(modelItem => item.UserAccounts_Firstname)</td>
+                                            <td class="align-top">@Html.ActionLink(item.UserAccounts_Firstname, "Index", "UserAccounts", new { FILTER_Keyword = @item.UserAccounts_Fullname }, new { @target = "_blank" })</td>
                                             @if (access.PettyCashRecords_Approve)
                                             {
                                                 <td class="align-top" style="text-align:center;">

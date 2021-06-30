@@ -259,9 +259,9 @@ namespace iSpeakWebApp.Controllers
             ViewBag.FILTER_DateTo = FILTER_DateTo;
         }
 
-        public JsonResult UpdateDeleted(Guid id, bool value, string CancelNotes)
+        public JsonResult UpdateDeleted(Guid id, string notes)
         {
-            update_Deleted(id, value, CancelNotes);
+            update_Deleted(id, notes);
             return Json(new { Message = "" });
         }
 
@@ -371,19 +371,21 @@ namespace iSpeakWebApp.Controllers
             db.SaveChanges();
         }
 
-        public void update_Deleted(Guid Id, bool value, string CancelNotes)
+        public void update_Deleted(Guid Id, string CancelNotes)
         {
             db.Database.ExecuteSqlCommand(@"
                 UPDATE LessonSessions 
                 SET
-                    Deleted = @Deleted
+                    Deleted = @Deleted,
+                    Notes_Cancel = @Notes_Cancel
                 WHERE LessonSessions.Id = @Id;                
             ",
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Id.Name, Id),
-                DBConnection.getSqlParameter(LessonSessionsModel.COL_Deleted.Name, value)
+                DBConnection.getSqlParameter(LessonSessionsModel.COL_Deleted.Name, 1),
+                DBConnection.getSqlParameter(LessonSessionsModel.COL_Notes_Cancel.Name, CancelNotes)
             );
 
-            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(LessonSessionsModel.COL_Deleted.LogDisplay, null, value));
+            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(LessonSessionsModel.COL_Deleted.LogDisplay, null, true));
             db.SaveChanges();
         }
 

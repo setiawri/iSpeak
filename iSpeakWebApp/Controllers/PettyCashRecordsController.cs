@@ -132,13 +132,14 @@ namespace iSpeakWebApp.Controllers
             return new DBContext().Database.SqlQuery<PettyCashRecordsModel>(@"
                     SELECT PettyCashRecords.*,
                         PettyCashRecordsCategories.Name AS PettyCashRecordsCategories_Name,
-                        LEFT(UserAccounts.Fullname, 
+                        ISNULL(LEFT(UserAccounts.Fullname, 
                                 CASE 
                                     WHEN charindex(' ', UserAccounts.Fullname) = 0 
                                     THEN LEN(UserAccounts.Fullname) 
                                     ELSE charindex(' ', UserAccounts.Fullname) - 1 
                                 END
-                            ) AS UserAccounts_Firstname,
+                            ),'') AS UserAccounts_Firstname,
+                        UserAccounts.Fullname AS UserAccounts_Fullname, 
                         InitialBalance.Amount + (SUM(PettyCashRecords.Amount) OVER(ORDER BY PettyCashRecords.Timestamp ASC)) AS Balance
                     FROM PettyCashRecords
                         LEFT JOIN PettyCashRecordsCategories ON PettyCashRecordsCategories.Id = PettyCashRecords.PettyCashRecordsCategories_Id
