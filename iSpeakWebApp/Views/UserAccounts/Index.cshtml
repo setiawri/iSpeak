@@ -31,7 +31,7 @@
                             </div>
                         }
 
-                        <div class="row ml-0 mr-2" style="width:100px;">
+                        <div class="row ml-0 mr-2" style="width:150px;">
                             <label class="mb-0">Keyword</label>
                             <div class="input-group">
                                 <input type="text" name="FILTER_Keyword" id="FILTER_Keyword" class="form-control" />
@@ -67,8 +67,8 @@
                                 <tr>
                                     <th>@Html.DisplayNameFor(model => model.Fullname)</th>
                                     <th>Info</th>
-                                    <th class="text-right" style="width:50px;">@Html.DisplayNameFor(model => model.ActiveLessonPackages)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Roles)</th>
+                                    <th class="text-right" style="width:150px;">@Html.DisplayNameFor(model => model.ActiveLessonPackages)</th>
+                                    <th class="text-right" style="width:100px;">@Html.DisplayNameFor(model => model.Roles)</th>
                                     <th class="non-searchable non-sortable" style="width:200px;"></th>
                                 </tr>
                             </thead>
@@ -88,7 +88,9 @@
                                                 <div>@Html.DisplayFor(modelItem => item.Phone1)</div>
                                                 <div>@Html.DisplayFor(modelItem => item.Phone2)</div>
                                             </td>
-                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.ActiveLessonPackages)</td>
+                                            <td class="align-top text-right">
+                                                @Html.ActionLink(item.ActiveLessonPackages.ToString(), "Index", "SaleInvoices", new { FILTER_Keyword = @item.Fullname, FILTER_chkDateFrom = false, FILTER_chkDateTo = false }, new { @target="_blank"})
+                                            </td>
                                             <td class="align-top">
                                                 @{
                                                     foreach (string Roles_Id in item.Roles_List)

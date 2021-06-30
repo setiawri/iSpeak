@@ -90,11 +90,8 @@
                                 <tr>
                                     <th class="d-none">@Html.DisplayNameFor(model => model.InitialRowNumber)</th>
                                     <th class="non-sortable" style="width:50px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
-                                    <th>@Html.DisplayNameFor(model => model.SaleInvoiceItems_Description)</th>
-                                    <th class="text-right" style="width:50px;">@Html.DisplayNameFor(model => model.SessionHours)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Student_UserAccounts_Fullname)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Tutor_UserAccounts_Id)</th>
-                                    <th class="non-searchable non-sortable"></th>
+                                    <th>Description</th>
+                                    <th class="non-searchable non-sortable">@Html.DisplayNameFor(model => model.Review)</th>
                                     <th class="non-searchable non-sortable" style="width:100px;"></th>
                                 </tr>
                             </thead>
@@ -106,21 +103,29 @@
                                         <tr>
                                             <td class="d-none">@Html.DisplayFor(modelItem => item.InitialRowNumber)</td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
-                                            <td class="align-top">
+                                            <td class="align-top" style="width:500px;">
+                                                @Html.ActionLink(item.Student_UserAccounts_Fullname, "Index", "UserAccounts", new { FILTER_Keyword = @item.Student_UserAccounts_Fullname }, new { @target = "_blank" })
+                                                <br />
                                                 @Html.DisplayFor(modelItem => item.SaleInvoiceItems_Description)
-                                                <br />Invoice: <a href='/SaleInvoices?FILTER_chkDateFrom=false&FILTER_chkDateTo=false&FILTER_Keyword=@item.SaleInvoices_No' target='_blank'>@item.SaleInvoices_No</a>
+                                                <br />
+                                                Invoice: <a href='/SaleInvoices/Index?FILTER_chkDateFrom=false&FILTER_chkDateTo=false&FILTER_Keyword=@item.SaleInvoices_No' target='_blank'>@item.SaleInvoices_No</a>
+                                                , Duration: @Html.DisplayFor(modelItem => item.SessionHours) hrs
                                                 @if (item.IsWaiveTutorFee)
                                                 {
                                                     @(", Tutor Fee Waived")
                                                 }
+                                                <br />
+                                                Tutor: @Html.ActionLink(item.Tutor_UserAccounts_Fullname, "Index", "UserAccounts", new { FILTER_Keyword = @item.Tutor_UserAccounts_Fullname }, new { @target = "_blank" })
+                                                @if (access.SaleInvoices_TutorTravelCost_View && item.TutorTravelCost > 0)
+                                                {
+                                                    @(" (Travel: ")@Html.DisplayFor(modelItem => item.TutorTravelCost)@:)
+                                                }
+                                                @if (access.LessonSessions_InternalNotes_View && !string.IsNullOrWhiteSpace(item.InternalNotes))
+                                                {
+                                                    <br />@("Internal: ")@Html.DisplayFor(modelItem => item.InternalNotes)
+                                                }
                                             </td>
-                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.SessionHours)</td>
-                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Student_UserAccounts_Fullname)</td>
-                                            <td class="align-top">
-                                                @Html.DisplayFor(modelItem => item.Tutor_UserAccounts_Fullname)
-                                                <br />Travel: @Html.DisplayFor(modelItem => item.TutorTravelCost)
-                                            </td>
-                                            <td></td>
+                                            <td class="align-top tablecellwrap">@Html.DisplayFor(modelItem => item.Review)</td>
                                             <td class="align-top">
                                                 @if (item.Deleted)
                                                 {

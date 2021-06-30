@@ -654,6 +654,8 @@
 	ALTER TABLE UserAccountRoles ADD LessonSessions_View bit default 0 not null;
 	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'LessonSessions_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
 	ALTER TABLE UserAccountRoles ADD LessonSessions_Edit bit default 0 not null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'LessonSessions_InternalNotes_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD LessonSessions_InternalNotes_View bit default 0 not null;
 	GO
 	
 	--HourlyRates
@@ -753,6 +755,7 @@
 		LessonSessions_Add=1,
 		LessonSessions_Edit=1,
 		LessonSessions_View=1,
+		LessonSessions_InternalNotes_View=1,
 		HourlyRates_Add=1,
 		HourlyRates_Edit=1,
 		HourlyRates_View=1,
@@ -836,6 +839,7 @@
 		LessonSessions_Add=0,
 		LessonSessions_Edit=0,
 		LessonSessions_View=1,
+		LessonSessions_InternalNotes_View=1,
 		HourlyRates_Add=0,
 		HourlyRates_Edit=0,
 		HourlyRates_View=0,
@@ -916,9 +920,10 @@
 		Inventory_Add=0,
 		Inventory_Edit=0,
 		Inventory_View=0,
-		LessonSessions_Add=0,
-		LessonSessions_Edit=0,
-		LessonSessions_View=0,
+		LessonSessions_Add=1,
+		LessonSessions_Edit=1,
+		LessonSessions_View=1,
+		LessonSessions_InternalNotes_View=1,
 		HourlyRates_Add=0,
 		HourlyRates_Edit=0,
 		HourlyRates_View=0,
@@ -1003,6 +1008,7 @@
 		LessonSessions_Add=1,
 		LessonSessions_Edit=1,
 		LessonSessions_View=1,
+		LessonSessions_InternalNotes_View=1,
 		HourlyRates_Add=0,
 		HourlyRates_Edit=0,
 		HourlyRates_View=0,
@@ -1087,6 +1093,7 @@
 		LessonSessions_Add=0,
 		LessonSessions_Edit=0,
 		LessonSessions_View=1,
+		LessonSessions_InternalNotes_View=0,
 		HourlyRates_Add=0,
 		HourlyRates_Edit=0,
 		HourlyRates_View=0,
@@ -1171,6 +1178,7 @@
 		LessonSessions_Add=1,
 		LessonSessions_Edit=1,
 		LessonSessions_View=1,
+		LessonSessions_InternalNotes_View=1,
 		HourlyRates_Add=1,
 		HourlyRates_Edit=1,
 		HourlyRates_View=1,

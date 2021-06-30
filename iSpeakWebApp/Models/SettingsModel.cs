@@ -46,15 +46,6 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_ResetPassword_Notes = new ModelMember { Name = "ResetPassword_Notes" };
 
 
-        [Display(Name = "Roles to see reminders")]
-        public string RolesToSeeReminders { get; set; }
-        public static ModelMember COL_RolesToSeeReminders = new ModelMember { Name = "RolesToSeeReminders", Id = new Guid("2f8d8208-4464-4a01-b9e1-30e54292b708") };
-        public string RolesToSeeReminders_Notes { get; set; }
-        public static ModelMember COL_RolesToSeeReminders_Notes = new ModelMember { Name = "RolesToSeeReminders_Notes" };
-        public List<string> RolesToSeeReminders_List { get; set; }
-        public static ModelMember COL_RolesToSeeReminders_List = new ModelMember { Name = "RolesToSeeReminders_List" };
-
-
         [Display(Name = "Full Access for Tutor Schedules")]
         public string FullAccessForTutorSchedules { get; set; }
         public static ModelMember COL_FullAccessForTutorSchedules = new ModelMember { Name = "FullAccessForTutorSchedules", Id = new Guid("9b5ab31f-ce5e-4942-9e07-0fe107058910") };

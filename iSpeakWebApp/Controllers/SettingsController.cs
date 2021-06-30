@@ -74,9 +74,6 @@ namespace iSpeakWebApp.Controllers
                 log = addLog(log, SettingsModel.COL_ResetPassword.Id, originalModel.ResetPassword, modifiedModel.ResetPassword, "UPDATE: '{1}'");
                 log = addLog(log, SettingsModel.COL_ResetPassword.Id, originalModel.ResetPassword_Notes, modifiedModel.ResetPassword_Notes, "Notes: '{1}'");
 
-                log = addLogForList<UserAccountRolesModel>(log, SettingsModel.COL_RolesToSeeReminders.Id, originalModel.RolesToSeeReminders_List, modifiedModel.RolesToSeeReminders_List);
-                log = addLog(log, SettingsModel.COL_RolesToSeeReminders.Id, originalModel.RolesToSeeReminders_Notes, modifiedModel.RolesToSeeReminders_Notes, "Notes: '{1}'");
-
                 log = addLogForList<UserAccountRolesModel>(log, SettingsModel.COL_FullAccessForTutorSchedules.Id, originalModel.FullAccessForTutorSchedules_List, modifiedModel.FullAccessForTutorSchedules_List);
                 log = addLog(log, SettingsModel.COL_FullAccessForTutorSchedules.Id, originalModel.FullAccessForTutorSchedules_Notes, modifiedModel.FullAccessForTutorSchedules_Notes, "Notes: '{1}'");
 
@@ -119,8 +116,6 @@ namespace iSpeakWebApp.Controllers
                     ISNULL(Settings_TutorRole.Notes,'') AS TutorRole_Notes,
                     ISNULL(Settings_ResetPassword.Value_String,'') AS ResetPassword,
                     ISNULL(Settings_ResetPassword.Notes,'') AS ResetPassword_Notes,
-                    ISNULL(Settings_RolesToSeeReminders.Value_String,'') AS RolesToSeeReminders,
-                    ISNULL(Settings_RolesToSeeReminders.Notes,'') AS RolesToSeeReminders_Notes,
                     ISNULL(Settings_FullAccessForTutorSchedules.Value_String,'') AS FullAccessForTutorSchedules,
                     ISNULL(Settings_FullAccessForTutorSchedules.Notes,'') AS FullAccessForTutorSchedules_Notes,
                     ISNULL(Settings_ShowOnlyOwnUserData.Value_String,'') AS ShowOnlyOwnUserData,
@@ -132,7 +127,6 @@ namespace iSpeakWebApp.Controllers
                     LEFT JOIN Settings Settings_StudentRole ON Settings_StudentRole.Id = @StudentRoleId
                     LEFT JOIN Settings Settings_TutorRole ON Settings_TutorRole.Id = @TutorRoleId
                     LEFT JOIN Settings Settings_ResetPassword ON Settings_ResetPassword.Id = @ResetPasswordId
-                    LEFT JOIN Settings Settings_RolesToSeeReminders ON Settings_RolesToSeeReminders.Id = @RolesToSeeRemindersId
                     LEFT JOIN Settings Settings_FullAccessForTutorSchedules ON Settings_FullAccessForTutorSchedules.Id = @FullAccessForTutorSchedulesId
                     LEFT JOIN Settings Settings_ShowOnlyOwnUserData ON Settings_ShowOnlyOwnUserData.Id = @ShowOnlyOwnUserDataId
                     LEFT JOIN Settings Settings_PayrollRatesRoles ON Settings_PayrollRatesRoles.Id = @PayrollRatesRolesId
@@ -143,7 +137,6 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(SettingsModel.COL_StudentRole.Name + "Id", SettingsModel.COL_StudentRole.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_TutorRole.Name + "Id", SettingsModel.COL_TutorRole.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_ResetPassword.Name + "Id", SettingsModel.COL_ResetPassword.Id),
-                    DBConnection.getSqlParameter(SettingsModel.COL_RolesToSeeReminders.Name + "Id", SettingsModel.COL_RolesToSeeReminders.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_FullAccessForTutorSchedules.Name + "Id", SettingsModel.COL_FullAccessForTutorSchedules.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_ShowOnlyOwnUserData.Name + "Id", SettingsModel.COL_ShowOnlyOwnUserData.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_PayrollRatesRoles.Name + "Id", SettingsModel.COL_PayrollRatesRoles.Id)
@@ -151,7 +144,6 @@ namespace iSpeakWebApp.Controllers
 
             foreach(SettingsModel model in models)
             {
-                if(!string.IsNullOrEmpty(model.RolesToSeeReminders)) model.RolesToSeeReminders_List = model.RolesToSeeReminders.Split(',').ToList();
                 if (!string.IsNullOrEmpty(model.FullAccessForTutorSchedules)) model.FullAccessForTutorSchedules_List = model.FullAccessForTutorSchedules.Split(',').ToList();
                 if (!string.IsNullOrEmpty(model.ShowOnlyOwnUserData)) model.ShowOnlyOwnUserData_List = model.ShowOnlyOwnUserData.Split(',').ToList();
                 if (!string.IsNullOrEmpty(model.PayrollRatesRoles)) model.PayrollRatesRoles_List = model.PayrollRatesRoles.Split(',').ToList();
@@ -162,7 +154,6 @@ namespace iSpeakWebApp.Controllers
 
         private void update(SettingsModel modifiedModel)
         {
-            if(modifiedModel.RolesToSeeReminders_List != null) modifiedModel.RolesToSeeReminders = string.Join(",", modifiedModel.RolesToSeeReminders_List.ToArray());
             if (modifiedModel.FullAccessForTutorSchedules_List != null) modifiedModel.FullAccessForTutorSchedules = string.Join(",", modifiedModel.FullAccessForTutorSchedules_List.ToArray());
             if (modifiedModel.ShowOnlyOwnUserData_List != null) modifiedModel.ShowOnlyOwnUserData = string.Join(",", modifiedModel.ShowOnlyOwnUserData_List.ToArray());
             if (modifiedModel.PayrollRatesRoles_List != null) modifiedModel.PayrollRatesRoles = string.Join(",", modifiedModel.PayrollRatesRoles_List.ToArray());
@@ -173,7 +164,6 @@ namespace iSpeakWebApp.Controllers
                     UPDATE Settings SET Value_Guid=@StudentRole, Notes=@StudentRole_Notes WHERE Id=@StudentRoleId;
                     UPDATE Settings SET Value_Guid=@TutorRole, Notes=@TutorRole_Notes WHERE Id=@TutorRoleId;
                     UPDATE Settings SET Value_String=@ResetPassword, Notes=@ResetPassword_Notes WHERE Id=@ResetPasswordId;
-                    UPDATE Settings SET Value_String=@RolesToSeeReminders, Notes=@RolesToSeeReminders_Notes WHERE Id=@RolesToSeeRemindersId;
                     UPDATE Settings SET Value_String=@FullAccessForTutorSchedules, Notes=@FullAccessForTutorSchedules_Notes WHERE Id=@FullAccessForTutorSchedulesId;
                     UPDATE Settings SET Value_String=@ShowOnlyOwnUserData, Notes=@ShowOnlyOwnUserData_Notes WHERE Id=@ShowOnlyOwnUserDataId;
                     UPDATE Settings SET Value_String=@PayrollRatesRoles, Notes=@PayrollRatesRoles_Notes WHERE Id=@PayrollRatesRolesId;
@@ -193,9 +183,6 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(SettingsModel.COL_ResetPassword.Name + "Id", SettingsModel.COL_ResetPassword.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_ResetPassword.Name, Util.wrapNullable(modifiedModel.ResetPassword)),
                     DBConnection.getSqlParameter(SettingsModel.COL_ResetPassword_Notes.Name, Util.wrapNullable(modifiedModel.ResetPassword_Notes)),
-                    DBConnection.getSqlParameter(SettingsModel.COL_RolesToSeeReminders.Name + "Id", SettingsModel.COL_RolesToSeeReminders.Id),
-                    DBConnection.getSqlParameter(SettingsModel.COL_RolesToSeeReminders.Name, Util.wrapNullable(modifiedModel.RolesToSeeReminders)),
-                    DBConnection.getSqlParameter(SettingsModel.COL_RolesToSeeReminders_Notes.Name, Util.wrapNullable(modifiedModel.RolesToSeeReminders_Notes)),
                     DBConnection.getSqlParameter(SettingsModel.COL_FullAccessForTutorSchedules.Name + "Id", SettingsModel.COL_FullAccessForTutorSchedules.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_FullAccessForTutorSchedules.Name, Util.wrapNullable(modifiedModel.FullAccessForTutorSchedules)),
                     DBConnection.getSqlParameter(SettingsModel.COL_FullAccessForTutorSchedules_Notes.Name, Util.wrapNullable(modifiedModel.FullAccessForTutorSchedules_Notes)),

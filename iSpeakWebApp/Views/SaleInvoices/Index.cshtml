@@ -137,7 +137,7 @@
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.No)</td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
                                             <td class="align-top">
-                                                <div>@Html.DisplayFor(modelItem => item.Customer_UserAccounts_Name)</div>
+                                                <div>@Html.ActionLink(item.Customer_UserAccounts_Name, "Index", "UserAccounts", new { FILTER_Keyword = @item.Customer_UserAccounts_Name }, new { @target="_blank"})</div>
                                                 @if (item.Cancelled)
                                                 {
                                                     <div><strong>Cancelled: </strong>@Html.DisplayFor(modelItem => item.CancelNotes)</div>

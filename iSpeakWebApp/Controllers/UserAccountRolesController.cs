@@ -238,6 +238,7 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.LessonSessions_Add, model.LessonSessions_Add, UserAccountRolesModel.COL_LessonSessions_Add.LogDisplay);
                     log = Helper.append(log, originalModel.LessonSessions_Edit, model.LessonSessions_Edit, UserAccountRolesModel.COL_LessonSessions_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.LessonSessions_View, model.LessonSessions_View, UserAccountRolesModel.COL_LessonSessions_View.LogDisplay);
+                    log = Helper.append(log, originalModel.LessonSessions_InternalNotes_View, model.LessonSessions_InternalNotes_View, UserAccountRolesModel.COL_LessonSessions_InternalNotes_View.LogDisplay);
 
                     //HourlyRates
                     log = Helper.append(log, originalModel.HourlyRates_Notes, model.HourlyRates_Notes, UserAccountRolesModel.COL_HourlyRates_Notes.LogDisplay);
@@ -400,6 +401,7 @@ namespace iSpeakWebApp.Controllers
                 if (item.LessonSessions_Add) model.LessonSessions_Add = true;
                 if (item.LessonSessions_Edit) model.LessonSessions_Edit = true;
                 if (item.LessonSessions_View) model.LessonSessions_View = true;
+                if (item.LessonSessions_InternalNotes_View) model.LessonSessions_InternalNotes_View = true;
 
                 //HourlyRates
                 if (item.HourlyRates_Add) model.HourlyRates_Add = true;

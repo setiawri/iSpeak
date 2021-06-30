@@ -152,28 +152,6 @@
 
                         <hr />
 
-                        @Html.LabelFor(model => model.RolesToSeeReminders, htmlAttributes: new { @class = "h5 mb-0" })
-                        <div class="row pl-0">
-                            <div>
-                                <button type="button" class="btn mb-1 ml-2 mr-1 px-1 icon-notebook" onclick="Log('@SettingsModel.COL_RolesToSeeReminders.Id')"></button>
-                            </div>
-                            <div id="RolesToSeeReminders_Div">
-                                <button id="RolesToSeeReminders" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
-                                <label id="RolesToSeeReminders_Label" class="col-form-label">@Model.RolesToSeeReminders_Notes</label>
-                            </div>
-                            <div class="col-lg-11 pl-0">
-                                <div id="RolesToSeeReminders_Edit" class="input-group d-none mb-1 ml-0 pl-0">
-                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
-                                    @Html.EditorFor(model => model.RolesToSeeReminders_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes", @title = Model.RolesToSeeReminders_Notes } })
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 pl-0">
-                            @Html.ListBoxFor(model => model.RolesToSeeReminders_List, ViewBag.UserAccountRoles as SelectList, new { @class = "form-control select2", @multiple = "multiple" })
-                        </div>
-
-                        <hr />
-
                         @Html.LabelFor(model => model.FullAccessForTutorSchedules, htmlAttributes: new { @class = "h5 mb-0" })
                         <div class="row pl-0">
                             <div>
