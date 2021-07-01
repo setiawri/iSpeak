@@ -183,7 +183,7 @@
                                                 }
                                                 @if (access.Payments_View)
                                                 {
-                                                    @Html.ActionLink("Payment", "Index", "Payments", new { FILTER_InvoiceNo = item.No, FILTER_chkDateFrom= false, FILTER_chkDateTo = false }, new { @target="_blank" })
+                                                    @Html.ActionLink("Payment", "Index", "Payments", new { FILTER_InvoiceNo = item.No, FILTER_chkDateFrom = false, FILTER_chkDateTo = false }, new { @target = "_blank" }) @:•
                                                 }
                                                 <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                             </td>

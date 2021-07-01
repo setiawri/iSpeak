@@ -274,7 +274,7 @@ namespace iSpeakWebApp.Controllers
         {
             ViewBag.RemoveDatatablesStateSave = rss;
 
-            List<UserAccountsModel> models = getBirthdays(Helper.getActiveBranchId(Session), null, DateTime.Now.Month);
+            List<UserAccountsModel> models = getBirthdays(Helper.getActiveBranchId(Session), null, Helper.getCurrentDateTime().Month);
 
             ViewBag.BirthdayCount = models.Count;
             UserAccountRolesController.setDropDownListViewBag(this);
@@ -476,11 +476,11 @@ namespace iSpeakWebApp.Controllers
         {
             string BranchClause = null;
             if (!showAllBranches)
-                BranchClause = string.Format(" AND Branches LIKE '%{0}%' ", Helper.getActiveBranchId(Session));
+                BranchClause = string.Format(" AND UserAccounts.Branches LIKE '%{0}%' ", Helper.getActiveBranchId(Session));
 
             string RoleClause = null;
             if (!string.IsNullOrEmpty(Role))
-                RoleClause = string.Format(" AND Roles LIKE '%{0}%' ", Role);
+                RoleClause = string.Format(" AND UserAccounts.Roles LIKE '%{0}%' ", Role);
 
             string sql = string.Format(@"
                         SELECT UserAccounts.*,

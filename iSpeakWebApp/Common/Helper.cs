@@ -90,7 +90,7 @@ namespace iSpeakWebApp
             if (PayPeriod != null)
                 payPeriod = (DateTime)PayPeriod;
             else if (month == null || year == null)
-                payPeriod = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, 0, 0, 0);
+                payPeriod = new DateTime(getCurrentDateTime().Year, getCurrentDateTime().Month, 1, 0, 0, 0);
             else
                 payPeriod = new DateTime((int)year, (int)month, 1, 0, 0, 0);
 
@@ -194,6 +194,11 @@ namespace iSpeakWebApp
                 return db.Languages.Where(x => x.Id.ToString().ToLower() == id).FirstOrDefault().Name;
             else
                 return null;
+        }
+
+        public static DateTime getCurrentDateTime()
+        {
+            return DateTime.UtcNow.AddHours(7); //Jakarta time
         }
 
         /******************************************************************************************************************************************************/

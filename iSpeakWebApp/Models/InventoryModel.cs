@@ -28,7 +28,7 @@ namespace iSpeakWebApp.Models
 
         [Display(Name = "Date")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yy}")]
-        public DateTime ReceiveDate { get; set; } = DateTime.Now;
+        public DateTime ReceiveDate { get; set; } = Helper.getCurrentDateTime();
         public static ModelMember COL_ReceiveDate = new ModelMember { Name = "ReceiveDate", Display = "Date", LogDisplay = ActivityLogsController.editDateFormat("Receive Date") };
 
 

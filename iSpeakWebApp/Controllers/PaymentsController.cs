@@ -26,7 +26,7 @@ namespace iSpeakWebApp.Controllers
             if(UtilWebMVC.hasNoFilter(FILTER_Keyword, FILTER_InvoiceNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo))
             {
                 FILTER_chkDateFrom = true;
-                FILTER_DateFrom = DateTime.Now;
+                FILTER_DateFrom = Helper.getCurrentDateTime();
             }
 
             setViewBag(FILTER_Keyword, FILTER_InvoiceNo, null, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
@@ -77,7 +77,7 @@ namespace iSpeakWebApp.Controllers
                 PaymentsModel payment = JsonConvert.DeserializeObject<PaymentsModel>(JsonPayments);
                 payment.Id = Guid.NewGuid();
                 payment.No = Util.incrementHexNumber(getLastNo());
-                payment.Timestamp = DateTime.Now;
+                payment.Timestamp = Helper.getCurrentDateTime();
 
                 if (payment.DebitAmount == 0)
                 {

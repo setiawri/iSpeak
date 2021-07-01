@@ -72,7 +72,7 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        setDateRangePicker('Birthday', '@string.Format("{0:yyyy/MM/dd}", DateTime.Now)');
+        setDateRangePicker('Birthday', '@string.Format("{0:yyyy/MM/dd}", Helper.getCurrentDateTime())');
     });
 
 </script>

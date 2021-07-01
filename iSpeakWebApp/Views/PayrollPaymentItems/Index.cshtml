@@ -223,7 +223,7 @@
 
     function applyLast() {
         AjaxGetDropdownlistData('UserAccounts_Id', 'GetDropDownListData', 'UserAccounts');
-        setDatePeriodFilter('FILTER_DatePeriod', 'FILTER_DatePeriod_Month', 'FILTER_DatePeriod_Year', '@string.Format("{0:MM/dd/yyyy}", ViewBag.FILTER_DatePeriod ?? DateTime.Now)');
+        setDatePeriodFilter('FILTER_DatePeriod', 'FILTER_DatePeriod_Month', 'FILTER_DatePeriod_Year', '@string.Format("{0:MM/dd/yyyy}", ViewBag.FILTER_DatePeriod ?? Helper.getCurrentDateTime())');
     }
 
     function generateFullTimePayroll() {

@@ -353,8 +353,8 @@ FILTERING
         setCheckboxFilter('FILTER_chkDateFrom', '@ViewBag.FILTER_chkDateFrom');
         setCheckboxFilter('FILTER_chkDateTo', '@ViewBag.FILTER_chkDateTo');
 
-        setDaterangepickerFilter('FILTER_DateFrom', '@string.Format("{0:yyyy/MM/dd}", ViewBag.FILTER_DateFrom ?? DateTime.Now)');
-        setDaterangepickerFilter('FILTER_DateTo', '@string.Format("{0:yyyy/MM/dd}", ViewBag.FILTER_DateTo ?? DateTime.Now)');
+        setDaterangepickerFilter('FILTER_DateFrom', '@string.Format("{0:yyyy/MM/dd}", ViewBag.FILTER_DateFrom ?? Helper.getCurrentDateTime())');
+        setDaterangepickerFilter('FILTER_DateTo', '@string.Format("{0:yyyy/MM/dd}", ViewBag.FILTER_DateTo ?? Helper.getCurrentDateTime())');
     });
 
     function getFilter(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id) {

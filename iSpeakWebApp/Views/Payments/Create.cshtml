@@ -223,7 +223,7 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        setFilter('id', '@ViewBag.id');
+
     });
 
     function applyLast() {
@@ -235,6 +235,7 @@
     })
 
     function calculateAmount() {
+        console.log($('#DueAmount').val() + ':::' + convertFormattedStringToInt($('#DueAmount').val()));
         $('#PaymentAmount').val(formatN0(calculatePaymentAmount()));
         $('#RemainingAmount').val(formatN0(calculateRemainingAmount()));
     }

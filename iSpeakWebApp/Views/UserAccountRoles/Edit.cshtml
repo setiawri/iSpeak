@@ -110,6 +110,10 @@
                                         @Html.CheckBoxFor(model => model.UserAccounts_Edit)
                                     </div>
                                     @Html.LabelFor(model => model.UserAccounts_Edit, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.UserAccounts_ResetPassword)
+                                    </div>
+                                    @Html.LabelFor(model => model.UserAccounts_ResetPassword, htmlAttributes: new { @class = "input-group-text mr-2" })
                                 </div>
                             </div>
 

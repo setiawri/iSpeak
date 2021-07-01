@@ -115,6 +115,7 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.UserAccounts_Add, model.UserAccounts_Add, UserAccountRolesModel.COL_UserAccounts_Add.LogDisplay);
                     log = Helper.append(log, originalModel.UserAccounts_Edit, model.UserAccounts_Edit, UserAccountRolesModel.COL_UserAccounts_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.UserAccounts_View, model.UserAccounts_View, UserAccountRolesModel.COL_UserAccounts_View.LogDisplay);
+                    log = Helper.append(log, originalModel.UserAccounts_ResetPassword, model.UserAccounts_ResetPassword, UserAccountRolesModel.COL_UserAccounts_ResetPassword.LogDisplay);
 
                     //User Account Roles
                     log = Helper.append(log, originalModel.UserAccountRoles_Notes, model.UserAccountRoles_Notes, UserAccountRolesModel.COL_UserAccountRoles_Notes.LogDisplay);
@@ -298,6 +299,7 @@ namespace iSpeakWebApp.Controllers
                 if (item.UserAccounts_Add) model.UserAccounts_Add = true;
                 if (item.UserAccounts_Edit) model.UserAccounts_Edit = true;
                 if (item.UserAccounts_View) model.UserAccounts_View = true;
+                if (item.UserAccounts_ResetPassword) model.UserAccounts_ResetPassword = true;
 
                 //UserAccountRoles
                 if (item.UserAccountRoles_Add) model.UserAccountRoles_Add = true;

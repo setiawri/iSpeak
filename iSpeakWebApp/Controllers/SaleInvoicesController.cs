@@ -27,7 +27,7 @@ namespace iSpeakWebApp.Controllers
             if (UtilWebMVC.hasNoFilter(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo))
             {
                 FILTER_chkDateFrom = true;
-                FILTER_DateFrom = DateTime.Now;
+                FILTER_DateFrom = Helper.getCurrentDateTime();
             }
 
             setViewBag(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
@@ -391,7 +391,7 @@ namespace iSpeakWebApp.Controllers
         public void add(SaleInvoicesModel model, List<SaleInvoiceItemsModel> SaleInvoiceItems)
         {
             model.Branches_Id = Helper.getActiveBranchId(Session);
-            model.Timestamp = DateTime.Now;
+            model.Timestamp = Helper.getCurrentDateTime();
             model.Due = model.Amount;
 
             db.Database.ExecuteSqlCommand(@"

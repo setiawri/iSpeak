@@ -60,6 +60,7 @@ namespace iSpeakWebApp.Models
         [Display(Name = "Expense Category")]
         public Guid? ExpenseCategories_Id { get; set; } = null;
         public static ModelMember COL_ExpenseCategories_Id = new ModelMember { Name = "ExpenseCategories_Id" };
+        public string ExpenseCategories_Name { get; set; } = string.Empty;
 
         /******************************************************************************************************************************************************/
 

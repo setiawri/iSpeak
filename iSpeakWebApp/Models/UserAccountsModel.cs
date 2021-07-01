@@ -30,7 +30,7 @@ namespace iSpeakWebApp.Models
 
         [Required]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime Birthday { get; set; } = DateTime.Now;
+        public DateTime Birthday { get; set; } = Helper.getCurrentDateTime();
         public static ModelMember COL_Birthday = new ModelMember { Name = "Birthday", Display = "Birthday", LogDisplay = ActivityLogsController.editDateFormat("Birthday") };
 
 

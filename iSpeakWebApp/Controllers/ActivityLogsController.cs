@@ -53,7 +53,7 @@ namespace iSpeakWebApp.Controllers
             {
                 Id = Guid.NewGuid(),
                 ReffId = reffId,
-                Timestamp = DateTime.Now,
+                Timestamp = Helper.getCurrentDateTime(),
                 Description = description,
                 UserAccounts_Id = (Guid)UserAccountsController.getUserId(Session),
                 UserAccounts_Fullname = null

@@ -14,7 +14,6 @@
 
 -- NEED TO DO AFTER SCRIPT IS RUN =======================================================================================
 
--- assign roles to users. currently all get student role
 -- all users will be prompted for password change
 
 -- CREATE NEW USER ACCOUNTS TABLE =======================================================================================
@@ -91,7 +90,9 @@
 	GO
 
 	UPDATE UserAccounts SET Branches = Branches_Id
-	UPDATE UserAccounts SET Interest = TRIM(Interest)
+	GO
+	UPDATE UserAccounts SET Interest = RTRIM(LTRIM(Interest))
+	GO
 	UPDATE UserAccounts SET Interest = NULL WHERE Interest = ''
 	GO
 	

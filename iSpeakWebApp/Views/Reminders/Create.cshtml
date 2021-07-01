@@ -65,7 +65,7 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        setDateRangePicker('Timestamp', '@string.Format("{0:yyyy/MM/dd}", DateTime.Now)');
+        setDateRangePicker('Timestamp', '@string.Format("{0:yyyy/MM/dd}", Helper.getCurrentDateTime())');
     });
 
 </script>

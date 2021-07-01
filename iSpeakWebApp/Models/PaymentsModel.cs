@@ -17,7 +17,7 @@ namespace iSpeakWebApp.Models
 
 
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}")]
-        public DateTime Timestamp { get; set; } = DateTime.Now;
+        public DateTime Timestamp { get; set; } = Helper.getCurrentDateTime();
         public static ModelMember COL_Timestamp = new ModelMember { Name = "Timestamp" };
 
 

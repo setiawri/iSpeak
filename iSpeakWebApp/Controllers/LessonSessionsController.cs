@@ -26,7 +26,7 @@ namespace iSpeakWebApp.Controllers
             if (UtilWebMVC.hasNoFilter(FILTER_Keyword, FILTER_InvoiceNo, FILTER_Cancelled, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo))
             {
                 FILTER_chkDateFrom = true;
-                FILTER_DateFrom = DateTime.Now;
+                FILTER_DateFrom = Helper.getCurrentDateTime();
             }
 
             setViewBag(FILTER_Keyword, FILTER_InvoiceNo, FILTER_Cancelled, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);

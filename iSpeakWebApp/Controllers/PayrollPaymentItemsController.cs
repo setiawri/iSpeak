@@ -44,7 +44,7 @@ namespace iSpeakWebApp.Controllers
 
         public void setViewBag(DateTime? FILTER_DatePeriod)
         {
-            ViewBag.FILTER_DatePeriod = FILTER_DatePeriod ?? Util.getFirstDayOfSelectedMonth(DateTime.Now);
+            ViewBag.FILTER_DatePeriod = FILTER_DatePeriod ?? Util.getFirstDayOfSelectedMonth(Helper.getCurrentDateTime());
         }
 
         public JsonResult GetDetails(Guid id, DateTime DatePeriod)

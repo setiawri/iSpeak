@@ -109,7 +109,13 @@
                                         <tr>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.No)</td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
-                                            <td class="align-top">@Html.DisplayFor(modelItem => item.PettyCashRecordsCategories_Name)</td>
+                                            <td class="align-top">
+                                                @item.PettyCashRecordsCategories_Name
+                                                @if (item.ExpenseCategories_Id != null)
+                                                { 
+                                                    <br /><strong>Expense Category: </strong>@(item.ExpenseCategories_Name)
+                                                }
+                                            </td>
                                             <td class="align-top tablecellwrap">@Html.DisplayFor(modelItem => item.Notes)</td>
                                             <td class="align-top text-right">@Html.DisplayFor(modelItem => item.Amount)</td>
                                             <td class="align-top text-right">@Html.DisplayFor(modelItem => item.Balance)</td>
