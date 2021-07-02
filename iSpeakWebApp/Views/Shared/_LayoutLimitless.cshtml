@@ -20,7 +20,7 @@
             </button>
         </div>
         <div class="collapse navbar-collapse" id="navbar-mobile">
-            @*<span class="navbar-text ml-md-3 mr-md-auto h1 my-0 py-1">@Helper.COMPANYNAME</span>*@                                
+            @*<span class="navbar-text ml-md-3 mr-md-auto h1 my-0 py-1">@Helper.COMPANYNAME</span>*@
             <img src="@Helper.getImageUrl("LogoWithBorder.png", Request, Server)" class="navbar-text ml-md-0 mr-md-auto h1 my-0 py-0" style="width:110px;" onclick="Action('LandingPage','LandingPage')" />
             <span class="navbar-text">
             </span>
@@ -324,6 +324,7 @@ FILTERING
 <input type="hidden" id="FILTER_Active" name="FILTER_Active" value="@ViewBag.FILTER_Active" />
 <input type="hidden" id="FILTER_Cancelled" name="FILTER_Cancelled" value="@ViewBag.FILTER_Cancelled" />
 <input type="hidden" id="FILTER_Approved" name="FILTER_Approved" value="@ViewBag.FILTER_Approved" />
+<input type="hidden" id="FILTER_HasDueAmount" name="FILTER_HasDueAmount" value="@ViewBag.FILTER_HasDueAmount" />
 <input type="hidden" id="FILTER_Languages_Id" name="FILTER_Languages_Id" value="@ViewBag.FILTER_Languages_Id" />
 <input type="hidden" id="FILTER_LessonTypes_Id" name="FILTER_LessonTypes_Id" value="@ViewBag.FILTER_LessonTypes_Id" />
 <input type="hidden" id="FILTER_Branches_Id" name="FILTER_Branches_Id" value="@ViewBag.FILTER_Branches_Id" />
@@ -343,6 +344,7 @@ FILTERING
         setValue('FILTER_Active', '@ViewBag.FILTER_Active');
         setValue('FILTER_Cancelled', '@ViewBag.FILTER_Cancelled');
         setValue('FILTER_Approved', '@ViewBag.FILTER_Approved');
+        setValue('FILTER_HasDueAmount', '@ViewBag.FILTER_HasDueAmount');
         setValue('FILTER_Status', '@ViewBag.FILTER_Status');
         setValue('FILTER_Languages_Id', '@ViewBag.FILTER_Languages_Id');
         setValue('FILTER_LessonTypes_Id', '@ViewBag.FILTER_LessonTypes_Id');
@@ -371,6 +373,10 @@ FILTERING
         if ($('#FILTER_Approved') != null)
             FILTER_Approved = $('#FILTER_Approved').val();
         filter += appendFilter(FILTER_Approved, "FILTER_Approved");
+
+        if ($('#FILTER_HasDueAmount') != null)
+            FILTER_HasDueAmount = $('#FILTER_HasDueAmount').val();
+        filter += appendFilter(FILTER_HasDueAmount, "FILTER_HasDueAmount");
 
         if ($('#FILTER_Status') != null)
             FILTER_Status = $('#FILTER_Status').val();

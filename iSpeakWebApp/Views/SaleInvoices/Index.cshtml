@@ -41,7 +41,7 @@
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">
-                                        @Html.CheckBox("FILTER_chkDateFrom", true, new { @class = "form-check-input check-styled" })
+                                        @Html.CheckBox("FILTER_chkDateFrom", false, new { @class = "form-check-input check-styled" })
                                     </div>
                                 </div>
                                 @Html.Editor("FILTER_DateFrom", new { htmlAttributes = new { @class = "form-control daterange-picker" } })
@@ -53,7 +53,7 @@
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">
-                                        @Html.CheckBox("FILTER_chkDateTo", true, new { @class = "form-check-input check-styled" })
+                                        @Html.CheckBox("FILTER_chkDateTo", false, new { @class = "form-check-input check-styled" })
                                     </div>
                                 </div>
                                 @Html.Editor("FILTER_DateTo", new { htmlAttributes = new { @class = "form-control daterange-picker" } })
@@ -66,6 +66,17 @@
                                 <select id="FILTER_Cancelled" name="FILTER_Cancelled" class="custom-select">
                                     <option value="" selected>ALL</option>
                                     <option value="1">YES</option>
+                                    <option value="0">NO</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:80px;">
+                            <label class="mb-0">Has Due</label>
+                            <div class="input-group">
+                                <select id="FILTER_HasDueAmount" name="FILTER_HasDueAmount" class="custom-select">
+                                    <option value="">ALL</option>
+                                    <option value="1" selected>YES</option>
                                     <option value="0">NO</option>
                                 </select>
                             </div>

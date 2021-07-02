@@ -53,12 +53,6 @@ namespace iSpeakWebApp.Controllers
                     "Update: '{1}'");
                 log = addLog(log, SettingsModel.COL_AutoEntryForCashPayments.Id, originalModel.AutoEntryForCashPayments_Notes, modifiedModel.AutoEntryForCashPayments_Notes, "Notes: '{1}'");
 
-                log = addLog(log, SettingsModel.COL_UserSetRoleAllowed.Id,
-                    originalModel.UserSetRoleAllowed == null ? "" : db.UserAccountRoles.Where(x => x.Id == originalModel.UserSetRoleAllowed).FirstOrDefault().Name,
-                    modifiedModel.UserSetRoleAllowed == null ? "" : db.UserAccountRoles.Where(x => x.Id == modifiedModel.UserSetRoleAllowed).FirstOrDefault().Name,
-                    "Update: '{1}'");
-                log = addLog(log, SettingsModel.COL_UserSetRoleAllowed.Id, originalModel.UserSetRoleAllowed_Notes, modifiedModel.UserSetRoleAllowed_Notes, "Notes: '{1}'");
-
                 log = addLog(log, SettingsModel.COL_StudentRole.Id,
                     originalModel.StudentRole == null ? "" : db.UserAccountRoles.Where(x => x.Id == originalModel.StudentRole).FirstOrDefault().Name,
                     modifiedModel.StudentRole == null ? "" : db.UserAccountRoles.Where(x => x.Id == modifiedModel.StudentRole).FirstOrDefault().Name,
@@ -108,8 +102,6 @@ namespace iSpeakWebApp.Controllers
                 SELECT
                     ISNULL(Settings_AutoEntryForCashPayments.Value_Guid,NULL) AS AutoEntryForCashPayments,
                     ISNULL(Settings_AutoEntryForCashPayments.Notes,'') AS AutoEntryForCashPayments_Notes,
-                    ISNULL(Settings_UserSetRoleAllowed.Value_Guid,NULL) AS UserSetRoleAllowed,
-                    ISNULL(Settings_UserSetRoleAllowed.Notes,'') AS UserSetRoleAllowed_Notes,
                     ISNULL(Settings_StudentRole.Value_Guid,NULL) AS StudentRole,
                     ISNULL(Settings_StudentRole.Notes,'') AS StudentRole_Notes,
                     ISNULL(Settings_TutorRole.Value_Guid,NULL) AS TutorRole,
@@ -123,7 +115,6 @@ namespace iSpeakWebApp.Controllers
                     ISNULL(Settings_PayrollRatesRoles.Value_String,'') AS PayrollRatesRoles,
                     ISNULL(Settings_PayrollRatesRoles.Notes,'') AS PayrollRatesRoles_Notes
                 FROM Settings Settings_AutoEntryForCashPayments
-                    LEFT JOIN Settings Settings_UserSetRoleAllowed ON Settings_UserSetRoleAllowed.Id = @UserSetRoleAllowedId
                     LEFT JOIN Settings Settings_StudentRole ON Settings_StudentRole.Id = @StudentRoleId
                     LEFT JOIN Settings Settings_TutorRole ON Settings_TutorRole.Id = @TutorRoleId
                     LEFT JOIN Settings Settings_ResetPassword ON Settings_ResetPassword.Id = @ResetPasswordId
@@ -133,7 +124,6 @@ namespace iSpeakWebApp.Controllers
                 WHERE Settings_AutoEntryForCashPayments.Id = @AutoEntryForCashPaymentsId
                 ",
                     DBConnection.getSqlParameter(SettingsModel.COL_AutoEntryForCashPayments.Name + "Id", SettingsModel.COL_AutoEntryForCashPayments.Id),
-                    DBConnection.getSqlParameter(SettingsModel.COL_UserSetRoleAllowed.Name + "Id", SettingsModel.COL_UserSetRoleAllowed.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_StudentRole.Name + "Id", SettingsModel.COL_StudentRole.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_TutorRole.Name + "Id", SettingsModel.COL_TutorRole.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_ResetPassword.Name + "Id", SettingsModel.COL_ResetPassword.Id),
@@ -160,7 +150,6 @@ namespace iSpeakWebApp.Controllers
 
             db.Database.ExecuteSqlCommand(@"
                     UPDATE Settings SET Value_Guid=@AutoEntryForCashPayments, Notes=@AutoEntryForCashPayments_Notes WHERE Id=@AutoEntryForCashPaymentsId;
-                    UPDATE Settings SET Value_Guid=@UserSetRoleAllowed, Notes=@UserSetRoleAllowed_Notes WHERE Id=@UserSetRoleAllowedId;
                     UPDATE Settings SET Value_Guid=@StudentRole, Notes=@StudentRole_Notes WHERE Id=@StudentRoleId;
                     UPDATE Settings SET Value_Guid=@TutorRole, Notes=@TutorRole_Notes WHERE Id=@TutorRoleId;
                     UPDATE Settings SET Value_String=@ResetPassword, Notes=@ResetPassword_Notes WHERE Id=@ResetPasswordId;
@@ -171,9 +160,6 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(SettingsModel.COL_AutoEntryForCashPayments.Name + "Id", SettingsModel.COL_AutoEntryForCashPayments.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_AutoEntryForCashPayments.Name, Util.wrapNullable(modifiedModel.AutoEntryForCashPayments)),
                     DBConnection.getSqlParameter(SettingsModel.COL_AutoEntryForCashPayments_Notes.Name, Util.wrapNullable(modifiedModel.AutoEntryForCashPayments_Notes)),
-                    DBConnection.getSqlParameter(SettingsModel.COL_UserSetRoleAllowed.Name + "Id", SettingsModel.COL_UserSetRoleAllowed.Id),
-                    DBConnection.getSqlParameter(SettingsModel.COL_UserSetRoleAllowed.Name, Util.wrapNullable(modifiedModel.UserSetRoleAllowed)),
-                    DBConnection.getSqlParameter(SettingsModel.COL_UserSetRoleAllowed_Notes.Name, Util.wrapNullable(modifiedModel.UserSetRoleAllowed_Notes)),
                     DBConnection.getSqlParameter(SettingsModel.COL_StudentRole.Name + "Id", SettingsModel.COL_StudentRole.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_StudentRole.Name, Util.wrapNullable(modifiedModel.StudentRole)),
                     DBConnection.getSqlParameter(SettingsModel.COL_StudentRole_Notes.Name, Util.wrapNullable(modifiedModel.StudentRole_Notes)),

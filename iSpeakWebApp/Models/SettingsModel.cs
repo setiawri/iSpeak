@@ -15,14 +15,6 @@ namespace iSpeakWebApp.Models
 
 
         [Required]
-        [Display(Name = "User Set Role Allowed")]
-        public Guid? UserSetRoleAllowed { get; set; }
-        public static ModelMember COL_UserSetRoleAllowed = new ModelMember { Name = "UserSetRoleAllowed", Display = "User Set Role Allowed", Id = new Guid("25f53554-3b9d-4d3b-a8e5-58d921950987") };
-        public string UserSetRoleAllowed_Notes { get; set; }
-        public static ModelMember COL_UserSetRoleAllowed_Notes = new ModelMember { Name = "UserSetRoleAllowed_Notes" };
-
-
-        [Required]
         [Display(Name = "Student Role")]
         public Guid? StudentRole { get; set; }
         public static ModelMember COL_StudentRole = new ModelMember { Name = "StudentRole", Display = "Student Role", Id = new Guid("A94B2FFC-3547-40CB-96CD-F82729768926") };
