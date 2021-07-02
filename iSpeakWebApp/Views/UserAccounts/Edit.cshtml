@@ -75,7 +75,10 @@
                             <div class="form-group row">
                                 @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "col-form-label col-lg-1" })
                                 <div class="col-lg-5">
-                                    @Html.ListBoxFor(model => model.Roles_List, ViewBag.UserAccountRoles as SelectList, new { @class = "form-control select2", @multiple = "multiple" })
+                                    @Html.ListBoxFor(model => model.Roles_List, ViewBag.UserAccountRoles as SelectList, 
+                                                (access.UserAccounts_EditRoles  ? (object)new { @class = "form-control select2", @multiple = "multiple" }
+                                                                                : (object)new { @class = "form-control select2", @multiple = "multiple", @disabled = "true" }
+                                                ))
                                     @Html.ValidationMessageFor(model => model.Roles_List, "", new { @class = "text-danger" })
                                 </div>
                             </div>

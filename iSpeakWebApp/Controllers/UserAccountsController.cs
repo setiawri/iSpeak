@@ -92,7 +92,10 @@ namespace iSpeakWebApp.Controllers
                 {
                     model.Password = HashPassword(SettingsController.get().ResetPassword);
                     model.Branches_Id = Helper.getActiveBranchId(Session);
+                    model.Branches = model.Branches_Id.ToString();
                     model.Username = generateUsername(model.Fullname, model.Birthday);
+                    if (!UserAccountsController.getUserAccess(Session).UserAccounts_EditRoles)
+                        model.Roles = SettingsController.get().StudentRole.ToString();
 
                     add(model);
                     db.SaveChanges();
@@ -609,8 +612,8 @@ namespace iSpeakWebApp.Controllers
         public void add(UserAccountsModel model)
         {
             db.Database.ExecuteSqlCommand(@"
-                INSERT INTO UserAccounts (Id,Fullname,Username,Password,Birthday,Branches_Id,ResetPassword,Active) 
-                    VALUES(@Id,@Fullname,@Username,@Password,@Birthday,@Branches_Id,@ResetPassword,@Active);
+                INSERT INTO UserAccounts (Id,Fullname,Username,Password,Birthday,Branches_Id,ResetPassword,Active,Roles,Branches) 
+                    VALUES(@Id,@Fullname,@Username,@Password,@Birthday,@Branches_Id,@ResetPassword,@Active,@Roles,@Branches);
             ",
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Username.Name, model.Username),
@@ -619,7 +622,9 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Birthday.Name, model.Birthday),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_ResetPassword.Name, model.ResetPassword),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Active.Name, model.Active),
-                DBConnection.getSqlParameter(UserAccountsModel.COL_Branches_Id.Name, model.Branches_Id)
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Branches_Id.Name, model.Branches_Id),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Roles.Name, model.Roles),
+                DBConnection.getSqlParameter(UserAccountsModel.COL_Branches.Name, model.Branches)
             );
 
             ActivityLogsController.AddCreateLog(db, Session, model.Id);

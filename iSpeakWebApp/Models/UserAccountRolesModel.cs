@@ -70,6 +70,10 @@ namespace iSpeakWebApp.Models
         public bool UserAccounts_ResetPassword { get; set; }
         public static ModelMember COL_UserAccounts_ResetPassword = new ModelMember { Name = "UserAccounts_ResetPassword", Display = "Reset Password", LogDisplay = ActivityLogsController.editBooleanFormat("UserAccounts Reset Password") };
 
+        [Display(Name = "Edit Roles")]
+        public bool UserAccounts_EditRoles { get; set; }
+        public static ModelMember COL_UserAccounts_EditRoles = new ModelMember { Name = "UserAccounts_EditRoles", Display = "Edit ROles", LogDisplay = ActivityLogsController.editBooleanFormat("UserAccounts Edit Roles") };
+
 
         /* USER ACCOUNTS ROLES ********************************************************************************************************************************/
 
