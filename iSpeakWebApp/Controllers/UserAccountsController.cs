@@ -30,7 +30,7 @@ namespace iSpeakWebApp.Controllers
             ViewBag.FILTER_Keyword = FILTER_Keyword;
             ViewBag.FILTER_Active = FILTER_Active;
             ViewBag.FILTER_Languages_Id = FILTER_Languages_Id;
-            UserAccountRolesController.setDropDownListViewBag(this);
+            UserAccountRolesController.setDropDownListViewBag(this, getUserAccess(Session).UserAccounts_EditRoles);
             BranchesController.setDropDownListViewBag(this);
             LanguagesController.setDropDownListViewBag(this);
             PromotionEventsController.setDropDownListViewBag(this);
@@ -94,7 +94,7 @@ namespace iSpeakWebApp.Controllers
                     model.Branches_Id = Helper.getActiveBranchId(Session);
                     model.Branches = model.Branches_Id.ToString();
                     model.Username = generateUsername(model.Fullname, model.Birthday);
-                    if (!UserAccountsController.getUserAccess(Session).UserAccounts_EditRoles)
+                    if (!getUserAccess(Session).UserAccounts_EditRoles)
                         model.Roles = SettingsController.get().StudentRole.ToString();
 
                     add(model);
@@ -193,16 +193,16 @@ namespace iSpeakWebApp.Controllers
             //bypass login
             if (Server.MachineName == Helper.DEVCOMPUTERNAME)
             {
-                if(string.IsNullOrEmpty(model.Username))
+                if (string.IsNullOrEmpty(model.Username))
                     model.Username = "ricky";
                 if (string.IsNullOrEmpty(model.Password))
                     model.Password = "qwerty";
             }
-            
+
             string hashedPassword = HashPassword(model.Password);
             UserAccountsModel userAccount = get(model.Username, hashedPassword);
 
-            if (userAccount == null)
+            if (userAccount == null || string.IsNullOrWhiteSpace(hashedPassword))
             {
                 ModelState.AddModelError("", "Invalid username or password");
                 ViewBag.Username = model.Username;

@@ -93,15 +93,18 @@
                                             </td>
                                             <td class="align-top">
                                                 @{
-                                                    foreach (string Roles_Id in item.Roles_List)
+                                                    if (item.Roles_List != null)
                                                     {
-                                                        Guid Id = new Guid(Roles_Id);
-                                                        for(int i=0; i< UserAccountRoles.Count; i++)
+                                                        foreach (string Roles_Id in item.Roles_List)
                                                         {
-                                                            if (UserAccountRoles[i].Id == Id)
+                                                            Guid Id = new Guid(Roles_Id);
+                                                            for (int i = 0; i < UserAccountRoles.Count; i++)
                                                             {
-                                                                <span class="badge @(badgeColors[i])" style="width:70px;">@(UserAccountRoles[i].Name)</span>
-                                                                break;
+                                                                if (UserAccountRoles[i].Id == Id)
+                                                                {
+                                                                    <span class="badge @(badgeColors[i])" style="width:70px;">@(UserAccountRoles[i].Name)</span>
+                                                                    break;
+                                                                }
                                                             }
                                                         }
                                                     }
