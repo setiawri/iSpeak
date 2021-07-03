@@ -43,10 +43,12 @@
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.SaleInvoices_No)</td>
                                             <td class="align-top">
                                                 <div>@Html.DisplayFor(modelItem => item.Description)</div>
+                                                <div><strong>Name: </strong>@Html.DisplayFor(modelItem => item.Customer_UserAccounts_Name)
                                                 @if (!string.IsNullOrEmpty(item.VouchersName))
                                                 {
-                                                    <div>Vouchers: @Html.DisplayFor(modelItem => item.VouchersName)</div>
+                                                    @:, <strong>Vouchers: </strong>@Html.DisplayFor(modelItem => item.VouchersName)
                                                 }
+                                                </div>
                                                 @if (!string.IsNullOrEmpty(item.Notes))
                                                 {
                                                     <div>Notes: @Html.DisplayFor(modelItem => item.Notes)</div>
