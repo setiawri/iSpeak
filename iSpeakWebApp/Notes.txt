@@ -8,9 +8,7 @@ FINAL: check for UTC date conversion
 ===============================================================================================================================================================
 
 TO DO:
-- check sanitize to include apostrophy
 - check for log links that should not be seen by some roles. e.g.: student should not see log for lesson sessions because there is information about hourly rates, etc.
-- add hex-id to lesson sessions, user accounts and add filters
 - admin should not see tutors in list of accounts
 - birthdays: show students with active lesson packages
 - navigation menu: for students, do not show menu Sales. maybe create a new one just for students?

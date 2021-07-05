@@ -109,7 +109,7 @@
                         badge,
                         formatDate(birthday, 'dd MMM yyyy'),
                         "<a href='/SaleInvoices/Index?FILTER_chkDateFrom=false&FILTER_chkDateTo=false&FILTER_Keyword=" + row.Fullname+"' target='_blank'>"+row.ActiveLessonPackages+"</a>",
-                        "<a href='/UserAccounts/Index?FILTER_Keyword=" + row.Fullname + "' target='_blank'>" + row.Fullname + "</a>",
+                        "<a href='/UserAccounts/Index?FILTER_Keyword=" + row.No + "' target='_blank'>" + row.Fullname + "</a>",
                         row.Phone1,
                         getUserAccountRolesName(row.Roles)
                     ]);

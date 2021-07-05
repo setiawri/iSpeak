@@ -55,7 +55,12 @@ namespace iSpeakWebApp.Controllers
                 if (LIBWebMVC.UtilWebMVC.hasNoFilter(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id))
                     return View();
                 else
-                    return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, null));
+                {
+                    string roles = "";
+                    if (!getUserAccess(Session).UserAccounts_EditRoles)
+                        roles = SettingsController.get().StudentRole.ToString();
+                    return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, roles));
+                }
             }
         }
 
@@ -64,7 +69,11 @@ namespace iSpeakWebApp.Controllers
         public ActionResult Index(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
         {
             setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id);
-            return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, null));
+
+            string roles = "";
+            if (!getUserAccess(Session).UserAccounts_EditRoles)
+                roles = SettingsController.get().StudentRole.ToString();
+            return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, roles));
         }
 
         /* CREATE *********************************************************************************************************************************************/
