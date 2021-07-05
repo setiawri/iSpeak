@@ -274,6 +274,7 @@ namespace iSpeakWebApp.Controllers
                     SELECT SaleInvoices.*,
                         Branches.Name AS Branches_Name,
                         Customer_UserAccounts.Fullname AS Customer_UserAccounts_Name,
+                        Customer_UserAccounts.No AS Customer_UserAccounts_No,
                         ROW_NUMBER() OVER (ORDER BY SaleInvoices.No DESC) AS InitialRowNumber
                     FROM SaleInvoices
                         LEFT JOIN Branches ON Branches.Id = SaleInvoices.Branches_Id

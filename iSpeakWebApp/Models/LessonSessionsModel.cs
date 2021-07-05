@@ -11,6 +11,11 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Id = new ModelMember { Name = "Id" };
 
 
+        [Display(Name = "No")]
+        public string No { get; set; }
+        public static ModelMember COL_No = new ModelMember { Name = "No", Display = "No", LogDisplay = ActivityLogsController.editStringFormat("No") };
+
+
         public Guid? Branches_Id { get; set; } = new Guid();
         public static ModelMember COL_Branches_Id = new ModelMember { Name = "Branches_Id" };
 
@@ -50,6 +55,7 @@ namespace iSpeakWebApp.Models
         public Guid Tutor_UserAccounts_Id { get; set; } = new Guid();
         public static ModelMember COL_Tutor_UserAccounts_Id = new ModelMember { Name = "Tutor_UserAccounts_Id", Display = "Tutor", LogDisplay = ActivityLogsController.editStringFormat("Tutor") };
         public string Tutor_UserAccounts_Fullname { get; set; }
+        public string Tutor_UserAccounts_No { get; set; }
 
 
         [Display(Name = "Hourly Rate")]
@@ -108,6 +114,7 @@ namespace iSpeakWebApp.Models
         public Guid? Student_UserAccounts_Id { get; set; } = null;
         [Display(Name = "Student")]
         public string Student_UserAccounts_Fullname { get; set; } = string.Empty;
+        public string Student_UserAccounts_No { get; set; } = string.Empty;
 
     }
 

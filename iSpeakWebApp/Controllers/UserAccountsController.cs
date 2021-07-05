@@ -510,7 +510,11 @@ namespace iSpeakWebApp.Controllers
 									    AND (MONTH(GETDATE()) <> @BirthdayListMonth OR DAY(UserAccounts.Birthday) >= DAY(GETDATE()))
 								    )
 							    )
-							    AND (@FILTER_Keyword IS NULL OR (UserAccounts.Fullname LIKE '%'+@FILTER_Keyword+'%' OR UserAccounts.Username LIKE '%'+@FILTER_Keyword+'%'))
+							    AND (@FILTER_Keyword IS NULL OR (
+                                        UserAccounts.Fullname LIKE '%'+@FILTER_Keyword+'%' 
+                                        OR UserAccounts.Username LIKE '%'+@FILTER_Keyword+'%'
+                                        OR UserAccounts.No LIKE '%'+@FILTER_Keyword+'%'
+                                    ))
                                 {0}{1}
                             )
 						ORDER BY UserAccounts.Fullname ASC
@@ -612,8 +616,16 @@ namespace iSpeakWebApp.Controllers
         public void add(UserAccountsModel model)
         {
             db.Database.ExecuteSqlCommand(@"
-                INSERT INTO UserAccounts (Id,Fullname,Username,Password,Birthday,Branches_Id,ResetPassword,Active,Roles,Branches) 
-                    VALUES(@Id,@Fullname,@Username,@Password,@Birthday,@Branches_Id,@ResetPassword,@Active,@Roles,@Branches);
+
+	            -- INCREMENT LAST HEX NUMBER
+	            DECLARE @HexLength int = 5, @LastHex_String varchar(5), @NewNo varchar(5)
+	            SELECT @LastHex_String = ISNULL(MAX(No),'') From UserAccounts	
+	            DECLARE @LastHex_Int int
+	            SELECT @LastHex_Int = CONVERT(INT, CONVERT(VARBINARY, REPLICATE('0', LEN(@LastHex_String)%2) + @LastHex_String, 2)) --@LastHex_String length must be even number of digits to convert to int
+	            SET @NewNo = RIGHT(CONVERT(NVARCHAR(10), CONVERT(VARBINARY(8), @LastHex_Int + 1), 1),@HexLength)
+
+                INSERT INTO UserAccounts (Id, No,    Fullname, Username, Password, Birthday, Branches_Id, ResetPassword, Active, Roles, Branches) 
+                                VALUES(  @Id,@NewNo,@Fullname,@Username,@Password,@Birthday,@Branches_Id,@ResetPassword,@Active,@Roles,@Branches);
             ",
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Username.Name, model.Username),

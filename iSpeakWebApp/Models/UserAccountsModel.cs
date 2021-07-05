@@ -12,6 +12,11 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Id = new ModelMember { Name = "Id", Display = "Id" };
 
 
+        [Display(Name = "Id")]
+        public string No { get; set; }
+        public static ModelMember COL_No = new ModelMember { Name = "No", Display = "No", LogDisplay = ActivityLogsController.editStringFormat("No") };
+
+
         [Required]
         public string Username { get; set; } = "default";
         public static ModelMember COL_Username = new ModelMember { Name = "Username", Display = "Username", LogDisplay = ActivityLogsController.editStringFormat("Username") };

@@ -39,6 +39,7 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Customer_UserAccounts_Id = new ModelMember { Name = "Customer_UserAccounts_Id", Display = "Branch", LogDisplay = ActivityLogsController.editStringFormat("Branch") };
         [Display(Name = "Customer")]
         public string Customer_UserAccounts_Name { get; set; }
+        public string Customer_UserAccounts_No { get; set; }
 
 
 

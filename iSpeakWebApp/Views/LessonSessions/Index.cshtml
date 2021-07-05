@@ -29,12 +29,12 @@
                             </div>
                         }
 
-                        @*<div class="row ml-0 mr-2" style="width:100px;">
+                        <div class="row ml-0 mr-2" style="width:100px;">
                             <label class="mb-0">No</label>
                             <div class="input-group">
                                 <input type="text" name="FILTER_Keyword" id="FILTER_Keyword" class="form-control" />
                             </div>
-                        </div>*@
+                        </div>
 
                         <div class="row ml-0 mr-2" style="width:100px;">
                             <label class="mb-0">Invoice</label>
@@ -89,7 +89,7 @@
                             <thead>
                                 <tr>
                                     <th class="d-none">@Html.DisplayNameFor(model => model.InitialRowNumber)</th>
-                                    <th class="non-sortable" style="width:50px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
+                                    <th class="non-sortable" style="width:50px;">@Html.DisplayNameFor(model => model.Timestamp) / @Html.DisplayNameFor(model => model.No)</th>
                                     <th>Description</th>
                                     <th class="non-searchable non-sortable">@Html.DisplayNameFor(model => model.Review)</th>
                                     <th class="non-searchable non-sortable" style="width:100px;"></th>
@@ -102,9 +102,12 @@
                                     {
                                         <tr>
                                             <td class="d-none">@Html.DisplayFor(modelItem => item.InitialRowNumber)</td>
-                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
+                                            <td class="align-top">
+                                                @Html.DisplayFor(modelItem => item.Timestamp)
+                                                <br /><strong>@Html.DisplayFor(modelItem => item.No)</strong>
+                                            </td>
                                             <td class="align-top" style="width:500px;">
-                                                @Html.ActionLink(item.Student_UserAccounts_Fullname, "Index", "UserAccounts", new { FILTER_Keyword = @item.Student_UserAccounts_Fullname }, new { @target = "_blank" })
+                                                @Html.ActionLink(item.Student_UserAccounts_Fullname, "Index", "UserAccounts", new { FILTER_Keyword = @item.Student_UserAccounts_No }, new { @target = "_blank" })
                                                 <br />
                                                 @Html.DisplayFor(modelItem => item.SaleInvoiceItems_Description)
                                                 <br />
@@ -115,7 +118,7 @@
                                                     @(", Tutor Fee Waived")
                                                 }
                                                 <br />
-                                                Tutor: @Html.ActionLink(item.Tutor_UserAccounts_Fullname, "Index", "UserAccounts", new { FILTER_Keyword = @item.Tutor_UserAccounts_Fullname }, new { @target = "_blank" })
+                                                Tutor: @Html.ActionLink(item.Tutor_UserAccounts_Fullname, "Index", "UserAccounts", new { FILTER_Keyword = @item.Tutor_UserAccounts_No }, new { @target = "_blank" })
                                                 @if (access.SaleInvoices_TutorTravelCost_View && item.TutorTravelCost > 0)
                                                 {
                                                     @(" (Travel: ")@Html.DisplayFor(modelItem => item.TutorTravelCost)@:)

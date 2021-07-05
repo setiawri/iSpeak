@@ -292,7 +292,9 @@ namespace iSpeakWebApp.Controllers
                         SaleInvoices.No AS SaleInvoices_No,
                         SaleInvoiceItems.Description AS SaleInvoiceItems_Description,
                         Student_UserAccounts.Fullname AS Student_UserAccounts_Fullname,
+                        Student_UserAccounts.No AS Student_UserAccounts_No,
                         Tutor_UserAccounts.Fullname AS Tutor_UserAccounts_Fullname,
+                        Tutor_UserAccounts.No AS Tutor_UserAccounts_No,
                         ROW_NUMBER() OVER (ORDER BY LessonSessions.Timestamp DESC) AS InitialRowNumber
                     FROM LessonSessions
                         LEFT JOIN SaleInvoiceItems ON SaleInvoiceItems.Id = LessonSessions.SaleInvoiceItems_Id
@@ -303,7 +305,9 @@ namespace iSpeakWebApp.Controllers
 						AND (@Id IS NULL OR LessonSessions.Id = @Id)
 						AND (@Id IS NOT NULL OR (
     						LessonSessions.Branches_Id = @Branches_Id
-                            AND (@FILTER_Keyword IS NULL OR (SaleInvoices.No LIKE '%'+@FILTER_Keyword+'%'))
+                            AND (@FILTER_Keyword IS NULL OR (
+                                    LessonSessions.No LIKE '%'+@FILTER_Keyword+'%'
+                                ))
                             AND (@FILTER_DateFrom IS NULL OR LessonSessions.Timestamp >= @FILTER_DateFrom)
                             AND (@FILTER_DateTo IS NULL OR LessonSessions.Timestamp <= @FILTER_DateTo)
                             AND (@Deleted IS NULL OR LessonSessions.Deleted = @Deleted)
@@ -331,9 +335,17 @@ namespace iSpeakWebApp.Controllers
 
         public void add(LessonSessionsModel model)
         {
-            db.Database.ExecuteSqlCommand(@"                
-                INSERT INTO LessonSessions   (Id, Branches_Id, Timestamp, SaleInvoiceItems_Id, SessionHours, Review, InternalNotes, Deleted, Tutor_UserAccounts_Id, HourlyRates_Rate, TravelCost, TutorTravelCost, Adjustment, PayrollPaymentItems_Id, Notes_Cancel, IsScheduleChange, IsWaiveTutorFee) 
-                                      VALUES(@Id,@Branches_Id,@Timestamp,@SaleInvoiceItems_Id,@SessionHours,@Review,@InternalNotes,@Deleted,@Tutor_UserAccounts_Id,@HourlyRates_Rate,@TravelCost,@TutorTravelCost,@Adjustment,@PayrollPaymentItems_Id,@Notes_Cancel,@IsScheduleChange,@IsWaiveTutorFee);
+            db.Database.ExecuteSqlCommand(@"       
+
+	            -- INCREMENT LAST HEX NUMBER
+	            DECLARE @HexLength int = 5, @LastHex_String varchar(5), @NewNo varchar(5)
+	            SELECT @LastHex_String = ISNULL(MAX(No),'') From LessonSessions	
+	            DECLARE @LastHex_Int int
+	            SELECT @LastHex_Int = CONVERT(INT, CONVERT(VARBINARY, REPLICATE('0', LEN(@LastHex_String)%2) + @LastHex_String, 2)) --@LastHex_String length must be even number of digits to convert to int
+	            SET @NewNo = RIGHT(CONVERT(NVARCHAR(10), CONVERT(VARBINARY(8), @LastHex_Int + 1), 1),@HexLength)
+
+                INSERT INTO LessonSessions   (Id, No,    Branches_Id, Timestamp, SaleInvoiceItems_Id, SessionHours, Review, InternalNotes, Deleted, Tutor_UserAccounts_Id, HourlyRates_Rate, TravelCost, TutorTravelCost, Adjustment, PayrollPaymentItems_Id, Notes_Cancel, IsScheduleChange, IsWaiveTutorFee) 
+                                      VALUES(@Id,@NewNo,@Branches_Id,@Timestamp,@SaleInvoiceItems_Id,@SessionHours,@Review,@InternalNotes,@Deleted,@Tutor_UserAccounts_Id,@HourlyRates_Rate,@TravelCost,@TutorTravelCost,@Adjustment,@PayrollPaymentItems_Id,@Notes_Cancel,@IsScheduleChange,@IsWaiveTutorFee);
             ",
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Branches_Id.Name, model.Branches_Id),
