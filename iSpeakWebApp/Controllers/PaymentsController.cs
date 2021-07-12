@@ -309,6 +309,12 @@ namespace iSpeakWebApp.Controllers
 	                                LEFT JOIN SaleInvoices ON Saleinvoices.Id = PaymentItems.ReferenceId
                                 WHERE SaleInvoices.No = @FILTER_InvoiceNo
                             )))
+                            AND (@Branches_Id IS NULL OR (Payments.Id IN (
+                                SELECT PaymentItems.Payments_Id
+                                FROM PaymentItems
+                                    LEFT JOIN SaleInvoices ON SaleInvoices.Id = PaymentItems.ReferenceId
+                                WHERE SaleInvoices.Branches_Id = @Branches_Id
+                            )))
                         ))
 					ORDER BY Payments.No DESC
                 ",
@@ -317,6 +323,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter("FILTER_InvoiceNo", FILTER_InvoiceNo),
                 DBConnection.getSqlParameter("FILTER_DateFrom", FILTER_DateFrom),
                 DBConnection.getSqlParameter("FILTER_DateTo", Util.getAsEndDate(FILTER_DateTo)),
+                DBConnection.getSqlParameter("Branches_Id", Branches_Id),
                 DBConnection.getSqlParameter(PaymentsModel.COL_Cancelled.Name, Cancelled),
                 DBConnection.getSqlParameter(PaymentsModel.COL_Confirmed.Name, IsChecked)
             ).ToList();

@@ -9,8 +9,6 @@ FINAL: check for UTC date conversion
 
 TO DO:
 - check for log links that should not be seen by some roles. e.g.: student should not see log for lesson sessions because there is information about hourly rates, etc.
-- admin should not see tutors in list of accounts
-- birthdays: show students with active lesson packages
 - navigation menu: for students, do not show menu Sales. maybe create a new one just for students?
 - tutors can only see their payroll information. related to settings value can only see own data
 - trim useraccounts name on edit/add

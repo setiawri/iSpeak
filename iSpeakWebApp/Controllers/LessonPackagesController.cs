@@ -151,7 +151,8 @@ namespace iSpeakWebApp.Controllers
             return db.Database.SqlQuery<LessonPackagesModel>(@"
                         SELECT LessonPackages.*,
                             NULL AS Languages_Name,
-                            NULL AS LessonTypes_Name
+                            NULL AS LessonTypes_Name,
+                            '' AS DDLDescription
                         FROM LessonPackages
                         WHERE 1=1 
 							AND (@Id IS NOT NULL OR LessonPackages.Name = @Name)
