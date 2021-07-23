@@ -8,6 +8,12 @@ FINAL: check for UTC date conversion
 ===============================================================================================================================================================
 
 TO DO:
+- troubleshoot:
+	> create invoice for free trial 1 hour
+	> create session for 0.5 hour
+	> cancel invoice shows error:
+		1. bad request from wrong domain: i-speak.co
+		2. error because session is not yet cancelled. not showing error message.
 - check for log links that should not be seen by some roles. e.g.: student should not see log for lesson sessions because there is information about hourly rates, etc.
 - navigation menu: for students, do not show menu Sales. maybe create a new one just for students?
 - tutors can only see their payroll information. related to settings value can only see own data
@@ -82,6 +88,9 @@ TO DO:
 
 
 IMPROVEMENTS:
+
+- create list in dashboard of things to check and approve
+	> invoice items with 0 amount
 
 - auto send happy birthday message to users
 

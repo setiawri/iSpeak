@@ -23,10 +23,10 @@ namespace iSpeakWebApp.Controllers
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public static List<SaleInvoiceItemsModel> getActiveLessonPackages(Guid Customer_UserAccounts_Id, int? hasLessonHours) { return get(null, null, null, null, Customer_UserAccounts_Id, hasLessonHours, 1, null); }
-        public static List<SaleInvoiceItemsModel> get_by_SaleInvoices_Id(Guid SaleInvoices_Id) { return get(null, SaleInvoices_Id, null, null, null, null, null, null); }
-        public static List<SaleInvoiceItemsModel> get_by_IdList(string IdList) { return get(null, null, null, null, null, null, null, IdList); }
-        public static List<SaleInvoiceItemsModel> get(Guid? Id, Guid? SaleInvoices_Id, string SaleInvoices_IdList, Guid? Payments_Id, Guid? Customer_UserAccounts_Id, int? hasLessonHours, int? isFullyPaid, string IdList)
+        public static List<SaleInvoiceItemsModel> getActiveLessonPackages(Guid Customer_UserAccounts_Id, int? hasLessonHours) { return get(null, null, null, null, Customer_UserAccounts_Id, hasLessonHours, 1, null, 0); }
+        public static List<SaleInvoiceItemsModel> get_by_SaleInvoices_Id(Guid SaleInvoices_Id) { return get(null, SaleInvoices_Id, null, null, null, null, null, null, null); }
+        public static List<SaleInvoiceItemsModel> get_by_IdList(string IdList) { return get(null, null, null, null, null, null, null, IdList, null); }
+        public static List<SaleInvoiceItemsModel> get(Guid? Id, Guid? SaleInvoices_Id, string SaleInvoices_IdList, Guid? Payments_Id, Guid? Customer_UserAccounts_Id, int? hasLessonHours, int? isFullyPaid, string IdList, int? SaleInvoices_Cancelled)
         {
             string IdList_Clause = "";
             if (!string.IsNullOrEmpty(IdList))
@@ -68,6 +68,7 @@ namespace iSpeakWebApp.Controllers
 				                WHERE PaymentItems.Payments_Id = @Payments_Id
                             )))
                             AND (@Customer_UserAccounts_Id IS NULL OR SaleInvoices.Customer_UserAccounts_Id = @Customer_UserAccounts_Id)
+                            AND (@SaleInvoices_Cancelled IS NULL OR SaleInvoices.Cancelled = @SaleInvoices_Cancelled)
                             AND (
                                     @hasLessonHours IS NULL 
                                     OR (@hasLessonHours = 0 AND SaleInvoiceItems.SessionHours_Remaining = 0)
@@ -89,7 +90,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SaleInvoices_Id.Name, SaleInvoices_Id),
                 DBConnection.getSqlParameter("Customer_UserAccounts_Id", Customer_UserAccounts_Id),
                 DBConnection.getSqlParameter("hasLessonHours", hasLessonHours),
-                DBConnection.getSqlParameter("isFullyPaid", isFullyPaid)
+                DBConnection.getSqlParameter("isFullyPaid", isFullyPaid),
+                DBConnection.getSqlParameter("SaleInvoices_Cancelled", SaleInvoices_Cancelled)
             ).ToList();
         }
 
