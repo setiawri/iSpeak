@@ -67,8 +67,7 @@ namespace iSpeakWebApp.Controllers
                                     <tr>
                                         <th style='width:140px;'>Date</th>
                                         <th>Description</th>
-                                        <th class='text-right' style='width:40px;'>Hour</th>
-                                        <th class='text-right' style='width:40px;'>Rate</th>
+                                        <th class='text-center' style='width:140px;'>Hours x Payrate</th>
                                         <th class='text-right' style='width:40px;'>Travel</th>
                                         <th class='text-right' style='width:40px;'>Amount</th>
                                         <th class='text-center' style='width:20px;'>Paid</th>
@@ -83,8 +82,7 @@ namespace iSpeakWebApp.Controllers
                                 <tr>
                                     <td class='align-top'>{0:dd/MM/yy HH:mm}</td>
                                     <td class='align-top'>{1}</td>
-                                    <td class='align-top text-right'>{2:N2}</td>
-                                    <td class='align-top text-right'>{3:N2}</td>
+                                    <td class='align-top text-right'>{2:N2} x {3:N2}</td>
                                     <td class='align-top text-right'>{4:N2}</td>
                                     <td class='align-top text-right'>{5:N2}</td>
                                     <td class='align-top text-center'>{6}</td>

@@ -14,6 +14,7 @@ TO DO:
 	> cancel invoice shows error:
 		1. bad request from wrong domain: i-speak.co
 		2. error because session is not yet cancelled. not showing error message.
+- payroll payment page: year box in month filter should be next to the month
 - check for log links that should not be seen by some roles. e.g.: student should not see log for lesson sessions because there is information about hourly rates, etc.
 - navigation menu: for students, do not show menu Sales. maybe create a new one just for students?
 - tutors can only see their payroll information. related to settings value can only see own data
