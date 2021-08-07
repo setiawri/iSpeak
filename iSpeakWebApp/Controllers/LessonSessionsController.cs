@@ -390,7 +390,15 @@ namespace iSpeakWebApp.Controllers
                 SET
                     Deleted = @Deleted,
                     Notes_Cancel = @Notes_Cancel
-                WHERE LessonSessions.Id = @Id;                
+                WHERE LessonSessions.Id = @Id;           
+
+                UPDATE SaleInvoiceItems 
+                SET SessionHours_Remaining = SessionHours_Remaining + (SELECT LessonSessions.SessionHours FROM LessonSessions WHERE LessonSessions.Id = @Id)  
+                WHERE SaleInvoiceItems.Id = (
+                        SELECT LessonSessions.SaleInvoiceItems_Id 
+                        FROM LessonSessions 
+                        WHERE LessonSessions.Id = @Id
+                    );    
             ",
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Id.Name, Id),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Deleted.Name, 1),
