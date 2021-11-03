@@ -386,10 +386,13 @@ namespace iSpeakWebApp.Controllers
         public void update_Deleted(Guid Id, string CancelNotes)
         {
             db.Database.ExecuteSqlCommand(@"
+                DELETE PayrollPaymentItems WHERE PayrollPaymentItems.Id = (SELECT LessonSessions.PayrollPaymentItems_Id FROM LessonSessions WHERE LessonSessions.Id = @Id)
+
                 UPDATE LessonSessions 
                 SET
                     Deleted = @Deleted,
-                    Notes_Cancel = @Notes_Cancel
+                    Notes_Cancel = @Notes_Cancel,
+                    PayrollPaymentItems_Id = NULL
                 WHERE LessonSessions.Id = @Id;           
 
                 UPDATE SaleInvoiceItems 

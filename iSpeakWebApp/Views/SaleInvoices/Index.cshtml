@@ -132,7 +132,10 @@
                                     {
                                         <th class="non-searchable non-sortable" style="width:0px;">Approval</th>
                                     }
-                                    <th class="non-searchable non-sortable" style="width:70px;"></th>
+                                    @if (access.SaleInvoices_Edit)
+                                    {
+                                        <th class="non-searchable non-sortable" style="width:70px;"></th>
+                                    }
                                     <th class="non-searchable non-sortable" style="width:180px;"></th>
                                 </tr>
                             </thead>
@@ -177,12 +180,15 @@
                                                     <input type="checkbox" id='@("chkApprove_" + rowno)' onclick="UpdateApproval(this, '@item.Id')" @(item.IsChecked ? "checked" : "") />
                                                 </td>
                                             }
-                                            <td class="align-top">
-                                                @if (!item.Cancelled)
-                                                {
-                                                    <a href="javascript:void(0)" id='@("lnkCancel_" + rowno)' class='@(item.IsChecked ? "d-none" : "")'><span class="badge badge-warning d-block mr-1" style="width:50px;" data-toggle="modal" data-target="#modal_cancel" onclick="PopulateCancelModal('@item.Id','@item.No')">CANCEL</span></a>
-                                                }
-                                            </td>
+                                            @if (access.SaleInvoices_Edit)
+                                            {
+                                                <td class="align-top">
+                                                    @if (!item.Cancelled)
+                                                    {
+                                                        <a href="javascript:void(0)" id='@("lnkCancel_" + rowno)' class='@(item.IsChecked ? "d-none" : "")'><span class="badge badge-warning d-block mr-1" style="width:50px;" data-toggle="modal" data-target="#modal_cancel" onclick="PopulateCancelModal('@item.Id','@item.No')">CANCEL</span></a>
+                                                    }
+                                                </td>
+                                            }
                                             <td class="align-top">
                                                 @if (item.Cancelled)
                                                 {

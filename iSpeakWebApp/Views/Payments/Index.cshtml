@@ -105,7 +105,10 @@
                                         <th class="non-searchable non-sortable" style="width:0px;">Approval</th>
                                     }
                                     <th class="non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
-                                    <th class="non-searchable non-sortable" style="width:70px;"></th>
+                                    @if (access.Payments_Edit)
+                                    {
+                                        <th class="non-searchable non-sortable" style="width:70px;"></th>
+                                    }
                                     <th class="non-searchable non-sortable" style="width:120px;"></th>
                                 </tr>
                             </thead>
@@ -152,12 +155,15 @@
                                                 }
                                                 @Html.DisplayFor(modelItem => item.Notes)
                                             </td>
-                                            <td class="align-top">
-                                                @if (!item.Cancelled)
-                                                {
-                                                    <a href="javascript:void(0)" id='@("lnkCancel_" + rowno)' class='@(item.Confirmed ? "d-none" : "")'><span class="badge badge-warning d-block mr-1" style="width:50px;" data-toggle="modal" data-target="#modal_cancel" onclick="PopulateCancelModal('@item.Id','@item.No')">CANCEL</span></a>
-                                                }
-                                            </td>
+                                            @if (access.Payments_Edit)
+                                            {
+                                                <td class="align-top">
+                                                    @if (!item.Cancelled)
+                                                    {
+                                                        <a href="javascript:void(0)" id='@("lnkCancel_" + rowno)' class='@(item.Confirmed ? "d-none" : "")'><span class="badge badge-warning d-block mr-1" style="width:50px;" data-toggle="modal" data-target="#modal_cancel" onclick="PopulateCancelModal('@item.Id','@item.No')">CANCEL</span></a>
+                                                    }
+                                                </td>
+                                            }
                                             <td class="align-top">
                                                 @if (item.Cancelled)
                                                 {
