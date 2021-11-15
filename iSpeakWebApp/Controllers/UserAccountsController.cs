@@ -205,7 +205,7 @@ namespace iSpeakWebApp.Controllers
                 if (string.IsNullOrEmpty(model.Username))
                     model.Username = "ricky";
                 if (string.IsNullOrEmpty(model.Password))
-                    model.Password = "qwerty";
+                    model.Password = "A2cdefGH";
             }
 
             string hashedPassword = HashPassword(model.Password);
@@ -409,26 +409,36 @@ namespace iSpeakWebApp.Controllers
             string Username;
             int charCount = 3;
 
-            List<string> name = Fullname.Split().ToList();
-            if (name.Count == 1)
-                name.Add(name[0]); //name must consist of 2 words
+            List<string> nameArray = Fullname.Split().ToList();
+            if (nameArray.Count == 1)
+                nameArray.Add(nameArray[0]); //name must consist of 2 words. duplicate first name as last name
 
-            Username = generateUsername(name, Birthday, charCount);
+            Username = generateUsername(nameArray, Birthday, charCount);
 
             //verify username doesn't exist
-            while (isExists(null, Username) && charCount <= name[0].Length)
-                Username = generateUsername(name, Birthday, charCount++);
+            while (isExists(null, Username) && charCount <= nameArray[0].Length)
+            {
+                Username = generateUsername(nameArray, Birthday, charCount++);
+            }
 
             return Username;
         }
 
         public string generateUsername(List<string> nameArray, DateTime Birthday, int charCount)
         {
-            return string.Format("{0}{1}{2:##00}{3:##00}",
-                nameArray[0].Substring(0, charCount),
-                nameArray[nameArray.Count - 1].Substring(0, charCount),
-                Birthday.Day,
-                Birthday.Month);
+            string first;
+            if (nameArray[0].Length < charCount)
+                first = nameArray[0];
+            else
+                first = nameArray[0].Substring(0, charCount);
+
+            string last;
+            if (nameArray[nameArray.Count - 1].Length < charCount)
+                last = nameArray[nameArray.Count - 1];
+            else
+                last = nameArray[nameArray.Count - 1].Substring(0, charCount);
+
+            return string.Format("{0}{1}{2:##00}{3:##00}", first, last, Birthday.Day, Birthday.Month);
         }
 
         public JsonResult GetDropDownListData(string keyword, int page, int take, string key)
