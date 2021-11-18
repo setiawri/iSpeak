@@ -163,7 +163,7 @@
                                             </td>
                                             <td class="align-top text-right">@Html.DisplayFor(modelItem => item.Amount)</td>
                                             <td class="align-top text-right pr-1">
-                                                @if (item.Due > 0)
+                                                @if (item.Due > 0 && !item.Cancelled)
                                                 {
                                                     @Html.DisplayFor(modelItem => item.Due)
                                                 }

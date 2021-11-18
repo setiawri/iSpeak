@@ -19,6 +19,7 @@ namespace iSpeakWebApp.Controllers
         public const string SESSION_ActiveBranches_Id = "ActiveBranches_Id";
         public const string SESSION_Branches_Models = "Branches_Models";
         public const string SESSION_ShowOnlyUserData = "ShowOnlyUserData";
+        public const string SESSION_ConnectToLiveDatabase = "ConnectToLiveDatabase";
 
 
         private readonly DBContext db = new DBContext();
@@ -197,7 +198,7 @@ namespace iSpeakWebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(UserAccountsModel model, string returnUrl)
+        public ActionResult Login(UserAccountsModel model, bool ConnectToLiveDatabase, string returnUrl)
         {
             //bypass login
             if (Server.MachineName == Helper.DEVCOMPUTERNAME)
@@ -227,7 +228,7 @@ namespace iSpeakWebApp.Controllers
                 }
                 else
                 {
-                    setLoginSession(Session, userAccount);
+                    setLoginSession(Session, userAccount, ConnectToLiveDatabase);
                     return RedirectToLocal(returnUrl);
                 }
             }
@@ -369,8 +370,9 @@ namespace iSpeakWebApp.Controllers
         {
             return getUserAccount(Session).ResetPassword;
         }
-
-        public static void setLoginSession(HttpSessionStateBase Session, UserAccountsModel model)
+        
+        public static void setLoginSession(HttpSessionStateBase Session, UserAccountsModel model) { setLoginSession(Session, model, false); }
+        public static void setLoginSession(HttpSessionStateBase Session, UserAccountsModel model, bool? ConnectToLiveDatabase)
         {
             if (model != null)
             {
@@ -378,6 +380,7 @@ namespace iSpeakWebApp.Controllers
                 Session[SESSION_ActiveBranches_Id] = model.Branches_Id;
                 Session[SESSION_Branches_Models] = BranchesController.get(1, model.Branches);
                 Session[SESSION_UserAccountAccess] = UserAccountRolesController.getAccesses(model);
+                Session[SESSION_ConnectToLiveDatabase] = ConnectToLiveDatabase;
 
                 Session[SESSION_ShowOnlyUserData] = true;
                 string ShowOnlyOwnUserData = SettingsController.get().ShowOnlyOwnUserData;

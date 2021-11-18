@@ -53,8 +53,14 @@
                             <div class="form-group d-flex align-items-center mx-4">
                                 <div class="form-check mb-0 d-none">
                                     <label class="form-check-label">
-                                        <input type="checkbox" name="remember" class="form-input-styled" checked data-fouc>
+                                        @Html.CheckBox("RememberSession", false, new { @class = "form-input-styled" })
                                         Remember
+                                    </label>
+                                </div>
+                                <div class="form-check mb-0 d-none">
+                                    <label class="form-check-label">
+                                        @Html.CheckBox("ConnectToLiveDatabase", false, new { @class= "form-input-styled" })
+                                        Connect to live database
                                     </label>
                                 </div>
                             </div>

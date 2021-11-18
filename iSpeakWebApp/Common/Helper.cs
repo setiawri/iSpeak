@@ -60,7 +60,10 @@ namespace iSpeakWebApp
 
         /* METHODS ********************************************************************************************************************************************/
 
-        public static string ConnectionString { get { return DBConnection.getWebConnectionString(Environment.MachineName == DEVCOMPUTERNAME ? SERVERNAME_DEV : SERVERNAME_LIVE, DBNAME, USERID, PASSWORD); } }
+        public static string ConnectionString { get {
+                bool ConnectToLiveDB = Convert.ToBoolean(Util.getConfigVariable("ConnectToLiveDB"));
+                string datasource = Environment.MachineName == DEVCOMPUTERNAME && !ConnectToLiveDB ? SERVERNAME_DEV : SERVERNAME_LIVE;
+                return DBConnection.getWebConnectionString(datasource, DBNAME, USERID, PASSWORD); } }
 
         public static string getImageUrl(string imageName, HttpRequestBase Request, HttpServerUtilityBase Server)
         {
