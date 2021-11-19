@@ -255,7 +255,7 @@
                         $('#LoadData').trigger('click');
                     }, //end success
                     error: function (data) {
-                        showMessage("ERROR: " + data.responseText);
+                        showMessage("ERROR: " + data.statusText);
                     } //end error
                 }); //end ajax
             }
@@ -280,7 +280,7 @@
                     $('#LoadData').trigger('click');
                 }, //end success
                 error: function (data) {
-                    showMessage("ERROR: " + data.responseText);
+                    showMessage("ERROR: " + data.statusText);
                 } //end error
             }); //end ajax
         }

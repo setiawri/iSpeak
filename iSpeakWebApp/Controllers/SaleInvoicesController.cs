@@ -351,7 +351,7 @@ namespace iSpeakWebApp.Controllers
 
         public string update_CancelNotes(Guid Id, string CancelNotes)
         {
-            SqlQueryResult result = DBConnection.executeQuery("DBContext", @"
+            SqlQueryResult result = DBConnection.executeQuery(db.Database.Connection.ConnectionString, @"
                     IF EXISTS(
                             SELECT Payments.Id
                             FROM PaymentItems 

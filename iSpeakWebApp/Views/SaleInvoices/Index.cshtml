@@ -307,8 +307,8 @@
                         disableDivElements('modal_cancel-footer', true);
                     },
                     error: function (data) {
-                        showMessage("ERROR: " + data.responseText);
-                    },
+                        showMessage("ERROR: " + data.statusText);
+                    }, //end error
                     complete: function (data) {
                         disableDivElements('modal_cancel-footer', false);
                     }
