@@ -446,9 +446,13 @@ namespace iSpeakWebApp.Models
         public bool LessonSessions_View { get; set; }
         public static ModelMember COL_LessonSessions_View = new ModelMember { Name = "LessonSessions_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("Lesson Sessions View") };
 
-        [Display(Name = "Edit")]
+        [Display(Name = "Edit All")]
         public bool LessonSessions_Edit { get; set; }
-        public static ModelMember COL_LessonSessions_Edit = new ModelMember { Name = "LessonSessions_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Lesson Sessions Edit") };
+        public static ModelMember COL_LessonSessions_Edit = new ModelMember { Name = "LessonSessions_Edit", Display = "Edit All", LogDisplay = ActivityLogsController.editBooleanFormat("Lesson Sessions Edit All") };
+
+        [Display(Name = "Edit Review & Internal Notes")]
+        public bool LessonSessions_EditReviewAndInternalNotes { get; set; }
+        public static ModelMember COL_LessonSessions_EditReviewAndInternalNotes = new ModelMember { Name = "LessonSessions_EditReviewAndInternalNotes", Display = "Edit Review & Internal Notes", LogDisplay = ActivityLogsController.editBooleanFormat("Lesson Sessions Edit Review & Internal Notes") };
 
         [Display(Name = "View Internal Notes")]
         public bool LessonSessions_InternalNotes_View { get; set; }

@@ -216,8 +216,14 @@ namespace iSpeakWebApp.Controllers
             return Json(new { Message = "" });
         }
 
+        public static decimal calculateAmount(bool IsWaiveTutorFee, decimal SessionHours, decimal HourlyRate, int TutorTravelCost)
+        {
+            return IsWaiveTutorFee ? 0 : (SessionHours * HourlyRate) + TutorTravelCost;
+        }
+
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
+        public static PayrollPaymentItemsModel get(HttpSessionStateBase Session, Guid? Id) { return get(Session, Id, null, null, null, null).FirstOrDefault(); }
         public static List<PayrollPaymentItemsModel> get(HttpSessionStateBase Session, Guid? UserAccounts_Id, DateTime? DatePeriod, int? IsFullTime) { return get(Session, null, null, UserAccounts_Id, DatePeriod, IsFullTime); }
         public static List<PayrollPaymentItemsModel> get(HttpSessionStateBase Session, Guid? Id, Guid? PayrollPayments_Id, Guid? UserAccounts_Id, DateTime? DatePeriod, int? IsFullTime)
         {
@@ -277,7 +283,7 @@ namespace iSpeakWebApp.Controllers
             );
         }
 
-        public static void update(DBContext db, HttpSessionStateBase Session, Guid? PayrollPayments_Id, List<PayrollPaymentItemsModel> models)
+        public static void update_PayrollPayments_Id(DBContext db, Guid? PayrollPayments_Id, List<PayrollPaymentItemsModel> models)
         {
             foreach (PayrollPaymentItemsModel model in models)
             {
@@ -289,6 +295,28 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Id.Name, model.Id),
                     DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_PayrollPayments_Id.Name, PayrollPayments_Id)
                 );
+            }
+        }
+
+        public static void update(DBContext db, HttpSessionStateBase Session, PayrollPaymentItemsModel model)
+        {
+            PayrollPaymentItemsModel originalModel = get(Session, model.Id);
+
+            string log = string.Empty;
+            log = Helper.append(log, originalModel.HourlyRate, model.HourlyRate, PayrollPaymentItemsModel.COL_HourlyRate.LogDisplay);
+            log = Helper.append(log, originalModel.TutorTravelCost, model.TutorTravelCost, PayrollPaymentItemsModel.COL_TutorTravelCost.LogDisplay);
+            log = Helper.append(log, originalModel.Amount, model.Amount, PayrollPaymentItemsModel.COL_Amount.LogDisplay);
+
+            if (!string.IsNullOrEmpty(log))
+            {
+                WebDBConnection.Update(db.Database, "PayrollPaymentItems",
+                    DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Id.Name, model.Id),
+                    DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_HourlyRate.Name, model.HourlyRate),
+                    DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_TutorTravelCost.Name, model.TutorTravelCost),
+                    DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Amount.Name, model.Amount)
+                );
+                ActivityLogsController.AddEditLog(db, Session, model.Id, log);
+                db.SaveChanges();
             }
         }
 

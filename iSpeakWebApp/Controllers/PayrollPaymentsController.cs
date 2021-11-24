@@ -173,7 +173,7 @@ namespace iSpeakWebApp.Controllers
             );
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
 
-            PayrollPaymentItemsController.update(db, Session, model.Id, items);
+            PayrollPaymentItemsController.update_PayrollPayments_Id(db, model.Id, items);
 
             db.SaveChanges();
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using iSpeakWebApp.Controllers;
 
 namespace iSpeakWebApp.Models
 {
@@ -28,16 +29,16 @@ namespace iSpeakWebApp.Models
 
 
         public decimal HourlyRate { get; set; }
-        public static ModelMember COL_HourlyRate = new ModelMember { Name = "HourlyRate" };
+        public static ModelMember COL_HourlyRate = new ModelMember { Name = "HourlyRate", Display = "Hourly Rate", LogDisplay = ActivityLogsController.editIntFormat("Hourly Rate") };
 
 
         public int TutorTravelCost { get; set; }
-        public static ModelMember COL_TutorTravelCost = new ModelMember { Name = "TutorTravelCost" };
+        public static ModelMember COL_TutorTravelCost = new ModelMember { Name = "TutorTravelCost", Display = "Tutor Travel Cost", LogDisplay = ActivityLogsController.editIntFormat("Tutor Travel Cost") };
 
 
         [DisplayFormat(DataFormatString = "{0:N0}")]
         public decimal Amount { get; set; }
-        public static ModelMember COL_Amount = new ModelMember { Name = "Amount" };
+        public static ModelMember COL_Amount = new ModelMember { Name = "Amount", Display = "Amount", LogDisplay = ActivityLogsController.editIntFormat("Amount") };
 
 
         public Guid UserAccounts_Id { get; set; }

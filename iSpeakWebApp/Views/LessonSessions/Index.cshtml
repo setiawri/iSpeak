@@ -143,7 +143,7 @@
                                                 {
                                                     <a href="javascript:void(0)" class="badge badge-warning d-block"><span style="width:50px;" data-toggle="modal" data-target="#modal_cancel" onclick="PopulateCancelModal('@item.Id')">CANCEL</span></a>
                                                 }
-                                                @if (access.LessonSessions_Edit)
+                                                @if (access.LessonSessions_Edit || access.LessonSessions_EditReviewAndInternalNotes)
                                                 {
                                                     <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a> @:•
                                                 }

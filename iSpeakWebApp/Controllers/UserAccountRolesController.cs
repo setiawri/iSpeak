@@ -239,6 +239,7 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.LessonSessions_Notes, model.LessonSessions_Notes, UserAccountRolesModel.COL_LessonSessions_Notes.LogDisplay);
                     log = Helper.append(log, originalModel.LessonSessions_Add, model.LessonSessions_Add, UserAccountRolesModel.COL_LessonSessions_Add.LogDisplay);
                     log = Helper.append(log, originalModel.LessonSessions_Edit, model.LessonSessions_Edit, UserAccountRolesModel.COL_LessonSessions_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.LessonSessions_EditReviewAndInternalNotes, model.LessonSessions_EditReviewAndInternalNotes, UserAccountRolesModel.COL_LessonSessions_EditReviewAndInternalNotes.LogDisplay);
                     log = Helper.append(log, originalModel.LessonSessions_View, model.LessonSessions_View, UserAccountRolesModel.COL_LessonSessions_View.LogDisplay);
                     log = Helper.append(log, originalModel.LessonSessions_InternalNotes_View, model.LessonSessions_InternalNotes_View, UserAccountRolesModel.COL_LessonSessions_InternalNotes_View.LogDisplay);
 
@@ -411,6 +412,7 @@ namespace iSpeakWebApp.Controllers
                 //LessonSessions
                 if (item.LessonSessions_Add) model.LessonSessions_Add = true;
                 if (item.LessonSessions_Edit) model.LessonSessions_Edit = true;
+                if (item.LessonSessions_EditReviewAndInternalNotes) model.LessonSessions_EditReviewAndInternalNotes = true;
                 if (item.LessonSessions_View) model.LessonSessions_View = true;
                 if (item.LessonSessions_InternalNotes_View) model.LessonSessions_InternalNotes_View = true;
 

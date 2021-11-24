@@ -655,6 +655,8 @@
 	ALTER TABLE UserAccountRoles ADD LessonSessions_View bit default 0 not null;
 	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'LessonSessions_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
 	ALTER TABLE UserAccountRoles ADD LessonSessions_Edit bit default 0 not null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'LessonSessions_EditReviewAndInternalNotes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD LessonSessions_EditReviewAndInternalNotes bit default 0 not null;
 	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'LessonSessions_InternalNotes_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
 	ALTER TABLE UserAccountRoles ADD LessonSessions_InternalNotes_View bit default 0 not null;
 	GO

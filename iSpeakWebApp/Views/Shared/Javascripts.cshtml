@@ -173,7 +173,7 @@
     }
 
     function selectFirstInput() {
-        $('form:not(.filter) :input:visible:enabled:first').select(); //select content of first visible and enabled control
+        $('form:not(.filter) :input:not([readonly]):visible:enabled:first').select(); //select content of first visible and enabled control
     }
 
     //format string to N0

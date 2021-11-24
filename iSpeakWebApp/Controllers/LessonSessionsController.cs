@@ -160,7 +160,7 @@ namespace iSpeakWebApp.Controllers
                         Hour = model.IsWaiveTutorFee ? 0 : model.SessionHours,
                         HourlyRate = HourlyRate,
                         TutorTravelCost = model.TutorTravelCost,
-                        Amount = model.IsWaiveTutorFee ? 0 : (model.SessionHours * HourlyRate) + model.TutorTravelCost,
+                        Amount = PayrollPaymentItemsController.calculateAmount(model.IsWaiveTutorFee, model.SessionHours, HourlyRate, model.TutorTravelCost),
                         UserAccounts_Id = model.Tutor_UserAccounts_Id,
                         Branches_Id = model.Branches_Id,
                         IsFullTime = false
@@ -197,7 +197,7 @@ namespace iSpeakWebApp.Controllers
         public ActionResult Edit(Guid? id, string FILTER_Keyword, string FILTER_InvoiceNo, int? FILTER_Cancelled,
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
-            if (!UserAccountsController.getUserAccess(Session).LessonSessions_Edit)
+            if (!UserAccountsController.getUserAccess(Session).LessonSessions_Edit && !UserAccountsController.getUserAccess(Session).LessonSessions_EditReviewAndInternalNotes)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
             if (id == null)
@@ -217,6 +217,14 @@ namespace iSpeakWebApp.Controllers
             {
                 LessonSessionsModel originalModel = get(modifiedModel.Id);
 
+                //without the specified access, some fields are excluded in edit form resulting in no value. Copy values from original model
+                if (!UserAccountsController.getUserAccess(Session).LessonSessions_Edit)
+                {
+                    modifiedModel.HourlyRates_Rate = originalModel.HourlyRates_Rate;
+                    modifiedModel.TravelCost = originalModel.TravelCost;
+                    modifiedModel.TutorTravelCost = originalModel.TutorTravelCost;
+                }
+
                 string log = string.Empty;
                 log = Helper.append(log, originalModel.HourlyRates_Rate, modifiedModel.HourlyRates_Rate, LessonSessionsModel.COL_HourlyRates_Rate.LogDisplay);
                 log = Helper.append(log, originalModel.TravelCost, modifiedModel.TravelCost, LessonSessionsModel.COL_TravelCost.LogDisplay);
@@ -227,6 +235,14 @@ namespace iSpeakWebApp.Controllers
                 if (!string.IsNullOrEmpty(log))
                 {
                     update(modifiedModel, log);
+
+                    //update payrollitem if rate or travel cost is changed
+                    //Tutor Travel Cost is not currently checked against total travel cost amount paid by customer. This edit may cause cost to exceed amount paid by customer.
+                    PayrollPaymentItemsModel payrollPaymentItem = PayrollPaymentItemsController.get(Session, originalModel.PayrollPaymentItems_Id);
+                    payrollPaymentItem.HourlyRate = modifiedModel.HourlyRates_Rate;
+                    payrollPaymentItem.TutorTravelCost = modifiedModel.TutorTravelCost;
+                    payrollPaymentItem.Amount = PayrollPaymentItemsController.calculateAmount(originalModel.IsWaiveTutorFee, originalModel.SessionHours, modifiedModel.HourlyRates_Rate, modifiedModel.TutorTravelCost);
+                    PayrollPaymentItemsController.update(db, Session, payrollPaymentItem);
                 }
 
                 return RedirectToAction(nameof(Index), new
