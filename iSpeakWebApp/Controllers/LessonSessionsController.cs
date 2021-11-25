@@ -239,9 +239,12 @@ namespace iSpeakWebApp.Controllers
                     //update payrollitem if rate or travel cost is changed
                     //Tutor Travel Cost is not currently checked against total travel cost amount paid by customer. This edit may cause cost to exceed amount paid by customer.
                     PayrollPaymentItemsModel payrollPaymentItem = PayrollPaymentItemsController.get(Session, originalModel.PayrollPaymentItems_Id);
-                    payrollPaymentItem.HourlyRate = modifiedModel.HourlyRates_Rate;
-                    payrollPaymentItem.TutorTravelCost = modifiedModel.TutorTravelCost;
-                    payrollPaymentItem.Amount = PayrollPaymentItemsController.calculateAmount(originalModel.IsWaiveTutorFee, originalModel.SessionHours, modifiedModel.HourlyRates_Rate, modifiedModel.TutorTravelCost);
+
+                    //this is necessary for payrollpaymentitems that has multiple lessonsessions (class)
+                    payrollPaymentItem.HourlyRate += (modifiedModel.HourlyRates_Rate - originalModel.HourlyRates_Rate); 
+                    payrollPaymentItem.TutorTravelCost += (modifiedModel.TutorTravelCost - originalModel.TutorTravelCost);
+
+                    payrollPaymentItem.Amount = PayrollPaymentItemsController.calculateAmount(originalModel.IsWaiveTutorFee, payrollPaymentItem.Hour, payrollPaymentItem.HourlyRate, modifiedModel.TutorTravelCost);
                     PayrollPaymentItemsController.update(db, Session, payrollPaymentItem);
                 }
 

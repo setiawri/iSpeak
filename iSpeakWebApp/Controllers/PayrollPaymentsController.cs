@@ -88,17 +88,17 @@ namespace iSpeakWebApp.Controllers
         {
             List<PayrollPaymentItemsModel> PayrollPaymentItems = PayrollPaymentItemsController.combineClassSesions(PayrollPaymentItemsController.get(Session, UserAccounts_Id, DatePeriod, null));
 
-            if (Amount != PayrollPaymentItems.Where(x => x.PayrollPayments_Id == null).Sum(x => x.Amount))
+            if (Amount != PayrollPaymentItems.Sum(x => x.Amount - x.PayrollPaymentAmount))
                 return UtilWebMVC.Json(Response, "Due amount has changed. Please reload list and try again.");
 
-            add(new PayrollPaymentsModel
+            add(PayrollPaymentItems, new PayrollPaymentsModel
             {
                 Id = Guid.NewGuid(),
                 Timestamp = Timestamp,
                 Amount = Amount,
                 Notes = Notes,
                 UserAccounts_Id = UserAccounts_Id
-            }, PayrollPaymentItems);
+            });
 
             return Json(new { Message = "" });
         }
@@ -146,11 +146,35 @@ namespace iSpeakWebApp.Controllers
                 ).ToList();
         }
 
-        public void add(PayrollPaymentsModel model, List<PayrollPaymentItemsModel> items)
+        public void add(List<PayrollPaymentItemsModel> items, PayrollPaymentsModel model)
         {
-            model.Id = Guid.NewGuid();
+            if (items.Count == 0)
+                return;
 
-            db.Database.ExecuteSqlCommand(@"
+            Guid? PayrollPayments_Id = null;
+            foreach(PayrollPaymentItemsModel item in items)
+            {
+                if(item.PayrollPayments_Id != null)
+                {
+                    PayrollPayments_Id = item.PayrollPayments_Id;
+                    break;
+                }
+            }
+
+            string log = string.Format("Payment of {0:N0} on {1:dd/MM/yy}", model.Amount, model.Timestamp);
+            if (!string.IsNullOrWhiteSpace(model.Notes))
+                log += ", Notes: " + model.Notes;
+
+            if (PayrollPayments_Id != null)
+            {
+                log = "Additional " + log;
+                model = get(Session, (Guid)PayrollPayments_Id);
+            }
+            else
+            {
+                model.Id = Guid.NewGuid();
+
+                db.Database.ExecuteSqlCommand(@"
 	                -- INCREMENT LAST HEX NUMBER
 	                DECLARE @HexLength int = 5, @LastHex_String varchar(5), @NewNo varchar(5)
 	                SELECT @LastHex_String = ISNULL(MAX(No),'') From PayrollPayments	
@@ -161,19 +185,20 @@ namespace iSpeakWebApp.Controllers
                 INSERT INTO PayrollPayments (Id, No,    Timestamp, UserAccounts_Id, Amount, IsChecked, Cancelled, Notes_Cancel, Notes) 
                                      VALUES(@Id,@NewNo,@Timestamp,@UserAccounts_Id,@Amount,@IsChecked,@Cancelled,@Notes_Cancel,@Notes);
             ",
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, model.Id),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Timestamp.Name, model.Timestamp),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_No.Name, model.No),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_UserAccounts_Id.Name, model.UserAccounts_Id),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Amount.Name, model.Amount),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_IsChecked.Name, model.IsChecked),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Cancelled.Name, model.Cancelled),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Notes_Cancel.Name, model.Notes_Cancel),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Notes.Name, model.Notes)
-            );
-            ActivityLogsController.AddCreateLog(db, Session, model.Id);
+                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, model.Id),
+                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Timestamp.Name, model.Timestamp),
+                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_No.Name, model.No),
+                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_UserAccounts_Id.Name, model.UserAccounts_Id),
+                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Amount.Name, model.Amount),
+                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_IsChecked.Name, model.IsChecked),
+                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Cancelled.Name, model.Cancelled),
+                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Notes_Cancel.Name, model.Notes_Cancel),
+                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Notes.Name, model.Notes)
+                );
+            }
+            ActivityLogsController.Add(db, Session, model.Id, log);
 
-            PayrollPaymentItemsController.update_PayrollPayments_Id(db, model.Id, items);
+            PayrollPaymentItemsController.update_PayrollPayments_Id(db, Session, model.Id, items);
 
             db.SaveChanges();
         }

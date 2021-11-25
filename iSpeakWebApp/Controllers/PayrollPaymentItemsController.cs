@@ -70,14 +70,17 @@ namespace iSpeakWebApp.Controllers
                                         <th class='text-center' style='width:140px;'>Hours x Payrate</th>
                                         <th class='text-right' style='width:40px;'>Travel</th>
                                         <th class='text-right' style='width:40px;'>Amount</th>
-                                        <th class='text-center' style='width:20px;'>Paid</th>
+                                        <th class='text-center' style='width:20px;'>Due</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                     ");
 
+                decimal dueAmount = 0;
+                Guid? PayrollPayments_Id = null;
                 foreach (PayrollPaymentItemsModel model in combinedModels)
                 {
+                    dueAmount = model.Amount - model.PayrollPaymentAmount;
                     content += string.Format(@"
                                 <tr>
                                     <td class='align-top'>{0:dd/MM/yy HH:mm}</td>
@@ -94,11 +97,14 @@ namespace iSpeakWebApp.Controllers
                             model.HourlyRate,
                             model.TutorTravelCost,
                             model.Amount,
-                            model.PayrollPayments_Id == null ? "<span class='text-danger'><i class='icon-cancel-circle2'></i></span>" : "<span class='text-primary'><i class='icon-checkmark'></i></span>"
+                            dueAmount > 0 ? 
+                                string.Format("<a href=\"javascript: void(0)\" onclick=\"Log('{0}')\" class='text-primary'>{1:N0}</a>", model.Id, dueAmount) 
+                                : string.Format("<a href=\"javascript: void(0)\" onclick=\"Log('{0}')\" class='text-primary'><i class='icon-checkmark'></i></a>", model.Id)
                         );
+                    PayrollPayments_Id = model.PayrollPayments_Id;
                 }
 
-                decimal due = combinedModels.Where(x => x.PayrollPayments_Id == null).Sum(x => x.Amount);
+                dueAmount = combinedModels.Sum(x => x.Amount - x.PayrollPaymentAmount);
                 content += string.Format(@"
                             </tbody></table></div>
 
@@ -110,13 +116,16 @@ namespace iSpeakWebApp.Controllers
                                 <div><button type='button' class='btn btn-success mx-2' data-toggle='modal' data-target='#modal_payment' {2}"
                         + "onclick=\"ClosePayrollItemsDialog('{3}','{4}',{1})\""
                         + @"><i class='icon-checkmark3 mr-2'></i>CREATE PAYMENT</button></div>
-                            </div>
+                                <div><button type='button' class='btn btn-primary mr-2 {5}' onclick=""Log('{6}')"">PAYMENT INFO</button></div>
+                            </ div>
                         ",
                         combinedModels.Sum(x=>x.Amount),
-                        due,
-                        due > 0 ? "" : "disabled='true'",
+                        dueAmount,
+                        dueAmount > 0 ? "" : "disabled='true'",
                         Tutor_UserAccounts_Id,
-                        Tutor_UserAccounts_Fullname
+                        Tutor_UserAccounts_Fullname,
+                        PayrollPayments_Id == null ? "d-none" : "",
+                        PayrollPayments_Id
                     );
             }
 
@@ -283,15 +292,15 @@ namespace iSpeakWebApp.Controllers
             );
         }
 
-        public static void update_PayrollPayments_Id(DBContext db, Guid? PayrollPayments_Id, List<PayrollPaymentItemsModel> models)
+        public static void update_PayrollPayments_Id(DBContext db, HttpSessionStateBase Session, Guid? PayrollPayments_Id, List<PayrollPaymentItemsModel> models)
         {
             foreach (PayrollPaymentItemsModel model in models)
             {
                 db.Database.ExecuteSqlCommand(@"
-                    UPDATE PayrollPaymentItems   
-                        SET PayrollPayments_Id = @PayrollPayments_Id
-                    WHERE Id = @Id;
-                ",
+                        UPDATE PayrollPaymentItems 
+                        SET PayrollPayments_Id = @PayrollPayments_Id, PayrollPaymentAmount = Amount
+                        WHERE Id = @Id;
+                    ",
                     DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Id.Name, model.Id),
                     DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_PayrollPayments_Id.Name, PayrollPayments_Id)
                 );
@@ -339,11 +348,11 @@ namespace iSpeakWebApp.Controllers
 							LEFT JOIN UserAccounts ON UserAccounts.Id = Payrolls.Tutor_UserAccounts_Id
 							LEFT JOIN (
 									SELECT UserAccounts_Id AS Tutor_UserAccounts_Id,
-										SUM(Amount) AS Amount
+										SUM(PayrollPaymentItems.Amount-PayrollPaymentItems.PayrollPaymentAmount) AS Amount
 									FROM PayrollPaymentItems
 									WHERE PayrollPaymentItems.Timestamp >= @StartDate AND PayrollPaymentItems.Timestamp <= @EndDate
                                         AND PayrollPaymentItems.Branches_Id = @Branches_Id
-										AND PayrollPayments_Id IS NULL
+										AND PayrollPaymentItems.Amount <> PayrollPaymentItems.PayrollPaymentAmount
 									GROUP BY UserAccounts_Id						
 								) Due ON Due.Tutor_UserAccounts_Id = Payrolls.Tutor_UserAccounts_Id
 						ORDER BY UserAccounts.Fullname ASC

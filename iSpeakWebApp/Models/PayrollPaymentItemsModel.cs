@@ -14,6 +14,9 @@ namespace iSpeakWebApp.Models
         public Guid? PayrollPayments_Id { get; set; } = null;
         public static ModelMember COL_PayrollPayments_Id = new ModelMember { Name = "PayrollPayments_Id" };
 
+        public int PayrollPaymentAmount { get; set; } = 0;
+        public static ModelMember COL_PayrollPaymentAmount = new ModelMember { Name = "PayrollPaymentAmount" };
+
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yy HH:mm}")]
         public DateTime? Timestamp { get; set; }

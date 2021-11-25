@@ -83,7 +83,12 @@
                                             <td>@Html.ActionLink(item.Tutor_UserAccounts_FullName, "Index", "UserAccounts", new { FILTER_Keyword = @item.Tutor_UserAccounts_FullName }, new { @target = "_blank" })</td>
                                             <td class="text-right">@Html.DisplayFor(modelItem => item.TotalHours)</td>
                                             <td class="text-right">@Html.DisplayFor(modelItem => item.PayableAmount)</td>
-                                            <td class="text-right">@Html.DisplayFor(modelItem => item.DueAmount)</td>
+                                            <td class="text-right @(item.DueAmount < 0 ? "text-danger" : "" )">
+                                                @if (item.DueAmount != 0)
+                                                { 
+                                                    @Html.DisplayFor(modelItem => item.DueAmount) 
+                                                }
+                                            </td>
                                             <td><a href="javascript:void(0)" onclick="GetDetails('@item.Tutor_UserAccounts_Id', '@item.Tutor_UserAccounts_FullName')">Details</a></td>
                                         </tr>
                                     }
@@ -142,7 +147,7 @@
                             </div>
                         </div>
 
-                        <div class="modal-footer">
+                        <div id="modal_payment-buttons" class="modal-footer">
                             <button id="modal_payment-submit" type="button" class="btn bg-success" onclick="Payment()">Submit</button>
                             <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
                         </div>
@@ -265,6 +270,7 @@
     // PAYMENT =====================================================================================================================================================
 
     function Payment() {
+        disableDivElements('modal_payment-buttons', true);
         if (!event.detail || event.detail == 1) {
             $.ajax({
                 type: "POST",
@@ -284,6 +290,7 @@
                 } //end error
             }); //end ajax
         }
+        disableDivElements('modal_payment-buttons', false);
     }
 
     $('#modal_payment').on('shown.bs.modal', function () {
