@@ -133,39 +133,41 @@ namespace iSpeakWebApp.Controllers
                     IF @FILTER_DateFrom IS NULL
 	                    SET @FILTER_DateFrom = (SELECT ISNULL(MIN(PettyCashRecords.Timestamp),GETDATE()) FROM PettyCashRecords WHERE Branches_Id = @Branches_Id)
 
-                    SELECT PettyCashRecords.*,
-                        PettyCashRecordsCategories.Name AS PettyCashRecordsCategories_Name,
-                        ExpenseCategories.Name AS ExpenseCategories_Name,
-                        ISNULL(LEFT(UserAccounts.Fullname, 
-                                CASE 
-                                    WHEN charindex(' ', UserAccounts.Fullname) = 0 
-                                    THEN LEN(UserAccounts.Fullname) 
-                                    ELSE charindex(' ', UserAccounts.Fullname) - 1 
-                                END
-                            ),'') AS UserAccounts_Firstname,
-                        UserAccounts.Fullname AS UserAccounts_Fullname, 
-                        InitialBalance.Amount + (SUM(PettyCashRecords.Amount) OVER(ORDER BY PettyCashRecords.Timestamp ASC)) AS Balance
-                    FROM PettyCashRecords
-                        LEFT JOIN PettyCashRecordsCategories ON PettyCashRecordsCategories.Id = PettyCashRecords.PettyCashRecordsCategories_Id
-                        LEFT JOIN ExpenseCategories ON ExpenseCategories.Id = PettyCashRecords.ExpenseCategories_Id
-                        LEFT JOIN UserAccounts ON UserAccounts.Id = PettyCashRecords.UserAccounts_Id
-                        LEFT JOIN (
-                                SELECT 1 AS Id, ISNULL(SUM(PettyCashRecords.Amount),0) AS Amount
-                                FROM PettyCashRecords
-                                WHERE 1=1
-                					AND PettyCashRecords.Branches_Id = @Branches_Id
-                                    AND PettyCashRecords.Timestamp < @FILTER_DateFrom
-                            ) InitialBalance ON InitialBalance.Id = 1
-                    WHERE 1=1
-    					AND PettyCashRecords.Branches_Id = @Branches_Id
-						AND (@Id IS NULL OR PettyCashRecords.Id = @Id)
-						AND (@Id IS NOT NULL OR (
-                            PettyCashRecords.Timestamp >= @FILTER_DateFrom
-    						AND (@FILTER_Keyword IS NULL OR (PettyCashRecords.No LIKE '%'+@FILTER_Keyword+'%'))
-                            AND (@FILTER_DateTo IS NULL OR PettyCashRecords.Timestamp <= @FILTER_DateTo)
-                            AND (@IsChecked IS NULL OR PettyCashRecords.IsChecked = @IsChecked)
-                        ))
-					ORDER BY PettyCashRecords.Timestamp ASC
+                    SELECT * FROM (
+                        SELECT PettyCashRecords.*,
+                            PettyCashRecordsCategories.Name AS PettyCashRecordsCategories_Name,
+                            ExpenseCategories.Name AS ExpenseCategories_Name,
+                            ISNULL(LEFT(UserAccounts.Fullname, 
+                                    CASE 
+                                        WHEN charindex(' ', UserAccounts.Fullname) = 0 
+                                        THEN LEN(UserAccounts.Fullname) 
+                                        ELSE charindex(' ', UserAccounts.Fullname) - 1 
+                                    END
+                                ),'') AS UserAccounts_Firstname,
+                            UserAccounts.Fullname AS UserAccounts_Fullname, 
+                            InitialBalance.Amount + (SUM(PettyCashRecords.Amount) OVER(ORDER BY PettyCashRecords.Timestamp ASC)) AS Balance
+                        FROM PettyCashRecords
+                            LEFT JOIN PettyCashRecordsCategories ON PettyCashRecordsCategories.Id = PettyCashRecords.PettyCashRecordsCategories_Id
+                            LEFT JOIN ExpenseCategories ON ExpenseCategories.Id = PettyCashRecords.ExpenseCategories_Id
+                            LEFT JOIN UserAccounts ON UserAccounts.Id = PettyCashRecords.UserAccounts_Id
+                            LEFT JOIN (
+                                    SELECT 1 AS Id, ISNULL(SUM(PettyCashRecords.Amount),0) AS Amount
+                                    FROM PettyCashRecords
+                                    WHERE 1=1
+                					    AND PettyCashRecords.Branches_Id = @Branches_Id
+                                        AND PettyCashRecords.Timestamp < @FILTER_DateFrom
+                                ) InitialBalance ON InitialBalance.Id = 1
+                        WHERE 1=1
+    					    AND PettyCashRecords.Branches_Id = @Branches_Id
+						    AND (@Id IS NULL OR PettyCashRecords.Id = @Id)
+						    AND (@Id IS NOT NULL OR (
+                                PettyCashRecords.Timestamp >= @FILTER_DateFrom
+    						    AND (@FILTER_Keyword IS NULL OR (PettyCashRecords.No LIKE '%'+@FILTER_Keyword+'%'))
+                                AND (@FILTER_DateTo IS NULL OR PettyCashRecords.Timestamp <= @FILTER_DateTo)
+                                AND (@IsChecked IS NULL OR PettyCashRecords.IsChecked = @IsChecked)
+                            ))
+                    ) ResultTable
+                    ORDER BY ResultTable.Timestamp DESC
                 ",
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Id.Name, Id),
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Branches_Id.Name, Branches_Id),
