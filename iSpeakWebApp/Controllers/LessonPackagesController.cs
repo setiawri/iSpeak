@@ -196,19 +196,7 @@ namespace iSpeakWebApp.Controllers
 
         public void update(LessonPackagesModel model, string log)
         {
-            db.Database.ExecuteSqlCommand(@"
-                UPDATE LessonPackages 
-                SET
-                    Name = @Name,
-                    Active = @Active,
-                    Notes = @Notes,
-                    Languages_Id = @Languages_Id,
-                    LessonTypes_Id = @LessonTypes_Id,
-                    SessionHours = @SessionHours,
-                    ExpirationDay = @ExpirationDay,
-                    Price = @Price
-                WHERE LessonPackages.Id = @Id;                
-            ",
+            LIBWebMVC.WebDBConnection.Update(db.Database, "LessonPackages",
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_Name.Name, model.Name),
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_Active.Name, model.Active),
@@ -226,10 +214,7 @@ namespace iSpeakWebApp.Controllers
 
         public void add(LessonPackagesModel model)
         {
-            db.Database.ExecuteSqlCommand(@"
-                INSERT INTO LessonPackages (Id, Name, Active, Notes, Languages_Id, LessonTypes_Id, SessionHours, ExpirationDay, Price) 
-                                    VALUES(@Id,@Name,@Active,@Notes,@Languages_Id,@LessonTypes_Id,@SessionHours,@ExpirationDay,@Price);
-            ",
+            LIBWebMVC.WebDBConnection.Insert(db.Database, "LessonPackages",
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_Name.Name, model.Name),
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_Active.Name, model.Active),

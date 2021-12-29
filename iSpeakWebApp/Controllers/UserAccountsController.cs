@@ -571,13 +571,7 @@ namespace iSpeakWebApp.Controllers
 
         public void updatePassword(UserAccountsModel model, string log)
         {
-            db.Database.ExecuteSqlCommand(@"
-                UPDATE UserAccounts 
-                SET
-                    Password = @Password,
-                    ResetPassword = @ResetPassword
-                WHERE UserAccounts.Id = @Id;                
-            ",
+            LIBWebMVC.WebDBConnection.Update(db.Database, "UserAccounts",
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Password.Name, model.Password),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_ResetPassword.Name, model.ResetPassword)
@@ -593,26 +587,7 @@ namespace iSpeakWebApp.Controllers
             if(model.Interest_List != null) model.Interest = string.Join(",", model.Interest_List.ToArray());
             if (model.Branches_List != null) model.Branches = string.Join(",", model.Branches_List.ToArray());
 
-            db.Database.ExecuteSqlCommand(@"
-                UPDATE UserAccounts 
-                SET
-                    Username = @Username,
-                    Fullname = @Fullname,
-                    Birthday = @Birthday,
-                    Branches_Id = @Branches_Id,
-                    Branches = @Branches,
-                    Active = @Active,
-                    ResetPassword = @ResetPassword,
-                    Email = @Email,
-                    Address = @Address,
-                    Phone1 = @Phone1,
-                    Phone2 = @Phone2,
-                    Notes = @Notes,
-                    Interest = @Interest,
-                    PromotionEvents_Id = @PromotionEvents_Id,
-                    Roles = @Roles
-                WHERE UserAccounts.Id = @Id;                
-            ",
+            LIBWebMVC.WebDBConnection.Update(db.Database, "UserAccounts",
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Username.Name, model.Username),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Fullname.Name, model.Fullname),

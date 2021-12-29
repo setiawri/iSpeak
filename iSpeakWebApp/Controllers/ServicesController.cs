@@ -185,18 +185,7 @@ namespace iSpeakWebApp.Controllers
 
         public void update(ServicesModel model, string log)
         {
-            db.Database.ExecuteSqlCommand(@"
-                UPDATE Services 
-                SET
-                    Name = @Name,
-                    Active = @Active,
-                    Notes = @Notes,
-                    Description = @Description,
-                    Units_Id = @Units_Id,
-                    ForSale = @ForSale,
-                    SellPrice = @SellPrice
-                WHERE Services.Id = @Id;                
-            ",
+            LIBWebMVC.WebDBConnection.Update(db.Database, "Services",
                 DBConnection.getSqlParameter(ServicesModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(ServicesModel.COL_Name.Name, model.Name),
                 DBConnection.getSqlParameter(ServicesModel.COL_Active.Name, model.Active),
@@ -213,10 +202,7 @@ namespace iSpeakWebApp.Controllers
 
         public void add(ServicesModel model)
         {
-            db.Database.ExecuteSqlCommand(@"
-                INSERT INTO Services   (Id, Name, Active, Notes, Description, Units_Id, ForSale, SellPrice) 
-                                VALUES(@Id,@Name,@Active,@Notes,@Description,@Units_Id,@ForSale,@SellPrice);
-            ",
+            LIBWebMVC.WebDBConnection.Insert(db.Database, "Services",
                 DBConnection.getSqlParameter(ServicesModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(ServicesModel.COL_Name.Name, model.Name),
                 DBConnection.getSqlParameter(ServicesModel.COL_Active.Name, model.Active),

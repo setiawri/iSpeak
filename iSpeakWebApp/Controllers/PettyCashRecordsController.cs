@@ -207,12 +207,7 @@ namespace iSpeakWebApp.Controllers
 
         public void update_IsChecked(Guid Id, bool value)
         {
-            db.Database.ExecuteSqlCommand(@"
-                UPDATE PettyCashRecords 
-                SET
-                    IsChecked = @IsChecked
-                WHERE PettyCashRecords.Id = @Id;                
-            ",
+            LIBWebMVC.WebDBConnection.Update(db.Database, "PettyCashRecords",
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Id.Name, Id),
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_IsChecked.Name, value)
             );

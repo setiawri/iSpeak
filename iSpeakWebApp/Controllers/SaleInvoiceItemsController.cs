@@ -102,28 +102,7 @@ namespace iSpeakWebApp.Controllers
             foreach(SaleInvoiceItemsModel saleInvoiceItem in SaleInvoiceItems)
             {
                 saleInvoiceItem.Id = Guid.NewGuid();
-                db.Database.ExecuteSqlCommand(@"
-                        INSERT INTO SaleInvoiceItems   (Id, Notes, RowNo, SaleInvoices_Id, Description, Qty, Price, DiscountAmount, Vouchers, VouchersAmount, VouchersName, Products_Id, Services_Id, LessonPackages_Id, SessionHours, SessionHours_Remaining, TravelCost, TutorTravelCost) 
-                                                VALUES(@Id,@Notes,@RowNo,@SaleInvoices_Id,@Description,@Qty,@Price,@DiscountAmount,@Vouchers,@VouchersAmount,@VouchersName,@Products_Id,@Services_Id,@LessonPackages_Id,@SessionHours,@SessionHours_Remaining,@TravelCost,@TutorTravelCost);
-                    ",
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Id.Name, saleInvoiceItem.Id),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Notes.Name, saleInvoiceItem.Notes),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_RowNo.Name, ++rowNo),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SaleInvoices_Id.Name, SaleInvoices_Id),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Description.Name, saleInvoiceItem.Description),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Qty.Name, saleInvoiceItem.Qty),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Price.Name, saleInvoiceItem.Price),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_DiscountAmount.Name, saleInvoiceItem.DiscountAmount),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Vouchers.Name, saleInvoiceItem.Vouchers),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_VouchersName.Name, saleInvoiceItem.VouchersName),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_VouchersAmount.Name, saleInvoiceItem.VouchersAmount),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Products_Id.Name, saleInvoiceItem.Products_Id),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Services_Id.Name, saleInvoiceItem.Services_Id),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_LessonPackages_Id.Name, saleInvoiceItem.LessonPackages_Id),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SessionHours.Name, saleInvoiceItem.SessionHours),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SessionHours_Remaining.Name, saleInvoiceItem.SessionHours_Remaining),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_TravelCost.Name, saleInvoiceItem.TravelCost),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_TutorTravelCost.Name, saleInvoiceItem.TutorTravelCost)
+                LIBWebMVC.WebDBConnection.Insert(db.Database, "SaleInvoiceItems",
                 );
 
                 if (saleInvoiceItem.Products_Id != null)
@@ -160,12 +139,7 @@ namespace iSpeakWebApp.Controllers
 
         public static void update_SessionHours_Remaining(DBContext db, HttpSessionStateBase Session, Guid Id, decimal value, string log)
         {
-            db.Database.ExecuteSqlCommand(@"
-                UPDATE SaleInvoiceItems 
-                SET
-                    SessionHours_Remaining = @SessionHours_Remaining
-                WHERE SaleInvoiceItems.Id = @Id;                
-            ",
+            LIBWebMVC.WebDBConnection.Update(db.Database, "SaleInvoiceItems",
                 DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Id.Name, Id),
                 DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SessionHours_Remaining.Name, value)
             );

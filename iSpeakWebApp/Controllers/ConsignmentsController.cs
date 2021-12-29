@@ -176,15 +176,7 @@ namespace iSpeakWebApp.Controllers
 
         public void update(ConsignmentsModel model, string log)
         {
-            db.Database.ExecuteSqlCommand(@"
-                UPDATE Consignments 
-                SET
-                    Name = @Name,
-                    Active = @Active,
-                    Notes = @Notes,
-                    Branches_Id = @Branches_Id
-                WHERE Consignments.Id = @Id;                
-            ",
+            LIBWebMVC.WebDBConnection.Update(db.Database, "Consignments",
                 DBConnection.getSqlParameter(ConsignmentsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(ConsignmentsModel.COL_Name.Name, model.Name),
                 DBConnection.getSqlParameter(ConsignmentsModel.COL_Active.Name, model.Active),
@@ -198,10 +190,7 @@ namespace iSpeakWebApp.Controllers
 
         public void add(ConsignmentsModel model)
         {
-            db.Database.ExecuteSqlCommand(@"
-                INSERT INTO Consignments   (Id, Name, Active, Notes, Branches_Id) 
-                                    VALUES(@Id,@Name,@Active,@Notes,@Branches_Id);
-            ",
+            LIBWebMVC.WebDBConnection.Insert(db.Database, "Consignments",
                 DBConnection.getSqlParameter(ConsignmentsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(ConsignmentsModel.COL_Name.Name, model.Name),
                 DBConnection.getSqlParameter(ConsignmentsModel.COL_Active.Name, model.Active),

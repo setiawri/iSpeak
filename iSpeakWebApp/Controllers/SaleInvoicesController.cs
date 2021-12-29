@@ -335,12 +335,7 @@ namespace iSpeakWebApp.Controllers
 
         public static void update_Due(HttpSessionStateBase Session, DBContext db, Guid Id, int originalValue, int newValue)
         {
-            db.Database.ExecuteSqlCommand(@"
-                UPDATE SaleInvoices 
-                SET
-                    Due = @Due
-                WHERE SaleInvoices.Id = @Id;                
-            ",
+            WebDBConnection.Update(db.Database, "SaleInvoices",
                 DBConnection.getSqlParameter(SaleInvoicesModel.COL_Id.Name, Id),
                 DBConnection.getSqlParameter(SaleInvoicesModel.COL_Due.Name, newValue)
             );

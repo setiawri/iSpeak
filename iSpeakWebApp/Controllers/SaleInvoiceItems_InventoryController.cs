@@ -55,10 +55,7 @@ namespace iSpeakWebApp.Controllers
 
         public static void add(HttpSessionStateBase Session, DBContext db, SaleInvoiceItems_InventoryModel model)
         {
-            db.Database.ExecuteSqlCommand(@"
-                INSERT INTO SaleInvoiceItems_Inventory   (Id, SaleInvoiceItems_Id, Inventory_Id, Qty) 
-                                                  VALUES(@Id,@SaleInvoiceItems_Id,@Inventory_Id,@Qty);
-            ",
+            LIBWebMVC.WebDBConnection.Insert(db.Database, "SaleInvoiceItems_Inventory",
                 DBConnection.getSqlParameter(SaleInvoiceItems_InventoryModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(SaleInvoiceItems_InventoryModel.COL_SaleInvoiceItems_Id.Name, model.SaleInvoiceItems_Id),
                 DBConnection.getSqlParameter(SaleInvoiceItems_InventoryModel.COL_Inventory_Id.Name, model.Inventory_Id),

@@ -205,12 +205,7 @@ namespace iSpeakWebApp.Controllers
 
         public void update_IsChecked(Guid Id, bool value)
         {
-            db.Database.ExecuteSqlCommand(@"
-                UPDATE PayrollPayments 
-                SET
-                    IsChecked = @IsChecked
-                WHERE PayrollPayments.Id = @Id;                
-            ",
+            WebDBConnection.Update(db.Database, "PayrollPayments",
                 DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, Id),
                 DBConnection.getSqlParameter(PayrollPaymentsModel.COL_IsChecked.Name, value)
             );

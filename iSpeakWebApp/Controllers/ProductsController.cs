@@ -221,20 +221,7 @@ namespace iSpeakWebApp.Controllers
 
         public void update(ProductsModel model, string log)
         {
-            db.Database.ExecuteSqlCommand(@"
-                UPDATE Products 
-                SET
-                    Name = @Name,
-                    Active = @Active,
-                    Notes = @Notes,
-                    Description = @Description,
-                    Barcode = @Barcode,
-                    Units_Id = @Units_Id,
-                    ForSale = @ForSale,
-                    BuyPrice = @BuyPrice,
-                    SellPrice = @SellPrice
-                WHERE Products.Id = @Id;                
-            ",
+            LIBWebMVC.WebDBConnection.Update(db.Database, "Products",
                 DBConnection.getSqlParameter(ProductsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(ProductsModel.COL_Name.Name, model.Name),
                 DBConnection.getSqlParameter(ProductsModel.COL_Active.Name, model.Active),
@@ -253,10 +240,7 @@ namespace iSpeakWebApp.Controllers
 
         public void add(ProductsModel model)
         {
-            db.Database.ExecuteSqlCommand(@"
-                INSERT INTO Products   (Id, Name, Active, Notes, Description, Barcode, Units_Id, ForSale, BuyPrice, SellPrice) 
-                                VALUES(@Id,@Name,@Active,@Notes,@Description,@Barcode,@Units_Id,@ForSale,@BuyPrice,@SellPrice);
-            ",
+            LIBWebMVC.WebDBConnection.Insert(db.Database, "Products",
                 DBConnection.getSqlParameter(ProductsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(ProductsModel.COL_Name.Name, model.Name),
                 DBConnection.getSqlParameter(ProductsModel.COL_Active.Name, model.Active),
@@ -268,7 +252,6 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(ProductsModel.COL_BuyPrice.Name, model.BuyPrice),
                 DBConnection.getSqlParameter(ProductsModel.COL_SellPrice.Name, model.SellPrice)
             );
-
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
             db.SaveChanges();
         }

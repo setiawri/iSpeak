@@ -262,10 +262,7 @@ namespace iSpeakWebApp.Controllers
 
         public void add(InventoryModel model)
         {
-            db.Database.ExecuteSqlCommand(@"
-                INSERT INTO Inventory   (Id, Notes, Branches_Id, Products_Id, ReceiveDate, BuyQty, BuyPrice, Suppliers_Id) 
-                                 VALUES(@Id,@Notes,@Branches_Id,@Products_Id,@ReceiveDate,@BuyQty,@BuyPrice,@Suppliers_Id);
-            ",
+            LIBWebMVC.WebDBConnection.Insert(db.Database, "Inventory",
                 DBConnection.getSqlParameter(InventoryModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(InventoryModel.COL_Notes.Name, model.Notes),
                 DBConnection.getSqlParameter(InventoryModel.COL_Branches_Id.Name, model.Branches_Id),
@@ -282,18 +279,7 @@ namespace iSpeakWebApp.Controllers
 
         public void update(InventoryModel model, string log)
         {
-            db.Database.ExecuteSqlCommand(@"
-                UPDATE Inventory 
-                SET
-                    Notes = @Notes,
-                    Branches_Id = @Branches_Id,
-                    Products_Id = @Products_Id,
-                    ReceiveDate = @ReceiveDate,
-                    BuyQty = @BuyQty,
-                    Suppliers_Id = @Suppliers_Id,
-                    BuyPrice = @BuyPrice
-                WHERE Inventory.Id = @Id;                
-            ",
+            LIBWebMVC.WebDBConnection.Update(db.Database, "Inventory",
                 DBConnection.getSqlParameter(InventoryModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(InventoryModel.COL_Notes.Name, model.Notes),
                 DBConnection.getSqlParameter(InventoryModel.COL_Branches_Id.Name, model.Branches_Id),
@@ -302,6 +288,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(InventoryModel.COL_BuyQty.Name, model.BuyQty),
                 DBConnection.getSqlParameter(InventoryModel.COL_Suppliers_Id.Name, model.Suppliers_Id),
                 DBConnection.getSqlParameter(InventoryModel.COL_BuyPrice.Name, model.BuyPrice)
+
             );
 
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);

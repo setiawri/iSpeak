@@ -189,17 +189,7 @@ namespace iSpeakWebApp.Controllers
 
         public void update(HourlyRatesModel model, string log)
         {
-            db.Database.ExecuteSqlCommand(@"
-                UPDATE HourlyRates 
-                SET
-                    Branches_Id = @Branches_Id,
-                    Notes = @Notes,
-                    LessonPackages_Id = @LessonPackages_Id,
-                    UserAccounts_Id = @UserAccounts_Id,
-                    Rate = @Rate,
-                    FullTimeTutorPayrate = @FullTimeTutorPayrate
-                WHERE HourlyRates.Id = @Id;                
-            ",
+            WebDBConnection.Update(db.Database, "HourlyRates",
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_Branches_Id.Name, model.Branches_Id),
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_LessonPackages_Id.Name, model.LessonPackages_Id),
@@ -217,10 +207,7 @@ namespace iSpeakWebApp.Controllers
         {
             model.Id = Guid.NewGuid();
 
-            db.Database.ExecuteSqlCommand(@"
-                INSERT INTO HourlyRates (Id, Branches_Id, LessonPackages_Id, UserAccounts_Id, Rate, FullTimeTutorPayrate, Notes) 
-                                 VALUES(@Id,@Branches_Id,@LessonPackages_Id,@UserAccounts_Id,@Rate,@FullTimeTutorPayrate,@Notes);
-            ",
+            WebDBConnection.Insert(db.Database, "HourlyRates",
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_Branches_Id.Name, model.Branches_Id),
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_LessonPackages_Id.Name, model.LessonPackages_Id),
