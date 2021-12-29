@@ -279,7 +279,10 @@ namespace iSpeakWebApp.Controllers
         {
             List<UserAccountRolesModel> models = new List<UserAccountRolesModel>();
             if (!UserAccounts_EditRoles)
+            {
                 models.Add(get(SettingsController.get().StudentRole.Value));
+                models.Add(get(SettingsController.get().TutorRole.Value));
+            }
             else
                 models = get();
 

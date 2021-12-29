@@ -1,10 +1,4 @@
 
-	IF not exists (select 1 from information_schema.columns where column_name = 'PayrollPaymentAmount' and table_name = 'PayrollPaymentItems' and table_schema='dbo')
-		alter table PayrollPaymentItems add PayrollPaymentAmount int default 0;
-	GO
-	UPDATE PayrollPaymentItems set PayrollPaymentAmount = 0;
-	UPDATE PayrollPaymentItems set PayrollPaymentAmount = Amount WHERE PayrollPayments_Id IS NOT NULL;
-	GO
 
 
 

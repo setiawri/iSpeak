@@ -72,7 +72,7 @@ namespace iSpeakWebApp.Models
 
         [Display(Name = "Edit Roles")]
         public bool UserAccounts_EditRoles { get; set; }
-        public static ModelMember COL_UserAccounts_EditRoles = new ModelMember { Name = "UserAccounts_EditRoles", Display = "Edit ROles", LogDisplay = ActivityLogsController.editBooleanFormat("UserAccounts Edit Roles") };
+        public static ModelMember COL_UserAccounts_EditRoles = new ModelMember { Name = "UserAccounts_EditRoles", Display = "Edit Roles", LogDisplay = ActivityLogsController.editBooleanFormat("UserAccounts Edit Roles") };
 
 
         /* USER ACCOUNTS ROLES ********************************************************************************************************************************/
