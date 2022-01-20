@@ -35,4 +35,14 @@ namespace iSpeakWebApp
         All = 0
     }
 
+    public enum DayOfWeekEnum : byte
+    {
+        Senin,
+        Selasa,
+        Rabu,
+        Kamis,
+        Jumat,
+        Sabtu,
+        Minggu
+    }
 }

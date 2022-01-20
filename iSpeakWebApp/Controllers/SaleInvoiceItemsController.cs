@@ -103,6 +103,24 @@ namespace iSpeakWebApp.Controllers
             {
                 saleInvoiceItem.Id = Guid.NewGuid();
                 LIBWebMVC.WebDBConnection.Insert(db.Database, "SaleInvoiceItems",
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Id.Name, saleInvoiceItem.Id),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Notes.Name, saleInvoiceItem.Notes),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_RowNo.Name, ++rowNo),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SaleInvoices_Id.Name, SaleInvoices_Id),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Description.Name, saleInvoiceItem.Description),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Qty.Name, saleInvoiceItem.Qty),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Price.Name, saleInvoiceItem.Price),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_DiscountAmount.Name, saleInvoiceItem.DiscountAmount),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Vouchers.Name, saleInvoiceItem.Vouchers),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_VouchersName.Name, saleInvoiceItem.VouchersName),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_VouchersAmount.Name, saleInvoiceItem.VouchersAmount),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Products_Id.Name, saleInvoiceItem.Products_Id),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_Services_Id.Name, saleInvoiceItem.Services_Id),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_LessonPackages_Id.Name, saleInvoiceItem.LessonPackages_Id),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SessionHours.Name, saleInvoiceItem.SessionHours),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SessionHours_Remaining.Name, saleInvoiceItem.SessionHours_Remaining),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_TravelCost.Name, saleInvoiceItem.TravelCost),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_TutorTravelCost.Name, saleInvoiceItem.TutorTravelCost)
                 );
 
                 if (saleInvoiceItem.Products_Id != null)

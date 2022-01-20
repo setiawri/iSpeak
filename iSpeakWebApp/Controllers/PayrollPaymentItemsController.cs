@@ -273,7 +273,7 @@ namespace iSpeakWebApp.Controllers
 
         public static void add(PayrollPaymentItemsModel model)
         {
-            WebDBConnection.Insert(new DBContext().Database, "PayrollPaymentItems"
+            WebDBConnection.Insert(new DBContext().Database, "PayrollPaymentItems",
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_PayrollPayments_Id.Name, model.PayrollPayments_Id),
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Timestamp.Name, model.Timestamp),

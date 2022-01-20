@@ -1,4 +1,34 @@
 
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Tutor_UserAccounts_Id_TEMP' AND TABLE_NAME = 'TutorSchedules' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE TutorSchedules ADD Tutor_UserAccounts_Id_TEMP uniqueidentifier NULL;
+GO	
+UPDATE TutorSchedules SET Tutor_UserAccounts_Id_TEMP = CONVERT(UNIQUEIDENTIFIER, Tutor_UserAccounts_Id)
+GO	
+ALTER TABLE TutorSchedules DROP COLUMN Tutor_UserAccounts_Id;
+EXEC sp_RENAME 'TutorSchedules.Tutor_UserAccounts_Id_TEMP' , 'Tutor_UserAccounts_Id', 'COLUMN'
+GO
+EXEC sp_RENAME 'TutorSchedules.IsActive' , 'Active', 'COLUMN'
+GO
+
+--TutorSchedules
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'TutorSchedules_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+ALTER TABLE UserAccountRoles ADD TutorSchedules_Notes varchar(MAX) null;
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'TutorSchedules_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+ALTER TABLE UserAccountRoles ADD TutorSchedules_Add bit default 0 not null;
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'TutorSchedules_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+ALTER TABLE UserAccountRoles ADD TutorSchedules_View bit default 0 not null;
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'TutorSchedules_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+ALTER TABLE UserAccountRoles ADD TutorSchedules_Edit bit default 0 not null;
+GO
+	
+
+delete TutorSchedules where TutorSchedules.Tutor_UserAccounts_Id is null
+GO
+
+-- Add the new accesses to user roles!!
+
+
+
 
 
 

@@ -498,6 +498,24 @@ namespace iSpeakWebApp.Models
         public bool PayrollPayments_Approve { get; set; }
         public static ModelMember COL_PayrollPayments_Approve = new ModelMember { Name = "PayrollPayments_Approve", Display = "Approve", LogDisplay = ActivityLogsController.editBooleanFormat("PayrollPayments Approve") };
 
+        /* TUTOR SCHEDULES ************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string TutorSchedules_Notes { get; set; }
+        public static ModelMember COL_TutorSchedules_Notes = new ModelMember { Name = "TutorSchedules_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("TutorSchedules Notes") };
+
+        [Display(Name = "Add")]
+        public bool TutorSchedules_Add { get; set; }
+        public static ModelMember COL_TutorSchedules_Add = new ModelMember { Name = "TutorSchedules_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("TutorSchedules Add") };
+
+        [Display(Name = "View")]
+        public bool TutorSchedules_View { get; set; }
+        public static ModelMember COL_TutorSchedules_View = new ModelMember { Name = "TutorSchedules_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("TutorSchedules View") };
+
+        [Display(Name = "Edit")]
+        public bool TutorSchedules_Edit { get; set; }
+        public static ModelMember COL_TutorSchedules_Edit = new ModelMember { Name = "TutorSchedules_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("TutorSchedules Edit") };
+
         /******************************************************************************************************************************************************/
 
     }

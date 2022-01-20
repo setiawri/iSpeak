@@ -1,0 +1,108 @@
+﻿@model IEnumerable<iSpeakWebApp.Models.TutorSchedulesModel>
+
+@{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    string ControllerName = "TutorSchedules";
+    ViewBag.SelectedNavigationMenu = "Schedules";
+    ViewBag.Title = "TUTOR SCHEDULES";
+    ViewBag.Subtitle = "Index";
+}
+
+<div class="content-wrapper">
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm("Index", ControllerName, FormMethod.Post))
+        {
+            <!-- Form inputs -->
+            <div class="card animated bounceInLeft">
+                <div class="card-header header-elements-inline pb-1">
+                    <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row mx-0">
+                        @if (access.TutorSchedules_Add)
+                        {
+                            <div class="mr-2">
+                                <label class="mb-0">&nbsp;</label>
+                                <div><a href="javascript:void(0)" onclick="Action('Create','@ControllerName')" class="btn btn-success"><i class="icon-plus22 mr-2"></i>CREATE</a></div>
+                            </div>
+                        }
+
+                        <div class="row ml-0 mr-2" style="width:100px;">
+                            <label class="mb-0">Keyword</label>
+                            <div class="input-group">
+                                <input type="text" name="FILTER_Keyword" id="FILTER_Keyword" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2">
+                            <label class="mb-0">Active</label>
+                            <div class="input-group">
+                                <select id="FILTER_Active" name="FILTER_Active" class="custom-select">
+                                    <option value="" selected>ALL</option>
+                                    <option value="1">Active</option>
+                                    <option value="0">Not Active</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="ml-0 mr-2">
+                            <label class="mb-0">&nbsp;</label>
+                            <button type="submit" onclick="showLoadingSpinner()" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>LOAD</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover datatable">
+                            <thead>
+                                <tr>
+                                    <th style="width:200px;">@Html.DisplayNameFor(model => model.Tutor_UserAccounts_Id)</th>
+                                    <th style="width:100px;">@Html.DisplayNameFor(model => model.DayOfWeek)</th>
+                                    <th style="width:50px;">@Html.DisplayNameFor(model => model.StartTime)</th>
+                                    <th style="width:50px;">@Html.DisplayNameFor(model => model.EndTime)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Notes)</th>
+                                    <th style="width:100px;">@Html.DisplayNameFor(model => model.Active)</th>
+                                    <th class="non-searchable non-sortable" style="width:100px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Tutor_UserAccounts_Name)</td>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.DayOfWeek)</td>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.StartTime)</td>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.EndTime)</td>
+                                            <td class="align-top tablecellwrap">@Html.DisplayFor(modelItem => item.Notes)</td>
+                                            <td class="align-top">
+                                                @if (item.Active)
+                                                {
+                                                    <span class="badge badge-success d-block" style="width:100px;">ACTIVE</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-dark d-block" style="width:100px;">NOT ACTIVE</span>
+                                                }
+                                            </td>
+                                            <td class="align-top">
+                                                @if (access.TutorSchedules_Edit)
+                                                {
+                                                    <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a>@:•
+                                                }
+                                                <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- /form inputs -->
+        }
+    </div>
+    <!-- /content area -->
+</div>

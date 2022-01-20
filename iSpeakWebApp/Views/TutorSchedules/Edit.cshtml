@@ -1,0 +1,135 @@
+﻿@model iSpeakWebApp.Models.TutorSchedulesModel
+
+@{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    string ControllerName = "TutorSchedules";
+    ViewBag.SelectedNavigationMenu = "Schedules";
+    ViewBag.Title = "TUTOR SCHEDULES";
+    ViewBag.Subtitle = "Edit";
+}
+
+<div class="content-wrapper">
+
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm("Edit", ControllerName, FormMethod.Post, new { id = "targetForm" }))
+        {
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.Tutor_UserAccounts_Name)
+                <!-- Form inputs -->
+                <div class="card">
+                    <div class="card-header header-elements-inline">
+                        <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
+                    </div>
+                    <div class="card-body">
+                        <fieldset class="mb-3">
+                            <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Subtitle</legend>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Tutor_UserAccounts_Id, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
+                                <div class="col-lg-4">
+                                    <select class="form-control" id="Tutor_UserAccounts_Id" name="Tutor_UserAccounts_Id" disabled></select>
+                                    @Html.ValidationMessageFor(model => model.Tutor_UserAccounts_Id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-lg-1 required">Schedule</label>
+                                <div class="col-lg-4">
+                                    <div class="row ml-0">
+                                        <div style="width:135px;">
+                                            @Html.EnumDropDownListFor(model => model.DayOfWeek, new { @class = "form-control select2" })
+                                        </div>
+                                        <div class="ml-1">
+                                            <div class="input-group">
+                                                <span class="input-group-prepend">
+                                                    <span class="input-group-text">Start</span>
+                                                </span>
+                                                <input type="text" class="form-control anytime-picker" id="StartTime" name="StartTime" style="width:80px;">
+                                            </div>
+                                        </div>
+                                        <div class="ml-1">
+                                            <div class="input-group">
+                                                <span class="input-group-prepend">
+                                                    <span class="input-group-text">End</span>
+                                                </span>
+                                                <input type="text" class="form-control anytime-picker" id="EndTime" name="EndTime" style="width:80px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        @Html.ValidationMessageFor(model => model.DayOfWeek, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                                <div class="col-lg-4">
+                                    @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                                <div class="col-lg-2">
+                                    <div class="form-check form-check-switchery">
+                                        <label class="form-check-label">
+                                            @Html.EditorFor(model => model.Active, new { htmlAttributes = new { @class = "form-check-input-switchery" } })
+                                        </label>
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </fieldset>
+
+                        @if (access.TutorSchedules_Edit)
+                        {
+                            <div>
+                                <button type="submit" onclick="" class="btn btn-primary"><i class="icon-paperplane mr-2"></i>Submit</button>
+                                <a href="javascript:void(0)" onclick="Action('Index', '@ControllerName')" class="btn btn-warning"><i class="icon-cross2 mr-2"></i>Cancel</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <!-- /form inputs -->
+            }
+        }
+    </div>
+    <!-- /content area -->
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        var $newOption = $("<option selected='selected'></option>").val('@Model.Tutor_UserAccounts_Id').text('@Model.Tutor_UserAccounts_Name');
+        $('#Tutor_UserAccounts_Id').append($newOption).trigger('change');
+
+        $('#StartTime').val('@string.Format("{0:HH:mm}", Model.StartTime)');
+        $('#EndTime').val('@string.Format("{0:HH:mm}", Model.EndTime)');
+    });
+
+    function applyLast() {
+    }
+
+    $('#targetForm').submit(function (e) {
+
+        if ($('#Tutor_UserAccounts_Id').val() == null) {
+            showMessage('Please select Tutor', 'Tutor_UserAccounts_Id');
+        } else if ($('#StartTime').val() >= $('#EndTime').val()) {
+            showMessage('Start Time cannot be the same or later than End Time', 'StartTime');
+        } else {
+            showLoadingSpinner();
+            disableElement('Tutor_UserAccounts_Id', false); //disabled control is not passed to controller
+            return true;
+        }
+
+        return false;
+    });
+
+</script>
