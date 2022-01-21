@@ -325,6 +325,7 @@
     <Content Include="Views\TutorSchedules\Create.cshtml" />
     <Content Include="Views\TutorSchedules\Edit.cshtml" />
     <Content Include="Views\TutorSchedules\Index.cshtml" />
+    <Content Include="Views\TutorSchedules\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

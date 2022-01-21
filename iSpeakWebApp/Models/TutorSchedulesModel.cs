@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using iSpeakWebApp.Controllers;
 
@@ -16,6 +17,7 @@ namespace iSpeakWebApp.Models
         public Guid Tutor_UserAccounts_Id { get; set; }
         public static ModelMember COL_Tutor_UserAccounts_Id = new ModelMember { Name = "Tutor_UserAccounts_Id" };
         public string Tutor_UserAccounts_Name { get; set; }
+        public string Tutor_UserAccounts_No { get; set; }
 
 
         [Required]
@@ -48,5 +50,10 @@ namespace iSpeakWebApp.Models
 
         /******************************************************************************************************************************************************/
 
+        [Display(Name = "Language")]
+        public string UserAccounts_Interest { get; set; }
+        public static ModelMember COL_UserAccounts_Interest = new ModelMember { Name = "UserAccounts_Interest" };
+        public List<string> UserAccounts_Interest_List { get; set; }
+        public static ModelMember COL_UserAccounts_Interest_List = new ModelMember { Name = "UserAccounts_Interest_List" };
     }
 }

@@ -1,0 +1,132 @@
+﻿@model iSpeakWebApp.Models.TutorSchedulesModel
+
+@{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    string ControllerName = "TutorSchedules";
+    ViewBag.SelectedNavigationMenu = "Schedules";
+    ViewBag.Title = "TUTOR SCHEDULES";
+    ViewBag.Subtitle = "Search";
+
+    iSpeakWebApp.Models.SettingsModel settings = iSpeakWebApp.Controllers.SettingsController.get();
+    string TutorRole = settings.TutorRole.Value.ToString();
+}
+
+<div class="content-wrapper">
+
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <!-- Form inputs -->
+            <div class="card" style="min-height:400px;">
+                <div class="card-header header-elements-inline">
+                    <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row mx-0">
+                        <div class="row ml-0 mr-0">
+                            @Html.LabelFor(model => model.Tutor_UserAccounts_Id, htmlAttributes: new { @class = "mb-0" })
+                            <div class="input-group">
+                                <div style="width:280px;">
+                                    <select class="form-control" id="Tutor_UserAccounts_Id" name="Tutor_UserAccounts_Id"></select>
+                                </div>
+                                <div class="input-group-append">
+                                    <a href="" class="input-group-text text-danger font-weight-bold" onclick="setDDLSelectedValue('Tutor_UserAccounts_Id', '');return false;">X</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:150px;">
+                            @Html.Label("Language", htmlAttributes: new { @class = "mb-0" })
+                            <div class="input-group">
+                                @Html.DropDownList("Languages_Id", ViewBag.Languages as SelectList, "Select", new { @class = "form-control select2" })
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:100px;">
+                            <label class="mb-0">Day</label>
+                            <div class="input-group">
+                                @Html.EnumDropDownListFor(model => model.DayOfWeek, new { @class = "form-control select2" })
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:80px;">
+                            <label class="mb-0">Start</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control anytime-picker" id="StartTime" name="StartTime" value="@string.Format("{0:HH:mm}", Model.StartTime)">
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:80px;">
+                            <label class="mb-0">End</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control anytime-picker" id="EndTime" name="EndTime" value="@string.Format("{0:HH:mm}", Model.EndTime)">
+                            </div>
+                        </div>
+
+                        @if (access.TutorSchedules_View)
+                        {
+                            <div class="ml-0 mr-2">
+                                <label class="mb-0">&nbsp;</label>
+                                <div class="input-group">
+                                    <button type="button" onclick="search()" class="btn btn-primary"><i class="icon-search4 mr-2"></i>SEARCH</button>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+
+                    <div class="form-group row">
+                        <div id="searchResult" class="table-responsive"></div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- /form inputs -->
+        }
+    </div>
+    <!-- /content area -->
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+    });
+
+    function applyLast() {
+        AjaxGetDropdownlistData('Tutor_UserAccounts_Id', 'GetDropDownListData', 'UserAccounts', '@TutorRole');
+    }
+
+    function search() {
+
+        if ($('#Languages_Id').val() == '') {
+            showMessage('Please select Language', 'Languages_Id');
+        } else if ($('#StartTime').val() >= $('#EndTime').val()) {
+            showMessage('Start Time cannot be the same or later than End Time', 'StartTime');
+        } else {
+            $('#searchResult').empty();
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetSchedules", ControllerName)',
+                data: {
+                    Tutor_UserAccounts_Id: getDDLSelectedValue('Tutor_UserAccounts_Id'),
+                    Languages_Id: getDDLSelectedValue('Languages_Id'),
+                    DayOfWeek: getDDLSelectedValue('DayOfWeek'),
+                    StartTime: $('#StartTime').val(),
+                    EndTime: $('#EndTime').val()
+                },
+                success: function (data) {
+                    $('#searchResult').append(data.content);
+                }, //end success
+                error: function (data) {
+                    showMessage("ERROR: " + data.statusText);
+                } //end error
+            }); //end ajax
+        }
+    };
+
+</script>

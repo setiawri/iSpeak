@@ -6,6 +6,13 @@
     ViewBag.SelectedNavigationMenu = "Schedules";
     ViewBag.Title = "TUTOR SCHEDULES";
     ViewBag.Subtitle = "Index";
+
+    List<iSpeakWebApp.Models.LanguagesModel> Languages = iSpeakWebApp.Controllers.LanguagesController.get();
+    string[] badgeColors = {
+        "badge-primary", "badge-secondary", "badge-info", "badge-success", "badge-dark", "badge-warning", "badge-danger", "badge-light",
+        "badge-primary", "badge-secondary", "badge-info", "badge-success", "badge-dark", "badge-warning", "badge-danger", "badge-light",
+        "badge-primary", "badge-secondary", "badge-info", "badge-success", "badge-dark", "badge-warning", "badge-danger", "badge-light"
+    };
 }
 
 <div class="content-wrapper">
@@ -57,6 +64,7 @@
                             <thead>
                                 <tr>
                                     <th style="width:200px;">@Html.DisplayNameFor(model => model.Tutor_UserAccounts_Id)</th>
+                                    <th style="width:100px;">@Html.DisplayNameFor(model => model.UserAccounts_Interest)</th>
                                     <th style="width:100px;">@Html.DisplayNameFor(model => model.DayOfWeek)</th>
                                     <th style="width:50px;">@Html.DisplayNameFor(model => model.StartTime)</th>
                                     <th style="width:50px;">@Html.DisplayNameFor(model => model.EndTime)</th>
@@ -72,6 +80,25 @@
                                     {
                                         <tr>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Tutor_UserAccounts_Name)</td>
+                                            <td class="align-top">
+                                                @{
+                                                    if (item.UserAccounts_Interest_List != null)
+                                                    {
+                                                        foreach (string Langeuages_Id in item.UserAccounts_Interest_List)
+                                                        {
+                                                            Guid Id = new Guid(Langeuages_Id);
+                                                            for (int i = 0; i < Languages.Count; i++)
+                                                            {
+                                                                if (Languages[i].Id == Id)
+                                                                {
+                                                                    <span class="badge @(badgeColors[i])" style="width:70px;">@(Languages[i].Name)</span>
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            </td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.DayOfWeek)</td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.StartTime)</td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.EndTime)</td>
