@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Linq;
 using System.Collections.Generic;
 using System.Web.Mvc;
@@ -138,12 +139,12 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public static List<TutorStudentSchedulesModel> get(Guid? Tutor_UserAccounts_Id, Guid? Student_UserAccounts_Id, Guid? Languages_Id, DayOfWeekEnum? DayOfWeek, DateTime? StartTime, DateTime? EndTime, Guid? SaleInvoiceItems_Id) 
-        { return get(null, Tutor_UserAccounts_Id, Student_UserAccounts_Id, DayOfWeek, StartTime, EndTime, SaleInvoiceItems_Id, Languages_Id, 1, null); }
-        public List<TutorStudentSchedulesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, null, null, null, null, null, null, null, FILTER_Active, FILTER_Keyword); }
-        public TutorStudentSchedulesModel get(Guid Id) { return get(Id, null, null, null, null, null, null, null, null, null).FirstOrDefault(); }
-        public static List<TutorStudentSchedulesModel> get() { return get(null, null, null, null, null, null, null, null, null, null); }
-        public static List<TutorStudentSchedulesModel> get(Guid? Id, Guid? Tutor_UserAccounts_Id, Guid? Student_UserAccounts_Id, DayOfWeekEnum? DayOfWeek, DateTime? StartTime, DateTime? EndTime, Guid? SaleInvoiceItems_Id,
+        public static List<TutorStudentSchedulesModel> get(HttpSessionStateBase Session, Guid? Tutor_UserAccounts_Id, Guid? Student_UserAccounts_Id, Guid? Languages_Id, DayOfWeekEnum? DayOfWeek, DateTime? StartTime, DateTime? EndTime, Guid? SaleInvoiceItems_Id) 
+        { return get(Session, null, Tutor_UserAccounts_Id, Student_UserAccounts_Id, DayOfWeek, StartTime, EndTime, SaleInvoiceItems_Id, Languages_Id, 1, null); }
+        public List<TutorStudentSchedulesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(Session, null, null, null, null, null, null, null, null, FILTER_Active, FILTER_Keyword); }
+        public TutorStudentSchedulesModel get(Guid Id) { return get(Session, Id, null, null, null, null, null, null, null, null, null).FirstOrDefault(); }
+        public List<TutorStudentSchedulesModel> get() { return get(Session, null, null, null, null, null, null, null, null, null, null); }
+        public static List<TutorStudentSchedulesModel> get(HttpSessionStateBase Session, Guid? Id, Guid? Tutor_UserAccounts_Id, Guid? Student_UserAccounts_Id, DayOfWeekEnum? DayOfWeek, DateTime? StartTime, DateTime? EndTime, Guid? SaleInvoiceItems_Id,
             Guid? Languages_Id, int? Active, string FILTER_Keyword)
         {
             return new DBContext().Database.SqlQuery<TutorStudentSchedulesModel>(@"
@@ -152,6 +153,7 @@ namespace iSpeakWebApp.Controllers
                             Tutor_UserAccounts.No AS Tutor_UserAccounts_No,
                             Student_UserAccounts.Fullname AS Student_UserAccounts_Name,
                             Student_UserAccounts.No AS Student_UserAccounts_No,
+                            Student_UserAccounts.Branches AS Student_UserAccounts_Branches,
                             SaleInvoices.No AS SaleInvoices_No,
                             SaleInvoiceItems.Description AS SaleInvoiceItems_Description,
                             Languages.Name AS Languages_Name,
@@ -181,6 +183,7 @@ namespace iSpeakWebApp.Controllers
                                     OR SaleInvoices.No LIKE '%'+@FILTER_Keyword+'%'
                                     OR TutorStudentSchedules.DayOfWeek LIKE '%'+@FILTER_Keyword+'%'
                                 ))
+                                AND (@Branches_Id IS NULL OR Student_UserAccounts.Branches LIKE '%'+ convert(nvarchar(50), @Branches_Id) + '%')
                             ))
 						ORDER BY Student_UserAccounts.Fullname ASC, Tutor_UserAccounts.Fullname ASC, TutorStudentSchedules.DayOfWeek ASC, TutorStudentSchedules.StartTime ASC, TutorStudentSchedules.EndTime ASC
                     ",
@@ -192,7 +195,8 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(TutorStudentSchedulesModel.COL_StartTime.Name, StartTime),
                     DBConnection.getSqlParameter(TutorStudentSchedulesModel.COL_EndTime.Name, EndTime),
                     DBConnection.getSqlParameter(TutorStudentSchedulesModel.COL_SaleInvoiceItems_Id.Name, SaleInvoiceItems_Id),
-                    DBConnection.getSqlParameter("Languages_Id", Languages_Id),
+                    DBConnection.getSqlParameter(TutorStudentSchedulesModel.COL_Languages_Id.Name, Languages_Id),
+                    DBConnection.getSqlParameter("Branches_Id", Helper.getActiveBranchId(Session)),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
         }

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.Entity;
+using System.Web;
 using System.Linq;
 using System.Collections.Generic;
 using System.Web.Mvc;
@@ -215,7 +215,7 @@ namespace iSpeakWebApp.Controllers
             }
 
             //add booked/expired slots
-            List<TutorStudentSchedulesModel> StudentSchedules = TutorStudentSchedulesController.get(Tutor_UserAccounts_Id, null, Languages_Id, DayOfWeek, StartTime, EndTime, null);
+            List<TutorStudentSchedulesModel> StudentSchedules = TutorStudentSchedulesController.get(Session, Tutor_UserAccounts_Id, null, Languages_Id, DayOfWeek, StartTime, EndTime, null);
             foreach(TutorStudentSchedulesModel schedule in StudentSchedules)
             {
                 List<string> row = initializeRow(dictionary, columns, schedule.Tutor_UserAccounts_Id, schedule.Tutor_UserAccounts_Name);
@@ -310,11 +310,11 @@ namespace iSpeakWebApp.Controllers
         }
 
         public List<TutorSchedulesModel> get(Guid? Tutor_UserAccounts_Id, Guid? Languages_Id, DayOfWeekEnum? DayOfWeek, DateTime? StartTime, DateTime? EndTime) 
-        { return get(null, Tutor_UserAccounts_Id, DayOfWeek, StartTime, EndTime, Languages_Id, 1, null); }
-        public List<TutorSchedulesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, null, null, null, null, null, FILTER_Active, FILTER_Keyword); }
-        public TutorSchedulesModel get(Guid Id) { return get(Id, null, null, null, null, null, null, null).FirstOrDefault(); }
-        public static List<TutorSchedulesModel> get() { return get(null, null, null, null, null, null, null, null); }
-        public static List<TutorSchedulesModel> get(Guid? Id, Guid? Tutor_UserAccounts_Id, DayOfWeekEnum? DayOfWeek, DateTime? StartTime, DateTime? EndTime, 
+        { return get(Session, null, Tutor_UserAccounts_Id, DayOfWeek, StartTime, EndTime, Languages_Id, 1, null); }
+        public List<TutorSchedulesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(Session, null, null, null, null, null, null, FILTER_Active, FILTER_Keyword); }
+        public TutorSchedulesModel get(Guid Id) { return get(Session, Id, null, null, null, null, null, null, null).FirstOrDefault(); }
+        public List<TutorSchedulesModel> get() { return get(Session, null, null, null, null, null, null, null, null); }
+        public static List<TutorSchedulesModel> get(HttpSessionStateBase Session, Guid? Id, Guid? Tutor_UserAccounts_Id, DayOfWeekEnum? DayOfWeek, DateTime? StartTime, DateTime? EndTime, 
             Guid? Languages_Id, int? Active, string FILTER_Keyword)
         {
             List<TutorSchedulesModel> models = new DBContext().Database.SqlQuery<TutorSchedulesModel>(@"
@@ -338,6 +338,7 @@ namespace iSpeakWebApp.Controllers
                                     UserAccounts.Fullname LIKE '%'+@FILTER_Keyword+'%'
                                     OR TutorSchedules.DayOfWeek LIKE '%'+@FILTER_Keyword+'%'
                                 ))
+                                AND (@Branches_Id IS NULL OR UserAccounts.Branches LIKE '%'+ convert(nvarchar(50), @Branches_Id) + '%')
                             ))
 						ORDER BY UserAccounts.Fullname ASC, TutorSchedules.DayOfWeek ASC, TutorSchedules.StartTime ASC, TutorSchedules.EndTime ASC
                     ",
@@ -347,6 +348,7 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(TutorSchedulesModel.COL_DayOfWeek.Name, DayOfWeek),
                     DBConnection.getSqlParameter(TutorSchedulesModel.COL_StartTime.Name, StartTime),
                     DBConnection.getSqlParameter(TutorSchedulesModel.COL_EndTime.Name, EndTime),
+                    DBConnection.getSqlParameter("Branches_Id", Helper.getActiveBranchId(Session)),
                     DBConnection.getSqlParameter("Languages_Id", Languages_Id),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();

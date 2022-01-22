@@ -52,8 +52,10 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_SaleInvoiceItems_Id = new ModelMember { Name = "SaleInvoiceItems_Id" };
         public string SaleInvoiceItems_Description { get; set; }
         public string SaleInvoices_No { get; set; }
-        public string Languages_Name { get; set; }
         public decimal SessionHours_Remaining { get; set; }
+        public string Languages_Id { get; set; }
+        public static ModelMember COL_Languages_Id = new ModelMember { Name = "Languages_Id" };
+        public string Languages_Name { get; set; }
 
 
         [Display(Name = "Active")]
