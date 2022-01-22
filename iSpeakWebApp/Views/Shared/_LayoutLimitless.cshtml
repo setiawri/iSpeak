@@ -78,6 +78,23 @@
                         }
                     </div>
                 </li>
+                <li id="Menu_Schedules" class="nav-item dropdown">
+                    <a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
+                        <i class="icon-notebook mr-2"></i>
+                        Schedules
+                    </a>
+                    <div class="dropdown-menu">
+                        @if (access.TutorSchedules_View)
+                        {
+                            <a href="@Url.Action("Search", "TutorSchedules", new { rss = 1 })" class="dropdown-item">Search</a>
+                            <a href="@Url.Action("Index", "TutorSchedules", new { rss = 1 })" class="dropdown-item">Tutor</a>
+                        }
+                        @if (access.TutorStudentSchedules_View)
+                        {
+                            <a href="@Url.Action("Index", "TutorStudentSchedules", new { rss = 1 })" class="dropdown-item">Student</a>
+                        }
+                    </div>
+                </li>
                 @if (access.LessonSessions_View)
                 {
                     <li id="Menu_Sessions" class="nav-item">
@@ -228,20 +245,6 @@
                             <i class="icon-users2 mr-2"></i>
                             Accounts
                         </a>
-                    </li>
-                }
-                @if (access.TutorSchedules_View)
-                {
-                    <li id="Menu_Schedules" class="nav-item dropdown">
-                        <a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
-                            <i class="icon-notebook mr-2"></i>
-                            Schedules
-                        </a>
-                        <div class="dropdown-menu">
-                            <a href="@Url.Action("Search", "TutorSchedules", new { rss = 1 })" class="dropdown-item">Search</a>
-                            <a href="@Url.Action("Index", "TutorSchedules", new { rss = 1 })" class="dropdown-item">Tutor</a>
-                            <a href="@Url.Action("Index", "TutorStudentSchedules", new { rss = 1 })" class="dropdown-item">Student</a>
-                        </div>
                     </li>
                 }
                 @if (false)

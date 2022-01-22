@@ -139,33 +139,50 @@ namespace iSpeakWebApp.Controllers
 
             setViewBag(FILTER_Keyword, FILTER_Active);
             TutorSchedulesModel model = new TutorSchedulesModel();
-            model.StartTime = new DateTime(1970, 1, 1, 7, 0, 0);
-            model.EndTime = new DateTime(1970, 1, 1, 21, 0, 0);
+            model.StartTime = new DateTime(1970, 1, 1, 8, 0, 0);
+            model.EndTime = new DateTime(1970, 1, 1, 20, 0, 0);
             LanguagesController.setDropDownListViewBag(this);
             return View(model);
         }
 
-        public JsonResult GetSchedules(Guid? Tutor_UserAccounts_Id, Guid? Languages_Id, DayOfWeekEnum DayOfWeek, DateTime StartTime, DateTime EndTime)
+        public JsonResult GetSchedules(Guid? Tutor_UserAccounts_Id, Guid? Languages_Id, DayOfWeekEnum DayOfWeek, DateTime StartTime, DateTime EndTime, int MinutesPerColumn)
         {
             StartTime = standardizeTime(StartTime);
             EndTime = standardizeTime(EndTime);
 
+            //adjust minutes to multiplication of MinutesPerColumn
+            StartTime = StartTime.AddMinutes(StartTime.Minute % MinutesPerColumn == 0 ? 0 : - 1 * (StartTime.Minute % MinutesPerColumn));            
+            EndTime = EndTime.AddMinutes(EndTime.Minute % MinutesPerColumn == 0 ? 0 : MinutesPerColumn - (EndTime.Minute % MinutesPerColumn));
+
             string content = string.Format(@"
-                    <div class='table-responsive'>
-                        <table class='table table-striped table-condensed'>
+                    <div class='table-responsive mt-1'>
+                        <table class='table table-bordered table-striped table-condensed'>
                             <thead>
                                 <tr>
-                                    <th class='text-center'>Tutor</th>
+                                    <th class='text-center' style='width:200px'>Tutor</th>
                 ");
 
             //create columns
             DateTime counter = StartTime;
             List<DateTime> columns = new List<DateTime>();
-            while(counter <= EndTime)
+            while(counter < EndTime)
             {
-                content += string.Format("<th class='text-center px-0'>{0:HH:mm}</th>", counter);
                 columns.Add(counter);
-                counter = counter.AddMinutes(30);
+                counter = counter.AddMinutes(MinutesPerColumn);
+            }
+
+            //format header text
+            int colspan = 60 / MinutesPerColumn;
+            for (int i=0; i<columns.Count; i++)
+            {
+                if(i==0 && columns[i].Minute != 0)
+                    content += string.Format("<th colspan='{0}' class='px-1 py-0'></th>", (60 - columns[i].Minute) / MinutesPerColumn);
+                else if (columns[i].Minute == 0)
+                {
+                    if (i + colspan > columns.Count)
+                        colspan = columns.Count - i;
+                    content += string.Format("<th colspan='{0}' class='px-1 py-0'>{1:HH:mm}</th>", colspan, columns[i]);
+                }
             }
 
             content += string.Format(@"
@@ -176,32 +193,43 @@ namespace iSpeakWebApp.Controllers
 
             //generate table content
             Dictionary<Guid, List<string>> dictionary = new Dictionary<Guid, List<string>>();
-            List<TutorSchedulesModel> schedules = get(Tutor_UserAccounts_Id, Languages_Id, DayOfWeek, StartTime, EndTime);
-            foreach (TutorSchedulesModel schedule in schedules)
+            List<TutorSchedulesModel> TutorSchedules = get(Tutor_UserAccounts_Id, Languages_Id, DayOfWeek, StartTime, EndTime);
+            foreach (TutorSchedulesModel schedule in TutorSchedules)
             {
-                List<string> row = new List<string>();
-                if (dictionary.ContainsKey(schedule.Tutor_UserAccounts_Id))
-                    row = dictionary[schedule.Tutor_UserAccounts_Id];
-                else
-                {
-                    row.Add(string.Format("<tr><td class='py-1 py-2'><a target='_blank' href='{0}'>{1}</a></td>",
-                                Url.Action("Index", "UserAccounts", new { FILTER_Keyword = schedule.Tutor_UserAccounts_No }),
-                                schedule.Tutor_UserAccounts_Name));
-                    foreach (DateTime column in columns)
-                        row.Add("<td></td>");
-                    dictionary.Add(schedule.Tutor_UserAccounts_Id, row);
-                } 
+                List<string> row = initializeRow(dictionary, columns, schedule.Tutor_UserAccounts_Id, schedule.Tutor_UserAccounts_Name);
 
-                //add cell content
+                //add schedule
                 for (int i=0; i<columns.Count; i++)
                 {
-                    if(columns[i] >= schedule.StartTime && columns[i] <= schedule.EndTime)
+                    if(columns[i] >= schedule.StartTime && columns[i] < schedule.EndTime)
                     {
                         row[i+1] = string.Format("<td class='px-0 py-1'><a target='_blank' href='{0}'><span class='btn btn-success d-block py-2' style='border-radius: 0 !important;'></span></a></td>",
-                                Url.Action("Create", "TutorStudentSchedules", new { DayOfWeek = (int)DayOfWeek, StartTime = string.Format("{0:HH_mm}", StartTime), Id = schedule.Tutor_UserAccounts_Id }));
+                                Url.Action("Create", "TutorStudentSchedules", new { 
+                                    DayOfWeek = (int)DayOfWeek, 
+                                    StartTime = string.Format("{0:HH_mm}", columns[i]), 
+                                    Id = schedule.Tutor_UserAccounts_Id, 
+                                    Name = schedule.Tutor_UserAccounts_Name 
+                                }));
                     }
                 }
+            }
 
+            //add booked/expired slots
+            List<TutorStudentSchedulesModel> StudentSchedules = TutorStudentSchedulesController.get(Tutor_UserAccounts_Id, null, Languages_Id, DayOfWeek, StartTime, EndTime, null);
+            foreach(TutorStudentSchedulesModel schedule in StudentSchedules)
+            {
+                List<string> row = initializeRow(dictionary, columns, schedule.Tutor_UserAccounts_Id, schedule.Tutor_UserAccounts_Name);
+
+                //add schedule
+                for (int i = 0; i < columns.Count; i++)
+                {
+                    if (columns[i] >= schedule.StartTime && columns[i] < schedule.EndTime)
+                    {
+                        row[i + 1] = string.Format("<td class='px-0 py-1'><a target='_blank' href='{0}'><span class='btn {1} d-block py-2' style='border-radius: 0 !important;'></span></a></td>",
+                                Url.Action("Index", "TutorStudentSchedules", new { FILTER_Keyword = schedule.Tutor_UserAccounts_Name }),
+                                schedule.SessionHours_Remaining > 0 ? "btn-warning" : "btn-secondary");
+                    }
+                }
             }
 
             //create rows
@@ -209,8 +237,6 @@ namespace iSpeakWebApp.Controllers
             {
                 foreach (string cell in row.Value)
                     content += cell;
-
-                content += "</tr>";
             }
 
             content += string.Format(@"
@@ -220,6 +246,32 @@ namespace iSpeakWebApp.Controllers
                 ");
 
             return Json(new { content = content }, JsonRequestBehavior.AllowGet);
+        }
+
+        public List<string> initializeRow(Dictionary<Guid, List<string>> dictionary, List<DateTime> columns, Guid Tutor_UserAccounts_Id, string Tutor_UserAccounts_Name)
+        {
+            List<string> row = new List<string>();
+
+            if (dictionary.ContainsKey(Tutor_UserAccounts_Id))
+                row = dictionary[Tutor_UserAccounts_Id];
+            else
+            {
+                //tutor column
+                row.Add(string.Format("<tr><td class='py-1 px-1' style='min-width:200px;'><a target='_blank' href='{0}'>{1}</a></td>",
+                        Url.Action("Index", "TutorSchedules", new { FILTER_Keyword = Tutor_UserAccounts_Name }),
+                        Tutor_UserAccounts_Name));
+
+                //time columns
+                foreach (DateTime column in columns)
+                    row.Add("<td></td>");
+
+                //close row
+                row.Add("</tr>");
+
+                dictionary.Add(Tutor_UserAccounts_Id, row);
+            }
+
+            return row;
         }
 
         /* METHODS ********************************************************************************************************************************************/

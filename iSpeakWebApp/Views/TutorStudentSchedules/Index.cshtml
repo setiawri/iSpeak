@@ -1,10 +1,10 @@
-﻿@model IEnumerable<iSpeakWebApp.Models.TutorSchedulesModel>
+﻿@model IEnumerable<iSpeakWebApp.Models.TutorStudentSchedulesModel>
 
 @{
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
-    string ControllerName = "TutorSchedules";
+    string ControllerName = "TutorStudentSchedules";
     ViewBag.SelectedNavigationMenu = "Schedules";
-    ViewBag.Title = "TUTOR SCHEDULES";
+    ViewBag.Title = "STUDENT SCHEDULES";
     ViewBag.Subtitle = "Index";
 
     List<iSpeakWebApp.Models.LanguagesModel> Languages = iSpeakWebApp.Controllers.LanguagesController.get();
@@ -28,7 +28,7 @@
                 <div class="card-body">
 
                     <div class="row mx-0">
-                        @if (access.TutorSchedules_Add)
+                        @if (access.TutorStudentSchedules_Add)
                         {
                             <div class="mr-2">
                                 <label class="mb-0">&nbsp;</label>
@@ -55,7 +55,7 @@
                         </div>
                         <div class="ml-0 mr-2">
                             <label class="mb-0">&nbsp;</label>
-                            <button type="submit" onclick="showLoadingSpinner()" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>LOAD</button>
+                            <button id="LoadData" type="submit" onclick="showLoadingSpinner()" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>LOAD</button>
                         </div>
                     </div>
 
@@ -63,14 +63,11 @@
                         <table class="table table-hover datatable">
                             <thead>
                                 <tr>
-                                    <th style="width:200px;">@Html.DisplayNameFor(model => model.Tutor_UserAccounts_Id)</th>
-                                    <th style="width:100px;">@Html.DisplayNameFor(model => model.UserAccounts_Interest)</th>
-                                    <th style="width:100px;">@Html.DisplayNameFor(model => model.DayOfWeek)</th>
-                                    <th style="width:50px;">@Html.DisplayNameFor(model => model.StartTime)</th>
-                                    <th style="width:50px;">@Html.DisplayNameFor(model => model.EndTime)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Notes)</th>
-                                    <th style="width:100px;">@Html.DisplayNameFor(model => model.Active)</th>
-                                    <th class="non-searchable non-sortable" style="width:100px;"></th>
+                                    <th style="width:300px;">@Html.DisplayNameFor(model => model.Student_UserAccounts_Id)</th>
+                                    <th style="width:200px;">@Html.DisplayNameFor(model => model.SaleInvoiceItems_Id)</th>
+                                    <th style="width:200px;">Schedule</th>
+                                    <th class="non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
+                                    <th class="non-searchable non-sortable" style="width:120px;"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -80,44 +77,21 @@
                                     {
                                         <tr>
                                             <td class="align-top">
-                                                @Html.ActionLink(item.Tutor_UserAccounts_Name, "Index", "UserAccounts", new { FILTER_Keyword = @item.Tutor_UserAccounts_No }, new { @target = "_blank" })</td>
-                                            <td class="align-top">
-                                                @{
-                                                    if (item.UserAccounts_Interest_List != null)
-                                                    {
-                                                        foreach (string Languages_Id in item.UserAccounts_Interest_List)
-                                                        {
-                                                            Guid Id = new Guid(Languages_Id);
-                                                            for (int i = 0; i < Languages.Count; i++)
-                                                            {
-                                                                if (Languages[i].Id == Id)
-                                                                {
-                                                                    <span class="badge @(badgeColors[i])" style="width:70px;">@(Languages[i].Name)</span>
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
+                                                <div>@Html.ActionLink(item.Student_UserAccounts_Name, "Index", "UserAccounts", new { FILTER_Keyword = @item.Student_UserAccounts_No }, new { @target = "_blank" })</div>
+                                                <div>Tutor: @Html.ActionLink(item.Tutor_UserAccounts_Name, "Index", "UserAccounts", new { FILTER_Keyword = @item.Tutor_UserAccounts_No }, new { @target = "_blank" })</div>
                                             </td>
-                                            <td class="align-top">@Html.DisplayFor(modelItem => item.DayOfWeek)</td>
-                                            <td class="align-top">@Html.DisplayFor(modelItem => item.StartTime)</td>
-                                            <td class="align-top">@Html.DisplayFor(modelItem => item.EndTime)</td>
+                                            <td class="align-top">
+                                                <div>@Html.ActionLink(item.SaleInvoices_No, "Index", "SaleInvoices", new { FILTER_Keyword = @item.SaleInvoices_No }, new { @target = "_blank" }): @item.Languages_Name</div>
+                                                <div>Remaining: @item.SessionHours_Remaining hrs</div>
+                                            </td>
+                                            <td class="align-top">
+                                                @Html.DisplayFor(modelItem => item.DayOfWeek), @Html.DisplayFor(modelItem => item.StartTime) - @Html.DisplayFor(modelItem => item.EndTime)
+                                            </td>
                                             <td class="align-top tablecellwrap">@Html.DisplayFor(modelItem => item.Notes)</td>
                                             <td class="align-top">
-                                                @if (item.Active)
+                                                @if (access.TutorStudentSchedules_Edit)
                                                 {
-                                                    <span class="badge badge-success d-block" style="width:100px;">ACTIVE</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="badge badge-dark d-block" style="width:100px;">NOT ACTIVE</span>
-                                                }
-                                            </td>
-                                            <td class="align-top">
-                                                @if (access.TutorSchedules_Edit)
-                                                {
-                                                    <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a>@:•
+                                                    <a href="javascript:void(0)" onclick="Delete('@item.Id')">DELETE</a> @:•
                                                 }
                                                 <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                             </td>
@@ -134,3 +108,24 @@
     </div>
     <!-- /content area -->
 </div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+    });
+
+    function applyLast() {
+    }
+
+    function Delete(id) {
+
+        if (confirm("Confirm delete schedule?")) {
+            showLoadingSpinner();
+            AjaxUpdate('Ajax_Delete', '@ControllerName', id, function () {
+                setTimeout(function () { performClickButton('LoadData'); }, 1000);
+            });
+        }
+    }
+
+</script>

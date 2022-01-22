@@ -66,6 +66,17 @@
                             </div>
                         </div>
 
+                        <div class="row ml-0 mr-2" style="width:80px;">
+                            <label class="mb-0">Minutes</label>
+                            <div class="input-group">
+                                <select id="MinutesPerColumn" name="MinutesPerColumn" class="form-control">
+                                    <option value="15">15</option>
+                                    <option value="30" selected>30</option>
+                                    <option value="60">60</option>
+                                </select>
+                            </div>
+                        </div>
+
                         @if (access.TutorSchedules_View)
                         {
                             <div class="ml-0 mr-2">
@@ -117,7 +128,8 @@
                     Languages_Id: getDDLSelectedValue('Languages_Id'),
                     DayOfWeek: getDDLSelectedValue('DayOfWeek'),
                     StartTime: $('#StartTime').val(),
-                    EndTime: $('#EndTime').val()
+                    EndTime: $('#EndTime').val(),
+                    MinutesPerColumn: parseInt(getDDLSelectedValue('MinutesPerColumn'))
                 },
                 success: function (data) {
                     $('#searchResult').append(data.content);

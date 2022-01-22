@@ -144,6 +144,7 @@
     <Compile Include="Controllers\ConsignmentsController.cs" />
     <Compile Include="Controllers\ExpenseCategoriesController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
+    <Compile Include="Controllers\TutorStudentSchedulesController.cs" />
     <Compile Include="Controllers\TutorSchedulesController.cs" />
     <Compile Include="Controllers\UnitsController.cs" />
     <Compile Include="Controllers\SuppliersController.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="Models\ConsignmentsModel.cs" />
     <Compile Include="Models\ExpenseCategoriesModel.cs" />
     <Compile Include="Models\ProductsModel.cs" />
+    <Compile Include="Models\TutorStudentSchedulesModel.cs" />
     <Compile Include="Models\TutorSchedulesModel.cs" />
     <Compile Include="Models\ServicesModel.cs" />
     <Compile Include="Models\InventoryModel.cs" />
@@ -326,6 +328,8 @@
     <Content Include="Views\TutorSchedules\Edit.cshtml" />
     <Content Include="Views\TutorSchedules\Index.cshtml" />
     <Content Include="Views\TutorSchedules\Search.cshtml" />
+    <Content Include="Views\TutorStudentSchedules\Create.cshtml" />
+    <Content Include="Views\TutorStudentSchedules\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

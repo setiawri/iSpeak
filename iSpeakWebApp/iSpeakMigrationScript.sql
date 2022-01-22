@@ -1,3 +1,5 @@
+UPDATE UserAccounts set Fullname = REPLACE(REPLACE(Fullname, '   ', ' '), '  ', ' ')
+GO
 
 IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Tutor_UserAccounts_Id_TEMP' AND TABLE_NAME = 'TutorSchedules' AND TABLE_SCHEMA='dbo') 
 	ALTER TABLE TutorSchedules ADD Tutor_UserAccounts_Id_TEMP uniqueidentifier NULL;
@@ -20,10 +22,51 @@ ALTER TABLE UserAccountRoles ADD TutorSchedules_View bit default 0 not null;
 IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'TutorSchedules_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
 ALTER TABLE UserAccountRoles ADD TutorSchedules_Edit bit default 0 not null;
 GO
-	
 
 delete TutorSchedules where TutorSchedules.Tutor_UserAccounts_Id is null
 GO
+
+-- TUTOR STUDENT SCHEDULES =================================================================================================
+
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IsActive' AND TABLE_NAME = 'TutorStudentSchedules' AND TABLE_SCHEMA='dbo') 
+	EXEC sp_RENAME 'TutorStudentSchedules.IsActive' , 'Active', 'COLUMN'
+GO
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Tutor_UserAccounts_Id_TEMP' AND TABLE_NAME = 'TutorStudentSchedules' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE TutorStudentSchedules ADD Tutor_UserAccounts_Id_TEMP uniqueidentifier NULL;
+GO	
+UPDATE TutorStudentSchedules SET Tutor_UserAccounts_Id_TEMP = CONVERT(UNIQUEIDENTIFIER, Tutor_UserAccounts_Id)
+GO	
+ALTER TABLE TutorStudentSchedules DROP COLUMN Tutor_UserAccounts_Id;
+EXEC sp_RENAME 'TutorStudentSchedules.Tutor_UserAccounts_Id_TEMP' , 'Tutor_UserAccounts_Id', 'COLUMN'
+GO
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Student_UserAccounts_Id_TEMP' AND TABLE_NAME = 'TutorStudentSchedules' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE TutorStudentSchedules ADD Student_UserAccounts_Id_TEMP uniqueidentifier NULL;
+GO	
+UPDATE TutorStudentSchedules SET Student_UserAccounts_Id_TEMP = CONVERT(UNIQUEIDENTIFIER, Student_UserAccounts_Id)
+GO	
+ALTER TABLE TutorStudentSchedules DROP COLUMN Student_UserAccounts_Id;
+EXEC sp_RENAME 'TutorStudentSchedules.Student_UserAccounts_Id_TEMP' , 'Student_UserAccounts_Id', 'COLUMN'
+GO
+EXEC sp_RENAME 'TutorStudentSchedules.InvoiceItems_Id' , 'SaleInvoiceItems_Id', 'COLUMN'
+GO
+
+--TutorStudentSchedules
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'TutorStudentSchedules_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+ALTER TABLE UserAccountRoles ADD TutorStudentSchedules_Notes varchar(MAX) null;
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'TutorStudentSchedules_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+ALTER TABLE UserAccountRoles ADD TutorStudentSchedules_Add bit default 0 not null;
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'TutorStudentSchedules_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+ALTER TABLE UserAccountRoles ADD TutorStudentSchedules_View bit default 0 not null;
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'TutorStudentSchedules_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+ALTER TABLE UserAccountRoles ADD TutorStudentSchedules_Edit bit default 0 not null;
+GO
+
+
+
+
+
+
+
 
 -- Add the new accesses to user roles!!
 

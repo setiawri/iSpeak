@@ -550,7 +550,7 @@
 
                 if (callbackfunction != null)
                     callbackfunction();
-            },            
+            },
             error: function (result) { bootbox.alert({ backdrop: true, message: "Error " + result }); }
         });
     }
@@ -560,6 +560,22 @@
         url = url.replace("__action", action).replace("__controller", controller);
         $.ajax({
             type: "POST", url: url, data: { id: id, value: value },
+            success: function (data) {
+                if (data.Message != '') {
+                    bootbox.alert({ backdrop: true, message: data.Message });
+                } else {
+                    executeIfSuccess();
+                }
+            },
+            error: function (result) { bootbox.alert({ backdrop: true, message: "Error " + result }); }
+        });
+    }
+
+    function AjaxDelete(action, controller, id, executeIfSuccess) {
+        var url = '@Url.Action("__action", "__controller")';
+        url = url.replace("__action", action).replace("__controller", controller);
+        $.ajax({
+            type: "POST", url: url, data: { id: id },
             success: function (data) {
                 if (data.Message != '') {
                     bootbox.alert({ backdrop: true, message: data.Message });
@@ -708,7 +724,7 @@
     //==============================================================================================================================================================
 
     $(document).ready(function () {
-        setNavigationMenuVisibility(); 
+        setNavigationMenuVisibility();
 
         $("input").attr("autocomplete", "off"); //turn off autocomplete
         $('.form-input-styled').uniform(); //??

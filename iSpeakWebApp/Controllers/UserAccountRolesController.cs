@@ -262,6 +262,12 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.TutorSchedules_Edit, model.TutorSchedules_Edit, UserAccountRolesModel.COL_TutorSchedules_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.TutorSchedules_View, model.TutorSchedules_View, UserAccountRolesModel.COL_TutorSchedules_View.LogDisplay);
 
+                    //TutorStudentSchedules
+                    log = Helper.append(log, originalModel.TutorStudentSchedules_Notes, model.TutorStudentSchedules_Notes, UserAccountRolesModel.COL_TutorStudentSchedules_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.TutorStudentSchedules_Add, model.TutorStudentSchedules_Add, UserAccountRolesModel.COL_TutorStudentSchedules_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.TutorStudentSchedules_Edit, model.TutorStudentSchedules_Edit, UserAccountRolesModel.COL_TutorStudentSchedules_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.TutorStudentSchedules_View, model.TutorStudentSchedules_View, UserAccountRolesModel.COL_TutorStudentSchedules_View.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -440,6 +446,11 @@ namespace iSpeakWebApp.Controllers
                 if (item.TutorSchedules_Add) model.TutorSchedules_Add = true;
                 if (item.TutorSchedules_Edit) model.TutorSchedules_Edit = true;
                 if (item.TutorSchedules_View) model.TutorSchedules_View = true;
+
+                //TutorStudentSchedules
+                if (item.TutorStudentSchedules_Add) model.TutorStudentSchedules_Add = true;
+                if (item.TutorStudentSchedules_Edit) model.TutorStudentSchedules_Edit = true;
+                if (item.TutorStudentSchedules_View) model.TutorStudentSchedules_View = true;
 
             }
 

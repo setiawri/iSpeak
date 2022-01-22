@@ -96,6 +96,7 @@ namespace iSpeakWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                model.Fullname = model.Fullname.Replace("  ", " ").Replace("  ", " ");
                 if (isExists(model.Fullname, model.Birthday))
                     ModelState.AddModelError(UserAccountsModel.COL_Fullname.Name, $"{model.Fullname} dengan tanggal lahir yang sama sudah terdaftar");
                 else
@@ -139,6 +140,7 @@ namespace iSpeakWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                modifiedModel.Fullname = modifiedModel.Fullname.Replace("  ", " ").Replace("  ", " ");
                 if (isExists(modifiedModel.Id, modifiedModel.Username))
                     ModelState.AddModelError(UserAccountsModel.COL_Username.Name, $"{modifiedModel.Username} sudah terdaftar");
                 else
