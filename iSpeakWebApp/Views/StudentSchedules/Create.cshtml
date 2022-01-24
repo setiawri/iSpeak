@@ -1,9 +1,9 @@
-﻿@model iSpeakWebApp.Models.TutorStudentSchedulesModel
+﻿@model iSpeakWebApp.Models.StudentSchedulesModel
 @using iSpeakWebApp.Models
 
 @{
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
-    string ControllerName = "TutorStudentSchedules";
+    string ControllerName = "StudentSchedules";
     ViewBag.SelectedNavigationMenu = "Schedules";
     ViewBag.Title = "STUDENT SCHEDULES";
     ViewBag.Subtitle = "Create";
@@ -96,7 +96,7 @@
 
                     </fieldset>
 
-                    @if (access.TutorStudentSchedules_Add)
+                    @if (access.StudentSchedules_Add)
                     {
                         <div>
                             <button type="submit" onclick="" class="btn btn-primary"><i class="icon-paperplane mr-2"></i>Submit</button>

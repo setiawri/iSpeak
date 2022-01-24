@@ -516,23 +516,23 @@ namespace iSpeakWebApp.Models
         public bool TutorSchedules_Edit { get; set; }
         public static ModelMember COL_TutorSchedules_Edit = new ModelMember { Name = "TutorSchedules_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("TutorSchedules Edit") };
 
-        /* TUTOR STUDENT SCHEDULES ****************************************************************************************************************************/
+        /* STUDENT SCHEDULES **********************************************************************************************************************************/
 
         [Display(Name = "Notes")]
-        public string TutorStudentSchedules_Notes { get; set; }
-        public static ModelMember COL_TutorStudentSchedules_Notes = new ModelMember { Name = "TutorStudentSchedules_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("TutorStudentSchedules Notes") };
+        public string StudentSchedules_Notes { get; set; }
+        public static ModelMember COL_StudentSchedules_Notes = new ModelMember { Name = "StudentSchedules_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("StudentSchedules Notes") };
 
         [Display(Name = "Add")]
-        public bool TutorStudentSchedules_Add { get; set; }
-        public static ModelMember COL_TutorStudentSchedules_Add = new ModelMember { Name = "TutorStudentSchedules_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("TutorStudentSchedules Add") };
+        public bool StudentSchedules_Add { get; set; }
+        public static ModelMember COL_StudentSchedules_Add = new ModelMember { Name = "StudentSchedules_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("StudentSchedules Add") };
 
         [Display(Name = "View")]
-        public bool TutorStudentSchedules_View { get; set; }
-        public static ModelMember COL_TutorStudentSchedules_View = new ModelMember { Name = "TutorStudentSchedules_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("TutorStudentSchedules View") };
+        public bool StudentSchedules_View { get; set; }
+        public static ModelMember COL_StudentSchedules_View = new ModelMember { Name = "StudentSchedules_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("StudentSchedules View") };
 
         [Display(Name = "Edit")]
-        public bool TutorStudentSchedules_Edit { get; set; }
-        public static ModelMember COL_TutorStudentSchedules_Edit = new ModelMember { Name = "TutorStudentSchedules_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("TutorStudentSchedules Edit") };
+        public bool StudentSchedules_Edit { get; set; }
+        public static ModelMember COL_StudentSchedules_Edit = new ModelMember { Name = "StudentSchedules_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("StudentSchedules Edit") };
 
         /******************************************************************************************************************************************************/
 

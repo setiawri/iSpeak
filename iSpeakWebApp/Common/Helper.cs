@@ -189,12 +189,16 @@ namespace iSpeakWebApp
             string id = value.ToString().ToLower();
             if (typeof(T) == typeof(UserAccountRolesModel))
                 return db.UserAccountRoles.Where(x => x.Id.ToString().ToLower() == id).FirstOrDefault().Name;
+            else if (typeof(T) == typeof(UserAccountsModel))
+                return new UserAccountsController().get((Guid)value).Fullname;
             else if (typeof(T) == typeof(BranchesModel))
                 return db.Branches.Where(x => x.Id.ToString().ToLower() == id).FirstOrDefault().Name;
             else if (typeof(T) == typeof(PromotionEventsModel))
                 return db.PromotionEvents.Where(x => x.Id.ToString().ToLower() == id).FirstOrDefault().Name;
             else if (typeof(T) == typeof(LanguagesModel))
                 return db.Languages.Where(x => x.Id.ToString().ToLower() == id).FirstOrDefault().Name;
+            else if (typeof(T) == typeof(SaleInvoiceItemsModel))
+                return SaleInvoiceItemsController.get_by_IdList(id).FirstOrDefault().SaleInvoices_No;
             else
                 return null;
         }

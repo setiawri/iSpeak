@@ -262,11 +262,11 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.TutorSchedules_Edit, model.TutorSchedules_Edit, UserAccountRolesModel.COL_TutorSchedules_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.TutorSchedules_View, model.TutorSchedules_View, UserAccountRolesModel.COL_TutorSchedules_View.LogDisplay);
 
-                    //TutorStudentSchedules
-                    log = Helper.append(log, originalModel.TutorStudentSchedules_Notes, model.TutorStudentSchedules_Notes, UserAccountRolesModel.COL_TutorStudentSchedules_Notes.LogDisplay);
-                    log = Helper.append(log, originalModel.TutorStudentSchedules_Add, model.TutorStudentSchedules_Add, UserAccountRolesModel.COL_TutorStudentSchedules_Add.LogDisplay);
-                    log = Helper.append(log, originalModel.TutorStudentSchedules_Edit, model.TutorStudentSchedules_Edit, UserAccountRolesModel.COL_TutorStudentSchedules_Edit.LogDisplay);
-                    log = Helper.append(log, originalModel.TutorStudentSchedules_View, model.TutorStudentSchedules_View, UserAccountRolesModel.COL_TutorStudentSchedules_View.LogDisplay);
+                    //StudentSchedules
+                    log = Helper.append(log, originalModel.StudentSchedules_Notes, model.StudentSchedules_Notes, UserAccountRolesModel.COL_StudentSchedules_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.StudentSchedules_Add, model.StudentSchedules_Add, UserAccountRolesModel.COL_StudentSchedules_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.StudentSchedules_Edit, model.StudentSchedules_Edit, UserAccountRolesModel.COL_StudentSchedules_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.StudentSchedules_View, model.StudentSchedules_View, UserAccountRolesModel.COL_StudentSchedules_View.LogDisplay);
 
                     if (!string.IsNullOrEmpty(log))
                     {
@@ -447,10 +447,10 @@ namespace iSpeakWebApp.Controllers
                 if (item.TutorSchedules_Edit) model.TutorSchedules_Edit = true;
                 if (item.TutorSchedules_View) model.TutorSchedules_View = true;
 
-                //TutorStudentSchedules
-                if (item.TutorStudentSchedules_Add) model.TutorStudentSchedules_Add = true;
-                if (item.TutorStudentSchedules_Edit) model.TutorStudentSchedules_Edit = true;
-                if (item.TutorStudentSchedules_View) model.TutorStudentSchedules_View = true;
+                //StudentSchedules
+                if (item.StudentSchedules_Add) model.StudentSchedules_Add = true;
+                if (item.StudentSchedules_Edit) model.StudentSchedules_Edit = true;
+                if (item.StudentSchedules_View) model.StudentSchedules_View = true;
 
             }
 

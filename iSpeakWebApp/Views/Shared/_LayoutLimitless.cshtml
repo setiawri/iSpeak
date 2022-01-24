@@ -89,9 +89,9 @@
                             <a href="@Url.Action("Search", "TutorSchedules", new { rss = 1 })" class="dropdown-item">Search</a>
                             <a href="@Url.Action("Index", "TutorSchedules", new { rss = 1 })" class="dropdown-item">Tutor</a>
                         }
-                        @if (access.TutorStudentSchedules_View)
+                        @if (access.StudentSchedules_View)
                         {
-                            <a href="@Url.Action("Index", "TutorStudentSchedules", new { rss = 1 })" class="dropdown-item">Student</a>
+                            <a href="@Url.Action("Index", "StudentSchedules", new { rss = 1 })" class="dropdown-item">Student</a>
                         }
                     </div>
                 </li>

@@ -144,7 +144,7 @@
     <Compile Include="Controllers\ConsignmentsController.cs" />
     <Compile Include="Controllers\ExpenseCategoriesController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
-    <Compile Include="Controllers\TutorStudentSchedulesController.cs" />
+    <Compile Include="Controllers\StudentSchedulesController.cs" />
     <Compile Include="Controllers\TutorSchedulesController.cs" />
     <Compile Include="Controllers\UnitsController.cs" />
     <Compile Include="Controllers\SuppliersController.cs" />
@@ -179,7 +179,7 @@
     <Compile Include="Models\ConsignmentsModel.cs" />
     <Compile Include="Models\ExpenseCategoriesModel.cs" />
     <Compile Include="Models\ProductsModel.cs" />
-    <Compile Include="Models\TutorStudentSchedulesModel.cs" />
+    <Compile Include="Models\StudentSchedulesModel.cs" />
     <Compile Include="Models\TutorSchedulesModel.cs" />
     <Compile Include="Models\ServicesModel.cs" />
     <Compile Include="Models\InventoryModel.cs" />
@@ -228,6 +228,8 @@
     <Content Include="assets\css\landingpage\style.css" />
     <Content Include="assets\css\layout.min.css" />
     <Content Include="assets\font\Roboto.css" />
+    <Content Include="assets\img\arrowDown.png" />
+    <Content Include="assets\img\arrowUp.png" />
     <Content Include="assets\img\happy_bday.jpg" />
     <Content Include="assets\img\landing_page.jpg" />
     <Content Include="assets\img\logo.png" />
@@ -328,8 +330,9 @@
     <Content Include="Views\TutorSchedules\Edit.cshtml" />
     <Content Include="Views\TutorSchedules\Index.cshtml" />
     <Content Include="Views\TutorSchedules\Search.cshtml" />
-    <Content Include="Views\TutorStudentSchedules\Create.cshtml" />
-    <Content Include="Views\TutorStudentSchedules\Index.cshtml" />
+    <Content Include="Views\StudentSchedules\Create.cshtml" />
+    <Content Include="Views\StudentSchedules\Index.cshtml" />
+    <Content Include="Views\StudentSchedules\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,8 +1,8 @@
-﻿@model IEnumerable<iSpeakWebApp.Models.TutorStudentSchedulesModel>
+﻿@model IEnumerable<iSpeakWebApp.Models.StudentSchedulesModel>
 
 @{
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
-    string ControllerName = "TutorStudentSchedules";
+    string ControllerName = "StudentSchedules";
     ViewBag.SelectedNavigationMenu = "Schedules";
     ViewBag.Title = "STUDENT SCHEDULES";
     ViewBag.Subtitle = "Index";
@@ -28,7 +28,7 @@
                 <div class="card-body">
 
                     <div class="row mx-0">
-                        @if (access.TutorStudentSchedules_Add)
+                        @if (access.StudentSchedules_Add)
                         {
                             <div class="mr-2">
                                 <label class="mb-0">&nbsp;</label>
@@ -67,7 +67,7 @@
                                     <th style="width:200px;">@Html.DisplayNameFor(model => model.SaleInvoiceItems_Id)</th>
                                     <th style="width:200px;">Schedule</th>
                                     <th class="non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
-                                    <th class="non-searchable non-sortable" style="width:120px;"></th>
+                                    <th class="non-searchable non-sortable" style="width:170px;"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -89,8 +89,9 @@
                                             </td>
                                             <td class="align-top tablecellwrap">@Html.DisplayFor(modelItem => item.Notes)</td>
                                             <td class="align-top">
-                                                @if (access.TutorStudentSchedules_Edit)
+                                                @if (access.StudentSchedules_Edit)
                                                 {
+                                                    <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a> @:•
                                                     <a href="javascript:void(0)" onclick="Delete('@item.Id')">DELETE</a> @:•
                                                 }
                                                 <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>

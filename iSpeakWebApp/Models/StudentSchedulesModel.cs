@@ -4,7 +4,7 @@ using iSpeakWebApp.Controllers;
 
 namespace iSpeakWebApp.Models
 {
-    public class TutorStudentSchedulesModel
+    public class StudentSchedulesModel
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
@@ -14,7 +14,7 @@ namespace iSpeakWebApp.Models
         [Required]
         [Display(Name = "Tutor")]
         public Guid Tutor_UserAccounts_Id { get; set; }
-        public static ModelMember COL_Tutor_UserAccounts_Id = new ModelMember { Name = "Tutor_UserAccounts_Id" };
+        public static ModelMember COL_Tutor_UserAccounts_Id = new ModelMember { Name = "Tutor_UserAccounts_Id", Display = "Tutor", LogDisplay = ActivityLogsController.editStringFormat("Tutor") };
         public string Tutor_UserAccounts_Name { get; set; }
         public string Tutor_UserAccounts_No { get; set; }
 
@@ -22,7 +22,7 @@ namespace iSpeakWebApp.Models
         [Required]
         [Display(Name = "Student")]
         public Guid Student_UserAccounts_Id { get; set; }
-        public static ModelMember COL_Student_UserAccounts_Id = new ModelMember { Name = "Student_UserAccounts_Id" };
+        public static ModelMember COL_Student_UserAccounts_Id = new ModelMember { Name = "Student_UserAccounts_Id", Display = "Student", LogDisplay = ActivityLogsController.editStringFormat("Student") };
         public string Student_UserAccounts_Name { get; set; }
         public string Student_UserAccounts_No { get; set; }
 
@@ -49,7 +49,7 @@ namespace iSpeakWebApp.Models
 
         [Display(Name = "Invoice")]
         public Guid SaleInvoiceItems_Id { get; set; } = Guid.Empty;
-        public static ModelMember COL_SaleInvoiceItems_Id = new ModelMember { Name = "SaleInvoiceItems_Id" };
+        public static ModelMember COL_SaleInvoiceItems_Id = new ModelMember { Name = "SaleInvoiceItems_Id", LogDisplay = ActivityLogsController.editStringFormat("Invoice No") };
         public string SaleInvoiceItems_Description { get; set; }
         public string SaleInvoices_No { get; set; }
         public decimal SessionHours_Remaining { get; set; }
