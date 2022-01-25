@@ -113,7 +113,7 @@
 
     function search() {
 
-        if ($('#Languages_Id').val() == '') {
+        if ($('#Languages_Id').val() == '' && $('#Tutor_UserAccounts_Id').val() == null) {
             showMessage('Please select Language', 'Languages_Id');
         } else if ($('#StartTime').val() >= $('#EndTime').val()) {
             showMessage('Start Time cannot be the same or later than End Time', 'StartTime');

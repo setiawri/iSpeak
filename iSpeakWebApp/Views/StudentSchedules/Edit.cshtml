@@ -114,6 +114,7 @@
 
 <script type="text/javascript">
 
+    var InitialSaleInvoiceItemIdLoad;
     $(document).ready(function () {
 
         if ('@Model.Tutor_UserAccounts_Id' != emptyGuid()) {
@@ -121,14 +122,13 @@
             $('#Tutor_UserAccounts_Id').append($newOption).trigger('change');
         }
 
+        if ('@Model.SaleInvoiceItems_Id' != emptyGuid()) {
+            InitialSaleInvoiceItemIdLoad = '@Model.SaleInvoiceItems_Id'; //assign value while loading invoice ddl
+        }
+
         if ('@Model.Student_UserAccounts_Id' != emptyGuid()) {
             var $newOption = $("<option selected='selected'></option>").val('@Model.Student_UserAccounts_Id').text('@Model.Student_UserAccounts_Name');
             $('#Student_UserAccounts_Id').append($newOption).trigger('change');
-        }
-
-        if ('@Model.SaleInvoiceItems_Id' != emptyGuid()) {
-            var $newOption = $("<option selected='selected'></option>").val('@Model.SaleInvoiceItems_Id').text('@Model.SaleInvoiceItems_Description');
-            $('#SaleInvoiceItems_Id').append($newOption).trigger('change');
         }
 
         $('#StartTime').val('@string.Format("{0:HH:mm}", Model.StartTime)');
@@ -145,8 +145,9 @@
         if ($('#Student_UserAccounts_Id').val() != '') {
             $.get('@Url.Action("GetActiveLessonPackages", "SaleInvoiceItems")', { Customer_UserAccounts_Id: $("#Student_UserAccounts_Id").val(), hasLessonHours: 1 }, function (data) {
                 $.each(data.content, function (index, row) {
-                    $("#SaleInvoiceItems_Id").append("<option value='" + row.Value + "'>" + row.Text + "</option>")
+                    $("#SaleInvoiceItems_Id").append("<option " + (row.Value == InitialSaleInvoiceItemIdLoad ? "selected" : "") + " value='" + row.Value + "'>" + row.Text + "</option>")
                 });
+                InitialSaleInvoiceItemIdLoad = null;
             });
         }
     }

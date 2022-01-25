@@ -36,23 +36,20 @@
                             </div>
                         }
 
-                        <div class="row ml-0 mr-2" style="width:100px;">
+                        <div class="row ml-0 mr-2" style="width:150px;">
                             <label class="mb-0">Keyword</label>
                             <div class="input-group">
                                 <input type="text" name="FILTER_Keyword" id="FILTER_Keyword" class="form-control" />
                             </div>
                         </div>
 
-                        <div class="row ml-0 mr-2">
-                            <label class="mb-0">Active</label>
+                        <div class="row ml-0 mr-2" style="width:150px;">
+                            <label class="mb-0">Tutor</label>
                             <div class="input-group">
-                                <select id="FILTER_Active" name="FILTER_Active" class="custom-select">
-                                    <option value="" selected>ALL</option>
-                                    <option value="1">Active</option>
-                                    <option value="0">Not Active</option>
-                                </select>
+                                <input type="text" name="FILTER_UserAccounts_Name" id="FILTER_UserAccounts_Name" class="form-control" />
                             </div>
                         </div>
+
                         <div class="ml-0 mr-2">
                             <label class="mb-0">&nbsp;</label>
                             <button id="LoadData" type="submit" onclick="showLoadingSpinner()" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>LOAD</button>

@@ -331,6 +331,7 @@ FILTERING
 <input type="hidden" id="FILTER_DateTo" name="FILTER_DateTo" value="@ViewBag.FILTER_DateTo" />
 <input type="hidden" id="FILTER_PaymentNo" name="FILTER_PaymentNo" value="@ViewBag.FILTER_PaymentNo" />
 <input type="hidden" id="FILTER_InvoiceNo" name="FILTER_InvoiceNo" value="@ViewBag.FILTER_InvoiceNo" />
+<input type="hidden" id="FILTER_UserAccounts_Name" name="FILTER_UserAccounts_Name" value="@ViewBag.FILTER_UserAccounts_Name" />
 
 <script type="text/javascript">
 
@@ -348,6 +349,7 @@ FILTERING
         setValue('FILTER_Branches_Id', '@ViewBag.FILTER_Branches_Id');
         setValue('FILTER_PaymentNo', '@ViewBag.FILTER_PaymentNo');
         setValue('FILTER_InvoiceNo', '@ViewBag.FILTER_InvoiceNo');
+        setValue('FILTER_UserAccounts_Name', '@ViewBag.FILTER_UserAccounts_Name');
 
         setCheckboxFilter('FILTER_chkDateFrom', '@ViewBag.FILTER_chkDateFrom');
         setCheckboxFilter('FILTER_chkDateTo', '@ViewBag.FILTER_chkDateTo');

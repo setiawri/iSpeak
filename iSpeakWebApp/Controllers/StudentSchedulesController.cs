@@ -14,21 +14,21 @@ namespace iSpeakWebApp.Controllers
 
         /* FILTER *********************************************************************************************************************************************/
 
-        public void setViewBag(string FILTER_Keyword, int? FILTER_Active)
+        public void setViewBag(string FILTER_Keyword, string FILTER_UserAccounts_Name)
         {
             ViewBag.FILTER_Keyword = FILTER_Keyword;
-            ViewBag.FILTER_Active = FILTER_Active;
+            ViewBag.FILTER_UserAccounts_Name = FILTER_UserAccounts_Name;
         }
 
         /* INDEX **********************************************************************************************************************************************/
 
         // GET: StudentSchedules
-        public ActionResult Index(int? rss, string FILTER_Keyword, int? FILTER_Active)
+        public ActionResult Index(int? rss, string FILTER_Keyword, string FILTER_UserAccounts_Name)
         {
             if (!UserAccountsController.getUserAccess(Session).StudentSchedules_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            setViewBag(FILTER_Keyword, FILTER_Active);
+            setViewBag(FILTER_Keyword, FILTER_UserAccounts_Name);
             if (rss != null)
             {
                 ViewBag.RemoveDatatablesStateSave = rss;
@@ -36,27 +36,27 @@ namespace iSpeakWebApp.Controllers
             }
             else
             {
-                return View(get(FILTER_Keyword, FILTER_Active));
+                return View(get(FILTER_Keyword, FILTER_UserAccounts_Name));
             }
         }
 
         // POST: StudentSchedules
         [HttpPost]
-        public ActionResult Index(string FILTER_Keyword, int? FILTER_Active)
+        public ActionResult Index(string FILTER_Keyword, string FILTER_UserAccounts_Name)
         {
-            setViewBag(FILTER_Keyword, FILTER_Active);
-            return View(get(FILTER_Keyword, FILTER_Active));
+            setViewBag(FILTER_Keyword, FILTER_UserAccounts_Name);
+            return View(get(FILTER_Keyword, FILTER_UserAccounts_Name));
         }
 
         /* CREATE *********************************************************************************************************************************************/
 
         // GET: StudentSchedules/Create
-        public ActionResult Create(string FILTER_Keyword, int? FILTER_Active, DayOfWeekEnum? DayOfWeek, string StartTime, Guid? Id, string Name)
+        public ActionResult Create(string FILTER_Keyword, string FILTER_UserAccounts_Name, DayOfWeekEnum? DayOfWeek, string StartTime, Guid? Id, string Name)
         {
             if (!UserAccountsController.getUserAccess(Session).StudentSchedules_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            setViewBag(FILTER_Keyword, FILTER_Active);
+            setViewBag(FILTER_Keyword, FILTER_UserAccounts_Name);
             StudentSchedulesModel model = new StudentSchedulesModel();
             if (Id != null)
             {
@@ -75,7 +75,7 @@ namespace iSpeakWebApp.Controllers
         // POST: StudentSchedules/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(StudentSchedulesModel model, string FILTER_Keyword, int? FILTER_Active)
+        public ActionResult Create(StudentSchedulesModel model, string FILTER_Keyword, string FILTER_UserAccounts_Name)
         {
             if (ModelState.IsValid)
             {
@@ -85,18 +85,18 @@ namespace iSpeakWebApp.Controllers
                 else
                 {
                     add(model);
-                    return RedirectToAction(nameof(Index), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
+                    return RedirectToAction(nameof(Index), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_UserAccounts_Name = FILTER_UserAccounts_Name });
                 }
             }
 
-            setViewBag(FILTER_Keyword, FILTER_Active);
+            setViewBag(FILTER_Keyword, FILTER_UserAccounts_Name);
             return View(model);
         }
 
         /* EDIT ***********************************************************************************************************************************************/
 
         // GET: StudentSchedules/Edit/{id}
-        public ActionResult Edit(Guid? id, string FILTER_Keyword, int? FILTER_Active)
+        public ActionResult Edit(Guid? id, string FILTER_Keyword, string FILTER_UserAccounts_Name)
         {
             if (!UserAccountsController.getUserAccess(Session).StudentSchedules_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
@@ -104,14 +104,20 @@ namespace iSpeakWebApp.Controllers
             if (id == null)
                 return RedirectToAction(nameof(Index));
 
-            setViewBag(FILTER_Keyword, FILTER_Active);
-            return View(get((Guid)id));
+            setViewBag(FILTER_Keyword, FILTER_UserAccounts_Name);
+            StudentSchedulesModel model = get((Guid)id);
+            if (model.SessionHours_Remaining == 0)
+            {
+                model.SaleInvoiceItems_Id = Guid.Empty;
+                ModelState.AddModelError(StudentSchedulesModel.COL_SaleInvoiceItems_Id.Name, "Paket sebelumnya sudah tidak memiliki sisa jam");
+            }
+            return View(model);
         }
 
         // POST: StudentSchedules/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(StudentSchedulesModel modifiedModel, string FILTER_Keyword, int? FILTER_Active)
+        public ActionResult Edit(StudentSchedulesModel modifiedModel, string FILTER_Keyword, string FILTER_UserAccounts_Name)
         {
             if (ModelState.IsValid)
             {
@@ -135,11 +141,11 @@ namespace iSpeakWebApp.Controllers
                     if (!string.IsNullOrEmpty(log))
                         update(modifiedModel, log);
 
-                    return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
+                    return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_UserAccounts_Name = FILTER_UserAccounts_Name });
                 }
             }
 
-            setViewBag(FILTER_Keyword, FILTER_Active);
+            setViewBag(FILTER_Keyword, FILTER_UserAccounts_Name);
             return View(modifiedModel);
         }
 
@@ -193,12 +199,12 @@ namespace iSpeakWebApp.Controllers
         }
 
         public static List<StudentSchedulesModel> get(HttpSessionStateBase Session, Guid? Tutor_UserAccounts_Id, Guid? Student_UserAccounts_Id, Guid? Languages_Id, DayOfWeekEnum? DayOfWeek, DateTime? StartTime, DateTime? EndTime, Guid? SaleInvoiceItems_Id) 
-        { return get(Session, null, Tutor_UserAccounts_Id, Student_UserAccounts_Id, DayOfWeek, StartTime, EndTime, SaleInvoiceItems_Id, Languages_Id, 1, null); }
-        public List<StudentSchedulesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(Session, null, null, null, null, null, null, null, null, FILTER_Active, FILTER_Keyword); }
+        { return get(Session, null, Tutor_UserAccounts_Id, Student_UserAccounts_Id, DayOfWeek, StartTime, EndTime, SaleInvoiceItems_Id, Languages_Id, null, null); }
+        public List<StudentSchedulesModel> get(string FILTER_Keyword, string FILTER_UserAccounts_Name) { return get(Session, null, null, null, null, null, null, null, null, FILTER_Keyword, FILTER_UserAccounts_Name); }
         public StudentSchedulesModel get(Guid Id) { return get(Session, Id, null, null, null, null, null, null, null, null, null).FirstOrDefault(); }
         public List<StudentSchedulesModel> get() { return get(Session, null, null, null, null, null, null, null, null, null, null); }
         public static List<StudentSchedulesModel> get(HttpSessionStateBase Session, Guid? Id, Guid? Tutor_UserAccounts_Id, Guid? Student_UserAccounts_Id, DayOfWeekEnum? DayOfWeek, DateTime? StartTime, DateTime? EndTime, Guid? SaleInvoiceItems_Id,
-            Guid? Languages_Id, int? Active, string FILTER_Keyword)
+            Guid? Languages_Id, string FILTER_Keyword, string FILTER_UserAccounts_Name)
         {
             return new DBContext().Database.SqlQuery<StudentSchedulesModel>(@"
                         SELECT StudentSchedules.*,
@@ -221,8 +227,7 @@ namespace iSpeakWebApp.Controllers
                         WHERE 1=1
 							AND (@Id IS NULL OR StudentSchedules.Id = @Id)
 							AND (@Id IS NOT NULL OR (
-                                (@Active IS NULL OR StudentSchedules.Active = @Active)
-                                AND (@Tutor_UserAccounts_Id IS NULL OR StudentSchedules.Tutor_UserAccounts_Id = @Tutor_UserAccounts_Id)
+                                (@Tutor_UserAccounts_Id IS NULL OR StudentSchedules.Tutor_UserAccounts_Id = @Tutor_UserAccounts_Id)
                                 AND (@Student_UserAccounts_Id IS NULL OR StudentSchedules.Student_UserAccounts_Id = @Student_UserAccounts_Id)
                                 AND (@DayOfWeek IS NULL OR StudentSchedules.[DayOfWeek] = @DayOfWeek)
                                 AND ((@StartTime IS NULL OR (@StartTime >= StudentSchedules.StartTime OR @StartTime <= StudentSchedules.EndTime))
@@ -231,17 +236,18 @@ namespace iSpeakWebApp.Controllers
                                 AND (@Languages_Id IS NULL OR Languages.Id = @Languages_Id)
                                 AND (@SaleInvoiceItems_Id IS NULL OR StudentSchedules.SaleInvoiceItems_Id = @SaleInvoiceItems_Id)
     							AND (@FILTER_Keyword IS NULL OR (
-                                    Tutor_UserAccounts.Fullname LIKE '%'+@FILTER_Keyword+'%'
-                                    OR Student_UserAccounts.Fullname LIKE '%'+@FILTER_Keyword+'%'
+                                    Student_UserAccounts.Fullname LIKE '%'+@FILTER_Keyword+'%'
                                     OR SaleInvoices.No LIKE '%'+@FILTER_Keyword+'%'
                                     OR StudentSchedules.DayOfWeek LIKE '%'+@FILTER_Keyword+'%'
+                                ))
+                                AND (@FILTER_UserAccounts_Name IS NULL OR (                                    
+                                    Tutor_UserAccounts.Fullname LIKE '%'+@FILTER_UserAccounts_Name+'%'
                                 ))
                                 AND (@Branches_Id IS NULL OR Student_UserAccounts.Branches LIKE '%'+ convert(nvarchar(50), @Branches_Id) + '%')
                             ))
 						ORDER BY Student_UserAccounts.Fullname ASC, Tutor_UserAccounts.Fullname ASC, StudentSchedules.DayOfWeek ASC, StudentSchedules.StartTime ASC, StudentSchedules.EndTime ASC
                     ",
                     DBConnection.getSqlParameter(StudentSchedulesModel.COL_Id.Name, Id),
-                    DBConnection.getSqlParameter(StudentSchedulesModel.COL_Active.Name, Active),
                     DBConnection.getSqlParameter(StudentSchedulesModel.COL_Tutor_UserAccounts_Id.Name, Tutor_UserAccounts_Id),
                     DBConnection.getSqlParameter(StudentSchedulesModel.COL_Student_UserAccounts_Id.Name, Student_UserAccounts_Id),
                     DBConnection.getSqlParameter(StudentSchedulesModel.COL_DayOfWeek.Name, DayOfWeek),
@@ -250,7 +256,8 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(StudentSchedulesModel.COL_SaleInvoiceItems_Id.Name, SaleInvoiceItems_Id),
                     DBConnection.getSqlParameter(StudentSchedulesModel.COL_Languages_Id.Name, Languages_Id),
                     DBConnection.getSqlParameter("Branches_Id", Helper.getActiveBranchId(Session)),
-                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
+                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
+                    DBConnection.getSqlParameter("FILTER_UserAccounts_Name", FILTER_UserAccounts_Name)
                 ).ToList();
         }
 

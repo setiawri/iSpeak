@@ -226,7 +226,7 @@ namespace iSpeakWebApp.Controllers
                     if (columns[i] >= schedule.StartTime && columns[i] < schedule.EndTime)
                     {
                         row[i + 1] = string.Format("<td class='px-0 py-1'><a target='_blank' href='{0}'><span class='btn {1} d-block py-2' style='border-radius: 0 !important;'></span></a></td>",
-                                Url.Action("Index", "StudentSchedules", new { FILTER_Keyword = schedule.Tutor_UserAccounts_Name }),
+                                Url.Action("Index", "StudentSchedules", new { FILTER_Keyword = schedule.Student_UserAccounts_Name, FILTER_UserAccounts_Name = schedule.Tutor_UserAccounts_Name }),
                                 schedule.SessionHours_Remaining > 0 ? "btn-warning" : "btn-secondary");
                     }
                 }
