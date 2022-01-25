@@ -296,10 +296,11 @@ namespace iSpeakWebApp.Controllers
                         FROM TutorSchedules
                         WHERE 1=1 
 							AND (@Id IS NULL OR TutorSchedules.Id <> @Id)
-                            AND TutorSchedules.Tutor_UserAccounts_Id = @Tutor_UserAccounts_Id 
+                            AND TutorSchedules.Tutor_UserAccounts_Id = @Tutor_UserAccounts_Id
                             AND TutorSchedules.[DayOfWeek] = @DayOfWeek
-                            AND (@StartTime IS NULL OR (@StartTime >= TutorSchedules.StartTime OR @StartTime < TutorSchedules.EndTime))
-                            AND (@EndTime IS NULL OR (@EndTime > TutorSchedules.StartTime OR @EndTime <= TutorSchedules.EndTime))
+                            AND ((@StartTime >= TutorSchedules.StartTime AND @StartTime < TutorSchedules.EndTime)
+                                OR (@EndTime > TutorSchedules.StartTime AND @EndTime <= TutorSchedules.EndTime)
+                            )
                     ",
                     DBConnection.getSqlParameter(TutorSchedulesModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(TutorSchedulesModel.COL_Tutor_UserAccounts_Id.Name, Tutor_UserAccounts_Id),

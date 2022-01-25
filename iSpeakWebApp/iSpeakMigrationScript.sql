@@ -1,28 +1,36 @@
-CREATE TABLE [dbo].[StudentSchedules] (
-    [Id]                      UNIQUEIDENTIFIER NOT NULL,
-    [DayOfWeek]               TINYINT          NOT NULL,
-    [StartTime]               DATETIME         NOT NULL,
-    [EndTime]                 DATETIME         NOT NULL,
-    [SaleInvoiceItems_Id]     UNIQUEIDENTIFIER NOT NULL,
-    [Notes]                   VARCHAR (MAX)    NULL,
-    [Active]                  BIT              NOT NULL,
-    [Tutor_UserAccounts_Id]   UNIQUEIDENTIFIER NULL,
-    [Student_UserAccounts_Id] UNIQUEIDENTIFIER NULL
-);
-GO
-DROP TABLE TutorStudentSchedules
-GO
 
-----StudentSchedules
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'StudentSchedules_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
-	EXEC sp_RENAME 'UserAccountRoles.TutorStudentSchedules_Notes' , 'StudentSchedules_Notes', 'COLUMN'
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'StudentSchedules_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
-	EXEC sp_RENAME 'UserAccountRoles.TutorStudentSchedules_Add' , 'StudentSchedules_Add', 'COLUMN'
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'StudentSchedules_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
-	EXEC sp_RENAME 'UserAccountRoles.TutorStudentSchedules_View' , 'StudentSchedules_View', 'COLUMN'
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'StudentSchedules_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
-	EXEC sp_RENAME 'UserAccountRoles.TutorStudentSchedules_Edit' , 'StudentSchedules_Edit', 'COLUMN'
-GO
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'UserAccounts_ViewAllRoles' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE UserAccountRoles ADD UserAccounts_ViewAllRoles bit default 0 not null;
+
+--CREATE TABLE [dbo].[StudentSchedules] (
+--    [Id]                      UNIQUEIDENTIFIER NOT NULL,
+--    [DayOfWeek]               TINYINT          NOT NULL,
+--    [StartTime]               DATETIME         NOT NULL,
+--    [EndTime]                 DATETIME         NOT NULL,
+--    [SaleInvoiceItems_Id]     UNIQUEIDENTIFIER NOT NULL,
+--    [Notes]                   VARCHAR (MAX)    NULL,
+--    [Active]                  BIT              NOT NULL,
+--    [Tutor_UserAccounts_Id]   UNIQUEIDENTIFIER NULL,
+--    [Student_UserAccounts_Id] UNIQUEIDENTIFIER NULL
+--);
+--GO
+--DROP TABLE TutorStudentSchedules
+--GO
+--DELETE StudentSchedules
+--GO
+--DELETE TutorSchedules
+--GO
+
+------StudentSchedules
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'StudentSchedules_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--	EXEC sp_RENAME 'UserAccountRoles.TutorStudentSchedules_Notes' , 'StudentSchedules_Notes', 'COLUMN'
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'StudentSchedules_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--	EXEC sp_RENAME 'UserAccountRoles.TutorStudentSchedules_Add' , 'StudentSchedules_Add', 'COLUMN'
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'StudentSchedules_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--	EXEC sp_RENAME 'UserAccountRoles.TutorStudentSchedules_View' , 'StudentSchedules_View', 'COLUMN'
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'StudentSchedules_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--	EXEC sp_RENAME 'UserAccountRoles.TutorStudentSchedules_Edit' , 'StudentSchedules_Edit', 'COLUMN'
+--GO
 
 
 

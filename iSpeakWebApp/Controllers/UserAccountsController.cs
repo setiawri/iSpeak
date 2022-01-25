@@ -72,7 +72,7 @@ namespace iSpeakWebApp.Controllers
             setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id);
 
             string roles = "";
-            if (!getUserAccess(Session).UserAccounts_EditRoles)
+            if (!getUserAccess(Session).UserAccounts_ViewAllRoles)
                 roles = SettingsController.get().StudentRole.ToString();
             return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, roles));
         }
