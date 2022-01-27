@@ -42,7 +42,7 @@ namespace iSpeakWebApp
 
         /* PUBLIC PROPERTIES **********************************************************************************************************************************/
 
-        public const string APP_VERSION = "v201211";
+        public const string APP_VERSION = "v210125";
         public const string COMPANYNAME = "iSpeak Language Center";
 
         public const string IMAGEFOLDERURL = "/assets/img/";

@@ -216,7 +216,8 @@ namespace iSpeakWebApp.Controllers
 
             //add booked/expired slots
             List<StudentSchedulesModel> StudentSchedules = StudentSchedulesController.get(Session, Tutor_UserAccounts_Id, null, Languages_Id, DayOfWeek, StartTime, EndTime, null);
-            foreach(StudentSchedulesModel schedule in StudentSchedules)
+            string url;
+            foreach (StudentSchedulesModel schedule in StudentSchedules)
             {
                 List<string> row = initializeRow(dictionary, columns, schedule.Tutor_UserAccounts_Id, schedule.Tutor_UserAccounts_Name);
 
@@ -226,8 +227,13 @@ namespace iSpeakWebApp.Controllers
                     if (columns[i] >= schedule.StartTime && columns[i] < schedule.EndTime)
                     {
                         row[i + 1] = string.Format("<td class='px-0 py-1'><a target='_blank' href='{0}'><span class='btn {1} d-block py-2' style='border-radius: 0 !important;'></span></a></td>",
-                                Url.Action("Index", "StudentSchedules", new { FILTER_Keyword = schedule.Student_UserAccounts_Name, FILTER_UserAccounts_Name = schedule.Tutor_UserAccounts_Name }),
-                                schedule.SessionHours_Remaining > 0 ? "btn-warning" : "btn-secondary");
+                                url = Url.Action("Index", "StudentSchedules", new { 
+                                    FILTER_Keyword = row[i + 1] != "<td></td>" ? "" : schedule.Student_UserAccounts_Name, 
+                                    FILTER_UserAccounts_Name = schedule.Tutor_UserAccounts_Name, 
+                                    FILTER_Custom = StudentSchedulesController.generateFILTER_Custom(schedule.DayOfWeek, schedule.StartTime, schedule.EndTime)
+                                }), 
+                                schedule.SessionHours_Remaining > 0 ? "btn-warning" : "btn-secondary"
+                            );
                     }
                 }
             }
