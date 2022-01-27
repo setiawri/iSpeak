@@ -40,6 +40,12 @@ namespace iSpeakWebApp
     {
         private static readonly DBContext db = new DBContext();
 
+        public static string[] badgeColors = {
+            "badge-primary", "badge-secondary", "badge-info", "badge-success", "badge-dark", "badge-warning", "badge-danger", "badge-light",
+            "badge-primary", "badge-secondary", "badge-info", "badge-success", "badge-dark", "badge-warning", "badge-danger", "badge-light",
+            "badge-primary", "badge-secondary", "badge-info", "badge-success", "badge-dark", "badge-warning", "badge-danger", "badge-light"
+        };
+
         /* PUBLIC PROPERTIES **********************************************************************************************************************************/
 
         public const string APP_VERSION = "v210125";

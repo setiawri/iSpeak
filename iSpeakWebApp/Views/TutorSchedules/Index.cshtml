@@ -8,11 +8,6 @@
     ViewBag.Subtitle = "Index";
 
     List<iSpeakWebApp.Models.LanguagesModel> Languages = iSpeakWebApp.Controllers.LanguagesController.get();
-    string[] badgeColors = {
-        "badge-primary", "badge-secondary", "badge-info", "badge-success", "badge-dark", "badge-warning", "badge-danger", "badge-light",
-        "badge-primary", "badge-secondary", "badge-info", "badge-success", "badge-dark", "badge-warning", "badge-danger", "badge-light",
-        "badge-primary", "badge-secondary", "badge-info", "badge-success", "badge-dark", "badge-warning", "badge-danger", "badge-light"
-    };
 }
 
 <div class="content-wrapper">
@@ -92,7 +87,7 @@
                                                             {
                                                                 if (Languages[i].Id == Id)
                                                                 {
-                                                                    <span class="badge @(badgeColors[i])" style="width:70px;">@(Languages[i].Name)</span>
+                                                                    <span class="badge @(Helper.badgeColors[i])" style="width:70px;">@(Languages[i].Name)</span>
                                                                     break;
                                                                 }
                                                             }

@@ -102,7 +102,7 @@ namespace iSpeakWebApp.Models
         public List<string> Roles_List { get; set; }
         public static ModelMember COL_Roles_List = new ModelMember { Name = "Roles_List" };
 
-        [Display(Name = "Active Lesson")]
+        [Display(Name = "Active Pckgs")]
         public int ActiveLessonPackages { get; set; } = 0;
     }
 }

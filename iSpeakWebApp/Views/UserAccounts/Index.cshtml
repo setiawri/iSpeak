@@ -8,6 +8,7 @@
     ViewBag.Subtitle = "Index";
 
     List<iSpeakWebApp.Models.UserAccountRolesModel> UserAccountRoles = iSpeakWebApp.Controllers.UserAccountRolesController.get();
+    List<iSpeakWebApp.Models.LanguagesModel> Languages = iSpeakWebApp.Controllers.LanguagesController.get();
 }
 
 <div class="content-wrapper">
@@ -68,47 +69,63 @@
                                     <th>@Html.DisplayNameFor(model => model.Fullname)</th>
                                     <th>Info</th>
                                     <th class="text-right" style="width:150px;">@Html.DisplayNameFor(model => model.ActiveLessonPackages)</th>
-                                    <th class="text-right" style="width:100px;">@Html.DisplayNameFor(model => model.Roles)</th>
                                     <th class="non-searchable non-sortable" style="width:200px;"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @if (Model != null)
                                 {
-                                    string[] badgeColors = { "badge-primary", "badge-secondary", "badge-info", "badge-success", "badge-dark", "badge-warning", "badge-danger", "badge-light" };
                                     foreach (var item in Model)
                                     {
                                         <tr>
                                             <td class="align-top">
                                                 <div>@Html.DisplayFor(modelItem => item.Fullname)</div>
                                                 <div>Id: @Html.DisplayFor(modelItem => item.No), Username: @Html.DisplayFor(modelItem => item.Username)</div>
-                                            </td>
-                                            <td class="align-top">
-                                                <div>@Html.DisplayFor(modelItem => item.Email)</div>
-                                                <div>@Html.DisplayFor(modelItem => item.Phone1)</div>
-                                                <div>@Html.DisplayFor(modelItem => item.Phone2)</div>
-                                            </td>
-                                            <td class="align-top text-right">
-                                                @Html.ActionLink(item.ActiveLessonPackages.ToString(), "Index", "SaleInvoices", new { FILTER_Keyword = @item.Fullname, FILTER_chkDateFrom = false, FILTER_chkDateTo = false }, new { @target="_blank"})
-                                            </td>
-                                            <td class="align-top">
-                                                @{
-                                                    if (item.Roles_List != null)
-                                                    {
-                                                        foreach (string Roles_Id in item.Roles_List)
+                                                <div>
+                                                    @{
+                                                        if (item.Roles_List != null)
                                                         {
-                                                            Guid Id = new Guid(Roles_Id);
-                                                            for (int i = 0; i < UserAccountRoles.Count; i++)
+                                                            foreach (string Roles_Id in item.Roles_List)
                                                             {
-                                                                if (UserAccountRoles[i].Id == Id)
+                                                                Guid Id = new Guid(Roles_Id);
+                                                                for (int i = 0; i < UserAccountRoles.Count; i++)
                                                                 {
-                                                                    <span class="badge @(badgeColors[i])" style="width:70px;">@(UserAccountRoles[i].Name)</span>
-                                                                    break;
+                                                                    if (UserAccountRoles[i].Id == Id)
+                                                                    {
+                                                                        <span class="badge @(Helper.badgeColors[i])" style="width:70px;">@(UserAccountRoles[i].Name)</span>
+                                                                        break;
+                                                                    }
                                                                 }
                                                             }
                                                         }
                                                     }
-                                                }
+                                                </div>
+                                            </td>
+                                            <td class="align-top">
+                                                <div>@Html.DisplayFor(modelItem => item.Email)</div>
+                                                <div>@Html.DisplayFor(modelItem => item.Phone1) @(string.IsNullOrWhiteSpace(item.Phone2) ? "" : ", ") @Html.DisplayFor(modelItem => item.Phone2)</div>
+                                                <div>
+                                                    @{
+                                                        if (item.Interest_List != null)
+                                                        {
+                                                            foreach (string Languages_Id in item.Interest_List)
+                                                            {
+                                                                Guid Id = new Guid(Languages_Id);
+                                                                for (int i = 0; i < Languages.Count; i++)
+                                                                {
+                                                                    if (Languages[i].Id == Id)
+                                                                    {
+                                                                        <span class="badge @(Helper.badgeColors[i])" style="width:70px;">@(Languages[i].Name)</span>
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                </div>
+                                            </td>
+                                            <td class="align-top text-right">
+                                                @Html.ActionLink(item.ActiveLessonPackages.ToString(), "Index", "SaleInvoices", new { FILTER_Keyword = @item.Fullname, FILTER_chkDateFrom = false, FILTER_chkDateTo = false }, new { @target="_blank"})
                                             </td>
                                             <td class="align-top">
                                                 @if (item.Active)
