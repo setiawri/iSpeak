@@ -618,8 +618,17 @@
     }
 
     // DATATABLES PLUGIN ===========================================================================================================================================
-
+    var scrollToTopOnPaginationClick = 0;
     var datatable = $('.datatable').DataTable({
+        bJQueryUI: true,
+        sPaginationType: "full_numbers",
+        fnDrawCallback: function (o) {
+            if (o._iDisplayStart != scrollToTopOnPaginationClick) {
+                var targetOffset = $('#scrollToTopOnPaginationClick').offset().top;
+                $('html,body').animate({ scrollTop: targetOffset }, 500);
+                scrollToTopOnPaginationClick = o._iDisplayStart;
+            }
+        },
         autoWidth: false,
         pagingType: 'full_numbers',
         order: [[0, 'asc']],
