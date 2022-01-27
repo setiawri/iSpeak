@@ -11,6 +11,7 @@ namespace iSpeakWebApp.Controllers
     public class TutorSchedulesController : Controller
     {
         private readonly DBContext db = new DBContext();
+        private const string DEFAULT_EMPTY_CELL = "<td style='width:10px;'></td>";
 
         /* FILTER *********************************************************************************************************************************************/
 
@@ -176,12 +177,12 @@ namespace iSpeakWebApp.Controllers
             for (int i=0; i<columns.Count; i++)
             {
                 if(i==0 && columns[i].Minute != 0)
-                    content += string.Format("<th colspan='{0}' class='px-1 py-0'></th>", (60 - columns[i].Minute) / MinutesPerColumn);
+                    content += string.Format("<th colspan='{0}' class='px-1 py-0' style='width:10px'></th>", (60 - columns[i].Minute) / MinutesPerColumn);
                 else if (columns[i].Minute == 0)
                 {
                     if (i + colspan > columns.Count)
                         colspan = columns.Count - i;
-                    content += string.Format("<th colspan='{0}' class='px-1 py-0'>{1:HH:mm}</th>", colspan, columns[i]);
+                    content += string.Format("<th colspan='{0}' class='px-1 py-0' style='width:10px'>{1:HH:mm}</th>", colspan, columns[i]);
                 }
             }
 
@@ -203,7 +204,7 @@ namespace iSpeakWebApp.Controllers
                 {
                     if(columns[i] >= schedule.StartTime && columns[i] < schedule.EndTime)
                     {
-                        row[i+1] = string.Format("<td class='px-0 py-1'><a target='_blank' href='{0}'><span class='btn btn-success d-block py-2' style='border-radius: 0 !important;'></span></a></td>",
+                        row[i+1] = string.Format("<td class='px-0 py-1' style='width:10px'><a target='_blank' href='{0}'><span class='btn btn-success d-block py-2' style='border-radius: 0 !important;'></span></a></td>",
                                 Url.Action("Create", "StudentSchedules", new { 
                                     DayOfWeek = (int)DayOfWeek, 
                                     StartTime = string.Format("{0:HH_mm}", columns[i]), 
@@ -228,7 +229,7 @@ namespace iSpeakWebApp.Controllers
                     {
                         row[i + 1] = string.Format("<td class='px-0 py-1'><a target='_blank' href='{0}'><span class='btn {1} d-block py-2' style='border-radius: 0 !important;'></span></a></td>",
                                 url = Url.Action("Index", "StudentSchedules", new { 
-                                    FILTER_Keyword = row[i + 1] != "<td></td>" ? "" : schedule.Student_UserAccounts_Name, 
+                                    FILTER_Keyword = row[i + 1] != DEFAULT_EMPTY_CELL ? "" : schedule.Student_UserAccounts_Name, 
                                     FILTER_UserAccounts_Name = schedule.Tutor_UserAccounts_Name, 
                                     FILTER_Custom = StudentSchedulesController.generateFILTER_Custom(schedule.DayOfWeek, schedule.StartTime, schedule.EndTime)
                                 }), 
@@ -269,7 +270,7 @@ namespace iSpeakWebApp.Controllers
 
                 //time columns
                 foreach (DateTime column in columns)
-                    row.Add("<td></td>");
+                    row.Add(DEFAULT_EMPTY_CELL);
 
                 //close row
                 row.Add("</tr>");
