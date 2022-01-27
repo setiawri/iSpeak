@@ -517,7 +517,7 @@ namespace iSpeakWebApp.Controllers
 									SELECT SaleInvoices.Customer_UserAccounts_Id, COUNT(SaleInvoiceItems.Id) AS ActiveLessonPackages
 									FROM SaleInvoiceItems
 										LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
-									WHERE SaleInvoiceItems.SessionHours_Remaining > 0
+									WHERE SaleInvoiceItems.SessionHours_Remaining > 0 AND SaleInvoices.Cancelled = 0
 									GROUP BY SaleInvoices.Customer_UserAccounts_Id
 								) LessonPackages ON LessonPackages.Customer_UserAccounts_Id = UserAccounts.Id
                         WHERE 1=1
