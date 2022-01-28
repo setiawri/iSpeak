@@ -734,6 +734,14 @@
         return $(control).prop('id');
     }
 
+    //use data-container:'.modal-body' for modals and data-container:'body' everywhere else
+    function applyPopovers() {
+        $('[data-toggle="popover"]').popover({
+            html: true,
+            trigger: 'hover'
+        });
+    }
+
     //==============================================================================================================================================================
 
     $(document).ready(function () {
@@ -746,11 +754,7 @@
         //checkbox styling
         applyCheckboxStyling();
 
-        //popovers
-        $('[data-toggle="popover"]').popover({
-            html: true,
-            trigger: 'hover'
-        });
+        applyPopovers();
 
         selectFirstInput();
 

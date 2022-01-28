@@ -22,6 +22,15 @@
             <div class="card" style="min-height:400px;">
                 <div class="card-header header-elements-inline">
                     <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
+                    @{
+                        string infotext = string.Format(@"
+                                <a class='btn btn-success line-height-1 mb-1'>&nbsp;</a> Available
+                                <br><a class='btn btn-warning line-height-1 mb-1'>&nbsp;</a> Booked by a student
+                                <br><a class='btn btn-primary line-height-1 mb-1'>&nbsp;</a> Booked by multiple students (class)
+                                <br><a class='btn btn-secondary line-height-1'>&nbsp;</a> Lesson Package has no hours left
+                            ");
+                    }
+                    <i class="icon-info22 text-primary ml-2" data-toggle="popover" data-container="body" data-placement="left" data-content="@infotext"></i>
                 </div>
                 <div class="card-body">
 
@@ -133,6 +142,7 @@
                 },
                 success: function (data) {
                     $('#searchResult').append(data.content);
+                    applyPopovers();
                 }, //end success
                 error: function (data) {
                     showMessage("ERROR: " + data.statusText);

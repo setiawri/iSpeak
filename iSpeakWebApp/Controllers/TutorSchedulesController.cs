@@ -159,7 +159,7 @@ namespace iSpeakWebApp.Controllers
                     <div class='table-responsive mt-1'>
                         <table class='table table-bordered table-striped table-condensed'>
                             <thead>
-                                <tr>
+                                <tr style='height:80px;'>
                                     <th class='text-center' style='width:200px'>Tutor</th>
                 ");
 
@@ -193,11 +193,13 @@ namespace iSpeakWebApp.Controllers
                 ");
 
             //generate table content
-            Dictionary<Guid, List<string>> dictionary = new Dictionary<Guid, List<string>>();
+            Dictionary<Guid, List<string>> tableContent = new Dictionary<Guid, List<string>>();
+            Dictionary<Guid, List<string>> popovers = new Dictionary<Guid, List<string>>();
             List<TutorSchedulesModel> TutorSchedules = get(Tutor_UserAccounts_Id, Languages_Id, DayOfWeek, StartTime, EndTime);
             foreach (TutorSchedulesModel schedule in TutorSchedules)
             {
-                List<string> row = initializeRow(dictionary, columns, schedule.Tutor_UserAccounts_Id, schedule.Tutor_UserAccounts_Name);
+                List<string> row = initializeRow(ref tableContent, ref popovers, columns, schedule.Tutor_UserAccounts_Id, schedule.Tutor_UserAccounts_Name);
+                List<string> popoverRow = popovers[schedule.Tutor_UserAccounts_Id];
 
                 //add schedule
                 for (int i=0; i<columns.Count; i++)
@@ -220,27 +222,31 @@ namespace iSpeakWebApp.Controllers
             string url;
             foreach (StudentSchedulesModel schedule in StudentSchedules)
             {
-                List<string> row = initializeRow(dictionary, columns, schedule.Tutor_UserAccounts_Id, schedule.Tutor_UserAccounts_Name);
+                List<string> row = initializeRow(ref tableContent, ref popovers, columns, schedule.Tutor_UserAccounts_Id, schedule.Tutor_UserAccounts_Name);
+                List<string> popoverRow = popovers[schedule.Tutor_UserAccounts_Id];
 
                 //add schedule
                 for (int i = 0; i < columns.Count; i++)
                 {
                     if (columns[i] >= schedule.StartTime && columns[i] < schedule.EndTime)
                     {
-                        row[i + 1] = string.Format("<td class='px-0 py-1'><a target='_blank' href='{0}'><span class='btn {1} d-block py-2' style='border-radius: 0 !important;'></span></a></td>",
+                        popoverRow[i+1] = Util.append(popoverRow[i+1], string.Format("[{0} hours] {1}", schedule.SessionHours_Remaining, schedule.Student_UserAccounts_Name), "<br>");
+                        bool isMultipleSchedules = row[i + 1] != DEFAULT_EMPTY_CELL;
+                        row[i + 1] = string.Format("<td class='px-0 py-1'><a target='_blank' href='{0}' class='btn {2} d-block py-2' style='border-radius: 0 !important;' data-toggle='popover' data-container='body' data-placement='bottom' data-content='{1}'></a></td>",
                                 url = Url.Action("Index", "StudentSchedules", new { 
-                                    FILTER_Keyword = row[i + 1] != DEFAULT_EMPTY_CELL ? "" : schedule.Student_UserAccounts_Name, 
+                                    FILTER_Keyword = isMultipleSchedules ? "" : schedule.Student_UserAccounts_Name, 
                                     FILTER_UserAccounts_Name = schedule.Tutor_UserAccounts_Name, 
                                     FILTER_Custom = StudentSchedulesController.generateFILTER_Custom(schedule.DayOfWeek, schedule.StartTime, schedule.EndTime)
-                                }), 
-                                schedule.SessionHours_Remaining > 0 ? "btn-warning" : "btn-secondary"
+                                }),
+                                popoverRow[i + 1],
+                                isMultipleSchedules ? "btn-primary" : (schedule.SessionHours_Remaining > 0 ? "btn-warning" : "btn-secondary")
                             );
                     }
                 }
             }
 
             //create rows
-            foreach (KeyValuePair<Guid, List<string>> row in dictionary)
+            foreach (KeyValuePair<Guid, List<string>> row in tableContent)
             {
                 foreach (string cell in row.Value)
                     content += cell;
@@ -255,27 +261,35 @@ namespace iSpeakWebApp.Controllers
             return Json(new { content = content }, JsonRequestBehavior.AllowGet);
         }
 
-        public List<string> initializeRow(Dictionary<Guid, List<string>> dictionary, List<DateTime> columns, Guid Tutor_UserAccounts_Id, string Tutor_UserAccounts_Name)
+        public List<string> initializeRow(ref Dictionary<Guid, List<string>> tableContent, ref Dictionary<Guid, List<string>> popovers, List<DateTime> columns, Guid Tutor_UserAccounts_Id, string Tutor_UserAccounts_Name)
         {
             List<string> row = new List<string>();
 
-            if (dictionary.ContainsKey(Tutor_UserAccounts_Id))
-                row = dictionary[Tutor_UserAccounts_Id];
+            if (tableContent.ContainsKey(Tutor_UserAccounts_Id))
+                row = tableContent[Tutor_UserAccounts_Id];
             else
             {
+                List<string> popoverRow = new List<string>();
+
                 //tutor column
                 row.Add(string.Format("<tr><td class='py-1 px-1' style='min-width:200px;'><a target='_blank' href='{0}'>{1}</a></td>",
                         Url.Action("Index", "TutorSchedules", new { FILTER_Keyword = Tutor_UserAccounts_Name }),
                         Tutor_UserAccounts_Name));
+                popoverRow.Add("");
 
                 //time columns
                 foreach (DateTime column in columns)
+                {
                     row.Add(DEFAULT_EMPTY_CELL);
+                    popoverRow.Add("");
+                }
 
                 //close row
                 row.Add("</tr>");
+                popoverRow.Add("");
 
-                dictionary.Add(Tutor_UserAccounts_Id, row);
+                tableContent.Add(Tutor_UserAccounts_Id, row);
+                popovers.Add(Tutor_UserAccounts_Id, popoverRow);
             }
 
             return row;
