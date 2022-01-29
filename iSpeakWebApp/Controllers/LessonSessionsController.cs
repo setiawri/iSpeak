@@ -135,6 +135,7 @@ namespace iSpeakWebApp.Controllers
                     SaleInvoiceItemsController.update_SessionHours_Remaining(db, Session, saleInvoiceItem.Id, saleInvoiceItem.SessionHours_Remaining,
                         string.Format("Lesson Session on {0:dd/MM/yy HH:mm} for {1:N2} hours. Remaining hours: {2:N2} hours.", session.Timestamp, session.SessionHours, saleInvoiceItem.SessionHours_Remaining));
                 }
+                db.SaveChanges();
 
                 //create payrollpaymentitem
                 if (!model.IsScheduleChange)
@@ -386,6 +387,7 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
+            db.SaveChanges();
         }
 
         public void update(LessonSessionsModel model, string log)
