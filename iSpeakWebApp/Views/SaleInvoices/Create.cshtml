@@ -68,7 +68,7 @@
                                     <div class="form-group row">
                                         @Html.Label("Lesson Package", htmlAttributes: new { @class = "col-form-label required", @style = "width:150px;" })
                                         <div style="min-width:600px">
-                                            @Html.DropDownList("LessonPackages", ViewBag.LessonPackages as SelectList, "Pilih", new { @class = "form-control select2", onchange = "UpdateLessonSessionHours()" })
+                                            @Html.DropDownList("LessonPackages", ViewBag.LessonPackages as SelectList, "Please Select", new { @class = "form-control select2", onchange = "UpdateLessonSessionHours()" })
                                             @Html.ValidationMessage("LessonPackages", "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -103,7 +103,7 @@
                                     <div class="form-group row">
                                         @Html.Label("Products", htmlAttributes: new { @class = "col-form-label required", @style = "width:150px;" })
                                         <div class="" style="width:500px">
-                                            @Html.DropDownList("Products", ViewBag.Products as SelectList, "Pilih", new { @class = "form-control select2" })
+                                            @Html.DropDownList("Products", ViewBag.Products as SelectList, "Please Select", new { @class = "form-control select2" })
                                             @Html.ValidationMessage("Products", "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -113,7 +113,7 @@
                                     <div class="form-group row">
                                         @Html.Label("Services", htmlAttributes: new { @class = "col-form-label required", @style = "width:150px;" })
                                         <div class="" style="width:500px">
-                                            @Html.DropDownList("Services", ViewBag.Services as SelectList, "Pilih", new { @class = "form-control select2" })
+                                            @Html.DropDownList("Services", ViewBag.Services as SelectList, "Please Select", new { @class = "form-control select2" })
                                             @Html.ValidationMessage("Services", "", new { @class = "text-danger" })
                                         </div>
                                     </div>

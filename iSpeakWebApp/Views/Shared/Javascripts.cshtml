@@ -601,7 +601,7 @@
         var url = '@Url.Action("__action", "__controller")';
         url = url.replace("__action", action).replace("__controller", controller);
         $('#'+id).select2({
-            placeholder: 'Pilih',
+            placeholder: 'Please Select',
             ajax: {
                 url: url,
                 data: function (params) {

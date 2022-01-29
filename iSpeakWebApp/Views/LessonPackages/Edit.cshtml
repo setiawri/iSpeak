@@ -36,7 +36,7 @@
                         <div class="form-group row">
                             @Html.LabelFor(model => model.Languages_Id, htmlAttributes: new { @class = "col-form-label col-lg-2 required" })
                             <div class="col-lg-2">
-                                @Html.DropDownListFor(model => model.Languages_Id, ViewBag.Languages as SelectList, "Pilih", new { @class = "form-control select2" })
+                                @Html.DropDownListFor(model => model.Languages_Id, ViewBag.Languages as SelectList, "Please Select", new { @class = "form-control select2" })
                                 @Html.ValidationMessageFor(model => model.Languages_Id, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                         <div class="form-group row">
                             @Html.LabelFor(model => model.LessonTypes_Id, htmlAttributes: new { @class = "col-form-label col-lg-2 required" })
                             <div class="col-lg-2">
-                                @Html.DropDownListFor(model => model.LessonTypes_Id, ViewBag.LessonTypes as SelectList, "Pilih", new { @class = "form-control select2" })
+                                @Html.DropDownListFor(model => model.LessonTypes_Id, ViewBag.LessonTypes as SelectList, "Please Select", new { @class = "form-control select2" })
                                 @Html.ValidationMessageFor(model => model.LessonTypes_Id, "", new { @class = "text-danger" })
                             </div>
                         </div>

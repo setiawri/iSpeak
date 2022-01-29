@@ -81,7 +81,7 @@
                         <div class="form-group row">
                             @Html.LabelFor(model => model.SaleInvoiceItems_Id, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
                             <div class="col-lg-4">
-                                @Html.DropDownListFor(model => model.SaleInvoiceItems_Id, new SelectList(""), "Pilih", new { @class = "form-control select2" })
+                                @Html.DropDownListFor(model => model.SaleInvoiceItems_Id, new SelectList(""), "Please Select", new { @class = "form-control select2" })
                                 @Html.ValidationMessageFor(model => model.SaleInvoiceItems_Id, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -153,7 +153,7 @@
 
     function ResetDDLSaleInvoiceItems_Id() {
         $("#SaleInvoiceItems_Id").empty();
-        $("#SaleInvoiceItems_Id").append("<option value=''>Pilih</option");
+        $("#SaleInvoiceItems_Id").append("<option value=''>Please Select</option");
     }
 
     $('#targetForm').submit(function (e) {
