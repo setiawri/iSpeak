@@ -93,7 +93,7 @@
                                     <th class="non-sortable" style="width:150px;">@Html.DisplayNameFor(model => model.UserAccounts_Id)</th>
                                     @if (access.PettyCashRecords_Approve)
                                     {
-                                        <th class="non-searchable non-sortable" style="width:0px;">Approval</th>
+                                        <th class="non-searchable non-sortable" style="width:0px;">Approved</th>
                                     }
                                     @if (access.PettyCashRecords_Approve)
                                     {
@@ -123,7 +123,7 @@
                                             @if (access.PettyCashRecords_Approve)
                                             {
                                                 <td class="align-top" style="text-align:center;">
-                                                    @Html.CheckBoxFor(modelItem => item.IsChecked, new { @class = "check-styled", onclick = string.Format("UpdateApproval(this, '{0}')", item.Id) })
+                                                    @Html.CheckBoxFor(modelItem => item.IsChecked, new { @class = "check-styled", onclick = string.Format("Update_Approved(this, '{0}')", item.Id) })
                                                 </td>
                                             }
                                             @if (access.PettyCashRecords_Approve)
@@ -155,8 +155,8 @@
         setDateRangePicker('FILTER_DateTo', '@string.Format("{0:yyyy/MM/dd}", DateTime.Today)');
     });
 
-    function UpdateApproval(control, id) {
-        AjaxUpdate('UpdateApproval', '@ControllerName', id, control.checked);
+    function Update_Approved(control, id) {
+        AjaxUpdate('Ajax_Update_Approved', '@ControllerName', id, control.checked);
     }
 
     function applyLast() {

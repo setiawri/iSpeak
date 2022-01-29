@@ -69,8 +69,9 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Cancelled = new ModelMember { Name = "Cancelled", Display = "Cancelled", LogDisplay = ActivityLogsController.editBooleanFormat("Cancelled") };
 
 
+        [Display(Name = "Approved")]
         public bool Confirmed { get; set; } = false;
-        public static ModelMember COL_Confirmed = new ModelMember { Name = "Confirmed", Display = "Approval", LogDisplay = ActivityLogsController.editBooleanFormat("Approval") };
+        public static ModelMember COL_Confirmed = new ModelMember { Name = "Confirmed", Display = "Approved", LogDisplay = ActivityLogsController.editBooleanFormat("Approved") };
 
 
         public bool IsTransfer { get; set; } = false;

@@ -33,8 +33,9 @@ namespace iSpeakWebApp.Models
         public string UserAccounts_Fullname { get; set; }
 
 
+        [Display(Name = "Approved")]
         public bool IsChecked { get; set; } = false;
-        public static ModelMember COL_IsChecked = new ModelMember { Name = "IsChecked", Display = "IsChecked", LogDisplay = ActivityLogsController.editBooleanFormat("Approval") };
+        public static ModelMember COL_IsChecked = new ModelMember { Name = "IsChecked", Display = "Approved", LogDisplay = ActivityLogsController.editBooleanFormat("Approved") };
 
 
         public bool Cancelled { get; set; } = false;

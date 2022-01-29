@@ -61,7 +61,7 @@
     function LoadReminders() {
         $.ajax({
             type: "POST",
-            url: '@Url.Action("GetData", "Reminders")',
+            url: '@Url.Action("Ajax_GetData", "Reminders")',
             data: {
                 FILTER_Keyword: getValueString('FILTER_Keyword'),
                 status: getDDLSelectedValue('ReminderStatus')

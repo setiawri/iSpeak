@@ -204,8 +204,8 @@
         setDateRangePicker('FILTER_DateTo', '@string.Format("{0:yyyy/MM/dd}", DateTime.Today)');
     });
 
-    function UpdateApproval(control, id) {
-        AjaxUpdate('Update_Approval', '@ControllerName', id, control.checked);
+    function Update_Approved(control, id) {
+        AjaxUpdate('Ajax_Update_Approved', '@ControllerName', id, control.checked);
     }
 
     function applyLast() {
@@ -227,7 +227,7 @@
             else {
                 $.ajax({
                     type: "POST",
-                    url: '@Url.Action("UpdateDeleted", ControllerName)',
+                    url: '@Url.Action("Ajax_Update_Deleted", ControllerName)',
                     data: {
                         id: $('#modal_cancel-Id').val(),
                         notes: $('#modal_cancel-Notes').val()

@@ -124,7 +124,7 @@ namespace iSpeakWebApp.Controllers
             SuppliersController.setDropDownListViewBag(this);
         }
 
-        public JsonResult GetDetails(Guid id)
+        public JsonResult Ajax_GetDetails(Guid id)
         {
             UserAccountRolesModel access = UserAccountsController.getUserAccess(Session);
 

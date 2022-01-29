@@ -93,7 +93,7 @@
                                     <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Amount)</th>
                                     @if (access.PayrollPayments_Approve)
                                     {
-                                        <th class="non-searchable non-sortable" style="width:0px;">Approval</th>
+                                        <th class="non-searchable non-sortable" style="width:0px;">Approved</th>
                                     }
                                     <th class="non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
                                     <th class="non-searchable non-sortable" style="width:70px;"></th>
@@ -113,7 +113,7 @@
                                             @if (access.PayrollPayments_Approve)
                                             {
                                                 <td class="align-top" style="text-align:center;">
-                                                    @Html.CheckBoxFor(modelItem => item.IsChecked, new { @class = "check-styled", onclick = string.Format("UpdateApproval(this, '{0}')", item.Id) })
+                                                    @Html.CheckBoxFor(modelItem => item.IsChecked, new { @class = "check-styled", onclick = string.Format("Update_Approved(this, '{0}')", item.Id) })
                                                 </td>
                                             }
                                             <td class="align-top">
@@ -197,8 +197,8 @@
         setDateRangePicker('FILTER_DateTo', '@string.Format("{0:yyyy/MM/dd}", DateTime.Today)');
     });
 
-    function UpdateApproval(control, id) {
-        AjaxUpdate('Update_Approval', '@ControllerName', id, control.checked);
+    function Update_Approved(control, id) {
+        AjaxUpdate('Ajax_Update_Approved', '@ControllerName', id, control.checked);
     }
 
     function applyLast() {
@@ -220,7 +220,7 @@
             else {
                 $.ajax({
                     type: "POST",
-                    url: '@Url.Action("Update_Cancelled", ControllerName)',
+                    url: '@Url.Action("Ajax_Update_Cancelled", ControllerName)',
                     data: {
                         id: $('#modal_cancel-Id').val(),
                         notes: $('#modal_cancel-Notes').val()

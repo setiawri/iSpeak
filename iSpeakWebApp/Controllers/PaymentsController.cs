@@ -207,7 +207,7 @@ namespace iSpeakWebApp.Controllers
             ViewBag.FILTER_DateTo = FILTER_DateTo;
         }
 
-        public JsonResult GetDetails(Guid id)
+        public JsonResult Ajax_GetDetails(Guid id)
         {
             UserAccountRolesModel access = UserAccountsController.getUserAccess(Session);
 
@@ -260,13 +260,13 @@ namespace iSpeakWebApp.Controllers
             return Json(new { content = content }, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult UpdateApproval(Guid id, bool value)
+        public JsonResult Ajax_Update_Approved(Guid id, bool value)
         {
-            update_Confirmed(id, value);
+            update_Approved(id, value);
             return Json(new { Message = "" });
         }
 
-        public JsonResult Update_Cancelled(Guid id, string notes)
+        public JsonResult Ajax_Update_Cancelled(Guid id, string notes)
         {
             update_CancelNotes(id, notes);
             return Json(new { Message = "" });
@@ -364,7 +364,7 @@ namespace iSpeakWebApp.Controllers
             db.SaveChanges();
         }
 
-        public void update_Confirmed(Guid Id, bool value)
+        public void update_Approved(Guid Id, bool value)
         {
             WebDBConnection.Update(db.Database, "Payments",
                     DBConnection.getSqlParameter(PaymentsModel.COL_Id.Name, Id),

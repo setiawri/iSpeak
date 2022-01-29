@@ -178,7 +178,7 @@ namespace iSpeakWebApp.Controllers
 
         /* RESET PASSWORD *************************************************************************************************************************************/
 
-        public JsonResult ResetPassword(Guid id)
+        public JsonResult Ajax_ResetPassword(Guid id)
         {
             UserAccountsModel model = new UserAccountsModel();
             model.Id = id;
@@ -297,7 +297,7 @@ namespace iSpeakWebApp.Controllers
             return PartialView("BirthdaysPartial");
         }
 
-        public JsonResult GetBirthdayData(int? month, Guid? UserAccountRoles_Id)
+        public JsonResult Ajax_GetBirthdayData(int? month, Guid? UserAccountRoles_Id)
         {
             List<UserAccountsModel> models = getBirthdays(Helper.getActiveBranchId(Session), UserAccountRoles_Id, (int)month);
             
@@ -306,7 +306,7 @@ namespace iSpeakWebApp.Controllers
 
         /* METHODS ********************************************************************************************************************************************/
 
-        public ActionResult UpdateActiveBranch(Guid BranchId, string returnUrl)
+        public ActionResult Ajax_UpdateActiveBranch(Guid BranchId, string returnUrl)
         {
             Session[SESSION_ActiveBranches_Id] = BranchId;
 
@@ -446,7 +446,7 @@ namespace iSpeakWebApp.Controllers
             return string.Format("{0}{1}{2:##00}{3:##00}", first, last, Birthday.Day, Birthday.Month);
         }
 
-        public JsonResult GetDropDownListData(string keyword, int page, int take, string key)
+        public JsonResult Ajax_GetDDLItems(string keyword, int page, int take, string key)
         {
             int skip = take * (page - 1);
             List<UserAccountsModel> models = get(skip, take, keyword, 1, null, key);

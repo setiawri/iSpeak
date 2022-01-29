@@ -47,7 +47,7 @@ namespace iSpeakWebApp.Controllers
             ViewBag.FILTER_DatePeriod = FILTER_DatePeriod ?? Util.getFirstDayOfSelectedMonth(Helper.getCurrentDateTime());
         }
 
-        public JsonResult GetDetails(Guid id, DateTime DatePeriod)
+        public JsonResult Ajax_GetDetails(Guid id, DateTime DatePeriod)
         {
             string content = "";
 
@@ -154,7 +154,7 @@ namespace iSpeakWebApp.Controllers
             return combinedModels;
         }
 
-        public JsonResult GenerateFullTimePayroll(DateTime param1)
+        public JsonResult Ajax_GenerateFullTimePayroll(DateTime param1)
         {
             int newItems = 0;
             DateTime DatePeriod = param1;
@@ -193,7 +193,7 @@ namespace iSpeakWebApp.Controllers
             return Json(new { Message = "Generated " + newItems + " payrolls" });
         }
 
-        public JsonResult Create(Guid? UserAccounts_Id, string Description, DateTime Timestamp, int Amount)
+        public JsonResult Ajax_Create(Guid? UserAccounts_Id, string Description, DateTime Timestamp, int Amount)
         {
             if(UserAccounts_Id == null)
                 UtilWebMVC.Json(Response, "Please select employee");

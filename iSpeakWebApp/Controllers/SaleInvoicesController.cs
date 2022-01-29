@@ -153,7 +153,7 @@ namespace iSpeakWebApp.Controllers
             VouchersController.setViewBag(this);
         }
 
-        public JsonResult GetDetails(Guid id)
+        public JsonResult Ajax_GetDetails(Guid id)
         {
             UserAccountRolesModel access = UserAccountsController.getUserAccess(Session);
 
@@ -232,13 +232,13 @@ namespace iSpeakWebApp.Controllers
             return Json(new { content = content }, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult UpdateApproval(Guid id, bool value)
+        public JsonResult Ajax_Update_Approved(Guid id, bool value)
         {
-            update_IsChecked(id, value);
+            update_Approved(id, value);
             return Json(new { Message = "" });
         }
 
-        public JsonResult Update_Cancelled(Guid id, string notes)
+        public JsonResult Ajax_Update_CancelNotes(Guid id, string notes)
         {
             return UtilWebMVC.Json(Response, update_CancelNotes(id, notes));
         }
@@ -317,7 +317,7 @@ namespace iSpeakWebApp.Controllers
             ).ToList();
         }
 
-        public void update_IsChecked(Guid Id, bool value)
+        public void update_Approved(Guid Id, bool value)
         {
             db.Database.ExecuteSqlCommand(@"
                 UPDATE SaleInvoices 

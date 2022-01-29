@@ -518,7 +518,7 @@
     function Log(id) {
         $.ajax({
             type: "POST",
-            url: '@Url.Action("GetLog", "ActivityLogs")',
+            url: '@Url.Action("Ajax_GetLog", "ActivityLogs")',
             data: {
                 ReffId: id
             },

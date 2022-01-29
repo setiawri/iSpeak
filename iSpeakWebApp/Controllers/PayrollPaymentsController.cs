@@ -72,19 +72,19 @@ namespace iSpeakWebApp.Controllers
             ViewBag.FILTER_DateTo = FILTER_DateTo;
         }
 
-        public JsonResult Update_Approval(Guid id, bool value)
+        public JsonResult Ajax_Update_Approved(Guid id, bool value)
         {
-            update_IsChecked(id, value);
+            update_Approved(id, value);
             return Json(new { Message = "" });
         }
 
-        public JsonResult Update_Cancelled(Guid id, string notes)
+        public JsonResult Ajax_Update_Cancelled(Guid id, string notes)
         {
             update_CancelNotes(id, notes);
             return Json(new { Message = "" });
         }
 
-        public JsonResult Create(Guid UserAccounts_Id, string Notes, DateTime Timestamp, decimal Amount, DateTime DatePeriod)
+        public JsonResult Ajax_Create(Guid UserAccounts_Id, string Notes, DateTime Timestamp, decimal Amount, DateTime DatePeriod)
         {
             List<PayrollPaymentItemsModel> PayrollPaymentItems = PayrollPaymentItemsController.combineClassSesions(PayrollPaymentItemsController.get(Session, UserAccounts_Id, DatePeriod, null));
 
@@ -203,7 +203,7 @@ namespace iSpeakWebApp.Controllers
             db.SaveChanges();
         }
 
-        public void update_IsChecked(Guid Id, bool value)
+        public void update_Approved(Guid Id, bool value)
         {
             WebDBConnection.Update(db.Database, "PayrollPayments",
                 DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, Id),

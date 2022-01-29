@@ -87,7 +87,7 @@ namespace iSpeakWebApp.Controllers
 
         /* METHODS ********************************************************************************************************************************************/
 
-        public JsonResult GetData(string FILTER_Keyword, int? status)
+        public JsonResult Ajax_GetData(string FILTER_Keyword, int? status)
         {
             List<RemindersModel> models = new RemindersController().get(Helper.getActiveBranchId(Session), status == null ? (EnumReminderStatuses?)null : (EnumReminderStatuses)status, FILTER_Keyword);
             return Json(new { result = models, count = models.Count }, JsonRequestBehavior.AllowGet);

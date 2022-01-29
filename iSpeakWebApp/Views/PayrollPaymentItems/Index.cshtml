@@ -222,17 +222,13 @@
     $(document).ready(function () {
     });
 
-    function UpdateApproval(control, id) {
-        AjaxUpdate('Update_Approval', '@ControllerName', id, control.checked);
-    }
-
     function applyLast() {
-        AjaxGetDropdownlistData('UserAccounts_Id', 'GetDropDownListData', 'UserAccounts');
+        AjaxGetDropdownlistData('UserAccounts_Id', 'Ajax_GetDDLItems', 'UserAccounts');
         setDatePeriodFilter('FILTER_DatePeriod', 'FILTER_DatePeriod_Month', 'FILTER_DatePeriod_Year', '@string.Format("{0:MM/dd/yyyy}", ViewBag.FILTER_DatePeriod ?? Helper.getCurrentDateTime())');
     }
 
     function generateFullTimePayroll() {
-        AjaxExecute('GenerateFullTimePayroll', '@ControllerName', getValueString('FILTER_DatePeriod'), null, function () { $('#LoadData').trigger('click'); });
+        AjaxExecute('Ajax_GenerateFullTimePayroll', '@ControllerName', getValueString('FILTER_DatePeriod'), null, function () { $('#LoadData').trigger('click'); });
     }
 
     // MANUAL PAYROLL ITEM =========================================================================================================================================
@@ -249,7 +245,7 @@
             else {
                 $.ajax({
                     type: "POST",
-                    url: '@Url.Action("Create", "PayrollPaymentItems")',
+                    url: '@Url.Action("Ajax_Create", "PayrollPaymentItems")',
                     data: {
                         UserAccounts_Id: getDDLSelectedValue('UserAccounts_Id'),
                         Description: getValueString('modal_manualitem-Description'),
@@ -274,7 +270,7 @@
         if (!event.detail || event.detail == 1) {
             $.ajax({
                 type: "POST",
-                url: '@Url.Action("Create", "PayrollPayments")',
+                url: '@Url.Action("Ajax_Create", "PayrollPayments")',
                 data: {
                     UserAccounts_Id: $('#modal_payment-UserAccounts_Id').val(),
                     Notes: $('#modal_payment-Notes').val(),
@@ -307,7 +303,7 @@
 
     function GetDetails(id, title) {
         setValue('modal_payment-UserAccounts_Id', id);
-        var url = '@Url.Action("GetDetails", "PayrollPaymentItems")';
+        var url = '@Url.Action("Ajax_GetDetails", "PayrollPaymentItems")';
         $.ajax({
             type: "POST", url: url, data: { id: id, DatePeriod: getValueString('FILTER_DatePeriod') },
             success: function (data) { bootbox.dialog({ backdrop: true, onEscape: true, title: title, size: 'large', message: data.content, className:'PayrollItemsDialog' }); },

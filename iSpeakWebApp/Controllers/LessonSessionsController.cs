@@ -278,7 +278,7 @@ namespace iSpeakWebApp.Controllers
             ViewBag.FILTER_DateTo = FILTER_DateTo;
         }
 
-        public JsonResult UpdateDeleted(Guid id, string notes)
+        public JsonResult Ajax_Update_Deleted(Guid id, string notes)
         {
             update_Deleted(id, notes);
             return Json(new { Message = "" });

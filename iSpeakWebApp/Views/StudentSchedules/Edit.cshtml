@@ -136,14 +136,14 @@
     });
 
     function applyLast() {
-        AjaxGetDropdownlistData('Tutor_UserAccounts_Id', 'GetDropDownListData', 'UserAccounts', '@TutorRole');
-        AjaxGetDropdownlistData('Student_UserAccounts_Id', 'GetDropDownListData', 'UserAccounts', '@StudentRole');
+        AjaxGetDropdownlistData('Tutor_UserAccounts_Id', 'Ajax_GetDDLItems', 'UserAccounts', '@TutorRole');
+        AjaxGetDropdownlistData('Student_UserAccounts_Id', 'Ajax_GetDDLItems', 'UserAccounts', '@StudentRole');
     }
 
     function LoadSaleInvoices() {
         ResetDDLSaleInvoiceItems_Id();
         if ($('#Student_UserAccounts_Id').val() != '') {
-            $.get('@Url.Action("GetActiveLessonPackages", "SaleInvoiceItems")', { Customer_UserAccounts_Id: $("#Student_UserAccounts_Id").val(), hasLessonHours: 1 }, function (data) {
+            $.get('@Url.Action("Ajax_GetActiveLessonPackages", "SaleInvoiceItems")', { Customer_UserAccounts_Id: $("#Student_UserAccounts_Id").val(), hasLessonHours: 1 }, function (data) {
                 $.each(data.content, function (index, row) {
                     $("#SaleInvoiceItems_Id").append("<option " + (row.Value == InitialSaleInvoiceItemIdLoad ? "selected" : "") + " value='" + row.Value + "'>" + row.Text + "</option>")
                 });

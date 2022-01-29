@@ -26,7 +26,7 @@ namespace iSpeakWebApp.Controllers
 
         /* DISPLAY LOG ****************************************************************************************************************************************/
 
-        public JsonResult GetLog(Guid ReffId)
+        public JsonResult Ajax_GetLog(Guid ReffId)
         {
             string message = @"<div class='table-responsive'>
                                     <table class='table table-striped table-bordered'>

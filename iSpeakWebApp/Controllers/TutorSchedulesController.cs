@@ -146,7 +146,7 @@ namespace iSpeakWebApp.Controllers
             return View(model);
         }
 
-        public JsonResult GetSchedules(Guid? Tutor_UserAccounts_Id, Guid? Languages_Id, DayOfWeekEnum DayOfWeek, DateTime StartTime, DateTime EndTime, int MinutesPerColumn)
+        public JsonResult Ajax_GetSchedules(Guid? Tutor_UserAccounts_Id, Guid? Languages_Id, DayOfWeekEnum DayOfWeek, DateTime StartTime, DateTime EndTime, int MinutesPerColumn)
         {
             StartTime = standardizeTime(StartTime);
             EndTime = standardizeTime(EndTime);

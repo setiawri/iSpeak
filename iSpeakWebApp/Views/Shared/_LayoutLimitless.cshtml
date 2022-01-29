@@ -300,7 +300,7 @@
     function updateActiveBranch() {
         $.ajax({
             type: "POST",
-            url: '@Url.Action("UpdateActiveBranch", "UserAccounts")',
+            url: '@Url.Action("Ajax_UpdateActiveBranch", "UserAccounts")',
             data: {
                 BranchId: $('#BranchId').val(),
                 returnUrl: window.location.pathname

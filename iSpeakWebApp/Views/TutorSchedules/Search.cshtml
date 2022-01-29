@@ -117,7 +117,7 @@
     });
 
     function applyLast() {
-        AjaxGetDropdownlistData('Tutor_UserAccounts_Id', 'GetDropDownListData', 'UserAccounts', '@TutorRole');
+        AjaxGetDropdownlistData('Tutor_UserAccounts_Id', 'Ajax_GetDDLItems', 'UserAccounts', '@TutorRole');
     }
 
     function search() {
@@ -131,7 +131,7 @@
 
             $.ajax({
                 type: "POST",
-                url: '@Url.Action("GetSchedules", ControllerName)',
+                url: '@Url.Action("Ajax_GetSchedules", ControllerName)',
                 data: {
                     Tutor_UserAccounts_Id: getDDLSelectedValue('Tutor_UserAccounts_Id'),
                     Languages_Id: getDDLSelectedValue('Languages_Id'),

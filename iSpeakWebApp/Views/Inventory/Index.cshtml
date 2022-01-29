@@ -78,7 +78,7 @@
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Suppliers_Name)</td>
                                             <td class="align-top text-right">@Html.DisplayFor(modelItem => item.BuyPrice)</td>
                                             <td class="align-top">
-                                                <a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Inventory @item.Products_Name (Initial qty: @string.Format("{0:N0}",item.BuyQty))', 'medium', 'GetDetails', '@ControllerName')">Sales</a>
+                                                <a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Inventory @item.Products_Name (Initial qty: @string.Format("{0:N0}",item.BuyQty))', 'medium', 'Ajax_GetDetails', '@ControllerName')">Sales</a>
                                                 @if (access.Inventory_Edit)
                                                 {
                                                     @:• <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a>

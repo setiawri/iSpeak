@@ -14,7 +14,7 @@ namespace iSpeakWebApp.Controllers
 
         /* METHODS ********************************************************************************************************************************************/
 
-        public JsonResult GetActiveLessonPackages(Guid Customer_UserAccounts_Id, int? hasLessonHours)
+        public JsonResult Ajax_GetActiveLessonPackages(Guid Customer_UserAccounts_Id, int? hasLessonHours)
         {
             SelectList content = new SelectList(getActiveLessonPackages(Customer_UserAccounts_Id, hasLessonHours), SaleInvoiceItemsModel.COL_Id.Name, SaleInvoiceItemsModel.COL_DDLDescription.Name);
 

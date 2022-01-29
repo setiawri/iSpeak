@@ -105,9 +105,9 @@ namespace iSpeakWebApp.Controllers
             ExpenseCategoriesController.setDropDownListViewBag(this);
         }
 
-        public JsonResult UpdateApproval(Guid id, bool value)
+        public JsonResult Ajax_Update_Approved(Guid id, bool value)
         {
-            update_IsChecked(id, value);
+            update_Approved(id, value);
             return Json(new { Message = "" });
         }
 
@@ -205,7 +205,7 @@ namespace iSpeakWebApp.Controllers
             );
         }
 
-        public void update_IsChecked(Guid Id, bool value)
+        public void update_Approved(Guid Id, bool value)
         {
             LIBWebMVC.WebDBConnection.Update(db.Database, "PettyCashRecords",
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Id.Name, Id),

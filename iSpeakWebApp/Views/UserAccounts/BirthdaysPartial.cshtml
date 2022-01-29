@@ -78,7 +78,7 @@
         var isCurrentMonth = getValueInt('MonthsDropdown') == ((new Date()).getMonth() + 1);
         $.ajax({
             type: "POST",
-            url: '@Url.Action("GetBirthdayData", "UserAccounts")',
+            url: '@Url.Action("Ajax_GetBirthdayData", "UserAccounts")',
             data: {
                 month: $('#MonthsDropdown').val(),
                 UserAccountRoles_Id: $('#UserAccountRoles').val()

@@ -130,7 +130,7 @@
                                     <th class="non-searchable non-sortable" style="width:0px;"></th>
                                     @if (access.SaleInvoices_Approve)
                                     {
-                                        <th class="non-searchable non-sortable" style="width:0px;">Approval</th>
+                                        <th class="non-searchable non-sortable" style="width:0px;">Approved</th>
                                     }
                                     @if (access.SaleInvoices_Edit)
                                     {
@@ -177,7 +177,7 @@
                                             @if (access.SaleInvoices_Approve)
                                             {
                                                 <td class="align-top" style="text-align:center;">
-                                                    <input type="checkbox" id='@("chkApprove_" + rowno)' onclick="UpdateApproval(this, '@item.Id')" @(item.IsChecked ? "checked" : "") />
+                                                    <input type="checkbox" id='@("chkApprove_" + rowno)' onclick="Update_Approved(this, '@item.Id')" @(item.IsChecked ? "checked" : "") />
                                                 </td>
                                             }
                                             @if (access.SaleInvoices_Edit)
@@ -196,7 +196,7 @@
                                                 }
                                                 @if (access.SaleInvoices_Edit)
                                                 {
-                                                    <a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Invoice @item.No', 'large', 'GetDetails', '@ControllerName')">View</a> @:•
+                                                    <a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Invoice @item.No', 'large', 'Ajax_GetDetails', '@ControllerName')">View</a> @:•
                                                 }
                                                 @if (access.Payments_View)
                                                 {
@@ -265,8 +265,8 @@
         setDateRangePicker('FILTER_DateTo', '@string.Format("{0:yyyy/MM/dd}", DateTime.Today)');
     });
 
-    function UpdateApproval(control, id) {
-        AjaxUpdate('UpdateApproval', '@ControllerName', id, control.checked, function () {
+    function Update_Approved(control, id) {
+        AjaxUpdate('Ajax_Update_Approved', '@ControllerName', id, control.checked, function () {
             toggleVisibility('lnkCancel_' + getRowNo(control));
         });
     }
@@ -294,7 +294,7 @@
             else {
                 $.ajax({
                     type: "POST",
-                    url: '@Url.Action("Update_Cancelled", ControllerName)',
+                    url: '@Url.Action("Ajax_Update_CancelNotes", ControllerName)',
                     data: {
                         id: $('#modal_cancel-Id').val(),
                         notes: $('#modal_cancel-Notes').val()
