@@ -17,7 +17,7 @@
 
     <!-- Content area -->
     <div class="content">
-        @using (Html.BeginForm("Create", "SaleInvoices", FormMethod.Post, new { id = "targetForm" }))
+        @using (Html.BeginForm("Create", ControllerName, FormMethod.Post, new { id = "targetForm" }))
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(model => model.Amount)
