@@ -11,6 +11,8 @@ namespace iSpeakWebApp.Controllers
     public class StudentSchedulesController : Controller
     {
         private readonly DBContext db = new DBContext();
+        public const string LOCATION_ONSITE = "ONSITE";
+        public const string LOCATION_ONLINE = "ONLINE";
 
         /* FILTER *********************************************************************************************************************************************/
 
@@ -79,6 +81,7 @@ namespace iSpeakWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                parseLessonLocation(ref model);
                 standardizeTime(model);
                 if (isExists(null, model.Tutor_UserAccounts_Id, model.Student_UserAccounts_Id, model.DayOfWeek, model.StartTime, model.EndTime))
                     ModelState.AddModelError(StudentSchedulesModel.COL_DayOfWeek.Name, "Ada bentrok waktu dengan jadwal murid atau tutor");
@@ -128,6 +131,8 @@ namespace iSpeakWebApp.Controllers
                 {
                     StudentSchedulesModel originalModel = get(modifiedModel.Id);
 
+                    parseLessonLocation(ref modifiedModel);
+
                     string log = string.Empty;
                     log = Helper.append<UserAccountsModel>(log, originalModel.Tutor_UserAccounts_Id, modifiedModel.Tutor_UserAccounts_Id, StudentSchedulesModel.COL_Tutor_UserAccounts_Id.LogDisplay);
                     log = Helper.append<UserAccountsModel>(log, originalModel.Student_UserAccounts_Id, modifiedModel.Student_UserAccounts_Id, StudentSchedulesModel.COL_Student_UserAccounts_Id.LogDisplay);
@@ -135,6 +140,7 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.DayOfWeek, modifiedModel.DayOfWeek, StudentSchedulesModel.COL_DayOfWeek.LogDisplay);
                     log = Helper.append(log, originalModel.StartTime, modifiedModel.StartTime, StudentSchedulesModel.COL_StartTime.LogDisplay);
                     log = Helper.append(log, originalModel.EndTime, modifiedModel.EndTime, StudentSchedulesModel.COL_EndTime.LogDisplay);
+                    log = Helper.append(log, originalModel.LessonLocation, modifiedModel.LessonLocation, StudentSchedulesModel.COL_LessonLocation.LogDisplay);
                     log = Helper.append(log, originalModel.Active, modifiedModel.Active, StudentSchedulesModel.COL_Active.LogDisplay);
                     log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, StudentSchedulesModel.COL_Notes.LogDisplay);
 
@@ -150,6 +156,16 @@ namespace iSpeakWebApp.Controllers
         }
 
         /* METHODS ********************************************************************************************************************************************/
+
+        public static void parseLessonLocation(ref StudentSchedulesModel model)
+        {
+            if (model.LessonLocationRadioButton == LOCATION_ONSITE)
+                model.LessonLocation = LOCATION_ONSITE;
+            else if (model.LessonLocationRadioButton == LOCATION_ONLINE)
+                model.LessonLocation = LOCATION_ONLINE;
+            else if (model.LessonLocationRadioButton == null)
+                model.LessonLocation = null;
+        }
 
         public static void standardizeTime(StudentSchedulesModel model)
         {
@@ -230,6 +246,7 @@ namespace iSpeakWebApp.Controllers
         {
             return new DBContext().Database.SqlQuery<StudentSchedulesModel>(@"
                         SELECT StudentSchedules.*,
+                            StudentSchedules.LessonLocation AS LessonLocationRadioButton,
                             Tutor_UserAccounts.Fullname AS Tutor_UserAccounts_Name,
                             Tutor_UserAccounts.No AS Tutor_UserAccounts_No,
                             Student_UserAccounts.Fullname AS Student_UserAccounts_Name,
@@ -261,13 +278,14 @@ namespace iSpeakWebApp.Controllers
                                     Student_UserAccounts.Fullname LIKE '%'+@FILTER_Keyword+'%'
                                     OR SaleInvoices.No LIKE '%'+@FILTER_Keyword+'%'
                                     OR StudentSchedules.DayOfWeek LIKE '%'+@FILTER_Keyword+'%'
+                                    OR StudentSchedules.LessonLocation LIKE '%'+@FILTER_Keyword+'%'
                                 ))
                                 AND (@FILTER_UserAccounts_Name IS NULL OR (                                    
                                     Tutor_UserAccounts.Fullname LIKE '%'+@FILTER_UserAccounts_Name+'%'
                                 ))
                                 AND (@Branches_Id IS NULL OR Student_UserAccounts.Branches LIKE '%'+ convert(nvarchar(50), @Branches_Id) + '%')
                             ))
-						ORDER BY Student_UserAccounts.Fullname ASC, Tutor_UserAccounts.Fullname ASC, StudentSchedules.DayOfWeek ASC, StudentSchedules.StartTime ASC, StudentSchedules.EndTime ASC
+						ORDER BY Student_UserAccounts.Fullname ASC, StudentSchedules.DayOfWeek ASC, StudentSchedules.StartTime ASC, StudentSchedules.EndTime ASC, Tutor_UserAccounts.Fullname ASC
                     ",
                     DBConnection.getSqlParameter(StudentSchedulesModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(StudentSchedulesModel.COL_Tutor_UserAccounts_Id.Name, Tutor_UserAccounts_Id),
@@ -293,6 +311,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(StudentSchedulesModel.COL_StartTime.Name, model.StartTime),
                 DBConnection.getSqlParameter(StudentSchedulesModel.COL_EndTime.Name, model.EndTime),
                 DBConnection.getSqlParameter(StudentSchedulesModel.COL_SaleInvoiceItems_Id.Name, model.SaleInvoiceItems_Id),
+                DBConnection.getSqlParameter(StudentSchedulesModel.COL_LessonLocation.Name, model.LessonLocation),
                 DBConnection.getSqlParameter(StudentSchedulesModel.COL_Active.Name, model.Active),
                 DBConnection.getSqlParameter(StudentSchedulesModel.COL_Notes.Name, model.Notes)
             );
@@ -310,6 +329,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(StudentSchedulesModel.COL_DayOfWeek.Name, model.DayOfWeek),
                 DBConnection.getSqlParameter(StudentSchedulesModel.COL_StartTime.Name, model.StartTime),
                 DBConnection.getSqlParameter(StudentSchedulesModel.COL_EndTime.Name, model.EndTime),
+                DBConnection.getSqlParameter(StudentSchedulesModel.COL_LessonLocation.Name, model.LessonLocation),
                 DBConnection.getSqlParameter(StudentSchedulesModel.COL_Notes.Name, model.Notes)
             );
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);

@@ -67,6 +67,10 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Notes = new ModelMember { Name = "Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Notes") };
 
 
+        public string LessonLocation { get; set; } = null;
+        public static ModelMember COL_LessonLocation = new ModelMember { Name = "LessonLocation", Display = "Location", LogDisplay = ActivityLogsController.editStringFormat("Location") };
+        public string LessonLocationRadioButton { get; set; } = null;
+
         /******************************************************************************************************************************************************/
 
     }

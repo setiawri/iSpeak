@@ -1,4 +1,37 @@
 
+
+---- UPDATE STUDENT SCHEDULES ================================================================================================
+
+--UPDATE StudentSchedules SET Notes = 'ONLINE' WHERE UPPER(Notes) collate SQL_Latin1_General_CP1_CS_AS = 'ONLINE'
+--UPDATE StudentSchedules SET Notes = 'ONSITE' WHERE UPPER(Notes) collate SQL_Latin1_General_CP1_CS_AS = 'ONSITE'
+--GO
+
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'LessonLocation' AND TABLE_NAME = 'StudentSchedules' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE StudentSchedules ADD LessonLocation varchar(MAX) NULL
+--GO
+
+--UPDATE StudentSchedules SET LessonLocation = Notes WHERE Notes = 'ONLINE' OR Notes = 'ONSITE'
+--GO
+--UPDATE StudentSchedules SET Notes = '' WHERE Notes = 'ONLINE' OR Notes = 'ONSITE'
+--GO
+
+---- CLEANUP ASPNET USER TABLES ==============================================================================================
+
+DROP TABLE __MigrationHistory;
+GO
+DROP TABLE AspNetRoles
+GO
+DROP TABLE AspNetUserClaims
+GO
+DROP TABLE AspNetUserLogins
+GO
+DROP TABLE AspNetUsers
+GO
+DROP TABLE AspNetUserRoles
+GO
+
+---- STUDENT SCHEDULES =======================================================================================================
+
 --IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'UserAccounts_ViewAllRoles' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
 --	ALTER TABLE UserAccountRoles ADD UserAccounts_ViewAllRoles bit default 0 not null;
 
