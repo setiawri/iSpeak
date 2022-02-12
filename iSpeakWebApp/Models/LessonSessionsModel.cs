@@ -85,8 +85,8 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_PayrollPaymentItems_Id = new ModelMember { Name = "PayrollPaymentItems_Id" };
 
 
-        public string Notes_Cancel { get; set; } = string.Empty;
-        public static ModelMember COL_Notes_Cancel = new ModelMember { Name = "Notes_Cancel", Display = "Cancel Notes", LogDisplay = ActivityLogsController.editStringFormat("Cancelled. Notes") };
+        public string CancelNotes { get; set; } = string.Empty;
+        public static ModelMember COL_CancelNotes = new ModelMember { Name = "CancelNotes", Display = "Cancel Notes", LogDisplay = ActivityLogsController.editStringFormat("Cancelled. Notes") };
 
 
         [Display(Name = "Schedule Change")]

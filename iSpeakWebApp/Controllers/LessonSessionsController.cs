@@ -364,8 +364,8 @@ namespace iSpeakWebApp.Controllers
 	            SELECT @LastHex_Int = CONVERT(INT, CONVERT(VARBINARY, REPLICATE('0', LEN(@LastHex_String)%2) + @LastHex_String, 2)) --@LastHex_String length must be even number of digits to convert to int
 	            SET @NewNo = RIGHT(CONVERT(NVARCHAR(10), CONVERT(VARBINARY(8), @LastHex_Int + 1), 1),@HexLength)
 
-                INSERT INTO LessonSessions   (Id, No,    Branches_Id, Timestamp, SaleInvoiceItems_Id, SessionHours, Review, InternalNotes, Deleted, Tutor_UserAccounts_Id, HourlyRates_Rate, TravelCost, TutorTravelCost, Adjustment, PayrollPaymentItems_Id, Notes_Cancel, IsScheduleChange, IsWaiveTutorFee) 
-                                      VALUES(@Id,@NewNo,@Branches_Id,@Timestamp,@SaleInvoiceItems_Id,@SessionHours,@Review,@InternalNotes,@Deleted,@Tutor_UserAccounts_Id,@HourlyRates_Rate,@TravelCost,@TutorTravelCost,@Adjustment,@PayrollPaymentItems_Id,@Notes_Cancel,@IsScheduleChange,@IsWaiveTutorFee);
+                INSERT INTO LessonSessions   (Id, No,    Branches_Id, Timestamp, SaleInvoiceItems_Id, SessionHours, Review, InternalNotes, Deleted, Tutor_UserAccounts_Id, HourlyRates_Rate, TravelCost, TutorTravelCost, Adjustment, PayrollPaymentItems_Id, CancelNotes, IsScheduleChange, IsWaiveTutorFee) 
+                                      VALUES(@Id,@NewNo,@Branches_Id,@Timestamp,@SaleInvoiceItems_Id,@SessionHours,@Review,@InternalNotes,@Deleted,@Tutor_UserAccounts_Id,@HourlyRates_Rate,@TravelCost,@TutorTravelCost,@Adjustment,@PayrollPaymentItems_Id,@CancelNotes,@IsScheduleChange,@IsWaiveTutorFee);
             ",
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Branches_Id.Name, model.Branches_Id),
@@ -381,7 +381,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_TutorTravelCost.Name, model.TutorTravelCost),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Adjustment.Name, model.Adjustment),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_PayrollPaymentItems_Id.Name, model.PayrollPaymentItems_Id),
-                DBConnection.getSqlParameter(LessonSessionsModel.COL_Notes_Cancel.Name, model.Notes_Cancel),
+                DBConnection.getSqlParameter(LessonSessionsModel.COL_CancelNotes.Name, model.CancelNotes),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_IsScheduleChange.Name, model.IsScheduleChange),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_IsWaiveTutorFee.Name, model.IsWaiveTutorFee)
             );
@@ -412,7 +412,7 @@ namespace iSpeakWebApp.Controllers
                 UPDATE LessonSessions 
                 SET
                     Deleted = @Deleted,
-                    Notes_Cancel = @Notes_Cancel,
+                    CancelNotes = @CancelNotes,
                     PayrollPaymentItems_Id = NULL
                 WHERE LessonSessions.Id = @Id;           
 
@@ -426,7 +426,7 @@ namespace iSpeakWebApp.Controllers
             ",
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Id.Name, Id),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Deleted.Name, 1),
-                DBConnection.getSqlParameter(LessonSessionsModel.COL_Notes_Cancel.Name, CancelNotes)
+                DBConnection.getSqlParameter(LessonSessionsModel.COL_CancelNotes.Name, CancelNotes)
             );
 
             ActivityLogsController.AddEditLog(db, Session, Id, string.Format(LessonSessionsModel.COL_Deleted.LogDisplay, null, true));

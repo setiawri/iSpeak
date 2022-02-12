@@ -1,6 +1,14 @@
 
 if not exists (select 1 from information_schema.columns where column_name = 'RefferenceId' and table_name = 'ActivityLogs' and table_schema='dbo') 
 	exec sp_rename 'ActivityLogs.ReffId' , 'ReferenceId', 'column'
+GO
+
+if not exists (select 1 from information_schema.columns where column_name = 'CancelNotes' and table_name = 'LessonSessions' and table_schema='dbo') 
+	exec sp_rename 'LessonSessions.Notes_Cancel' , 'CancelNotes', 'column'
+GO
+if not exists (select 1 from information_schema.columns where column_name = 'CancelNotes' and table_name = 'PayrollPayments' and table_schema='dbo') 
+	exec sp_rename 'PayrollPayments.Notes_Cancel' , 'CancelNotes', 'column'
+GO
 
 ---- CLEANUP ASPNET USER TABLES ==============================================================================================
 
@@ -495,7 +503,7 @@ GO
 --	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'CancelNotes' AND TABLE_NAME = 'Payments' AND TABLE_SCHEMA='dbo') 
 --		ALTER TABLE Payments ADD CancelNotes varchar(MAX) NULL;
 --	GO
---	UPDATE Payments SET CancelNotes=Notes_Cancel WHERE Cancelled=1;
+--	UPDATE Payments SET CancelNotes=CancelNotes WHERE Cancelled=1;
 
 	
 ---- PETTY CASH RECORDS ===================================================================================================
@@ -1372,7 +1380,7 @@ GO
 
 --GO
 
---ALTER TABLE Payments DROP COLUMN Notes_Cancel;
+--ALTER TABLE Payments DROP COLUMN CancelNotes;
 --ALTER TABLE Inventory DROP COLUMN AvailableQty;
 --GO
 

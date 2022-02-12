@@ -182,8 +182,8 @@ namespace iSpeakWebApp.Controllers
 	                SELECT @LastHex_Int = CONVERT(INT, CONVERT(VARBINARY, REPLICATE('0', LEN(@LastHex_String)%2) + @LastHex_String, 2)) --@LastHex_String length must be even number of digits to convert to int
 	                SET @NewNo = RIGHT(CONVERT(NVARCHAR(10), CONVERT(VARBINARY(8), @LastHex_Int + 1), 1),@HexLength)
 
-                INSERT INTO PayrollPayments (Id, No,    Timestamp, UserAccounts_Id, Amount, IsChecked, Cancelled, Notes_Cancel, Notes) 
-                                     VALUES(@Id,@NewNo,@Timestamp,@UserAccounts_Id,@Amount,@IsChecked,@Cancelled,@Notes_Cancel,@Notes);
+                INSERT INTO PayrollPayments (Id, No,    Timestamp, UserAccounts_Id, Amount, IsChecked, Cancelled, CancelNotes, Notes) 
+                                     VALUES(@Id,@NewNo,@Timestamp,@UserAccounts_Id,@Amount,@IsChecked,@Cancelled,@CancelNotes,@Notes);
             ",
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, model.Id),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Timestamp.Name, model.Timestamp),
@@ -192,7 +192,7 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Amount.Name, model.Amount),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_IsChecked.Name, model.IsChecked),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Cancelled.Name, model.Cancelled),
-                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Notes_Cancel.Name, model.Notes_Cancel),
+                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_CancelNotes.Name, model.CancelNotes),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Notes.Name, model.Notes)
                 );
             }
@@ -222,14 +222,14 @@ namespace iSpeakWebApp.Controllers
                 UPDATE PayrollPayments 
                 SET
                     Cancelled = 1,
-                    Notes_Cancel = @Notes_Cancel
+                    CancelNotes = @CancelNotes
                 WHERE PayrollPayments.Id = @Id;                
             ",
                 DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, Id),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Notes_Cancel.Name, CancelNotes)
+                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_CancelNotes.Name, CancelNotes)
             );
 
-            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(PayrollPaymentsModel.COL_Notes_Cancel.LogDisplay, CancelNotes));
+            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(PayrollPaymentsModel.COL_CancelNotes.LogDisplay, CancelNotes));
             db.SaveChanges();
         }
 

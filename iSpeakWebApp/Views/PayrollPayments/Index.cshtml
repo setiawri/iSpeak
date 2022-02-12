@@ -117,9 +117,9 @@
                                                 </td>
                                             }
                                             <td class="align-top">
-                                                @if (!string.IsNullOrEmpty(item.Notes_Cancel))
+                                                @if (!string.IsNullOrEmpty(item.CancelNotes))
                                                 {
-                                                    <div><strong>Cancelled: </strong>@Html.DisplayFor(modelItem => item.Notes_Cancel)</div>
+                                                    <div><strong>Cancelled: </strong>@Html.DisplayFor(modelItem => item.CancelNotes)</div>
                                                 }
                                                 @Html.DisplayFor(modelItem => item.Notes)
                                             </td>
