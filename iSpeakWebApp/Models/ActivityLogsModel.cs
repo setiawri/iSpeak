@@ -12,8 +12,8 @@ namespace iSpeakWebApp.Models
 
         public DateTime Timestamp { get; set; }
 
-        public Guid ReffId { get; set; }
-        public static ModelMember COL_ReffId = new ModelMember { Name = "ReffId" };
+        public Guid ReferenceId { get; set; }
+        public static ModelMember COL_ReferenceId = new ModelMember { Name = "ReferenceId" };
 
         public string Description { get; set; }
 

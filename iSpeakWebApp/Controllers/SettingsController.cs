@@ -181,7 +181,7 @@ namespace iSpeakWebApp.Controllers
             );
         }
 
-        private string addLog(string log, Guid reffId, object oldValue, object newValue, string format)
+        private string addLog(string log, Guid ReferenceId, object oldValue, object newValue, string format)
         {
             string newlog = string.Empty;
             newlog = Util.appendChange(newlog, oldValue, newValue, format);
@@ -189,12 +189,12 @@ namespace iSpeakWebApp.Controllers
                 return log;
             else
             {
-                ActivityLogsController.Add(db, Session, reffId, newlog);
+                ActivityLogsController.Add(db, Session, ReferenceId, newlog);
                 return Util.append(log, string.Format("UPDATE: {0} to {1}", oldValue, newValue), Environment.NewLine + Environment.NewLine);
             }
         }
 
-        private string addLogForList<T>(string log, Guid reffId, List<string> oldValue, List<string> newValue)
+        private string addLogForList<T>(string log, Guid ReferenceId, List<string> oldValue, List<string> newValue)
         {
             if (newValue != null)
                 newValue = newValue.ConvertAll(d => d.ToUpper());
@@ -226,7 +226,7 @@ namespace iSpeakWebApp.Controllers
             if (!string.IsNullOrEmpty(removedlog) || !string.IsNullOrEmpty(addedlog))
             {
                 string newlog = "UPDATE: " + removedlog + addedlog;
-                ActivityLogsController.Add(db, Session, reffId, newlog);
+                ActivityLogsController.Add(db, Session, ReferenceId, newlog);
                 return Util.append(log, newlog, Environment.NewLine + Environment.NewLine);
             }
             else

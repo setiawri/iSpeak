@@ -138,7 +138,7 @@ namespace iSpeakWebApp
             return Util.webAppendChange(log, oldValue, newValue, format);
         }
 
-        public static string addLog(HttpSessionStateBase Session, string log, Guid reffId, object oldValue, object newValue, string format)
+        public static string addLog(HttpSessionStateBase Session, string log, Guid ReferenceId, object oldValue, object newValue, string format)
         {
             string newlog = string.Empty;
             newlog = Util.appendChange(newlog, oldValue, newValue, format);
@@ -146,7 +146,7 @@ namespace iSpeakWebApp
                 return log;
             else
             {
-                ActivityLogsController.Add(db, Session, reffId, newlog);
+                ActivityLogsController.Add(db, Session, ReferenceId, newlog);
                 db.SaveChanges();
                 return Util.append(log, string.Format("UPDATE: {0} to {1}", oldValue, newValue), Environment.NewLine + Environment.NewLine);
             }

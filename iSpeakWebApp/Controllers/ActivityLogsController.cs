@@ -26,7 +26,7 @@ namespace iSpeakWebApp.Controllers
 
         /* DISPLAY LOG ****************************************************************************************************************************************/
 
-        public JsonResult Ajax_GetLog(Guid ReffId)
+        public JsonResult Ajax_GetLog(Guid ReferenceId)
         {
             string message = @"<div class='table-responsive'>
                                     <table class='table table-striped table-bordered'>
@@ -39,7 +39,7 @@ namespace iSpeakWebApp.Controllers
                                         </thead>
                                         <tbody>";
 
-            foreach (ActivityLogsModel item in get(ReffId))
+            foreach (ActivityLogsModel item in get(ReferenceId))
             {
                 message += string.Format(@"
                             <tr>
@@ -56,14 +56,14 @@ namespace iSpeakWebApp.Controllers
 
         /* ADD ************************************************************************************************************************************************/
 
-        public static void AddEditLog(DBContext db, HttpSessionStateBase Session, Guid reffId, string log) { Add(db, Session, reffId, "UPDATE:<BR>" + log); }
-        public static void AddCreateLog(DBContext db, HttpSessionStateBase Session, Guid reffId) { Add(db, Session, reffId, "Created"); }
-        public static void Add(DBContext db, HttpSessionStateBase Session, Guid reffId, string description)
+        public static void AddEditLog(DBContext db, HttpSessionStateBase Session, Guid ReferenceId, string log) { Add(db, Session, ReferenceId, "UPDATE:<BR>" + log); }
+        public static void AddCreateLog(DBContext db, HttpSessionStateBase Session, Guid ReferenceId) { Add(db, Session, ReferenceId, "Created"); }
+        public static void Add(DBContext db, HttpSessionStateBase Session, Guid ReferenceId, string description)
         {
             db.ActivityLogs.Add(new ActivityLogsModel
             {
                 Id = Guid.NewGuid(),
-                ReffId = reffId,
+                ReferenceId = ReferenceId,
                 Timestamp = Helper.getCurrentDateTime(),
                 Description = description,
                 UserAccounts_Id = (Guid)UserAccountsController.getUserId(Session),
@@ -73,21 +73,21 @@ namespace iSpeakWebApp.Controllers
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public List<ActivityLogsModel> get(Guid ReffId)
+        public List<ActivityLogsModel> get(Guid ReferenceId)
         {
             return db.Database.SqlQuery<ActivityLogsModel>(@"
                         SELECT ActivityLogs.Id,
                             ActivityLogs.Timestamp,
-                            ActivityLogs.ReffId,
+                            ActivityLogs.ReferenceId,
                             ActivityLogs.Description,
                             ActivityLogs.UserAccounts_Id,
                             UserAccounts.Fullname AS UserAccounts_Fullname
                         FROM ActivityLogs
                             LEFT JOIN UserAccounts ON UserAccounts.Id = ActivityLogs.UserAccounts_Id
-                        WHERE ActivityLogs.ReffId = @ReffId
+                        WHERE ActivityLogs.ReferenceId = @ReferenceId
 						ORDER BY ActivityLogs.Timestamp DESC
                     ",
-                    DBConnection.getSqlParameter(ActivityLogsModel.COL_ReffId.Name, ReffId)
+                    DBConnection.getSqlParameter(ActivityLogsModel.COL_ReferenceId.Name, ReferenceId)
                 ).ToList();
         }
 

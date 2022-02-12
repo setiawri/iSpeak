@@ -1,19 +1,6 @@
 
-
----- UPDATE STUDENT SCHEDULES ================================================================================================
-
---UPDATE StudentSchedules SET Notes = 'ONLINE' WHERE UPPER(Notes) collate SQL_Latin1_General_CP1_CS_AS = 'ONLINE'
---UPDATE StudentSchedules SET Notes = 'ONSITE' WHERE UPPER(Notes) collate SQL_Latin1_General_CP1_CS_AS = 'ONSITE'
---GO
-
---IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'LessonLocation' AND TABLE_NAME = 'StudentSchedules' AND TABLE_SCHEMA='dbo') 
---	ALTER TABLE StudentSchedules ADD LessonLocation varchar(MAX) NULL
---GO
-
---UPDATE StudentSchedules SET LessonLocation = Notes WHERE Notes = 'ONLINE' OR Notes = 'ONSITE'
---GO
---UPDATE StudentSchedules SET Notes = '' WHERE Notes = 'ONLINE' OR Notes = 'ONSITE'
---GO
+if not exists (select 1 from information_schema.columns where column_name = 'RefferenceId' and table_name = 'ActivityLogs' and table_schema='dbo') 
+	exec sp_rename 'ActivityLogs.ReffId' , 'ReferenceId', 'column'
 
 ---- CLEANUP ASPNET USER TABLES ==============================================================================================
 
@@ -29,6 +16,21 @@ DROP TABLE AspNetUsers
 GO
 DROP TABLE AspNetUserRoles
 GO
+
+---- UPDATE STUDENT SCHEDULES ================================================================================================
+
+--UPDATE StudentSchedules SET Notes = 'ONLINE' WHERE UPPER(Notes) collate SQL_Latin1_General_CP1_CS_AS = 'ONLINE'
+--UPDATE StudentSchedules SET Notes = 'ONSITE' WHERE UPPER(Notes) collate SQL_Latin1_General_CP1_CS_AS = 'ONSITE'
+--GO
+
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'LessonLocation' AND TABLE_NAME = 'StudentSchedules' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE StudentSchedules ADD LessonLocation varchar(MAX) NULL
+--GO
+
+--UPDATE StudentSchedules SET LessonLocation = Notes WHERE Notes = 'ONLINE' OR Notes = 'ONSITE'
+--GO
+--UPDATE StudentSchedules SET Notes = '' WHERE Notes = 'ONLINE' OR Notes = 'ONSITE'
+--GO
 
 ---- STUDENT SCHEDULES =======================================================================================================
 
@@ -368,7 +370,7 @@ GO
 --		CREATE TABLE [dbo].[ActivityLogs] (
 --			[Id] uniqueidentifier NOT NULL,
 --			[Timestamp] datetime NOT NULL,
---			[ReffId] uniqueidentifier NOT NULL,
+--			[ReferenceId] uniqueidentifier NOT NULL,
 --			[Description] varchar(max) NOT NULL,
 --			[UserAccounts_Id] uniqueidentifier NOT NULL,
 --			[UserAccounts_Fullname] varchar(MAX) NULL
@@ -385,7 +387,7 @@ GO
 --			SELECT TOP 1 @Iteration_Id = Id FROM #TEMP_INPUTARRAY
 
 --			-- add operation here
---			INSERT INTO ActivityLogs(Id, Timestamp, ReffId, Description, UserAccounts_Id, UserAccounts_Fullname) 
+--			INSERT INTO ActivityLogs(Id, Timestamp, ReferenceId, Description, UserAccounts_Id, UserAccounts_Fullname) 
 --				VALUES(
 --					(SELECT Id FROM #TEMP_INPUTARRAY WHERE Id=@Iteration_Id),
 --					(SELECT Timestamp FROM #TEMP_INPUTARRAY WHERE Id=@Iteration_Id),
