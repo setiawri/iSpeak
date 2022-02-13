@@ -132,7 +132,7 @@ namespace iSpeakWebApp.Controllers
                     {
                         Id = Guid.NewGuid(),
                         Branches_Id = Helper.getActiveBranchId(Session),
-                        RefId = payment.Id,
+                        ReferenceId = payment.Id,
                         No = "",
                         Timestamp = payment.Timestamp,
                         PettyCashRecordsCategories_Id = SettingsController.get().AutoEntryForCashPayments.Value,

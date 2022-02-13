@@ -1,6 +1,10 @@
 
-if not exists (select 1 from information_schema.columns where column_name = 'RefferenceId' and table_name = 'ActivityLogs' and table_schema='dbo') 
+if not exists (select 1 from information_schema.columns where column_name = 'ReferenceId' and table_name = 'ActivityLogs' and table_schema='dbo') 
 	exec sp_rename 'ActivityLogs.ReffId' , 'ReferenceId', 'column'
+GO
+
+if not exists (select 1 from information_schema.columns where column_name = 'ReferenceId' and table_name = 'PettyCashRecords' and table_schema='dbo') 
+	exec sp_rename 'PettyCashRecords.RefId' , 'ReferenceId', 'column'
 GO
 
 if not exists (select 1 from information_schema.columns where column_name = 'CancelNotes' and table_name = 'LessonSessions' and table_schema='dbo') 
@@ -23,6 +27,13 @@ GO
 DROP TABLE AspNetUsers
 GO
 DROP TABLE AspNetUserRoles
+GO
+DROP TABLE RoleAccessMenu
+GO
+
+DROP TABLE Logs;
+GO
+DROP TABLE MasterMenu;
 GO
 
 ---- UPDATE STUDENT SCHEDULES ================================================================================================
@@ -399,7 +410,7 @@ GO
 --				VALUES(
 --					(SELECT Id FROM #TEMP_INPUTARRAY WHERE Id=@Iteration_Id),
 --					(SELECT Timestamp FROM #TEMP_INPUTARRAY WHERE Id=@Iteration_Id),
---					(SELECT RefId FROM #TEMP_INPUTARRAY WHERE Id=@Iteration_Id),
+--					(SELECT ReferenceId FROM #TEMP_INPUTARRAY WHERE Id=@Iteration_Id),
 --					(SELECT Description FROM #TEMP_INPUTARRAY WHERE Id=@Iteration_Id),
 --					(SELECT UserAccounts_Id FROM #TEMP_INPUTARRAY WHERE Id=@Iteration_Id),
 --					null

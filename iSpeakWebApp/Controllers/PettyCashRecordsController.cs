@@ -189,12 +189,12 @@ namespace iSpeakWebApp.Controllers
 	                SELECT @LastHex_Int = CONVERT(INT, CONVERT(VARBINARY, REPLICATE('0', LEN(@LastHex_String)%2) + @LastHex_String, 2)) --@LastHex_String length must be even number of digits to convert to int
 	                SET @NewNo = RIGHT(CONVERT(NVARCHAR(10), CONVERT(VARBINARY(8), @LastHex_Int + 1), 1),@HexLength)
 
-                    INSERT INTO PettyCashRecords   (Id, Branches_Id, RefId, No,    Timestamp, PettyCashRecordsCategories_Id, Notes, Amount, IsChecked, UserAccounts_Id, ExpenseCategories_Id) 
-                                            VALUES(@Id,@Branches_Id,@RefId,@NewNo,@Timestamp,@PettyCashRecordsCategories_Id,@Notes,@Amount,@IsChecked,@UserAccounts_Id,@ExpenseCategories_Id);
+                    INSERT INTO PettyCashRecords   (Id, Branches_Id, ReferenceId, No,    Timestamp, PettyCashRecordsCategories_Id, Notes, Amount, IsChecked, UserAccounts_Id, ExpenseCategories_Id) 
+                                            VALUES(@Id,@Branches_Id,@ReferenceId,@NewNo,@Timestamp,@PettyCashRecordsCategories_Id,@Notes,@Amount,@IsChecked,@UserAccounts_Id,@ExpenseCategories_Id);
                 ",
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Branches_Id.Name, model.Branches_Id),
-                DBConnection.getSqlParameter(PettyCashRecordsModel.COL_RefId.Name, model.RefId),
+                DBConnection.getSqlParameter(PettyCashRecordsModel.COL_ReferenceId.Name, model.ReferenceId),
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Timestamp.Name, model.Timestamp),
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_PettyCashRecordsCategories_Id.Name, model.PettyCashRecordsCategories_Id),
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Notes.Name, model.Notes),

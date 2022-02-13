@@ -14,8 +14,8 @@ namespace iSpeakWebApp.Models
         public Guid Branches_Id { get; set; }
         public static ModelMember COL_Branches_Id = new ModelMember { Name = "Branches_Id" };
 
-        public Guid? RefId { get; set; } = null;
-        public static ModelMember COL_RefId = new ModelMember { Name = "RefId" };
+        public Guid? ReferenceId { get; set; } = null;
+        public static ModelMember COL_ReferenceId = new ModelMember { Name = "ReferenceId" };
 
 
         public string No { get; set; } = string.Empty;
