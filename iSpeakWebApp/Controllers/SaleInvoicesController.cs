@@ -319,16 +319,10 @@ namespace iSpeakWebApp.Controllers
 
         public void update_Approved(Guid Id, bool value)
         {
-            db.Database.ExecuteSqlCommand(@"
-                UPDATE SaleInvoices 
-                SET
-                    Approved = @Approved
-                WHERE SaleInvoices.Id = @Id;                
-            ",
-                DBConnection.getSqlParameter(SaleInvoicesModel.COL_Id.Name, Id),
-                DBConnection.getSqlParameter(SaleInvoicesModel.COL_Approved.Name, value)
-            );
-
+            WebDBConnection.Update(db.Database, "SaleInvoices",
+                    DBConnection.getSqlParameter(SaleInvoicesModel.COL_Id.Name, Id),
+                    DBConnection.getSqlParameter(SaleInvoicesModel.COL_Approved.Name, value)
+                );
             ActivityLogsController.AddEditLog(db, Session, Id, string.Format(SaleInvoicesModel.COL_Approved.LogDisplay, null, value));
             db.SaveChanges();
         }
