@@ -119,7 +119,7 @@ namespace iSpeakWebApp.Controllers
         public PettyCashRecordsModel get(Guid Id) { return get(Session, Id, null, false, null, false, null, null).FirstOrDefault(); }
         public static List<PettyCashRecordsModel> get(HttpSessionStateBase Session, Guid? Id, string FILTER_Keyword, 
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo, 
-            int? IsChecked)
+            int? Approved)
         {
             Guid Branches_Id = Helper.getActiveBranchId(Session);
 
@@ -164,7 +164,7 @@ namespace iSpeakWebApp.Controllers
                                 PettyCashRecords.Timestamp >= @FILTER_DateFrom
     						    AND (@FILTER_Keyword IS NULL OR (PettyCashRecords.No LIKE '%'+@FILTER_Keyword+'%'))
                                 AND (@FILTER_DateTo IS NULL OR PettyCashRecords.Timestamp <= @FILTER_DateTo)
-                                AND (@IsChecked IS NULL OR PettyCashRecords.IsChecked = @IsChecked)
+                                AND (@Approved IS NULL OR PettyCashRecords.Approved = @Approved)
                             ))
                     ) ResultTable
                     ORDER BY ResultTable.Timestamp DESC
@@ -174,7 +174,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
                 DBConnection.getSqlParameter("FILTER_DateFrom", FILTER_DateFrom),
                 DBConnection.getSqlParameter("FILTER_DateTo", Util.getAsEndDate(FILTER_DateTo)),
-                DBConnection.getSqlParameter(PettyCashRecordsModel.COL_IsChecked.Name, IsChecked)
+                DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Approved.Name, Approved)
             ).ToList();
         }
 
@@ -189,8 +189,8 @@ namespace iSpeakWebApp.Controllers
 	                SELECT @LastHex_Int = CONVERT(INT, CONVERT(VARBINARY, REPLICATE('0', LEN(@LastHex_String)%2) + @LastHex_String, 2)) --@LastHex_String length must be even number of digits to convert to int
 	                SET @NewNo = RIGHT(CONVERT(NVARCHAR(10), CONVERT(VARBINARY(8), @LastHex_Int + 1), 1),@HexLength)
 
-                    INSERT INTO PettyCashRecords   (Id, Branches_Id, ReferenceId, No,    Timestamp, PettyCashRecordsCategories_Id, Notes, Amount, IsChecked, UserAccounts_Id, ExpenseCategories_Id) 
-                                            VALUES(@Id,@Branches_Id,@ReferenceId,@NewNo,@Timestamp,@PettyCashRecordsCategories_Id,@Notes,@Amount,@IsChecked,@UserAccounts_Id,@ExpenseCategories_Id);
+                    INSERT INTO PettyCashRecords   (Id, Branches_Id, ReferenceId, No,    Timestamp, PettyCashRecordsCategories_Id, Notes, Amount, Approved, UserAccounts_Id, ExpenseCategories_Id) 
+                                            VALUES(@Id,@Branches_Id,@ReferenceId,@NewNo,@Timestamp,@PettyCashRecordsCategories_Id,@Notes,@Amount,@Approved,@UserAccounts_Id,@ExpenseCategories_Id);
                 ",
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Branches_Id.Name, model.Branches_Id),
@@ -199,7 +199,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_PettyCashRecordsCategories_Id.Name, model.PettyCashRecordsCategories_Id),
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Notes.Name, model.Notes),
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Amount.Name, model.Amount),
-                DBConnection.getSqlParameter(PettyCashRecordsModel.COL_IsChecked.Name, model.IsChecked),
+                DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Approved.Name, model.Approved),
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_UserAccounts_Id.Name, model.UserAccounts_Id),
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_ExpenseCategories_Id.Name, model.ExpenseCategories_Id)
             );
@@ -209,10 +209,10 @@ namespace iSpeakWebApp.Controllers
         {
             LIBWebMVC.WebDBConnection.Update(db.Database, "PettyCashRecords",
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Id.Name, Id),
-                DBConnection.getSqlParameter(PettyCashRecordsModel.COL_IsChecked.Name, value)
+                DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Approved.Name, value)
             );
 
-            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(PettyCashRecordsModel.COL_IsChecked.LogDisplay, null, value));
+            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(PettyCashRecordsModel.COL_Approved.LogDisplay, null, value));
             db.SaveChanges();
         }
 

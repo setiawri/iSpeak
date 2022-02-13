@@ -252,7 +252,7 @@ namespace iSpeakWebApp.Controllers
         public SaleInvoicesModel get(Guid Id) { return get(Session, Id, null, null, null, false, null, false, null, null, null, null).FirstOrDefault(); }
         public static List<SaleInvoicesModel> get(HttpSessionStateBase Session, Guid? Id, string SaleInvoiceItemIdList,
             string FILTER_Keyword, string FILTER_PaymentNo, bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo, 
-            int? Cancelled, int? IsChecked, int? FILTER_HasDueAmount)
+            int? Cancelled, int? Approved, int? FILTER_HasDueAmount)
         {
             Guid Branches_Id = Helper.getActiveBranchId(Session);
 
@@ -296,7 +296,7 @@ namespace iSpeakWebApp.Controllers
                             AND (@FILTER_DateFrom IS NULL OR SaleInvoices.Timestamp >= @FILTER_DateFrom)
                             AND (@FILTER_DateTo IS NULL OR SaleInvoices.Timestamp <= @FILTER_DateTo)
                             AND (@Cancelled IS NULL OR SaleInvoices.Cancelled = @Cancelled)
-                            AND (@IsChecked IS NULL OR SaleInvoices.IsChecked = @IsChecked)
+                            AND (@Approved IS NULL OR SaleInvoices.Approved = @Approved)
                             AND (@FILTER_HasDueAmount IS NULL OR ((@FILTER_HasDueAmount = 0 AND SaleInvoices.Due = 0) OR (@FILTER_HasDueAmount = 1 AND SaleInvoices.Due > 0)))
                             AND (@Branches_Id IS NULL OR SaleInvoices.Branches_Id = @Branches_Id)
                             {0}{1}
@@ -313,7 +313,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter("FILTER_HasDueAmount", FILTER_HasDueAmount),
                 DBConnection.getSqlParameter(SaleInvoicesModel.COL_Branches_Id.Name, Branches_Id),
                 DBConnection.getSqlParameter(SaleInvoicesModel.COL_Cancelled.Name, Cancelled),
-                DBConnection.getSqlParameter(SaleInvoicesModel.COL_IsChecked.Name, IsChecked)
+                DBConnection.getSqlParameter(SaleInvoicesModel.COL_Approved.Name, Approved)
             ).ToList();
         }
 
@@ -322,14 +322,14 @@ namespace iSpeakWebApp.Controllers
             db.Database.ExecuteSqlCommand(@"
                 UPDATE SaleInvoices 
                 SET
-                    IsChecked = @IsChecked
+                    Approved = @Approved
                 WHERE SaleInvoices.Id = @Id;                
             ",
                 DBConnection.getSqlParameter(SaleInvoicesModel.COL_Id.Name, Id),
-                DBConnection.getSqlParameter(SaleInvoicesModel.COL_IsChecked.Name, value)
+                DBConnection.getSqlParameter(SaleInvoicesModel.COL_Approved.Name, value)
             );
 
-            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(SaleInvoicesModel.COL_IsChecked.LogDisplay, null, value));
+            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(SaleInvoicesModel.COL_Approved.LogDisplay, null, value));
             db.SaveChanges();
         }
 
@@ -404,8 +404,8 @@ namespace iSpeakWebApp.Controllers
 	            SELECT @LastHex_Int = CONVERT(INT, CONVERT(VARBINARY, REPLICATE('0', LEN(@LastHex_String)%2) + @LastHex_String, 2)) --@LastHex_String length must be even number of digits to convert to int
 	            SET @NewNo = RIGHT(CONVERT(NVARCHAR(10), CONVERT(VARBINARY(8), @LastHex_Int + 1), 1),@HexLength)
 
-                INSERT INTO SaleInvoices   (Id, No,    Branches_Id, Timestamp, Notes, Customer_UserAccounts_Id, Amount, Due, Cancelled, IsChecked) 
-                                    VALUES(@Id,@NewNo,@Branches_Id,@Timestamp,@Notes,@Customer_UserAccounts_Id,@Amount,@Due,@Cancelled,@IsChecked);
+                INSERT INTO SaleInvoices   (Id, No,    Branches_Id, Timestamp, Notes, Customer_UserAccounts_Id, Amount, Due, Cancelled, Approved) 
+                                    VALUES(@Id,@NewNo,@Branches_Id,@Timestamp,@Notes,@Customer_UserAccounts_Id,@Amount,@Due,@Cancelled,@Approved);
             ",
                 DBConnection.getSqlParameter(SaleInvoicesModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(SaleInvoicesModel.COL_Branches_Id.Name, model.Branches_Id),
@@ -415,7 +415,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(SaleInvoicesModel.COL_Amount.Name, model.Amount),
                 DBConnection.getSqlParameter(SaleInvoicesModel.COL_Due.Name, model.Due),
                 DBConnection.getSqlParameter(SaleInvoicesModel.COL_Cancelled.Name, model.Cancelled),
-                DBConnection.getSqlParameter(SaleInvoicesModel.COL_IsChecked.Name, model.IsChecked)
+                DBConnection.getSqlParameter(SaleInvoicesModel.COL_Approved.Name, model.Approved)
             );
 
             ActivityLogsController.AddCreateLog(db, Session, model.Id);

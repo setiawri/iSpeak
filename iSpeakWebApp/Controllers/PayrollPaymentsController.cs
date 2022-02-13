@@ -132,7 +132,7 @@ namespace iSpeakWebApp.Controllers
                                 AND (@FILTER_DateFrom IS NULL OR PayrollPayments.Timestamp >= @FILTER_DateFrom)
                                 AND (@FILTER_DateTo IS NULL OR PayrollPayments.Timestamp <= @FILTER_DateTo)
                                 AND (@Cancelled IS NULL OR PayrollPayments.Cancelled = @Cancelled)
-                                AND (@IsChecked IS NULL OR PayrollPayments.IsChecked = @IsChecked)
+                                AND (@Approved IS NULL OR PayrollPayments.Approved = @Approved)
                             ))
 						ORDER BY UserAccounts.Fullname ASC
                     ",
@@ -142,7 +142,7 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter("FILTER_DateTo", Util.getAsEndDate(FILTER_DateTo)),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Branches_Id.Name, Helper.getActiveBranchId(Session)),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Cancelled.Name, Cancelled),
-                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_IsChecked.Name, Approved)
+                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Approved.Name, Approved)
                 ).ToList();
         }
 
@@ -182,15 +182,15 @@ namespace iSpeakWebApp.Controllers
 	                SELECT @LastHex_Int = CONVERT(INT, CONVERT(VARBINARY, REPLICATE('0', LEN(@LastHex_String)%2) + @LastHex_String, 2)) --@LastHex_String length must be even number of digits to convert to int
 	                SET @NewNo = RIGHT(CONVERT(NVARCHAR(10), CONVERT(VARBINARY(8), @LastHex_Int + 1), 1),@HexLength)
 
-                INSERT INTO PayrollPayments (Id, No,    Timestamp, UserAccounts_Id, Amount, IsChecked, Cancelled, CancelNotes, Notes) 
-                                     VALUES(@Id,@NewNo,@Timestamp,@UserAccounts_Id,@Amount,@IsChecked,@Cancelled,@CancelNotes,@Notes);
+                INSERT INTO PayrollPayments (Id, No,    Timestamp, UserAccounts_Id, Amount, Approved, Cancelled, CancelNotes, Notes) 
+                                     VALUES(@Id,@NewNo,@Timestamp,@UserAccounts_Id,@Amount,@Approved,@Cancelled,@CancelNotes,@Notes);
             ",
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, model.Id),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Timestamp.Name, model.Timestamp),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_No.Name, model.No),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_UserAccounts_Id.Name, model.UserAccounts_Id),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Amount.Name, model.Amount),
-                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_IsChecked.Name, model.IsChecked),
+                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Approved.Name, model.Approved),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Cancelled.Name, model.Cancelled),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_CancelNotes.Name, model.CancelNotes),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Notes.Name, model.Notes)
@@ -207,10 +207,10 @@ namespace iSpeakWebApp.Controllers
         {
             WebDBConnection.Update(db.Database, "PayrollPayments",
                 DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, Id),
-                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_IsChecked.Name, value)
+                DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Approved.Name, value)
             );
 
-            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(PayrollPaymentsModel.COL_IsChecked.LogDisplay, null, value));
+            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(PayrollPaymentsModel.COL_Approved.LogDisplay, null, value));
             db.SaveChanges();
         }
 

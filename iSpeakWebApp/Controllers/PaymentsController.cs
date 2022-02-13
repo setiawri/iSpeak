@@ -138,7 +138,7 @@ namespace iSpeakWebApp.Controllers
                         PettyCashRecordsCategories_Id = SettingsController.get().AutoEntryForCashPayments.Value,
                         Notes = "Cash Payment [" + payment.No + "]",
                         Amount = payment.CashAmount,
-                        IsChecked = false,
+                        Approved = false,
                         UserAccounts_Id = (Guid)UserAccountsController.getUserId(Session),
                         ExpenseCategories_Id = null
                     });
@@ -280,7 +280,7 @@ namespace iSpeakWebApp.Controllers
         public PaymentsModel get(Guid Id) { return get(Session, Id, null, null, false, null, false, null, null, null).FirstOrDefault(); }
         public static List<PaymentsModel> get(HttpSessionStateBase Session, Guid? Id, string FILTER_Keyword, string FILTER_InvoiceNo, 
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo, 
-            int? Cancelled, int? IsChecked)
+            int? Cancelled, int? Approved)
         {
             Guid Branches_Id = Helper.getActiveBranchId(Session);
 
@@ -325,7 +325,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter("FILTER_DateTo", Util.getAsEndDate(FILTER_DateTo)),
                 DBConnection.getSqlParameter("Branches_Id", Branches_Id),
                 DBConnection.getSqlParameter(PaymentsModel.COL_Cancelled.Name, Cancelled),
-                DBConnection.getSqlParameter(PaymentsModel.COL_Confirmed.Name, IsChecked)
+                DBConnection.getSqlParameter(PaymentsModel.COL_Confirmed.Name, Approved)
             ).ToList();
         }
 

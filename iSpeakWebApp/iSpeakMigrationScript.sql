@@ -7,6 +7,16 @@ if not exists (select 1 from information_schema.columns where column_name = 'Ref
 	exec sp_rename 'PettyCashRecords.RefId' , 'ReferenceId', 'column'
 GO
 
+if not exists (select 1 from information_schema.columns where column_name = 'Approved' and table_name = 'PettyCashRecords' and table_schema='dbo') 
+	exec sp_rename 'PettyCashRecords.IsChecked' , 'Approved', 'column'
+GO
+if not exists (select 1 from information_schema.columns where column_name = 'Approved' and table_name = 'PayrollPayments' and table_schema='dbo') 
+	exec sp_rename 'PayrollPayments.IsChecked' , 'Approved', 'column'
+GO
+if not exists (select 1 from information_schema.columns where column_name = 'Approved' and table_name = 'SaleInvoices' and table_schema='dbo') 
+	exec sp_rename 'SaleInvoices.IsChecked' , 'Approved', 'column'
+GO
+
 if not exists (select 1 from information_schema.columns where column_name = 'CancelNotes' and table_name = 'LessonSessions' and table_schema='dbo') 
 	exec sp_rename 'LessonSessions.Notes_Cancel' , 'CancelNotes', 'column'
 GO
