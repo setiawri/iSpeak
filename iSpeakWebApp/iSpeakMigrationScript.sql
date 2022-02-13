@@ -19,6 +19,9 @@ GO
 if not exists (select 1 from information_schema.columns where column_name = 'Approved' and table_name = 'Payments' and table_schema='dbo') 
 	exec sp_rename 'Payments.Confirmed' , 'Approved', 'column'
 GO
+if not exists (select 1 from information_schema.columns where column_name = 'Cancelled' and table_name = 'LessonSessions' and table_schema='dbo') 
+	exec sp_rename 'LessonSessions.Deleted' , 'Cancelled', 'column'
+GO
 
 if not exists (select 1 from information_schema.columns where column_name = 'CancelNotes' and table_name = 'LessonSessions' and table_schema='dbo') 
 	exec sp_rename 'LessonSessions.Notes_Cancel' , 'CancelNotes', 'column'

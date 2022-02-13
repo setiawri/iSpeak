@@ -128,14 +128,14 @@
                                                 {
                                                     <br /><strong>Internal: </strong>@Html.DisplayFor(modelItem => item.InternalNotes)
                                                 }
-                                                @if (item.Deleted)
+                                                @if (item.Cancelled)
                                                 {
                                                     <br /><strong>Cancelled: </strong>@Html.DisplayFor(modelItem => item.CancelNotes)
                                                 }
                                             </td>
                                             <td class="align-top tablecellwrap">@Html.DisplayFor(modelItem => item.Review)</td>
                                             <td class="align-top">
-                                                @if (item.Deleted)
+                                                @if (item.Cancelled)
                                                 {
                                                     <span class="badge badge-danger d-block">CANCELLED</span>
                                                 }
@@ -227,7 +227,7 @@
             else {
                 $.ajax({
                     type: "POST",
-                    url: '@Url.Action("Ajax_Update_Deleted", ControllerName)',
+                    url: '@Url.Action("Ajax_Update_Cancelled", ControllerName)',
                     data: {
                         id: $('#modal_cancel-Id').val(),
                         notes: $('#modal_cancel-Notes').val()

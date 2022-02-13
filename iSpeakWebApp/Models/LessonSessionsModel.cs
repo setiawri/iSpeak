@@ -46,8 +46,8 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_InternalNotes = new ModelMember { Name = "InternalNotes", Display = "Internal Notes", LogDisplay = ActivityLogsController.editStringFormat("Internal Notes") };
 
 
-        public bool Deleted { get; set; } = false;
-        public static ModelMember COL_Deleted = new ModelMember { Name = "Deleted", Display = "Deleted", LogDisplay = ActivityLogsController.editBooleanFormat("Deleted") };
+        public bool Cancelled { get; set; } = false;
+        public static ModelMember COL_Cancelled = new ModelMember { Name = "Cancelled", Display = "Cancelled", LogDisplay = ActivityLogsController.editBooleanFormat("Cancelled") };
 
 
         [Required]

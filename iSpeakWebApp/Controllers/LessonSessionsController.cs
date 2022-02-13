@@ -279,9 +279,9 @@ namespace iSpeakWebApp.Controllers
             ViewBag.FILTER_DateTo = FILTER_DateTo;
         }
 
-        public JsonResult Ajax_Update_Deleted(Guid id, string notes)
+        public JsonResult Ajax_Update_Cancelled(Guid id, string notes)
         {
-            update_Deleted(id, notes);
+            update_Cancelled(id, notes);
             return Json(new { Message = "" });
         }
 
@@ -330,7 +330,7 @@ namespace iSpeakWebApp.Controllers
                                 ))
                             AND (@FILTER_DateFrom IS NULL OR LessonSessions.Timestamp >= @FILTER_DateFrom)
                             AND (@FILTER_DateTo IS NULL OR LessonSessions.Timestamp <= @FILTER_DateTo)
-                            AND (@Deleted IS NULL OR LessonSessions.Deleted = @Deleted)
+                            AND (@Cancelled IS NULL OR LessonSessions.Cancelled = @Cancelled)
     						AND (@FILTER_InvoiceNo IS NULL OR (LessonSessions.SaleInvoiceItems_Id IN (                                
                                 SELECT SaleInvoiceItems.Id
                                 FROM SaleInvoiceItems 
@@ -345,7 +345,7 @@ namespace iSpeakWebApp.Controllers
             return new DBContext().Database.SqlQuery<LessonSessionsModel>(sql,
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Id.Name, Id),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Branches_Id.Name, Branches_Id),
-                DBConnection.getSqlParameter(LessonSessionsModel.COL_Deleted.Name, Cancelled),
+                DBConnection.getSqlParameter(LessonSessionsModel.COL_Cancelled.Name, Cancelled),
                 DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
                 DBConnection.getSqlParameter("FILTER_InvoiceNo", FILTER_InvoiceNo),
                 DBConnection.getSqlParameter("FILTER_DateFrom", FILTER_DateFrom),
@@ -364,8 +364,8 @@ namespace iSpeakWebApp.Controllers
 	            SELECT @LastHex_Int = CONVERT(INT, CONVERT(VARBINARY, REPLICATE('0', LEN(@LastHex_String)%2) + @LastHex_String, 2)) --@LastHex_String length must be even number of digits to convert to int
 	            SET @NewNo = RIGHT(CONVERT(NVARCHAR(10), CONVERT(VARBINARY(8), @LastHex_Int + 1), 1),@HexLength)
 
-                INSERT INTO LessonSessions   (Id, No,    Branches_Id, Timestamp, SaleInvoiceItems_Id, SessionHours, Review, InternalNotes, Deleted, Tutor_UserAccounts_Id, HourlyRates_Rate, TravelCost, TutorTravelCost, Adjustment, PayrollPaymentItems_Id, CancelNotes, IsScheduleChange, IsWaiveTutorFee) 
-                                      VALUES(@Id,@NewNo,@Branches_Id,@Timestamp,@SaleInvoiceItems_Id,@SessionHours,@Review,@InternalNotes,@Deleted,@Tutor_UserAccounts_Id,@HourlyRates_Rate,@TravelCost,@TutorTravelCost,@Adjustment,@PayrollPaymentItems_Id,@CancelNotes,@IsScheduleChange,@IsWaiveTutorFee);
+                INSERT INTO LessonSessions   (Id, No,    Branches_Id, Timestamp, SaleInvoiceItems_Id, SessionHours, Review, InternalNotes, Cancelled, Tutor_UserAccounts_Id, HourlyRates_Rate, TravelCost, TutorTravelCost, Adjustment, PayrollPaymentItems_Id, CancelNotes, IsScheduleChange, IsWaiveTutorFee) 
+                                      VALUES(@Id,@NewNo,@Branches_Id,@Timestamp,@SaleInvoiceItems_Id,@SessionHours,@Review,@InternalNotes,@Cancelled,@Tutor_UserAccounts_Id,@HourlyRates_Rate,@TravelCost,@TutorTravelCost,@Adjustment,@PayrollPaymentItems_Id,@CancelNotes,@IsScheduleChange,@IsWaiveTutorFee);
             ",
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Branches_Id.Name, model.Branches_Id),
@@ -374,7 +374,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_SessionHours.Name, model.SessionHours),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Review.Name, model.Review),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_InternalNotes.Name, model.InternalNotes),
-                DBConnection.getSqlParameter(LessonSessionsModel.COL_Deleted.Name, model.Deleted),
+                DBConnection.getSqlParameter(LessonSessionsModel.COL_Cancelled.Name, model.Cancelled),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Tutor_UserAccounts_Id.Name, model.Tutor_UserAccounts_Id),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_HourlyRates_Rate.Name, model.HourlyRates_Rate),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_TravelCost.Name, model.TravelCost),
@@ -404,14 +404,14 @@ namespace iSpeakWebApp.Controllers
             db.SaveChanges();
         }
 
-        public void update_Deleted(Guid Id, string CancelNotes)
+        public void update_Cancelled(Guid Id, string CancelNotes)
         {
             db.Database.ExecuteSqlCommand(@"
                 DELETE PayrollPaymentItems WHERE PayrollPaymentItems.Id = (SELECT LessonSessions.PayrollPaymentItems_Id FROM LessonSessions WHERE LessonSessions.Id = @Id)
 
                 UPDATE LessonSessions 
                 SET
-                    Deleted = @Deleted,
+                    Cancelled = @Cancelled,
                     CancelNotes = @CancelNotes,
                     PayrollPaymentItems_Id = NULL
                 WHERE LessonSessions.Id = @Id;           
@@ -425,11 +425,11 @@ namespace iSpeakWebApp.Controllers
                     );    
             ",
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_Id.Name, Id),
-                DBConnection.getSqlParameter(LessonSessionsModel.COL_Deleted.Name, 1),
+                DBConnection.getSqlParameter(LessonSessionsModel.COL_Cancelled.Name, 1),
                 DBConnection.getSqlParameter(LessonSessionsModel.COL_CancelNotes.Name, CancelNotes)
             );
 
-            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(LessonSessionsModel.COL_Deleted.LogDisplay, null, true));
+            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(LessonSessionsModel.COL_Cancelled.LogDisplay, null, true));
             db.SaveChanges();
         }
 

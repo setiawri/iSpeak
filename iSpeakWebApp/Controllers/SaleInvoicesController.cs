@@ -355,7 +355,7 @@ namespace iSpeakWebApp.Controllers
                             FROM LessonSessions 
 	                            LEFT JOIN SaleInvoiceitems ON SaleInvoiceitems.Id = LessonSessions.SaleInvoiceItems_Id
 	                            LEFT JOIN SaleInvoices ON Saleinvoices.Id = SaleInvoiceitems.SaleInvoices_Id
-                            WHERE SaleInvoices.Id = @Id AND LessonSessions.Deleted = 0
+                            WHERE SaleInvoices.Id = @Id AND LessonSessions.Cancelled = 0
                         )
                         SET @returnValueString = 'Please cancel related lesson sessions and try again.';
    
