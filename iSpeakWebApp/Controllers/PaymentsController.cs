@@ -302,7 +302,7 @@ namespace iSpeakWebApp.Controllers
                             AND (@FILTER_DateFrom IS NULL OR Payments.Timestamp >= @FILTER_DateFrom)
                             AND (@FILTER_DateTo IS NULL OR Payments.Timestamp <= @FILTER_DateTo)
                             AND (@Cancelled IS NULL OR Payments.Cancelled = @Cancelled)
-                            AND (@Confirmed IS NULL OR Payments.Confirmed = @Confirmed)
+                            AND (@Approved IS NULL OR Payments.Approved = @Approved)
     						AND (@FILTER_InvoiceNo IS NULL OR (Payments.Id IN (                                
                                 SELECT PaymentItems.Payments_Id
                                 FROM PaymentItems 
@@ -325,7 +325,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter("FILTER_DateTo", Util.getAsEndDate(FILTER_DateTo)),
                 DBConnection.getSqlParameter("Branches_Id", Branches_Id),
                 DBConnection.getSqlParameter(PaymentsModel.COL_Cancelled.Name, Cancelled),
-                DBConnection.getSqlParameter(PaymentsModel.COL_Confirmed.Name, Approved)
+                DBConnection.getSqlParameter(PaymentsModel.COL_Approved.Name, Approved)
             ).ToList();
         }
 
@@ -356,7 +356,7 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(PaymentsModel.COL_ConsignmentAmount.Name, model.ConsignmentAmount),
                     DBConnection.getSqlParameter(PaymentsModel.COL_Notes.Name, model.Notes),
                     DBConnection.getSqlParameter(PaymentsModel.COL_Cancelled.Name, model.Cancelled),
-                    DBConnection.getSqlParameter(PaymentsModel.COL_Confirmed.Name, model.Confirmed),
+                    DBConnection.getSqlParameter(PaymentsModel.COL_Approved.Name, model.Approved),
                     DBConnection.getSqlParameter(PaymentsModel.COL_IsTransfer.Name, model.IsTransfer),
                     DBConnection.getSqlParameter(PaymentsModel.COL_CancelNotes.Name, model.CancelNotes)
                 );
@@ -368,9 +368,9 @@ namespace iSpeakWebApp.Controllers
         {
             WebDBConnection.Update(db.Database, "Payments",
                     DBConnection.getSqlParameter(PaymentsModel.COL_Id.Name, Id),
-                    DBConnection.getSqlParameter(PaymentsModel.COL_Confirmed.Name, value)
+                    DBConnection.getSqlParameter(PaymentsModel.COL_Approved.Name, value)
                 );
-            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(PaymentsModel.COL_Confirmed.LogDisplay, null, value));
+            ActivityLogsController.AddEditLog(db, Session, Id, string.Format(PaymentsModel.COL_Approved.LogDisplay, null, value));
             db.SaveChanges();
         }
 

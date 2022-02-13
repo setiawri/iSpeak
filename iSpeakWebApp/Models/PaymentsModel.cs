@@ -70,8 +70,8 @@ namespace iSpeakWebApp.Models
 
 
         [Display(Name = "Approved")]
-        public bool Confirmed { get; set; } = false;
-        public static ModelMember COL_Confirmed = new ModelMember { Name = "Confirmed", Display = "Approved", LogDisplay = ActivityLogsController.editBooleanFormat("Approved") };
+        public bool Approved { get; set; } = false;
+        public static ModelMember COL_Approved = new ModelMember { Name = "Approved", Display = "Approved", LogDisplay = ActivityLogsController.editBooleanFormat("Approved") };
 
 
         public bool IsTransfer { get; set; } = false;
