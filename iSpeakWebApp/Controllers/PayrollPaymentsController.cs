@@ -66,6 +66,8 @@ namespace iSpeakWebApp.Controllers
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
             ViewBag.FILTER_Keyword = FILTER_Keyword;
+            ViewBag.FILTER_Cancelled = FILTER_Cancelled;
+            ViewBag.FILTER_Approved = FILTER_Approved;
             ViewBag.FILTER_chkDateFrom = FILTER_chkDateFrom;
             ViewBag.FILTER_DateFrom = FILTER_DateFrom;
             ViewBag.FILTER_chkDateTo = FILTER_chkDateTo;
@@ -97,7 +99,8 @@ namespace iSpeakWebApp.Controllers
                 Timestamp = Timestamp,
                 Amount = Amount,
                 Notes = Notes,
-                UserAccounts_Id = UserAccounts_Id
+                UserAccounts_Id = UserAccounts_Id, 
+                Branches_Id = (Guid)PayrollPaymentItems[0].Branches_Id
             });
 
             return Json(new { Message = "" });
@@ -119,15 +122,14 @@ namespace iSpeakWebApp.Controllers
             return new DBContext().Database.SqlQuery<PayrollPaymentsModel>(@"
                         SELECT PayrollPayments.*,
                             UserAccounts.Fullname AS UserAccounts_Fullname,
-                            Branches.Id AS Branches_Id,
                             Branches.Name AS Branches_Name
                         FROM PayrollPayments
                             LEFT JOIN UserAccounts ON UserAccounts.Id = PayrollPayments.UserAccounts_Id
-                            LEFT JOIN Branches ON Branches.Id = (SELECT TOP(1) Branches_Id FROM PayrollPaymentItems WHERE PayrollPayments_Id=PayrollPayments.Id)
+                            LEFT JOIN Branches ON Branches.Id = PayrollPayments.Branches_Id
                         WHERE 1=1
 							AND (@Id IS NULL OR PayrollPayments.Id = @Id)
 							AND (@Id IS NOT NULL OR (
-                                Branches.Id = @Branches_Id
+                                PayrollPayments.Branches_Id = @Branches_Id
     							AND (@FILTER_Keyword IS NULL OR (PayrollPayments.No LIKE '%'+@FILTER_Keyword+'%' OR UserAccounts.Fullname LIKE '%'+@FILTER_Keyword+'%'))
                                 AND (@FILTER_DateFrom IS NULL OR PayrollPayments.Timestamp >= @FILTER_DateFrom)
                                 AND (@FILTER_DateTo IS NULL OR PayrollPayments.Timestamp <= @FILTER_DateTo)
@@ -182,14 +184,15 @@ namespace iSpeakWebApp.Controllers
 	                SELECT @LastHex_Int = CONVERT(INT, CONVERT(VARBINARY, REPLICATE('0', LEN(@LastHex_String)%2) + @LastHex_String, 2)) --@LastHex_String length must be even number of digits to convert to int
 	                SET @NewNo = RIGHT(CONVERT(NVARCHAR(10), CONVERT(VARBINARY(8), @LastHex_Int + 1), 1),@HexLength)
 
-                INSERT INTO PayrollPayments (Id, No,    Timestamp, UserAccounts_Id, Amount, Approved, Cancelled, CancelNotes, Notes) 
-                                     VALUES(@Id,@NewNo,@Timestamp,@UserAccounts_Id,@Amount,@Approved,@Cancelled,@CancelNotes,@Notes);
+                INSERT INTO PayrollPayments (Id, No,    Timestamp, UserAccounts_Id, Amount, Branches_Id, Approved, Cancelled, CancelNotes, Notes) 
+                                     VALUES(@Id,@NewNo,@Timestamp,@UserAccounts_Id,@Amount,@Branches_Id,@Approved,@Cancelled,@CancelNotes,@Notes);
             ",
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Id.Name, model.Id),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Timestamp.Name, model.Timestamp),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_No.Name, model.No),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_UserAccounts_Id.Name, model.UserAccounts_Id),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Amount.Name, model.Amount),
+                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Branches_Id.Name, model.Branches_Id),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Approved.Name, model.Approved),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Cancelled.Name, model.Cancelled),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_CancelNotes.Name, model.CancelNotes),

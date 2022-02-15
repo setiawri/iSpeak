@@ -22,6 +22,10 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_No = new ModelMember { Name = "No", Display = "No", LogDisplay = ActivityLogsController.editStringFormat("No") };
 
 
+        public Guid Branches_Id { get; set; }
+        public static ModelMember COL_Branches_Id = new ModelMember { Name = "Branches_Id" };
+        public string Branches_Name { get; set; } = null;
+
         public string Notes { get; set; } = null;
         public static ModelMember COL_Notes = new ModelMember { Name = "Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Notes") };
 
@@ -52,10 +56,6 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Amount = new ModelMember { Name = "Amount", Display = "Amount", LogDisplay = ActivityLogsController.editIntFormat("Amount") };
 
 
-        public Guid Branches_Id { get; set; }
-        public static ModelMember COL_Branches_Id = new ModelMember { Name = "Branches_Id" };
-
-        public string Branches_Name { get; set; } = null;
     }
 
 }

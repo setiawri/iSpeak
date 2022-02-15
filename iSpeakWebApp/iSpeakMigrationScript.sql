@@ -30,6 +30,36 @@ if not exists (select 1 from information_schema.columns where column_name = 'Can
 	exec sp_rename 'PayrollPayments.Notes_Cancel' , 'CancelNotes', 'column'
 GO
 
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Branches_Id' AND TABLE_NAME = 'PayrollPayments' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE PayrollPayments ADD Branches_Id uniqueidentifier NULL
+GO
+-- populate value
+	IF(SELECT object_id('TempDB..#TEMP_INPUTARRAY')) IS NOT NULL
+		DROP TABLE #TEMP_INPUTARRAY
+		
+	SELECT * INTO #TEMP_INPUTARRAY FROM (SELECT * FROM PayrollPayments) AS x
+	
+	DECLARE @Iteration_Id uniqueidentifier
+	DECLARE @Branches_Id uniqueidentifier
+	WHILE EXISTS(SELECT * FROM #TEMP_INPUTARRAY)
+	BEGIN
+		SELECT TOP 1 @Iteration_Id = Id FROM #TEMP_INPUTARRAY
+		SELECT TOP 1 @Branches_Id = PayrollPaymentItems.Branches_Id FROM PayrollPaymentItems WHERE PayrollPaymentItems.PayrollPayments_Id = @Iteration_Id
+
+		-- add operation here
+		UPDATE PayrollPayments SET Branches_Id = @Branches_Id WHERE Id = @Iteration_Id
+		
+		-- remove row to iterate to the next row
+		DELETE #TEMP_INPUTARRAY WHERE Id = @Iteration_Id
+	END
+	
+	-- clean up
+	DROP TABLE #TEMP_INPUTARRAY
+GO
+UPDATE PayrollPayments SET Branches_Id = NULL WHERE Cancelled=1
+GO
+
+
 ---- CLEANUP ASPNET USER TABLES ==============================================================================================
 
 DROP TABLE __MigrationHistory;

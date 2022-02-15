@@ -88,15 +88,15 @@
                             <thead>
                                 <tr>
                                     <th style="width:50px;">@Html.DisplayNameFor(model => model.No)</th>
-                                    <th style="width:80px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
-                                    <th>@Html.DisplayNameFor(model => model.UserAccounts_Fullname)</th>
-                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Amount)</th>
+                                    <th class="px-0" style="width:80px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
+                                    <th>@Html.DisplayNameFor(model => model.UserAccounts_Id)</th>
+                                    <th class="non-sortable text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Amount)</th>
                                     @if (access.PayrollPayments_Approve)
                                     {
-                                        <th class="non-searchable non-sortable" style="width:0px;">Approved</th>
+                                        <th class="non-searchable non-sortable px-0" style="width:0px;">Approved</th>
                                     }
                                     <th class="non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
-                                    <th class="non-searchable non-sortable" style="width:70px;"></th>
+                                    <th class="non-searchable non-sortable px-0" style="width:50px;"></th>
                                     <th class="non-searchable non-sortable" style="width:120px;"></th>
                                 </tr>
                             </thead>
@@ -107,33 +107,37 @@
                                     {
                                         <tr>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.No)</td>
-                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
+                                            <td class="align-top px-0">@Html.DisplayFor(modelItem => item.Timestamp)</td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.UserAccounts_Fullname)</td>
                                             <td class="align-top text-right">@Html.DisplayFor(modelItem => item.Amount)</td>
                                             @if (access.PayrollPayments_Approve)
                                             {
-                                                <td class="align-top" style="text-align:center;">
+                                                <td class="align-top px-0">
                                                     @Html.CheckBoxFor(modelItem => item.Approved, new { @class = "check-styled", onclick = string.Format("Update_Approved(this, '{0}')", item.Id) })
                                                 </td>
                                             }
                                             <td class="align-top">
-                                                @if (!string.IsNullOrEmpty(item.CancelNotes))
+                                                @if (item.Cancelled)
                                                 {
-                                                    <div><strong>Cancelled: </strong>@Html.DisplayFor(modelItem => item.CancelNotes)</div>
+                                                    <div>
+                                                        <span class="badge badge-danger">CANCELLED</span>
+                                                        @if (!string.IsNullOrEmpty(item.CancelNotes))
+                                                        {
+                                                            @Html.DisplayFor(modelItem => item.CancelNotes)
+                                                        }
+                                                    </div>
                                                 }
-                                                @Html.DisplayFor(modelItem => item.Notes)
+                                                <div>
+                                                    @Html.DisplayFor(modelItem => item.Notes)
+                                                </div>
                                             </td>
-                                            <td class="align-top">
+                                            <td class="align-top px-0">
                                                 @if (!item.Cancelled)
                                                 {
                                                     <a href="javascript:void(0)"><span class="badge badge-warning d-block mr-1" style="width:50px;" data-toggle="modal" data-target="#modal_cancel" onclick="PopulateCancelModal('@item.Id','@item.No')">CANCEL</span></a>
                                                 }
                                             </td>
                                             <td class="align-top">
-                                                @if (item.Cancelled)
-                                                {
-                                                    <div><span class="badge badge-danger d-block mr-1">CANCELLED</span></div>
-                                                }
                                                 <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Print', '@ControllerName', 'true')">Print</a>
                                                 • <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                             </td>
