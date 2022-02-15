@@ -148,26 +148,28 @@
                                                     <input type="checkbox" id='@("chkApprove_" + rowno)' onclick="Update_Approved(this, '@item.Id')" @(item.Approved ? "checked" : "") />
                                                 </td>
                                             }
-                                            <td class="align-top">                                                
-                                                @if (!string.IsNullOrEmpty(item.CancelNotes))
+                                            <td class="align-top">
+                                                @if (item.Cancelled)
                                                 {
-                                                    <div><strong>Cancelled: </strong>@Html.DisplayFor(modelItem => item.CancelNotes)</div>
+                                                    <div>
+                                                        <span class="badge badge-danger">CANCELLED</span>                                                
+                                                        @if (!string.IsNullOrEmpty(item.CancelNotes))
+                                                        {
+                                                            @Html.DisplayFor(modelItem => item.CancelNotes)
+                                                        }
+                                                    </div>
                                                 }
-                                                @Html.DisplayFor(modelItem => item.Notes)
+                                                <div>@Html.DisplayFor(modelItem => item.Notes)</div>
                                             </td>
                                             @if (access.Payments_Edit)
                                             {
                                                 <td class="align-top">
-                                                    @if (!item.Cancelled)
-                                                    {
-                                                        <a href="javascript:void(0)" id='@("lnkCancel_" + rowno)' class='@(item.Approved ? "d-none" : "")'><span class="badge badge-warning d-block mr-1" style="width:50px;" data-toggle="modal" data-target="#modal_cancel" onclick="PopulateCancelModal('@item.Id','@item.No')">CANCEL</span></a>
-                                                    }
                                                 </td>
                                             }
                                             <td class="align-top">
-                                                @if (item.Cancelled)
+                                                @if (!item.Cancelled)
                                                 {
-                                                    <div><span class="badge badge-danger d-block mr-1">CANCELLED</span></div>
+                                                    <div><a href="javascript:void(0)" id='@("lnkCancel_" + rowno)' class='@(item.Approved ? "d-none" : "")'><span class="badge badge-warning d-block mr-1" style="width:50px;" data-toggle="modal" data-target="#modal_cancel" onclick="PopulateCancelModal('@item.Id','@item.No')">CANCEL</span></a></div>
                                                 }
                                                 @*<a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Payment @item.No', 'medium', 'Ajax_GetDetails', '@ControllerName')">View</a> @:•*@
                                                 <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Print', '@ControllerName', 'true')">Receipt</a>
