@@ -539,6 +539,28 @@ namespace iSpeakWebApp.Models
         public bool StudentSchedules_Edit { get; set; }
         public static ModelMember COL_StudentSchedules_Edit = new ModelMember { Name = "StudentSchedules_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("StudentSchedules Edit") };
 
+        /* FILES **********************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string Files_Notes { get; set; }
+        public static ModelMember COL_Files_Notes = new ModelMember { Name = "Files_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Files Notes") };
+
+        [Display(Name = "Add")]
+        public bool Files_Add { get; set; }
+        public static ModelMember COL_Files_Add = new ModelMember { Name = "Files_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("Files Add") };
+
+        [Display(Name = "View")]
+        public bool Files_View { get; set; }
+        public static ModelMember COL_Files_View = new ModelMember { Name = "Files_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("Files View") };
+
+        [Display(Name = "Edit")]
+        public bool Files_Edit { get; set; }
+        public static ModelMember COL_Files_Edit = new ModelMember { Name = "Files_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Files Edit") };
+
+        [Display(Name = "Edit Global")]
+        public bool Files_EditGlobal { get; set; }
+        public static ModelMember COL_Files_EditGlobal = new ModelMember { Name = "Files_EditGlobal", Display = "Edit Global", LogDisplay = ActivityLogsController.editBooleanFormat("Files Edit Global") };
+
         /******************************************************************************************************************************************************/
 
     }

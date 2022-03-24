@@ -12,6 +12,7 @@
     @Html.Partial("Scripts")
 </head>
 <body>
+    <div id="topOfPage"></div>
     <!-- Main navbar ----------------------------------------------------------------------------------------------------------------------------------->
     <div class="navbar navbar-expand-md navbar-dark">
         <div class="d-md-none">
@@ -247,9 +248,9 @@
                         </a>
                     </li>
                 }
-                @if (false)
+                @if (access.Files_View)
                 {
-                    <li class="nav-item dropdown">
+                    <li id="Menu_Files" class="nav-item dropdown">
                         <a href="@Url.Action("Index", "Files", new { rss=1 })" class="navbar-nav-link">
                             <i class="icon-file-upload2 mr-2"></i>
                             Files
@@ -290,6 +291,9 @@
     </div>
     <!-- /Footer --------------------------------------------------------------------------------------------------------------------------------------->
 
+    <a href="#" class="scrollbutton scrollup" onclick="ScrollTo('topOfPage',500); this.blur();">a</a>
+    <a href="#" class="scrollbutton scrolldown" onclick="ScrollTo('bottomOfPage',500); this.blur();">a</a>
+    <div id="bottomOfPage"></div>
 </body>
 </html>
 

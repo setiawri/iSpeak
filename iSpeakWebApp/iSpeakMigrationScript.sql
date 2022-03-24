@@ -1,86 +1,120 @@
 
-if not exists (select 1 from information_schema.columns where column_name = 'ReferenceId' and table_name = 'ActivityLogs' and table_schema='dbo') 
-	exec sp_rename 'ActivityLogs.ReffId' , 'ReferenceId', 'column'
-GO
-
-if not exists (select 1 from information_schema.columns where column_name = 'ReferenceId' and table_name = 'PettyCashRecords' and table_schema='dbo') 
-	exec sp_rename 'PettyCashRecords.RefId' , 'ReferenceId', 'column'
-GO
-
-if not exists (select 1 from information_schema.columns where column_name = 'Approved' and table_name = 'PettyCashRecords' and table_schema='dbo') 
-	exec sp_rename 'PettyCashRecords.IsChecked' , 'Approved', 'column'
-GO
-if not exists (select 1 from information_schema.columns where column_name = 'Approved' and table_name = 'PayrollPayments' and table_schema='dbo') 
-	exec sp_rename 'PayrollPayments.IsChecked' , 'Approved', 'column'
-GO
-if not exists (select 1 from information_schema.columns where column_name = 'Approved' and table_name = 'SaleInvoices' and table_schema='dbo') 
-	exec sp_rename 'SaleInvoices.IsChecked' , 'Approved', 'column'
-GO
-if not exists (select 1 from information_schema.columns where column_name = 'Approved' and table_name = 'Payments' and table_schema='dbo') 
-	exec sp_rename 'Payments.Confirmed' , 'Approved', 'column'
-GO
-if not exists (select 1 from information_schema.columns where column_name = 'Cancelled' and table_name = 'LessonSessions' and table_schema='dbo') 
-	exec sp_rename 'LessonSessions.Deleted' , 'Cancelled', 'column'
-GO
-
-if not exists (select 1 from information_schema.columns where column_name = 'CancelNotes' and table_name = 'LessonSessions' and table_schema='dbo') 
-	exec sp_rename 'LessonSessions.Notes_Cancel' , 'CancelNotes', 'column'
-GO
-if not exists (select 1 from information_schema.columns where column_name = 'CancelNotes' and table_name = 'PayrollPayments' and table_schema='dbo') 
-	exec sp_rename 'PayrollPayments.Notes_Cancel' , 'CancelNotes', 'column'
-GO
-
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Branches_Id' AND TABLE_NAME = 'PayrollPayments' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE PayrollPayments ADD Branches_Id uniqueidentifier NULL
-GO
--- populate value
-	IF(SELECT object_id('TempDB..#TEMP_INPUTARRAY')) IS NOT NULL
-		DROP TABLE #TEMP_INPUTARRAY
-		
-	SELECT * INTO #TEMP_INPUTARRAY FROM (SELECT * FROM PayrollPayments) AS x
-	
-	DECLARE @Iteration_Id uniqueidentifier
-	DECLARE @Branches_Id uniqueidentifier
-	WHILE EXISTS(SELECT * FROM #TEMP_INPUTARRAY)
-	BEGIN
-		SELECT TOP 1 @Iteration_Id = Id FROM #TEMP_INPUTARRAY
-		SELECT TOP 1 @Branches_Id = PayrollPaymentItems.Branches_Id FROM PayrollPaymentItems WHERE PayrollPaymentItems.PayrollPayments_Id = @Iteration_Id
-
-		-- add operation here
-		UPDATE PayrollPayments SET Branches_Id = @Branches_Id WHERE Id = @Iteration_Id
-		
-		-- remove row to iterate to the next row
-		DELETE #TEMP_INPUTARRAY WHERE Id = @Iteration_Id
-	END
-	
-	-- clean up
-	DROP TABLE #TEMP_INPUTARRAY
-GO
-UPDATE PayrollPayments SET Branches_Id = NULL WHERE Cancelled=1
-GO
-
-
 ---- CLEANUP ASPNET USER TABLES ==============================================================================================
 
-DROP TABLE __MigrationHistory;
-GO
-DROP TABLE AspNetRoles
-GO
-DROP TABLE AspNetUserClaims
-GO
-DROP TABLE AspNetUserLogins
-GO
-DROP TABLE AspNetUsers
-GO
-DROP TABLE AspNetUserRoles
-GO
-DROP TABLE RoleAccessMenu
-GO
+--DROP TABLE __MigrationHistory;
+--GO
+--DROP TABLE AspNetRoles
+--GO
+--DROP TABLE AspNetUserClaims
+--GO
+--DROP TABLE AspNetUserLogins
+--GO
+--DROP TABLE AspNetUsers
+--GO
+--DROP TABLE AspNetUserRoles
+--GO
+--DROP TABLE RoleAccessMenu
+--GO
 
-DROP TABLE Logs;
-GO
-DROP TABLE MasterMenu;
-GO
+--DROP TABLE Logs;
+--GO
+--DROP TABLE MasterMenu;
+--GO
+
+---- FILES ===================================================================================================================
+
+--CREATE TABLE [dbo].[Files]
+--(
+--	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+--    [OnlineFileId] VARCHAR(MAX) NULL, 
+--    [ParentId] UNIQUEIDENTIFIER NOT NULL, 
+--    [Branches_Id] UNIQUEIDENTIFIER NULL,
+--    [No] VARCHAR(MAX) NOT NULL, 
+--    [FileName] VARCHAR(MAX) NULL,
+--    [DirectoryName] VARCHAR(MAX) NULL, 
+--    [Notes] VARCHAR(MAX) NULL, 
+--    [UserAccounts_Id] UNIQUEIDENTIFIER NOT NULL, 
+--    [Timestamp] DATETIME NOT NULL, 
+--    [IsDeleted] BIT NOT NULL DEFAULT 0, 
+--    [Approved] BIT NOT NULL DEFAULT 0
+--)
+
+----Files
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Files_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--ALTER TABLE UserAccountRoles ADD Files_Notes varchar(MAX) null;
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Files_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--ALTER TABLE UserAccountRoles ADD Files_Add bit default 0 not null;
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Files_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--ALTER TABLE UserAccountRoles ADD Files_View bit default 0 not null;
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Files_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--ALTER TABLE UserAccountRoles ADD Files_Edit bit default 0 not null;
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Files_EditGlobal' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--ALTER TABLE UserAccountRoles ADD Files_EditGlobal bit default 0 not null;
+--GO
+
+---- CLEANUP =================================================================================================================
+
+
+--if not exists (select 1 from information_schema.columns where column_name = 'ReferenceId' and table_name = 'ActivityLogs' and table_schema='dbo') 
+--	exec sp_rename 'ActivityLogs.ReffId' , 'ReferenceId', 'column'
+--GO
+
+--if not exists (select 1 from information_schema.columns where column_name = 'ReferenceId' and table_name = 'PettyCashRecords' and table_schema='dbo') 
+--	exec sp_rename 'PettyCashRecords.RefId' , 'ReferenceId', 'column'
+--GO
+
+--if not exists (select 1 from information_schema.columns where column_name = 'Approved' and table_name = 'PettyCashRecords' and table_schema='dbo') 
+--	exec sp_rename 'PettyCashRecords.IsChecked' , 'Approved', 'column'
+--GO
+--if not exists (select 1 from information_schema.columns where column_name = 'Approved' and table_name = 'PayrollPayments' and table_schema='dbo') 
+--	exec sp_rename 'PayrollPayments.IsChecked' , 'Approved', 'column'
+--GO
+--if not exists (select 1 from information_schema.columns where column_name = 'Approved' and table_name = 'SaleInvoices' and table_schema='dbo') 
+--	exec sp_rename 'SaleInvoices.IsChecked' , 'Approved', 'column'
+--GO
+--if not exists (select 1 from information_schema.columns where column_name = 'Approved' and table_name = 'Payments' and table_schema='dbo') 
+--	exec sp_rename 'Payments.Confirmed' , 'Approved', 'column'
+--GO
+--if not exists (select 1 from information_schema.columns where column_name = 'Cancelled' and table_name = 'LessonSessions' and table_schema='dbo') 
+--	exec sp_rename 'LessonSessions.Deleted' , 'Cancelled', 'column'
+--GO
+
+--if not exists (select 1 from information_schema.columns where column_name = 'CancelNotes' and table_name = 'LessonSessions' and table_schema='dbo') 
+--	exec sp_rename 'LessonSessions.Notes_Cancel' , 'CancelNotes', 'column'
+--GO
+--if not exists (select 1 from information_schema.columns where column_name = 'CancelNotes' and table_name = 'PayrollPayments' and table_schema='dbo') 
+--	exec sp_rename 'PayrollPayments.Notes_Cancel' , 'CancelNotes', 'column'
+--GO
+
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Branches_Id' AND TABLE_NAME = 'PayrollPayments' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE PayrollPayments ADD Branches_Id uniqueidentifier NULL
+--GO
+---- populate value
+--	IF(SELECT object_id('TempDB..#TEMP_INPUTARRAY')) IS NOT NULL
+--		DROP TABLE #TEMP_INPUTARRAY
+		
+--	SELECT * INTO #TEMP_INPUTARRAY FROM (SELECT * FROM PayrollPayments) AS x
+	
+--	DECLARE @Iteration_Id uniqueidentifier
+--	DECLARE @Branches_Id uniqueidentifier
+--	WHILE EXISTS(SELECT * FROM #TEMP_INPUTARRAY)
+--	BEGIN
+--		SELECT TOP 1 @Iteration_Id = Id FROM #TEMP_INPUTARRAY
+--		SELECT TOP 1 @Branches_Id = PayrollPaymentItems.Branches_Id FROM PayrollPaymentItems WHERE PayrollPaymentItems.PayrollPayments_Id = @Iteration_Id
+
+--		-- add operation here
+--		UPDATE PayrollPayments SET Branches_Id = @Branches_Id WHERE Id = @Iteration_Id
+		
+--		-- remove row to iterate to the next row
+--		DELETE #TEMP_INPUTARRAY WHERE Id = @Iteration_Id
+--	END
+	
+--	-- clean up
+--	DROP TABLE #TEMP_INPUTARRAY
+--GO
+--UPDATE PayrollPayments SET Branches_Id = NULL WHERE Cancelled=1
+--GO
+
 
 ---- UPDATE STUDENT SCHEDULES ================================================================================================
 

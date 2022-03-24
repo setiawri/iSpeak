@@ -1,4 +1,11 @@
 ﻿===============================================================================================================================================================
+Google Drive Files
+------------------
+ricky.ispeak@gmail.com/ispeakwell
+service account: ispeakfiles@ispeakfiles.iam.gserviceaccount.com
+API Library: Google Drive API
+
+===============================================================================================================================================================
 DB MIGRATION
 ------------
 - run migration script
@@ -9,8 +16,6 @@ FINAL: check for UTC date conversion
 
 TO DO:
 - troubleshoot:
-	> create invoice for free trial 1 hour
-	> create session for 0.5 hour
 	> cancel invoice shows error:
 		1. bad request from wrong domain: i-speak.co
 		2. error because session is not yet cancelled. not showing error message.

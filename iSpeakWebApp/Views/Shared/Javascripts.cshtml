@@ -122,6 +122,8 @@
 
     function setValue(id, value) { $('#' + id).val(value); }
 
+    function setText(id, value) { $('#' + id).text(value); }
+
     function resetListbox(id) { $('#'+id).val('').trigger('change'); }
 
     function setToZeroIfEmpty(control) {
@@ -380,6 +382,15 @@
         $('#' + id).prop('checked', value);
     }
 
+    function setSwitcheryState(id, value) {
+        if (value == 'True' || value == true)
+            value = false;
+        else if (value == 'False' || value == false)
+            value = true;
+
+        $('#' + id).prop('checked', value).trigger("click");
+    }
+
     function applyCheckboxStyling() {
         $('.check-styled').uniform();
         $('.check-styled-info').uniform({
@@ -446,13 +457,22 @@
                 if (format[i] == 'MMM') {
                     month = monthNames[value.getMonth()];
                 } else if (format[i] == 'MM') {
-                    month = (('' + (value.getMonth() + 1)).length < 2 ? '0' : '') + (value.getMonth()+1) + ' ';
+                    month = (('' + (value.getMonth() + 1)).length < 2 ? '0' : '') + (value.getMonth() + 1) + ' ';
                 }
                 result.push(month);
             }
 
             if (format[i] == 'yyyy')
                 result.push(value.getFullYear());
+
+            if (format[i] == 'HH')
+                result.push(padLeft(value.getHours(), format[i].length, "0"));
+
+            if (format[i] == 'mm')
+                result.push(padLeft(value.getMinutes(), format[i].length, "0"));
+
+            if (format[i] == 'ss')
+                result.push(padLeft(value.getSeconds(), format[i].length, "0"));
         }
 
         var finalResult = result.filter(Boolean).join(delimiter);
@@ -469,6 +489,8 @@
             return "-";
         else if (value.split("/").length > 1)
             return "/";
+        else if (value.split(":").length > 1)
+            return ":";
     }
 
     function addMonths(date, value) {
@@ -685,6 +707,23 @@
         $(this).blur();
     });
 
+    function applyScrollButtons() {
+        $(window).scroll(function () {
+            //console.log("this.scrollTop:" + $(this).scrollTop() + " :: " + "this.height:" + $(this).height() + " :: " + " :: " + "document.height:" + $(document).height() + " :: " + ($(this).scrollTop() + $(this).height()) + " > " + ($(document).height()));
+            if ($(this).scrollTop() > 50) {
+                $('.scrollup').fadeIn();
+            } else {
+                $('.scrollup').fadeOut();
+            }
+
+            if ($(this).scrollTop() + $(this).height() > $(document).height() - 50) {
+                $('.scrolldown').fadeOut();
+            } else {
+                $('.scrolldown').fadeIn();
+            }
+        });
+    }
+
     // PRINTING ====================================================================================================================================================
 
     ////cannot be used because need to figure out how to render partial from different folder to shared folder
@@ -725,6 +764,30 @@
             $('#' + id).addClass('d-none');
     }
 
+    function setVisibility(id, value) {
+        if (value)
+            $('#' + id).removeClass('d-none');
+        else
+            $('#' + id).addClass('d-none');
+    }
+
+    function isVisible(id) {
+        return !$('#' + id).hasClass('d-none');
+    }
+
+    function setTogglePanel(id, value) {
+        if (value) {
+            if (!$('#' + id).hasClass('show')) {
+                $('#' + id).addClass('show');
+            }
+        }
+        else {
+            if ($('#' + id).hasClass('show')) {
+                $('#' + id).removeClass('show');
+            }
+        }
+    }
+
     function getRowNo(control) {
         var id = getElementId(control);
         return id.substring(id.indexOf('_') + 1, id.length);
@@ -740,6 +803,12 @@
             html: true,
             trigger: 'hover'
         });
+    }
+
+    function setModalControlToFocusOnShown(modalId, controlId) {
+        $('#' + modalId).on('shown.bs.modal', function () {
+            $('#' + controlId).focus();
+        })
     }
 
     //==============================================================================================================================================================
@@ -765,6 +834,12 @@
                 var switchery = new Switchery(html);
             });
         }
+
+        //Show the name of file in file input
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
 
         $('.notesbutton').click(function (event) {
             var id = '#' + event.target.id;

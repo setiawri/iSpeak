@@ -269,6 +269,13 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.StudentSchedules_Edit, model.StudentSchedules_Edit, UserAccountRolesModel.COL_StudentSchedules_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.StudentSchedules_View, model.StudentSchedules_View, UserAccountRolesModel.COL_StudentSchedules_View.LogDisplay);
 
+                    //Files
+                    log = Helper.append(log, originalModel.Files_Notes, model.Files_Notes, UserAccountRolesModel.COL_Files_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.Files_Add, model.Files_Add, UserAccountRolesModel.COL_Files_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.Files_Edit, model.Files_Edit, UserAccountRolesModel.COL_Files_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.Files_View, model.Files_View, UserAccountRolesModel.COL_Files_View.LogDisplay);
+                    log = Helper.append(log, originalModel.Files_EditGlobal, model.Files_EditGlobal, UserAccountRolesModel.COL_Files_EditGlobal.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -453,6 +460,12 @@ namespace iSpeakWebApp.Controllers
                 if (item.StudentSchedules_Add) model.StudentSchedules_Add = true;
                 if (item.StudentSchedules_Edit) model.StudentSchedules_Edit = true;
                 if (item.StudentSchedules_View) model.StudentSchedules_View = true;
+
+                //Files
+                if (item.Files_Add) model.Files_Add = true;
+                if (item.Files_Edit) model.Files_Edit = true;
+                if (item.Files_View) model.Files_View = true;
+                if (item.Files_EditGlobal) model.Files_EditGlobal = true;
 
             }
 

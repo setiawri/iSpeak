@@ -63,9 +63,31 @@
         width: 100%;
     }
 
-        /* Add some top padding to the page content to prevent sudden quick movement (as the navigation bar gets a new position at the top of the page (position:fixed and top:0) */
-        .sticky + .content {
-            padding-top: 60px;
-        }
+    .scrollbutton {
+        width: 35px;
+        height: 35px;
+        position: fixed;
+        display: none;
+        text-indent: -9999px;
+        z-index: 999999;
+    }
+
+    .scrollup {
+        bottom: 100px;
+        right: 50px;
+        background: url('/assets/img/arrowUp.png') no-repeat;
+    }
+
+    .scrolldown {
+        bottom: 50px;
+        right: 50px;
+        background: url('/assets/img/arrowDown.png') no-repeat;
+    }
+
+    /* Add some top padding to the page content to prevent sudden quick movement (as the navigation bar gets a new position at the top of the page (position:fixed and top:0) */
+    .sticky + .content {
+        padding-top: 60px;
+    }
+
 </style>
 <!--/custom Style-->

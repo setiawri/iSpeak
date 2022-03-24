@@ -81,6 +81,9 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Adjustment = new ModelMember { Name = "Adjustment", Display = "Adjustment", LogDisplay = ActivityLogsController.editDecimalFormat("Adjustment") };
 
 
+        /*
+         * Cannot move this field to PayrollPaymentItems table because many LessonSessions can point to one PayrollPaymentItem
+         */
         public Guid? PayrollPaymentItems_Id { get; set; } = null;
         public static ModelMember COL_PayrollPaymentItems_Id = new ModelMember { Name = "PayrollPaymentItems_Id" };
 

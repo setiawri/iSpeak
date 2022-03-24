@@ -124,7 +124,7 @@
 
         if (confirm("Confirm delete schedule?")) {
             showLoadingSpinner();
-            AjaxUpdate('Ajax_Delete', '@ControllerName', id, function () {
+            AjaxUpdate('Ajax_Delete', '@ControllerName', id, null, function () {
                 setTimeout(function () { performClickButton('LoadData'); }, 1000);
             });
         }

@@ -46,7 +46,7 @@
                                 <div>
                                     <h4 class="text-primary mb-2 mt-md-2">RECEIPT #@Model.No</h4>
                                     <ul class="list list-unstyled mb-0">
-                                        <li>DATE: <span class="font-weight-semibold">@string.Format("{0:dd/MM/yyyy}", TimeZoneInfo.ConvertTimeFromUtc(Model.Timestamp, TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time")))</span></li>
+                                        <li>DATE: <span class="font-weight-semibold">@string.Format("{0:dd/MM/yyyy}", Model.Timestamp)</span></li>
                                     </ul>
                                 </div>
                             </div>

@@ -1,0 +1,302 @@
+﻿@model IEnumerable<iSpeakWebApp.Models.FilesModel>
+
+@{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    string ControllerName = "Files";
+    ViewBag.SelectedNavigationMenu = "Files";
+    ViewBag.Title = "FILES";
+    ViewBag.Subtitle = "Index";
+
+}
+
+<div class="content-wrapper">
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm("Index", ControllerName, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("ParentId")
+            <!-- Form inputs -->
+            <div class="card animated bounceInLeft">
+                <div class="card-header header-elements-inline pb-1">
+                    <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mt-0 mb-2">
+                        <div class="h2 ml-2 mr-2 mb-0">
+                            @ViewBag.DirectoryTree
+                        </div>
+
+                        @if (access.Files_Add)
+                        {
+                            <div id="createDirectoryButton" class="mr-2 mb-0">
+                                <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_Directory" onclick="PopulateDirectoryModal(null, null, false)" class="btn btn-success">
+                                    <i class="icon-folder-plus2 mr-2"></i>ADD FOLDER
+                                </a>
+                            </div>
+                            <div id="uploadFileButton" class="mr-2 mb-0">
+                                <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_File" onclick="PopulateFileModal(null)" class="btn btn-success">
+                                    <i class="icon-file-plus2 mr-2"></i>ADD FILE
+                                </a>
+                            </div>
+                            <div class="mr-2 mb-0">
+                                <a href="@Url.Action("Index", ControllerName, new { ViewTrashBin = true })" class="btn btn-primary" data-toggle="popover" data-container="body" data-placement="top" data-content="VIEW TRASH BIN">
+                                    <i class="icon-bin mr-0"></i>
+                                </a>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="row mx-0">
+                        <div class="row ml-0 mr-2" style="width:150px;">
+                            <label class="mb-0">Keyword</label>
+                            <div class="input-group">
+                                <input type="text" name="FILTER_Keyword" id="FILTER_Keyword" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="ml-0 mr-2">
+                            <label class="mb-0">&nbsp;</label>
+                            <button id="LoadData" name="submitButton" type="submit" onclick="showLoadingSpinner()" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>LOAD</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover datatable pt-0">
+                            <thead>
+                                <tr>
+                                    <th style="width:300px;">Name</th>
+                                    <th class="non-searchable non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
+                                    <th style="width:150px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
+                                    <th class="non-sortable" style="width:150px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="align-top">
+                                                @if (item.Branches_Id == null)
+                                                {
+                                                    <i class="icon-star-full2 text-warning-300 mr-2" data-toggle="popover" data-container="body" data-placement="top" data-content="Visible to every branch"></i>
+                                                }
+                                                @if (item.isDirectory)
+                                                {
+                                                    <i class="icon-folder mr-2"></i> @Html.ActionLink(item.DirectoryName, "Index", ControllerName, new { No = item.No, ParentId = item.Id }, new { })
+                                                }
+                                                else
+                                                {
+                                                    <a href="@string.Format("https://drive.google.com/uc?export=download&id={0}&&No={1}", item.OnlineFileId, item.No)" target="_blank">@item.Filename</a>
+                                                }
+                                            </td>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Notes)</td>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
+                                            <td class="align-top">
+                                                <a href="javascript:void(0)" onclick="Log('@item.Id')"><i class="icon-menu6 mr-0" data-toggle="popover" data-container="body" data-placement="top" data-content="LOG"></i></a>
+                                                @if ((item.Branches_Id != null && access.Files_Edit) || (item.Branches_Id == null && access.Files_EditGlobal))
+                                                {
+                                                    if (!item.IsDeleted)
+                                                    {
+                                                        @:• <a href="javascript:void(0)" onclick="Delete('@item.Id')"><i class="icon-bin text-danger mr-0" data-toggle="popover" data-container="body" data-placement="top" data-content="<span class='text-danger font-weight-bold'><i class='icon-cross3'></i>DELETE</span>"></i></a>
+                                                    }
+                                                    if (item.isDirectory)
+                                                    {
+                                                        @:• <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_Directory" onclick="PopulateDirectoryModal('@item.Id','@item.DirectoryName','@(item.Branches_Id == null)')"><i class="icon-pencil7 mr-0" data-toggle="popover" data-container="body" data-placement="top" data-content="EDIT"></i></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        if (!item.parentIsFile && !item.IsDeleted)
+                                                        {
+                                                            @:• <a href="javascript:void(0)" data-toggle="modal" data-target="#modal_File" onclick="PopulateFileModal('@item.Id')"><i class="icon-file-upload mr-0" data-toggle="popover" data-container="body" data-placement="top" data-content="UPLOAD NEW VERSION"></i></a>
+                                                        }
+                                                        if (item.hasRevisions)
+                                                        {
+                                                            @:• <a href="@Url.Action("Index", ControllerName, new { No = item.No, ParentId = item.Id })"><i class="icon-files-empty mr-0" data-toggle="popover" data-container="body" data-placement="top" data-content="VIEW PREVIOUS VERSION"></i></a>
+                                                        }
+                                                    }
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- /form inputs -->
+
+            <!-- File form modal -->
+            <div id="modal_File" class="modal fade" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-warning">
+                            <h6 class="modal-title">FILE</h6>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <form action="#" class="form-horizontal">
+                            <div class="modal-body">
+                                <div style="display: none">
+                                    <input class="form-control" id="FileId" name="FileId" />
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-2">File</label>
+                                    <div class="col-sm-10">
+                                        <div class="input-group">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="file" name="file" />
+                                                <label class="custom-file-label" for="File" id="fileLabel">Select a file</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-2">Description</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="FileDescription" id="FileDescription" class="form-control" placeholder="Description" />
+                                    </div>
+                                </div>
+
+                                @if (access.Files_EditGlobal)
+                                {
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-sm-2">Global</label>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-check-switchery">
+                                                <label class="form-check-label">
+                                                    <input type="checkbox" id="IsGlobalFile" name="IsGlobalFile" value="true" class="form-check-input-switchery" />
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button id="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPLOADFILE" value="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPLOADFILE" name="submitButton" type="submit" onclick="showLoadingSpinner()" class="btn bg-success">UPLOAD</button>
+                                <button id="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPLOADREVISION" value="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPLOADREVISION" name="submitButton" type="submit" onclick="showLoadingSpinner()" class="btn bg-success">UPLOAD NEW VERSION</button>
+                                <button type="button" class="btn btn-warning" data-dismiss="modal">CLOSE</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- /File form modal -->
+
+            <!-- Directory form modal -->
+            <div id="modal_Directory" class="modal fade" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-warning">
+                            <h6 class="modal-title">FOLDER</h6>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <form action="#" class="form-horizontal">
+                            <div class="modal-body">
+                                <div style="display: none">
+                                    <input class="form-control" id="DirectoryId" name="DirectoryId" />
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-2">Name</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="DirectoryName" name="DirectoryName" placeholder="Name" />
+                                    </div>
+                                </div>
+
+                                @if (access.Files_EditGlobal)
+                                {
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-sm-2">Global</label>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-check-switchery">
+                                                <label class="form-check-label">
+                                                    <input type="checkbox" id="IsGlobalDirectory" name="IsGlobalDirectory" value="true" class="form-check-input-switchery" />
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button id="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_CREATEDIRECTORY" value="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_CREATEDIRECTORY" name="submitButton" type="submit" onclick="showLoadingSpinner()" class="btn bg-success">CREATE</button>
+                                <button id="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPDATEDIRECTORY" value="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPDATEDIRECTORY" name="submitButton" type="submit" onclick="showLoadingSpinner()" class="btn bg-success">UPDATE</button>
+                                <button type="button" class="btn btn-warning" data-dismiss="modal">CLOSE</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- /Directory form modal -->
+
+        }
+
+    </div>
+    <!-- /content area -->
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        setValue('ParentId', '@ViewBag.ParentId');
+    });
+
+    function applyLast() {
+    }
+
+    function Delete(id) {
+
+        if (confirm("Confirm delete file?")) {
+            showLoadingSpinner();
+            AjaxUpdate('Ajax_Update_IsDeleted', '@ControllerName', id, 'true', function () {
+                setTimeout(function () { performClickButton('LoadData'); }, 1000);
+            });
+        }
+    }
+
+    function PopulateDirectoryModal(id, directoryName, isGlobal) {
+        setModalControlToFocusOnShown('modal_Directory', 'DirectoryName');
+
+        $('#DirectoryId').val(id);
+        $('#DirectoryName').val(directoryName);
+        setSwitcheryState('IsGlobalDirectory', isGlobal);
+
+        if (id == null) {
+            setVisibility('@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_CREATEDIRECTORY', true);
+            setVisibility('@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPDATEDIRECTORY', false);
+        }
+        else {
+            setVisibility('@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_CREATEDIRECTORY', false);
+            setVisibility('@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPDATEDIRECTORY', true);
+        }
+    }
+
+    function PopulateFileModal(id) {
+        setModalControlToFocusOnShown('modal_File', 'FileDescription');
+
+        $('#file').val('');
+        $('#fileLabel').text('Select a file');
+
+        $('#FileId').val(id);
+
+        if (id == null) {
+            setVisibility('@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPLOADFILE', true);
+            setVisibility('@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPLOADREVISION', false);
+        }
+        else {
+            setVisibility('@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPLOADFILE', false);
+            setVisibility('@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPLOADREVISION', true);
+        }
+    }
+
+</script>

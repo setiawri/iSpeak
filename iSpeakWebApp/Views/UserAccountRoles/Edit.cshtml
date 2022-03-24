@@ -871,6 +871,40 @@
 
                             <hr />
 
+                            <label class="h5 mb-0">FILES</label>
+                            <div class="pl-0">
+                                <div id="Files_Div">
+                                    <button id="Files" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                    <label id="Files_Label" class="col-form-label">@Model.Files_Notes</label>
+                                </div>
+                                <div id="Files_Edit" class="input-group d-none mb-1">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.Files_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes" } })
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    @Html.CheckBoxFor(model => model.Files_View)
+                                </div>
+                                <div class="input-group-append">
+                                    @Html.LabelFor(model => model.Files_View, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.Files_Add)
+                                    </div>
+                                    @Html.LabelFor(model => model.Files_Add, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.Files_Edit)
+                                    </div>
+                                    @Html.LabelFor(model => model.Files_Edit, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.Files_EditGlobal)
+                                    </div>
+                                    @Html.LabelFor(model => model.Files_EditGlobal, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                </div>
+                            </div>
+
+                            <hr />
+
                         </fieldset>
 
                         @if (access.UserAccountRoles_Edit)
@@ -880,11 +914,11 @@
                                 <a href="@Url.Action("Index", "UserAccountRoles")" class="btn btn-warning"><i class="icon-cross2 mr-2"></i>Cancel</a>
                             </div>
 
-                            <div style="position:fixed; bottom:100px;right:30px;">
+                            @*<div style="position:fixed; bottom:100px;right:30px;">
                                 <button type="button" class="btn mb-1 mr-1 btn-lg fa-2x" style="width:70px;height:70px;" onclick="ScrollTo('submitDiv',1000); this.blur();">
                                     <span class="icon-arrow-down52 text-primary" style="font-size:28pt;"></span>
                                 </button>
-                            </div>
+                            </div>*@
                         }
                     </div>
                 </div>
