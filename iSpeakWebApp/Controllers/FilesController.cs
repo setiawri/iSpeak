@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Linq;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using iSpeakWebApp.Models;
+
 using LIBUtil;
 using LIBWebMVC;
+
+using Google.Apis.Auth.OAuth2.Web;
 
 namespace iSpeakWebApp.Controllers
 {
@@ -40,10 +45,23 @@ namespace iSpeakWebApp.Controllers
             HttpPostedFileBase File, Guid? FileId, string FileDescription, bool? IsGlobalFile, 
             Guid? DirectoryId, string DirectoryName, bool? IsGlobalDirectory)
         {
+            ActionResult actionResult = null;
             if (!string.IsNullOrWhiteSpace(submitButton))
-                Create(submitButton, ParentId, File, FileId, FileDescription, IsGlobalFile, DirectoryId, DirectoryName, IsGlobalDirectory);
+                actionResult = Create(submitButton, ParentId, File, FileId, FileDescription, IsGlobalFile, DirectoryId, DirectoryName, IsGlobalDirectory);
+            if (actionResult != null)
+                return actionResult;
 
             return RedirectToAction(nameof(Index), new { ParentId = ParentId, FILTER_Keyword = FILTER_Keyword });
+        }
+
+        //This method is required by Google Drive API
+        public ActionResult IndexAsync(CancellationToken cancellationToken)
+        {
+            AuthorizationCodeWebApp.AuthResult authorization = GoogleDriveAPIHelper.getAuthorization(this); 
+            if (authorization.Credential == null)
+                return new RedirectResult(authorization.RedirectUri);
+            else
+                return RedirectToAction(nameof(Index));
         }
 
         /* METHODS ********************************************************************************************************************************************/
@@ -69,7 +87,7 @@ namespace iSpeakWebApp.Controllers
             return Json(new { Message = "" });
         }
 
-        public void Create(string submitButton, Guid? ParentId, HttpPostedFileBase File, Guid? FileId, string FileDescription, bool? IsGlobalFile, Guid? DirectoryId, string DirectoryName, bool? IsGlobalDirectory)
+        public ActionResult Create(string submitButton, Guid? ParentId, HttpPostedFileBase File, Guid? FileId, string FileDescription, bool? IsGlobalFile, Guid? DirectoryId, string DirectoryName, bool? IsGlobalDirectory)
         {
             FilesModel model = new FilesModel();
             if (ParentId == null)
@@ -82,59 +100,62 @@ namespace iSpeakWebApp.Controllers
             else
                 model.Branches_Id = Helper.getActiveBranchId(Session);
 
-            if (submitButton == BUTTONVALUE_UPLOADFILE)
+            if (submitButton == BUTTONVALUE_UPLOADFILE || submitButton == BUTTONVALUE_UPLOADREVISION)
             {
                 if (File == null || File.ContentLength == 0)
                     UtilWebMVC.setBootboxMessage(this, "Invalid File");
                 else
                 {
-                    string OnlineFileId = GoogleDriveAPIHelper.UploadToDrive(Server, File);
-                    model.Filename = File.FileName;
-                    model.OnlineFileId = OnlineFileId;
-                    model.Notes = FileDescription;
-                    add(model);
+                    AuthorizationCodeWebApp.AuthResult authorization = GoogleDriveAPIHelper.getAuthorization(this);
+                    if (authorization.Credential == null)
+                    {
+                        UtilWebMVC.setBootboxMessage(this, "Google Login was required. Please navigate to the folder and try to upload the file again.");
+                        return RedirectToAction(nameof(IndexAsync));
+                    }
+                    else
+                    {
+                        authorization = GoogleDriveAPIHelper.checkExpiration(this, authorization);
+
+                        string OnlineFileId = GoogleDriveAPIHelper.UploadToDrive(GoogleDriveAPIHelper.GetServiceForWebApplication(authorization), File);
+                        if (GoogleDriveAPIHelper.isFileUploadSuccessful(this, OnlineFileId))
+                        {
+
+                            model.Filename = File.FileName;
+                            model.OnlineFileId = OnlineFileId;
+                            model.Notes = FileDescription;
+
+                            if (submitButton == BUTTONVALUE_UPLOADFILE)
+                                add(model);
+                            else
+                            {
+                                FilesModel originalModel = get((Guid)FileId);
+                                model.ParentId = originalModel.ParentId;
+                                add(model);
+                                originalModel.ParentId = model.Id;
+                                update(originalModel);
+                            }
+                        }
+                    }
                 }
             }
-            else if (submitButton == BUTTONVALUE_UPLOADREVISION)
-            {
-                if (File == null || File.ContentLength == 0)
-                    UtilWebMVC.setBootboxMessage(this, "Invalid File");
-                else
-                {
-                    FilesModel originalModel = get((Guid)FileId);
-
-                    string OnlineFileId = GoogleDriveAPIHelper.UploadToDrive(Server, File);
-                    model.Filename = File.FileName;
-                    model.OnlineFileId = OnlineFileId;
-                    model.ParentId = originalModel.ParentId;
-                    model.Notes = FileDescription;
-                    add(model);
-
-                    originalModel.ParentId = model.Id;
-                    update(originalModel);
-                }
-            }
-            else if (submitButton == BUTTONVALUE_CREATEDIRECTORY)
+            else if (submitButton == BUTTONVALUE_CREATEDIRECTORY || submitButton == BUTTONVALUE_UPDATEDIRECTORY)
             {
                 if (string.IsNullOrWhiteSpace(DirectoryName))
-                    UtilWebMVC.setBootboxMessage(this, "Invalid File");
+                    UtilWebMVC.setBootboxMessage(this, "Invalid Name");
                 else
                 {
                     model.DirectoryName = DirectoryName;
-                    add(model);
+                    if (submitButton == BUTTONVALUE_CREATEDIRECTORY)
+                        add(model);
+                    else
+                    {
+                        model.Id = (Guid)DirectoryId;
+                        update(model);
+                    }
                 }
             }
-            else if (submitButton == BUTTONVALUE_UPDATEDIRECTORY)
-            {
-                if (string.IsNullOrWhiteSpace(DirectoryName))
-                    UtilWebMVC.setBootboxMessage(this, "Invalid File");
-                else
-                {
-                    model.Id = (Guid)DirectoryId;
-                    model.DirectoryName = DirectoryName;
-                    update(model);
-                }
-            }
+
+            return null;
         }
 
         public void update(FilesModel modifiedModel)

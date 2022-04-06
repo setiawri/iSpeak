@@ -1,11 +1,12 @@
 ﻿using iSpeakWebApp.Models;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using System;
 using System.Collections.Generic;
-using LIBUtil;
 
-using System.Web.Mvc;
+using LIBUtil;
+using LIBWebMVC;
 
 namespace iSpeakWebApp.Controllers
 {
@@ -17,6 +18,7 @@ namespace iSpeakWebApp.Controllers
         public const string SESSION_UserAccount = "UserAccount";
         public const string SESSION_UserAccountAccess = "UserAccountAccess";
         public const string SESSION_ActiveBranches_Id = "ActiveBranches_Id";
+        public const string SESSION_OnlineToken = "OnlineToken";
         public const string SESSION_Branches_Models = "Branches_Models";
         public const string SESSION_ShowOnlyUserData = "ShowOnlyUserData";
         public const string SESSION_ConnectToLiveDatabase = "ConnectToLiveDatabase";
@@ -53,7 +55,7 @@ namespace iSpeakWebApp.Controllers
             }
             else
             {
-                if (LIBWebMVC.UtilWebMVC.hasNoFilter(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id))
+                if (UtilWebMVC.hasNoFilter(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id))
                     return View();
                 else
                 {
@@ -268,8 +270,6 @@ namespace iSpeakWebApp.Controllers
                 ModelState.AddModelError("", "Invalid confirm password");
             else
             {
-                setLoginSession(Session, model);
-
                 model.Password = HashPassword(SanitizedNewPassword);
                 model.ResetPassword = false;
                 updatePassword(model, "Password changed");
@@ -340,6 +340,14 @@ namespace iSpeakWebApp.Controllers
                 return getUserAccount(Session).Id;
         }
 
+        public static object get_OnlineToken(HttpSessionStateBase Session)
+        {
+            if (getUserAccount(Session) == null)
+                return null;
+            else
+                return getUserAccount(Session).Id;
+        }
+
         public static bool getShowOnlyUserData(HttpSessionStateBase Session)
         {
             return (bool)Session[SESSION_ShowOnlyUserData];
@@ -372,8 +380,8 @@ namespace iSpeakWebApp.Controllers
         {
             return getUserAccount(Session).ResetPassword;
         }
-        
-        public static void setLoginSession(HttpSessionStateBase Session, UserAccountsModel model) { setLoginSession(Session, model, false); }
+
+        public static void setLoginSession(HttpSessionStateBase Session, UserAccountsModel model) { setLoginSession(Session, model, null); }
         public static void setLoginSession(HttpSessionStateBase Session, UserAccountsModel model, bool? ConnectToLiveDatabase)
         {
             if (model != null)
@@ -382,7 +390,7 @@ namespace iSpeakWebApp.Controllers
                 Session[SESSION_ActiveBranches_Id] = model.Branches_Id;
                 Session[SESSION_Branches_Models] = BranchesController.get(1, model.Branches);
                 Session[SESSION_UserAccountAccess] = UserAccountRolesController.getAccesses(model);
-                Session[SESSION_ConnectToLiveDatabase] = ConnectToLiveDatabase;
+                if (ConnectToLiveDatabase != null) Session[SESSION_ConnectToLiveDatabase] = ConnectToLiveDatabase;
 
                 Session[SESSION_ShowOnlyUserData] = true;
                 string ShowOnlyOwnUserData = SettingsController.get().ShowOnlyOwnUserData;
@@ -400,7 +408,7 @@ namespace iSpeakWebApp.Controllers
 
         public static void updateLoginSession(HttpSessionStateBase Session)
         {
-            setLoginSession(Session, (UserAccountsModel)Session[SESSION_UserAccount]);
+            setLoginSession(Session, new UserAccountsController().get(getUserAccount(Session).Id));
         }
 
         public ActionResult LogOff()
@@ -573,7 +581,7 @@ namespace iSpeakWebApp.Controllers
 
         public void updatePassword(UserAccountsModel model, string log)
         {
-            LIBWebMVC.WebDBConnection.Update(db.Database, "UserAccounts",
+            WebDBConnection.Update(db.Database, "UserAccounts",
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Password.Name, model.Password),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_ResetPassword.Name, model.ResetPassword)
@@ -583,13 +591,21 @@ namespace iSpeakWebApp.Controllers
             db.SaveChanges();
         }
 
+        public static void update_OnlineToken(DBContext db, string Id, string OnlineToken)
+        {
+            WebDBConnection.Update(db.Database, "UserAccounts",
+                    DBConnection.getSqlParameter(UserAccountsModel.COL_Id.Name, new Guid(Id)),
+                    DBConnection.getSqlParameter(UserAccountsModel.COL_OnlineToken.Name, OnlineToken)
+                );
+        }
+
         public void update(UserAccountsModel model, string log)
         {
             if(model.Roles_List != null) model.Roles = string.Join(",", model.Roles_List.ToArray());
             if(model.Interest_List != null) model.Interest = string.Join(",", model.Interest_List.ToArray());
             if (model.Branches_List != null) model.Branches = string.Join(",", model.Branches_List.ToArray());
 
-            LIBWebMVC.WebDBConnection.Update(db.Database, "UserAccounts",
+            WebDBConnection.Update(db.Database, "UserAccounts",
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Username.Name, model.Username),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Fullname.Name, model.Fullname),
@@ -607,6 +623,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(UserAccountsModel.COL_PromotionEvents_Id.Name, model.PromotionEvents_Id),
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Roles.Name, model.Roles)
             );
+
+            updateLoginSession(Session);
 
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
             db.SaveChanges();

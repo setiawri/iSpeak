@@ -92,6 +92,8 @@ namespace iSpeakWebApp.Models
         public Guid? PromotionEvents_Id { get; set; }
         public static ModelMember COL_PromotionEvents_Id = new ModelMember { Name = "PromotionEvents_Id", Display = "Promotion Event", LogDisplay = ActivityLogsController.editStringFormat("Promotion Event") };
 
+        public string OnlineToken { get; set; }
+        public static ModelMember COL_OnlineToken = new ModelMember { Name = "OnlineToken" };
 
         /******************************************************************************************************************************************************/
 

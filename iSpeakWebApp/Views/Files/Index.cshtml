@@ -137,53 +137,51 @@
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
 
-                        <form action="#" class="form-horizontal">
-                            <div class="modal-body">
-                                <div style="display: none">
-                                    <input class="form-control" id="FileId" name="FileId" />
-                                </div>
+                        <div class="modal-body">
+                            <div style="display: none">
+                                <input class="form-control" id="FileId" name="FileId" />
+                            </div>
 
-                                <div class="form-group row">
-                                    <label class="col-form-label col-sm-2">File</label>
-                                    <div class="col-sm-10">
-                                        <div class="input-group">
-                                            <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="file" name="file" />
-                                                <label class="custom-file-label" for="File" id="fileLabel">Select a file</label>
-                                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2">File</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="file" name="file" />
+                                            <label class="custom-file-label" for="File" id="fileLabel">Select a file</label>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="form-group row">
-                                    <label class="col-form-label col-sm-2">Description</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" name="FileDescription" id="FileDescription" class="form-control" placeholder="Description" />
-                                    </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2">Description</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="FileDescription" id="FileDescription" class="form-control" placeholder="Description" />
                                 </div>
+                            </div>
 
-                                @if (access.Files_EditGlobal)
-                                {
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-sm-2">Global</label>
-                                        <div class="col-sm-10">
-                                            <div class="form-check form-check-switchery">
-                                                <label class="form-check-label">
-                                                    <input type="checkbox" id="IsGlobalFile" name="IsGlobalFile" value="true" class="form-check-input-switchery" />
-                                                </label>
-                                            </div>
+                            @if (access.Files_EditGlobal)
+                            {
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-2">Global</label>
+                                    <div class="col-sm-10">
+                                        <div class="form-check form-check-switchery">
+                                            <label class="form-check-label">
+                                                <input type="checkbox" id="IsGlobalFile" name="IsGlobalFile" value="true" class="form-check-input-switchery" />
+                                            </label>
                                         </div>
                                     </div>
-                                }
+                                </div>
+                            }
 
-                            </div>
+                        </div>
 
-                            <div class="modal-footer">
-                                <button id="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPLOADFILE" value="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPLOADFILE" name="submitButton" type="submit" onclick="showLoadingSpinner()" class="btn bg-success">UPLOAD</button>
-                                <button id="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPLOADREVISION" value="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPLOADREVISION" name="submitButton" type="submit" onclick="showLoadingSpinner()" class="btn bg-success">UPLOAD NEW VERSION</button>
-                                <button type="button" class="btn btn-warning" data-dismiss="modal">CLOSE</button>
-                            </div>
-                        </form>
+                        <div class="modal-footer">
+                            <button id="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPLOADFILE" value="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPLOADFILE" name="submitButton" type="submit" onclick="showLoadingSpinner()" class="btn bg-success">UPLOAD</button>
+                            <button id="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPLOADREVISION" value="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPLOADREVISION" name="submitButton" type="submit" onclick="showLoadingSpinner()" class="btn bg-success">UPLOAD NEW VERSION</button>
+                            <button type="button" class="btn btn-warning" data-dismiss="modal">CLOSE</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -198,41 +196,39 @@
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
 
-                        <form action="#" class="form-horizontal">
-                            <div class="modal-body">
-                                <div style="display: none">
-                                    <input class="form-control" id="DirectoryId" name="DirectoryId" />
-                                </div>
+                        <div class="modal-body">
+                            <div style="display: none">
+                                <input class="form-control" id="DirectoryId" name="DirectoryId" />
+                            </div>
 
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2">Name</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="DirectoryName" name="DirectoryName" placeholder="Name" />
+                                </div>
+                            </div>
+
+                            @if (access.Files_EditGlobal)
+                            {
                                 <div class="form-group row">
-                                    <label class="col-form-label col-sm-2">Name</label>
+                                    <label class="col-form-label col-sm-2">Global</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="DirectoryName" name="DirectoryName" placeholder="Name" />
-                                    </div>
-                                </div>
-
-                                @if (access.Files_EditGlobal)
-                                {
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-sm-2">Global</label>
-                                        <div class="col-sm-10">
-                                            <div class="form-check form-check-switchery">
-                                                <label class="form-check-label">
-                                                    <input type="checkbox" id="IsGlobalDirectory" name="IsGlobalDirectory" value="true" class="form-check-input-switchery" />
-                                                </label>
-                                            </div>
+                                        <div class="form-check form-check-switchery">
+                                            <label class="form-check-label">
+                                                <input type="checkbox" id="IsGlobalDirectory" name="IsGlobalDirectory" value="true" class="form-check-input-switchery" />
+                                            </label>
                                         </div>
                                     </div>
-                                }
+                                </div>
+                            }
 
-                            </div>
+                        </div>
 
-                            <div class="modal-footer">
-                                <button id="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_CREATEDIRECTORY" value="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_CREATEDIRECTORY" name="submitButton" type="submit" onclick="showLoadingSpinner()" class="btn bg-success">CREATE</button>
-                                <button id="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPDATEDIRECTORY" value="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPDATEDIRECTORY" name="submitButton" type="submit" onclick="showLoadingSpinner()" class="btn bg-success">UPDATE</button>
-                                <button type="button" class="btn btn-warning" data-dismiss="modal">CLOSE</button>
-                            </div>
-                        </form>
+                        <div class="modal-footer">
+                            <button id="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_CREATEDIRECTORY" value="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_CREATEDIRECTORY" name="submitButton" type="submit" onclick="showLoadingSpinner()" class="btn bg-success">CREATE</button>
+                            <button id="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPDATEDIRECTORY" value="@iSpeakWebApp.Controllers.FilesController.BUTTONVALUE_UPDATEDIRECTORY" name="submitButton" type="submit" onclick="showLoadingSpinner()" class="btn bg-success">UPDATE</button>
+                            <button type="button" class="btn btn-warning" data-dismiss="modal">CLOSE</button>
+                        </div>
                     </div>
                 </div>
             </div>

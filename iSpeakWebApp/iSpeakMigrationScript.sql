@@ -1,27 +1,12 @@
 
----- CLEANUP ASPNET USER TABLES ==============================================================================================
-
---DROP TABLE __MigrationHistory;
---GO
---DROP TABLE AspNetRoles
---GO
---DROP TABLE AspNetUserClaims
---GO
---DROP TABLE AspNetUserLogins
---GO
---DROP TABLE AspNetUsers
---GO
---DROP TABLE AspNetUserRoles
---GO
---DROP TABLE RoleAccessMenu
---GO
-
---DROP TABLE Logs;
---GO
---DROP TABLE MasterMenu;
---GO
-
 ---- FILES ===================================================================================================================
+
+--CREATE TABLE [dbo].[GoogleTokens]
+--(
+--	[Id] VARCHAR(50) NOT NULL PRIMARY KEY, 
+--    [token] NVARCHAR(MAX) NOT NULL
+--)
+--GO
 
 --CREATE TABLE [dbo].[Files]
 --(
@@ -52,8 +37,29 @@
 --ALTER TABLE UserAccountRoles ADD Files_EditGlobal bit default 0 not null;
 --GO
 
----- CLEANUP =================================================================================================================
+---- CLEANUP ASPNET USER TABLES ==============================================================================================
 
+--DROP TABLE __MigrationHistory;
+--GO
+--DROP TABLE AspNetRoles
+--GO
+--DROP TABLE AspNetUserClaims
+--GO
+--DROP TABLE AspNetUserLogins
+--GO
+--DROP TABLE AspNetUsers
+--GO
+--DROP TABLE AspNetUserRoles
+--GO
+--DROP TABLE RoleAccessMenu
+--GO
+
+--DROP TABLE Logs;
+--GO
+--DROP TABLE MasterMenu;
+--GO
+
+---- CLEANUP =================================================================================================================
 
 --if not exists (select 1 from information_schema.columns where column_name = 'ReferenceId' and table_name = 'ActivityLogs' and table_schema='dbo') 
 --	exec sp_rename 'ActivityLogs.ReffId' , 'ReferenceId', 'column'
