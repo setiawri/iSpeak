@@ -205,7 +205,7 @@ namespace iSpeakWebApp.Controllers
                         ",
                         log,
                         model.Description,
-                        model.LessonPackages_Id != null ? string.Format("<br/><strong>Available Hours:</strong> {0:N0}", model.SessionHours_Remaining) : "",
+                        model.LessonPackages_Id != null ? string.Format("<br/><strong>Available Hours:</strong> {0:N2}", model.SessionHours_Remaining) : "",
                         !string.IsNullOrWhiteSpace(model.VouchersName) ? string.Format("<br/>Vouchers: {0}", model.VouchersName) : "",
                         !string.IsNullOrWhiteSpace(model.Notes) ? string.Format("<br/>Notes: {0}", model.Notes) : "",
                         model.Qty,

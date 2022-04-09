@@ -268,7 +268,7 @@ namespace iSpeakWebApp.Controllers
 
         public JsonResult Ajax_Update_Cancelled(Guid id, string notes)
         {
-            update_CancelNotes(id, notes);
+            update_Cancelled(id, notes);
             return Json(new { Message = "" });
         }
 
@@ -374,7 +374,7 @@ namespace iSpeakWebApp.Controllers
             db.SaveChanges();
         }
 
-        public void update_CancelNotes(Guid Id, string CancelNotes)
+        public void update_Cancelled(Guid Id, string CancelNotes)
         {
             WebDBConnection.Update(db.Database, "Payments",
                     DBConnection.getSqlParameter(PaymentsModel.COL_Id.Name, Id),
@@ -382,6 +382,20 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(PaymentsModel.COL_CancelNotes.Name, CancelNotes)
                 );
             ActivityLogsController.AddEditLog(db, Session, Id, string.Format(PaymentsModel.COL_CancelNotes.LogDisplay, CancelNotes));
+
+            //Adjust sale invoice due amount
+            List<PaymentItemsModel> paymentItems = PaymentItemsController.get(null, Id);
+            List<SaleInvoicesModel> saleInvoices;
+            foreach (PaymentItemsModel paymentitem in paymentItems)
+            {
+                saleInvoices = SaleInvoicesController.get(Session, paymentitem.ReferenceId.ToString());
+                if(saleInvoices.Count > 0)
+                    WebDBConnection.Update(db.Database, "SaleInvoices",
+                            DBConnection.getSqlParameter(SaleInvoicesModel.COL_Id.Name, saleInvoices[0].Id),
+                            DBConnection.getSqlParameter(SaleInvoicesModel.COL_Due.Name, saleInvoices[0].Due + paymentitem.Amount)
+                        );
+            }
+
             db.SaveChanges();
         }
 

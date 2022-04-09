@@ -84,8 +84,9 @@
                                     <tbody>
                                         @foreach (var item in SaleInvoiceItems)
                                         {
-                                            <tr>
-                                                <td class="align-top">@Html.DisplayFor(modelItem => item.SaleInvoices_No)</td>
+                                            <tr>                                                
+                                                
+                                                <td class="align-top">@Html.ActionLink(item.SaleInvoices_No, "Index", "SaleInvoices", new { FILTER_Keyword = item.SaleInvoices_No }, new { @target = "_blank" })</td>
                                                 <td class="align-top">
                                                     @Html.DisplayFor(modelItem => item.Description)
                                                     <br /><strong>Name: </strong>@Html.DisplayFor(modelItem => item.Customer_UserAccounts_Name)

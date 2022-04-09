@@ -123,11 +123,11 @@
                                 <tr>
                                     <th class="d-none">@Html.DisplayNameFor(model => model.InitialRowNumber)</th>
                                     <th style="width:50px;">@Html.DisplayNameFor(model => model.No)</th>
-                                    <th class="non-sortable" style="width:150px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
+                                    <th class="non-sortable px-0" style="width:150px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
                                     <th>@Html.DisplayNameFor(model => model.Customer_UserAccounts_Id)</th>
-                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Amount)</th>
-                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Due)</th>
-                                    <th class="non-searchable non-sortable" style="width:0px;"></th>
+                                    <th class="text-right pl-0" style="width:120px;">@Html.DisplayNameFor(model => model.Amount)</th>
+                                    <th class="text-right non-sortable px-0" style="width:120px;">@Html.DisplayNameFor(model => model.Due)</th>
+                                    <th class="non-searchable non-sortable px-0" style="width:0px;"></th>
                                     @if (access.SaleInvoices_Approve)
                                     {
                                         <th class="non-searchable non-sortable" style="width:0px;">Approved</th>
@@ -149,7 +149,7 @@
                                         <tr>
                                             <td class="d-none">@Html.DisplayFor(modelItem => item.InitialRowNumber)</td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.No)</td>
-                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
+                                            <td class="align-top px-0">@Html.DisplayFor(modelItem => item.Timestamp)</td>
                                             <td class="align-top">
                                                 <div>@Html.ActionLink(item.Customer_UserAccounts_Name, "Index", "UserAccounts", new { FILTER_Keyword = @item.Customer_UserAccounts_No }, new { @target="_blank"})</div>
                                                 @if (item.Cancelled)
@@ -161,14 +161,14 @@
                                                     <div><strong>Notes: </strong>@Html.DisplayFor(modelItem => item.Notes)</div>
                                                 }
                                             </td>
-                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.Amount)</td>
-                                            <td class="align-top text-right pr-1">
+                                            <td class="align-top text-right pl-0">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                            <td class="align-top text-right px-0">
                                                 @if (item.Due > 0 && !item.Cancelled)
                                                 {
                                                     @Html.DisplayFor(modelItem => item.Due)
                                                 }
                                             </td>
-                                            <td class="align-top pl-0">
+                                            <td class="align-top pl-1 pr-0">
                                                 @if (item.Due > 0 && !item.Cancelled)
                                                 {
                                                     <input type="checkbox" class="due-checkbox" id="@item.Id" />
