@@ -80,7 +80,8 @@
       <HintPath>..\packages\Google.Apis.Auth.1.56.0\lib\net461\Google.Apis.Auth.PlatformServices.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis.Core, Version=1.56.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.Core.1.56.0\lib\net45\Google.Apis.Core.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Google.Apis.Core.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis.Drive.v3, Version=1.55.0.2601, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.Drive.v3.1.55.0.2601\lib\net45\Google.Apis.Drive.v3.dll</HintPath>
@@ -540,6 +541,9 @@
       <Project>{344268d2-6387-4ad2-88f5-dc743733abfc}</Project>
       <Name>LIBWebMVC</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
