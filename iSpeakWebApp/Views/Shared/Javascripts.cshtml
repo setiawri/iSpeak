@@ -22,8 +22,8 @@
     function setDatePeriodFilter(idFilter, idMonth, idYear, value) {
         if ($('#' + idMonth) != null && $('#' + idYear) != null) {
             var date = new Date(value);
-            setDDLSelectedValue('FILTER_DatePeriod_Month', (date.getMonth() + 1).toString());
-            setDDLSelectedValue('FILTER_DatePeriod_Year', date.getFullYear().toString());
+            setDDLSelectedValue(idMonth, (date.getMonth() + 1).toString());
+            setDDLSelectedValue(idYear, date.getFullYear().toString());
             updateFILTER_DatePeriod(idFilter, idMonth, idYear);
         }
     }
