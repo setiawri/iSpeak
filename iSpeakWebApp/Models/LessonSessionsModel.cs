@@ -37,12 +37,12 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_SessionHours = new ModelMember { Name = "SessionHours", Display = "Hours", LogDisplay = ActivityLogsController.editDecimalFormat("Hours") };
 
 
-        public string Review { get; set; }
+        public string Review { get; set; } = null;
         public static ModelMember COL_Review = new ModelMember { Name = "Review", Display = "Review", LogDisplay = ActivityLogsController.editStringFormat("Review") };
 
 
         [Display(Name = "Internal Notes")]
-        public string InternalNotes { get; set; }
+        public string InternalNotes { get; set; } = null;
         public static ModelMember COL_InternalNotes = new ModelMember { Name = "InternalNotes", Display = "Internal Notes", LogDisplay = ActivityLogsController.editStringFormat("Internal Notes") };
 
 
