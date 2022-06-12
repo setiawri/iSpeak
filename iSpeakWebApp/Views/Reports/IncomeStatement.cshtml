@@ -1,0 +1,143 @@
+﻿@model IEnumerable<iSpeakWebApp.Models.IncomeStatementModel>
+
+@{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    string ControllerName = "Reports";
+    ViewBag.SelectedNavigationMenu = "Internal";
+    ViewBag.Title = "INCOME STATEMENT";
+    ViewBag.Subtitle = "INCOME STATEMENT";
+}
+
+<div class="content-wrapper">
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm("IncomeStatement", ControllerName, FormMethod.Post))
+        {
+            <!-- Form inputs -->
+            <div class="card animated bounceInLeft">
+                <div class="card-header header-elements-inline pb-1">
+                    <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
+                    @*<i class="icon-info22 text-primary ml-2" data-container="body" data-toggle="popover" data-placement="left" data-content="Content"></i>*@
+                </div>
+                <div class="card-body">
+
+                    <div class="row mx-0">
+
+                        <div class="row ml-0 mr-2" style="width:150px;">
+                            <label class="mb-0">From</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        @Html.CheckBox("FILTER_chkDateFrom", true, new { @class = "form-check-input check-styled", @checked = "checked" })
+                                    </div>
+                                </div>
+                                @Html.Editor("FILTER_DateFrom", new { htmlAttributes = new { @class = "form-control daterange-picker", @checked = "checked" } })
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:150px;">
+                            <label class="mb-0">To</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        @Html.CheckBox("FILTER_chkDateTo", true, new { @class = "form-check-input check-styled" })
+                                    </div>
+                                </div>
+                                @Html.Editor("FILTER_DateTo", new { htmlAttributes = new { @class = "form-control daterange-picker" } })
+                            </div>
+                        </div>
+
+                        <div class="ml-0 mr-2">
+                            <label class="mb-0">&nbsp;</label>
+                            <button type="submit" id="LoadData" onclick="showLoadingSpinner()" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>LOAD</button>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-2">
+                        <label class="h1 mb-0">Revenue</label>
+                        <canvas id="myChart"></canvas>
+                    </div>
+
+                    <div class="mt-2 table-responsive">
+                        <table class="table table-hover datatable">
+                            <thead>
+                                <tr>
+                                    <th>@Html.DisplayNameFor(model => model.MonthYear)</th>
+                                    <th class="text-right" style="width:100px;">@Html.DisplayNameFor(model => model.Revenue)</th>
+                                    <th class="text-right" style="width:100px;">@Html.DisplayNameFor(model => model.Expenses)</th>
+                                    <th class="text-right" style="width:100px;">@Html.DisplayNameFor(model => model.Profit)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.MonthYear)</td>
+                                            <td class="text-right">@Html.DisplayFor(modelItem => item.Revenue)</td>
+                                            <td class="text-right">@Html.DisplayFor(modelItem => item.Expenses)</td>
+                                            <td class="text-right">@Html.DisplayFor(modelItem => item.Profit)</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                
+            </div>
+            <!-- /form inputs -->
+        }
+
+    </div>
+    <!-- /content area -->
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        setDateRangePicker('FILTER_DateFrom', '@string.Format("{0:yyyy/MM/dd}", DateTime.Today.AddYears(-3))');
+        setDateRangePicker('FILTER_DateTo', '@string.Format("{0:yyyy/MM/dd}", DateTime.Today)');
+
+        generateChart();
+    });
+
+    function applyLast() {
+    }
+
+    function generateChart() {
+        var datas = '@ViewBag.Data'.replace(/&quot;/g, '"')
+        var label = JSON.parse(datas).Labels;
+        var datasetLabels =JSON.parse(datas).DatasetLabels;
+        var datasetDatas =JSON.parse(datas).DatasetDatas;
+        var dataSets = [];
+        for (var i = 0; i < datasetDatas.length; i++) {
+            var dataSet = {
+                label: datasetLabels[i],
+                backgroundColor: GetRandomColor(),
+                borderColor: 'black',
+                borderWidth: 1,
+                data: datasetDatas[i]
+            };
+            dataSets.push(dataSet);
+        }
+        var ctx = document.getElementById("myChart");
+        new Chart(ctx, {
+            type: 'bar',
+            data: { labels: label, datasets: dataSets },
+            options: {
+                responsive: true,
+                title: { display: false, text: '' },
+                legend: { display: true, position: "top" },
+                scales: {
+                    yAxes: { ticks: { beginAtZero: true } }
+                }
+            }
+        });
+    }
+
+</script>

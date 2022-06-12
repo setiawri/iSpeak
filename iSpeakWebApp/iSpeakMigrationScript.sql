@@ -1,3 +1,11 @@
+---- REPORTS =================================================================================================================
+
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IncomeStatement_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+ALTER TABLE UserAccountRoles ADD IncomeStatement_Notes varchar(MAX) null;
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IncomeStatement_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+ALTER TABLE UserAccountRoles ADD IncomeStatement_ViewProfit bit default 0 not null;
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IncomeStatement_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+ALTER TABLE UserAccountRoles ADD IncomeStatement_View bit default 0 not null;
 
 ---- FILES ===================================================================================================================
 
@@ -25,16 +33,16 @@
 --)
 
 ----Files
---IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Files_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
---ALTER TABLE UserAccountRoles ADD Files_Notes varchar(MAX) null;
---IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Files_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
---ALTER TABLE UserAccountRoles ADD Files_Add bit default 0 not null;
---IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Files_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
---ALTER TABLE UserAccountRoles ADD Files_View bit default 0 not null;
---IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Files_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
---ALTER TABLE UserAccountRoles ADD Files_Edit bit default 0 not null;
---IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Files_EditGlobal' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
---ALTER TABLE UserAccountRoles ADD Files_EditGlobal bit default 0 not null;
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IncomeStatement_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--ALTER TABLE UserAccountRoles ADD IncomeStatement_Notes varchar(MAX) null;
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IncomeStatement_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--ALTER TABLE UserAccountRoles ADD IncomeStatement_Add bit default 0 not null;
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IncomeStatement_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--ALTER TABLE UserAccountRoles ADD IncomeStatement_View bit default 0 not null;
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IncomeStatement_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--ALTER TABLE UserAccountRoles ADD IncomeStatement_Edit bit default 0 not null;
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IncomeStatement_EditGlobal' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--ALTER TABLE UserAccountRoles ADD IncomeStatement_EditGlobal bit default 0 not null;
 --GO
 
 ---- CLEANUP ASPNET USER TABLES ==============================================================================================

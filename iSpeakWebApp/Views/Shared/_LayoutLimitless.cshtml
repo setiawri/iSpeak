@@ -144,6 +144,10 @@
                                 }
                             </div>
                         </div>
+                        @if (access.IncomeStatement_View)
+                        {
+                            <a href="@Url.Action("IncomeStatement", "Reports", new { rss=1 })" class="dropdown-item">Income Statement</a>
+                        }
                         @if (false)
                         {
                             <a href="@Url.Action("Index", "Expenses", new { rss=1 })" class="dropdown-item">Expenses</a>
@@ -151,10 +155,6 @@
                         @if (false)
                         {
                             <a href="@Url.Action("NewStudent", "Reports", new { rss=1 })" class="dropdown-item">New Student</a>
-                        }
-                        @if (false)
-                        {
-                            <a href="@Url.Action("ProfitLoss", "Reports", new { rss=1 })" class="dropdown-item">Profit &amp; Loss</a>
                         }
                         @if (false)
                         {

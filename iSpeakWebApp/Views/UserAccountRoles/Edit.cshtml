@@ -905,6 +905,31 @@
 
                             <hr />
 
+                            <label class="h5 mb-0">INCOME STATEMENT</label>
+                            <div class="pl-0">
+                                <div id="IncomeStatement_Div">
+                                    <button id="Files" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                    <label id="IncomeStatement_Label" class="col-form-label">@Model.IncomeStatement_Notes</label>
+                                </div>
+                                <div id="IncomeStatement_Edit" class="input-group d-none mb-1">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.IncomeStatement_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes" } })
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    @Html.CheckBoxFor(model => model.IncomeStatement_View)
+                                </div>
+                                <div class="input-group-append">
+                                    @Html.LabelFor(model => model.IncomeStatement_View, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.IncomeStatement_ViewProfit)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+
                         </fieldset>
 
                         @if (access.UserAccountRoles_Edit)

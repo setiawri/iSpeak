@@ -276,6 +276,11 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.Files_View, model.Files_View, UserAccountRolesModel.COL_Files_View.LogDisplay);
                     log = Helper.append(log, originalModel.Files_EditGlobal, model.Files_EditGlobal, UserAccountRolesModel.COL_Files_EditGlobal.LogDisplay);
 
+                    //Income Statement
+                    log = Helper.append(log, originalModel.IncomeStatement_Notes, model.IncomeStatement_Notes, UserAccountRolesModel.COL_IncomeStatement_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.IncomeStatement_View, model.IncomeStatement_View, UserAccountRolesModel.COL_IncomeStatement_View.LogDisplay);
+                    log = Helper.append(log, originalModel.IncomeStatement_ViewProfit, model.IncomeStatement_ViewProfit, UserAccountRolesModel.COL_IncomeStatement_ViewProfit.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -467,6 +472,9 @@ namespace iSpeakWebApp.Controllers
                 if (item.Files_View) model.Files_View = true;
                 if (item.Files_EditGlobal) model.Files_EditGlobal = true;
 
+                //Income Statement
+                if (item.IncomeStatement_View) model.IncomeStatement_View = true;
+                if (item.IncomeStatement_ViewProfit) model.IncomeStatement_ViewProfit = true;
             }
 
             return model;

@@ -193,6 +193,7 @@
     <Compile Include="Controllers\ActivityLogsController.cs" />
     <Compile Include="Controllers\LandingPageController.cs" />
     <Compile Include="Controllers\PayrollPaymentItemsController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\PayrollPaymentsController.cs" />
     <Compile Include="Controllers\HourlyRatesController.cs" />
     <Compile Include="Controllers\LessonSessionsController.cs" />
@@ -232,6 +233,7 @@
     <Compile Include="Models\HourlyRatesModel.cs" />
     <Compile Include="Models\PaymentItemsModel.cs" />
     <Compile Include="Models\LessonSessionsModel.cs" />
+    <Compile Include="Models\IncomeStatementModel.cs" />
     <Compile Include="Models\PayrollsModel.cs" />
     <Compile Include="Models\PayrollPaymentsModel.cs" />
     <Compile Include="Models\PayrollPaymentItemsModel.cs" />
@@ -292,6 +294,7 @@
     <Content Include="assets\css\landingpage\owl.theme.default.min.css" />
     <Content Include="assets\css\landingpage\style.css" />
     <Content Include="assets\css\layout.min.css" />
+    <Content Include="assets\font\Roboto.css" />
     <Content Include="assets\img\arrowDown.png" />
     <Content Include="assets\img\arrowUp.png" />
     <Content Include="assets\img\happy_bday.jpg" />
@@ -314,6 +317,7 @@
     <Content Include="assets\js\landingpage\popper.min.js" />
     <Content Include="assets\js\main\bootstrap.bundle.min.js" />
     <Content Include="assets\js\main\jquery.min.js" />
+    <Content Include="assets\js\plugins\charts\chart.js" />
     <Content Include="assets\js\plugins\forms\number\jquery.number.min.js" />
     <Content Include="assets\js\plugins\forms\selects\select2.min.js" />
     <Content Include="assets\js\plugins\forms\styling\switch.min.js" />
@@ -459,10 +463,10 @@
     <Content Include="Scripts\jquery-3.6.0.min.map" />
     <Content Include="Views\Files\Index.cshtml" />
     <Content Include="WebLive.config" />
+    <Content Include="Views\Reports\IncomeStatement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="assets\font\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\css\icons\fontawesome\fonts\fontawesome-webfont.eot" />

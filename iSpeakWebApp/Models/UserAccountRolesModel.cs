@@ -18,7 +18,7 @@ namespace iSpeakWebApp.Models
         public string Notes { get; set; }
         public static ModelMember COL_Notes = new ModelMember { Name = "Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Notes") };
 
-        /* REMINDERS ******************************************************************************************************************************************/
+        /* REMINDERS ******************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string Reminders_Notes { get; set; }
@@ -37,7 +37,7 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Reminders_Edit = new ModelMember { Name = "Reminders_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Reminders Edit") };
 
 
-        /* BIRTHDAYS ******************************************************************************************************************************************/
+        /* BIRTHDAYS ******************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string Birthdays_Notes { get; set; }
@@ -48,7 +48,7 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Birthdays_View = new ModelMember { Name = "Birthdays_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("Birthdays View") };
 
 
-        /* USER ACCOUNTS **************************************************************************************************************************************/
+        /* USER ACCOUNTS **************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string UserAccounts_Notes { get; set; }
@@ -113,7 +113,7 @@ namespace iSpeakWebApp.Models
         public bool Settings_Edit { get; set; }
         public static ModelMember COL_Settings_Edit = new ModelMember { Name = "Settings_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Settings Roles Edit") };
 
-        /* BRANCHES *******************************************************************************************************************************************/
+        /* BRANCHES *******************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string Branches_Notes { get; set; }
@@ -132,7 +132,7 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Branches_Edit = new ModelMember { Name = "Branches_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Branches Edit") };
 
 
-        /* PROMOTION EVENTS ***********************************************************************************************************************************/
+        /* PROMOTION EVENTS ***********************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string PromotionEvents_Notes { get; set; }
@@ -169,7 +169,7 @@ namespace iSpeakWebApp.Models
         public bool PettyCashRecordsCategories_Edit { get; set; }
         public static ModelMember COL_PettyCashRecordsCategories_Edit = new ModelMember { Name = "PettyCashRecordsCategories_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("PettyCashRecordsCategories Edit") };
 
-        /* LANGUAGES ******************************************************************************************************************************************/
+        /* LANGUAGES ******************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string Languages_Notes { get; set; }
@@ -187,7 +187,7 @@ namespace iSpeakWebApp.Models
         public bool Languages_Edit { get; set; }
         public static ModelMember COL_Languages_Edit = new ModelMember { Name = "Languages_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Languages Edit") };
 
-        /* LESSON TYPES ***************************************************************************************************************************************/
+        /* LESSON TYPES ***************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string LessonTypes_Notes { get; set; }
@@ -205,7 +205,7 @@ namespace iSpeakWebApp.Models
         public bool LessonTypes_Edit { get; set; }
         public static ModelMember COL_LessonTypes_Edit = new ModelMember { Name = "LessonTypes_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("LessonTypes Edit") };
 
-        /* LESSON PACKAGES ************************************************************************************************************************************/
+        /* LESSON PACKAGES ************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string LessonPackages_Notes { get; set; }
@@ -223,7 +223,7 @@ namespace iSpeakWebApp.Models
         public bool LessonPackages_Edit { get; set; }
         public static ModelMember COL_LessonPackages_Edit = new ModelMember { Name = "LessonPackages_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("LessonPackages Edit") };
 
-        /* CONSIGNMENTS ***************************************************************************************************************************************/
+        /* CONSIGNMENTS ***************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string Consignments_Notes { get; set; }
@@ -241,7 +241,7 @@ namespace iSpeakWebApp.Models
         public bool Consignments_Edit { get; set; }
         public static ModelMember COL_Consignments_Edit = new ModelMember { Name = "Consignments_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Consignments Edit") };
 
-        /* VOUCHERS *******************************************************************************************************************************************/
+        /* VOUCHERS *******************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string Vouchers_Notes { get; set; }
@@ -259,7 +259,7 @@ namespace iSpeakWebApp.Models
         public bool Vouchers_Edit { get; set; }
         public static ModelMember COL_Vouchers_Edit = new ModelMember { Name = "Vouchers_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Vouchers Edit") };
 
-        /* SUPPLIERS ******************************************************************************************************************************************/
+        /* SUPPLIERS ******************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string Suppliers_Notes { get; set; }
@@ -277,7 +277,7 @@ namespace iSpeakWebApp.Models
         public bool Suppliers_Edit { get; set; }
         public static ModelMember COL_Suppliers_Edit = new ModelMember { Name = "Suppliers_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Suppliers Edit") };
 
-        /* UNITS **********************************************************************************************************************************************/
+        /* UNITS **********************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string Units_Notes { get; set; }
@@ -313,7 +313,7 @@ namespace iSpeakWebApp.Models
         public bool ExpenseCategories_Edit { get; set; }
         public static ModelMember COL_ExpenseCategories_Edit = new ModelMember { Name = "ExpenseCategories_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("ExpenseCategories Edit") };
 
-        /* SERVICES *******************************************************************************************************************************************/
+        /* SERVICES *******************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string Services_Notes { get; set; }
@@ -331,7 +331,7 @@ namespace iSpeakWebApp.Models
         public bool Services_Edit { get; set; }
         public static ModelMember COL_Services_Edit = new ModelMember { Name = "Services_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Services Edit") };
 
-        /* PRODUCTS *******************************************************************************************************************************************/
+        /* PRODUCTS *******************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string Products_Notes { get; set; }
@@ -349,7 +349,7 @@ namespace iSpeakWebApp.Models
         public bool Products_Edit { get; set; }
         public static ModelMember COL_Products_Edit = new ModelMember { Name = "Products_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Products Edit") };
 
-        /* SALE INVOICES **************************************************************************************************************************************/
+        /* SALE INVOICES **************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string SaleInvoices_Notes { get; set; }
@@ -375,7 +375,7 @@ namespace iSpeakWebApp.Models
         public bool SaleInvoices_TutorTravelCost_View { get; set; }
         public static ModelMember COL_SaleInvoices_TutorTravelCost_View = new ModelMember { Name = "SaleInvoices_TutorTravelCost_View", Display = "View Tutor Travel Cost", LogDisplay = ActivityLogsController.editBooleanFormat("SaleInvoices Tutor Travel Cost View") };
 
-        /* SALE PAYMENTS **************************************************************************************************************************************/
+        /* SALE PAYMENTS **************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string Payments_Notes { get; set; }
@@ -397,7 +397,7 @@ namespace iSpeakWebApp.Models
         public bool Payments_Approve { get; set; }
         public static ModelMember COL_Payments_Approve = new ModelMember { Name = "Payments_Approve", Display = "Approve", LogDisplay = ActivityLogsController.editBooleanFormat("Payments Approve") };
 
-        /* PETTY CASH *****************************************************************************************************************************************/
+        /* PETTY CASH *****************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string PettyCashRecords_Notes { get; set; }
@@ -419,7 +419,7 @@ namespace iSpeakWebApp.Models
         public bool PettyCashRecords_Approve { get; set; }
         public static ModelMember COL_PettyCashRecords_Approve = new ModelMember { Name = "PettyCashRecords_Approve", Display = "Approve", LogDisplay = ActivityLogsController.editBooleanFormat("PettyCashRecords Approve") };
 
-        /* INVENTORY ******************************************************************************************************************************************/
+        /* INVENTORY ******************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string Inventory_Notes { get; set; }
@@ -437,7 +437,7 @@ namespace iSpeakWebApp.Models
         public bool Inventory_Edit { get; set; }
         public static ModelMember COL_Inventory_Edit = new ModelMember { Name = "Inventory_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Inventory Edit") };
 
-        /* LESSON SESSIONS ************************************************************************************************************************************/
+        /* LESSON SESSIONS ************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string LessonSessions_Notes { get; set; }
@@ -463,7 +463,7 @@ namespace iSpeakWebApp.Models
         public bool LessonSessions_InternalNotes_View { get; set; }
         public static ModelMember COL_LessonSessions_InternalNotes_View = new ModelMember { Name = "LessonSessions_InternalNotes_View", Display = "View Internal Notes", LogDisplay = ActivityLogsController.editBooleanFormat("Lesson Sessions Internal Notes View") };
 
-        /* HOURLY RATES ***************************************************************************************************************************************/
+        /* HOURLY RATES ***************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string HourlyRates_Notes { get; set; }
@@ -481,7 +481,7 @@ namespace iSpeakWebApp.Models
         public bool HourlyRates_Edit { get; set; }
         public static ModelMember COL_HourlyRates_Edit = new ModelMember { Name = "HourlyRates_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("HourlyRates Edit") };
 
-        /* PAYROLL PAYMENTS ***********************************************************************************************************************************/
+        /* PAYROLL PAYMENTS ***********************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string PayrollPayments_Notes { get; set; }
@@ -503,7 +503,7 @@ namespace iSpeakWebApp.Models
         public bool PayrollPayments_Approve { get; set; }
         public static ModelMember COL_PayrollPayments_Approve = new ModelMember { Name = "PayrollPayments_Approve", Display = "Approve", LogDisplay = ActivityLogsController.editBooleanFormat("PayrollPayments Approve") };
 
-        /* TUTOR SCHEDULES ************************************************************************************************************************************/
+        /* TUTOR SCHEDULES ************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string TutorSchedules_Notes { get; set; }
@@ -539,7 +539,7 @@ namespace iSpeakWebApp.Models
         public bool StudentSchedules_Edit { get; set; }
         public static ModelMember COL_StudentSchedules_Edit = new ModelMember { Name = "StudentSchedules_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("StudentSchedules Edit") };
 
-        /* FILES **********************************************************************************************************************************************/
+        /* FILES **********************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]
         public string Files_Notes { get; set; }
@@ -561,7 +561,21 @@ namespace iSpeakWebApp.Models
         public bool Files_EditGlobal { get; set; }
         public static ModelMember COL_Files_EditGlobal = new ModelMember { Name = "Files_EditGlobal", Display = "Edit Global", LogDisplay = ActivityLogsController.editBooleanFormat("Files Edit Global") };
 
-        /******************************************************************************************************************************************************/
+        /* INCOME STATEMENT ***********************************************************************************************************************************************************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string IncomeStatement_Notes { get; set; }
+        public static ModelMember COL_IncomeStatement_Notes = new ModelMember { Name = "IncomeStatement_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Income Statement Notes") };
+
+        [Display(Name = "View")]
+        public bool IncomeStatement_View { get; set; }
+        public static ModelMember COL_IncomeStatement_View = new ModelMember { Name = "IncomeStatement_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("Income Statement View") };
+
+        [Display(Name = "View Profit")]
+        public bool IncomeStatement_ViewProfit { get; set; }
+        public static ModelMember COL_IncomeStatement_ViewProfit = new ModelMember { Name = "IncomeStatement_ViewProfit", Display = "View Profit", LogDisplay = ActivityLogsController.editBooleanFormat("Income Statement View Profit") };
+
+        /******************************************************************************************************************************************************************************************************************************************************************************************************/
 
     }
 }
