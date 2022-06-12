@@ -86,7 +86,7 @@ namespace iSpeakWebApp.Controllers
             {
                 row = dt.NewRow();
                 row[MONTHCOLUMN] = monthNames[i];
-                foreach (IncomeStatementModel item in models.Where(x => x.Month == i).ToList())
+                foreach (IncomeStatementModel item in models.Where(x => x.Month == i+1).ToList())
                     row[item.Year] = item.Revenue;
                 foreach (DataColumn column in dt.Columns)
                     if (row[column] == DBNull.Value)

@@ -925,6 +925,7 @@
                                     <div class="input-group-text">
                                         @Html.CheckBoxFor(model => model.IncomeStatement_ViewProfit)
                                     </div>
+                                    @Html.LabelFor(model => model.IncomeStatement_ViewProfit, htmlAttributes: new { @class = "input-group-text mr-2" })
                                 </div>
                             </div>
 
@@ -939,11 +940,11 @@
                                 <a href="@Url.Action("Index", "UserAccountRoles")" class="btn btn-warning"><i class="icon-cross2 mr-2"></i>Cancel</a>
                             </div>
 
-                            @*<div style="position:fixed; bottom:100px;right:30px;">
+                            <div style="position:fixed; bottom:100px;right:30px;">
                                 <button type="button" class="btn mb-1 mr-1 btn-lg fa-2x" style="width:70px;height:70px;" onclick="ScrollTo('submitDiv',1000); this.blur();">
                                     <span class="icon-arrow-down52 text-primary" style="font-size:28pt;"></span>
                                 </button>
-                            </div>*@
+                            </div>
                         }
                     </div>
                 </div>

@@ -1,11 +1,11 @@
 ---- REPORTS =================================================================================================================
 
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IncomeStatement_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
-ALTER TABLE UserAccountRoles ADD IncomeStatement_Notes varchar(MAX) null;
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IncomeStatement_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
-ALTER TABLE UserAccountRoles ADD IncomeStatement_ViewProfit bit default 0 not null;
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IncomeStatement_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
-ALTER TABLE UserAccountRoles ADD IncomeStatement_View bit default 0 not null;
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IncomeStatement_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--ALTER TABLE UserAccountRoles ADD IncomeStatement_Notes varchar(MAX) null;
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IncomeStatement_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--ALTER TABLE UserAccountRoles ADD IncomeStatement_ViewProfit bit default 0 not null;
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IncomeStatement_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--ALTER TABLE UserAccountRoles ADD IncomeStatement_View bit default 0 not null;
 
 ---- FILES ===================================================================================================================
 

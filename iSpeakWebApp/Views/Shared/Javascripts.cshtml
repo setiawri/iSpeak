@@ -650,15 +650,15 @@
     }
 
     // DATATABLES PLUGIN ===========================================================================================================================================
-    var scrollToTopOnPaginationClick = 0;
+    var topOfDataTable = 0;
     var datatable = $('.datatable').DataTable({
         bJQueryUI: true,
         sPaginationType: "full_numbers",
         fnDrawCallback: function (o) {
-            if (o._iDisplayStart != scrollToTopOnPaginationClick) {
-                var targetOffset = $('#scrollToTopOnPaginationClick').offset().top;
+            if (o._iDisplayStart != topOfDataTable) {
+                var targetOffset = $('.topOfDataTable').offset().top;
                 $('html,body').animate({ scrollTop: targetOffset }, 500);
-                scrollToTopOnPaginationClick = o._iDisplayStart;
+                topOfDataTable = o._iDisplayStart;
             }
         },
         autoWidth: false,
