@@ -266,6 +266,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Advertisements\LanguageClub\2022070901.jpg" />
     <Content Include="assets\css\animate.min.css" />
     <Content Include="assets\css\bootstrap-datetimepicker.css" />
     <Content Include="assets\css\bootstrap.min.css" />

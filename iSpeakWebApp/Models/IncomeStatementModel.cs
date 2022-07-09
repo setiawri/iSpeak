@@ -24,20 +24,21 @@ namespace iSpeakWebApp.Models
 
 
         [DisplayFormat(DataFormatString = "{0:N0}")]
-        public long Revenue { get; set; } = 0;
+        public long Revenues { get; set; } = 0;
         public static ModelMember COL_Revenue = new ModelMember { Name = "Revenue" };
 
 
-        [DisplayFormat(DataFormatString = "{0:N2}")]
-        public decimal Expenses { get; set; } = 0;
+        [DisplayFormat(DataFormatString = "{0:N0}")]
+        public long Expenses { get; set; } = 0;
         public static ModelMember COL_Expenses = new ModelMember { Name = "Expenses" };
 
 
-        [DisplayFormat(DataFormatString = "{0:N2}")]
-        public decimal Profit { get; set; } = 0;
+        [DisplayFormat(DataFormatString = "{0:N0}")]
+        public long Profits { get; set; } = 0;
         public static ModelMember COL_Profit = new ModelMember { Name = "Profit" };
 
 
+        [Display(Name = "%Profit")]
         [DisplayFormat(DataFormatString = "{0:N2}")]
         public decimal ProfitPercent { get; set; } = 0;
         public static ModelMember COL_ProfitPercent = new ModelMember { Name = "ProfitPercent" };

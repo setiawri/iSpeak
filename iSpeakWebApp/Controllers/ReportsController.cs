@@ -17,6 +17,7 @@ namespace iSpeakWebApp.Controllers
     {
         public string[] Labels { get; set; }
         public string[] DatasetLabels { get; set; }
+        public List<string> DatasetStackName { get; set; }
         public List<decimal[]> DatasetDatas { get; set; }
     }
 
@@ -74,52 +75,103 @@ namespace iSpeakWebApp.Controllers
         {
             const string MONTHCOLUMN = "Month";
 
-            DataTable dt = new DataTable();
-            dt.Columns.Add(new DataColumn(MONTHCOLUMN, typeof(string)));
+            DataTable dtRevenues = new DataTable();
+            DataTable dtExpenses = new DataTable();
+            DataTable dtProfits = new DataTable();
+            dtRevenues.Columns.Add(new DataColumn(MONTHCOLUMN, typeof(string)));
+            dtExpenses.Columns.Add(new DataColumn(MONTHCOLUMN, typeof(string)));
+            dtProfits.Columns.Add(new DataColumn(MONTHCOLUMN, typeof(string)));
             foreach (IncomeStatementModel model in models)
-                if (!dt.Columns.Contains(model.Year))
-                    dt.Columns.Add(new DataColumn(model.Year, typeof(decimal)));
+                if (!dtRevenues.Columns.Contains(model.Year))
+                {
+                    dtRevenues.Columns.Add(new DataColumn(model.Year, typeof(decimal)));
+                    dtExpenses.Columns.Add(new DataColumn(model.Year, typeof(decimal)));
+                    dtProfits.Columns.Add(new DataColumn(model.Year, typeof(decimal)));
+                }
 
             string[] monthNames = System.Globalization.DateTimeFormatInfo.CurrentInfo.MonthNames;
-            DataRow row;
-            for(int i = 0; i < 12; i++)
+            DataRow rowRevenues;
+            DataRow rowExpenses;
+            DataRow rowProfits;
+            for (int i = 0; i < 12; i++)
             {
-                row = dt.NewRow();
-                row[MONTHCOLUMN] = monthNames[i];
+                rowRevenues = dtRevenues.NewRow();
+                rowExpenses = dtExpenses.NewRow();
+                rowProfits = dtProfits.NewRow();
+
+                //set months in the first column
+                rowRevenues[MONTHCOLUMN] = monthNames[i];
+                rowExpenses[MONTHCOLUMN] = monthNames[i];
+                rowProfits[MONTHCOLUMN] = monthNames[i];
+
+                //set values
                 foreach (IncomeStatementModel item in models.Where(x => x.Month == i+1).ToList())
-                    row[item.Year] = item.Revenue;
-                foreach (DataColumn column in dt.Columns)
-                    if (row[column] == DBNull.Value)
-                        row[column] = 0;
-                dt.Rows.Add(row);
+                {
+                    rowRevenues[item.Year] = item.Revenues;
+                    rowExpenses[item.Year] = item.Expenses;
+                    rowProfits[item.Year] = item.Profits;
+                }
+
+                //set empty cells to 0
+                foreach (DataColumn column in dtRevenues.Columns)
+                    if (rowRevenues[column] == DBNull.Value)
+                        rowRevenues[column] = 0;
+                foreach (DataColumn column in dtExpenses.Columns)
+                    if (rowExpenses[column] == DBNull.Value)
+                        rowExpenses[column] = 0;
+                foreach (DataColumn column in dtProfits.Columns)
+                    if (rowProfits[column] == DBNull.Value)
+                        rowProfits[column] = 0;
+
+                //add row to tables
+                dtRevenues.Rows.Add(rowRevenues);
+                dtExpenses.Rows.Add(rowExpenses);
+                dtProfits.Rows.Add(rowProfits);
             }
 
             ChartData chartData = new ChartData();
 
-            string[] Labels = (dt.AsEnumerable().Select(p => p.Field<string>(MONTHCOLUMN))).Distinct().ToArray();
+            //month labels in X axis
+            string[] Labels = (dtRevenues.AsEnumerable().Select(p => p.Field<string>(MONTHCOLUMN))).Distinct().ToArray();
             chartData.Labels = Labels;
 
+            //legends
             List<string> datasetLabels = new List<string>();
-            for (int i = 1; i < dt.Columns.Count; i++)
+            for (int i = 1; i < dtExpenses.Columns.Count; i++)
             {
-                datasetLabels.Add(dt.Columns[i].ColumnName);
+                datasetLabels.Add(dtExpenses.Columns[i].ColumnName + " Expenses");
+                datasetLabels.Add(dtRevenues.Columns[i].ColumnName + " Profits");
             }
             chartData.DatasetLabels = datasetLabels.ToArray();
 
+            //data
+            List<string> datasetStackName = new List<string>();
             List<decimal[]> datasetDatas = new List<decimal[]>();
-            for (int i = 0; i < chartData.DatasetLabels.Length; i++)
+            List<decimal> data;
+            for (int i = 0; i < dtExpenses.Columns.Count - 1; i++)
             {
-                List<decimal> data = new List<decimal>();
+                data = new List<decimal>();
                 for (int j = 0; j < Labels.Length; j++)
                 {
-                    decimal amount = (dt.AsEnumerable().Where(p => p.Field<string>(MONTHCOLUMN) == Labels[j])
-                        .Select(p => p.Field<Decimal>(chartData.DatasetLabels[i]))).FirstOrDefault();
+                    decimal amount = (dtExpenses.AsEnumerable().Where(p => p.Field<string>(MONTHCOLUMN) == Labels[j]).Select(p => p.Field<Decimal>(dtExpenses.Columns[i + 1].ColumnName))).FirstOrDefault();
                     data.Add(amount);
                 }
                 datasetDatas.Add(data.ToArray());
-            }
+                datasetStackName.Add(datasetLabels[i]);
 
+                data = new List<decimal>();
+                for (int j = 0; j < Labels.Length; j++)
+                {
+                    //use profit amount because chart is stacked with expense. Revenue = profit + expense
+                    decimal amount = (dtProfits.AsEnumerable().Where(p => p.Field<string>(MONTHCOLUMN) == Labels[j]).Select(p => p.Field<Decimal>(dtExpenses.Columns[i + 1].ColumnName))).FirstOrDefault();
+                    data.Add(amount);
+                }
+                datasetDatas.Add(data.ToArray());
+                datasetStackName.Add(datasetLabels[i]);
+            }
             chartData.DatasetDatas = datasetDatas;
+            chartData.DatasetStackName = datasetStackName;
+
             return JsonConvert.SerializeObject(chartData);
         }
 
@@ -134,27 +186,43 @@ namespace iSpeakWebApp.Controllers
                 FILTER_DateTo = null;
 
             return new DBContext().Database.SqlQuery<IncomeStatementModel>(@"
-						SELECT	summarytable.MonthYear as MonthYear,
-								SUBSTRING(summarytable.MonthYear, 0, 5) AS [Year],
-								CAST(SUBSTRING(summarytable.MonthYear, 6, 2) AS INT) AS [Month],
-								CAST(SUM(summarytable.Revenue) AS BIGINT) AS Revenue,
-								CAST(SUM(summarytable.Expenses) AS DECIMAL) AS Expenses, 
-								CAST(SUM(summarytable.Profit) AS DECIMAL) AS Profit,
-								CAST((COALESCE(SUM(summarytable.Profit), 0) / IIF(SUM(summarytable.Expenses) = 0, 1, SUM(summarytable.Expenses)) * 100) AS DECIMAL) AS ProfitPercent
-						FROM (
-							SELECT 
-								CAST(YEAR(SaleInvoices.Timestamp) AS VARCHAR(4)) + '-' + (SELECT RIGHT('00' + CAST(MONTH(SaleInvoices.Timestamp) AS VARCHAR(2)),2)) AS MonthYear,
-								SaleInvoices.Amount AS Revenue,
-								0.0 AS Expenses,
-								0.0 AS Profit
-							FROM SaleInvoices 
-							WHERE 1=1
-								AND SaleInvoices.Cancelled = 0
-								AND (@FILTER_DateFrom IS NULL OR SaleInvoices.Timestamp >= @FILTER_DateFrom)
-								AND (@FILTER_DateTo IS NULL OR SaleInvoices.Timestamp <= @FILTER_DateTo)
-						) summarytable
-						GROUP BY summarytable.MonthYear
-						ORDER BY summarytable.MonthYear ASC
+						SELECT Revenues.*,
+							SUBSTRING(Revenues.MonthYear, 0, 5) AS [Year],
+							CAST(SUBSTRING(Revenues.MonthYear, 6, 2) AS INT) AS [Month],
+							CAST(COALESCE(Revenues.Amount, 0) AS BIGINT) AS Revenues,
+							CAST(COALESCE(Expenses.Amount, 0) AS BIGINT) AS Expenses,
+							CAST(( (CAST(COALESCE(Revenues.Amount, 0) AS FLOAT) - COALESCE(Expenses.Amount, 0)) ) AS BIGINT) AS Profits,
+							CAST(( (CAST(COALESCE(Revenues.Amount, 0) AS FLOAT) - COALESCE(Expenses.Amount, 0)) / IIF(COALESCE(Revenues.Amount, 0) = 0, 1, COALESCE(Revenues.Amount, 0)) * 100) AS DECIMAL(5,2)) AS ProfitPercent
+						FROM (SELECT Summary.MonthYear as MonthYear, CAST(SUM(Summary.Amount) AS BIGINT) AS Amount
+								FROM (
+									SELECT 
+										CAST(YEAR(SaleInvoices.Timestamp) AS VARCHAR(4)) + '-' + (SELECT RIGHT('00' + CAST(MONTH(SaleInvoices.Timestamp) AS VARCHAR(2)),2)) AS MonthYear,
+										SaleInvoices.Amount AS Amount,
+										0.0 AS Profit
+									FROM SaleInvoices 
+									WHERE 1=1
+										AND SaleInvoices.Cancelled = 0
+										AND (@FILTER_DateFrom IS NULL OR SaleInvoices.Timestamp >= @FILTER_DateFrom)
+										AND (@FILTER_DateTo IS NULL OR SaleInvoices.Timestamp <= @FILTER_DateTo)
+								) Summary
+								GROUP BY Summary.MonthYear
+							) Revenues
+							LEFT JOIN (
+								SELECT Summary.MonthYear as MonthYear, CAST(SUM(Summary.Amount) AS BIGINT) AS Amount
+								FROM (
+									SELECT 
+										CAST(YEAR(PayrollPaymentItems.Timestamp) AS VARCHAR(4)) + '-' + (SELECT RIGHT('00' + CAST(MONTH(PayrollPaymentItems.Timestamp) AS VARCHAR(2)),2)) AS MonthYear,
+										PayrollPaymentItems.Amount AS Amount
+									FROM PayrollPaymentItems 
+									WHERE 1=1
+										AND PayrollPaymentItems.CancelNotes IS NULL
+										AND PayrollPaymentItems.Timestamp IS NOT NULL
+										AND (@FILTER_DateFrom IS NULL OR PayrollPaymentItems.Timestamp >= @FILTER_DateFrom)
+										AND (@FILTER_DateTo IS NULL OR PayrollPaymentItems.Timestamp <= @FILTER_DateTo)
+								) Summary
+								GROUP BY Summary.MonthYear
+							) Expenses ON Expenses.MonthYear = Revenues.MonthYear
+						ORDER BY Revenues.MonthYear ASC
                     ",
                     DBConnection.getSqlParameter("FILTER_DateFrom", FILTER_DateFrom),
                     DBConnection.getSqlParameter("FILTER_DateTo", Util.getAsEndDate(FILTER_DateTo))
