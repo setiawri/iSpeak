@@ -23,6 +23,38 @@
     <link href="~/assets/css/landingpage/aos.css" rel="stylesheet" />
     <!-- MAIN CSS -->
     <link href="~/assets/css/landingpage/style.css" rel="stylesheet" />
+
+    <style>
+        /* Display Image Full Width */
+        .imgbox {
+            display: grid;
+            width: 100%;
+        }
+        .center-fit {
+            max-width: 100%;
+            max-height: 100vh;
+            margin: auto;
+        }
+
+        /* Display Multiple Images in Full Width row */
+        .multipleImageBox {
+            white-space: nowrap;
+            display: table;
+            max-width: 100%;
+            margin: auto;
+        }
+        .multipleImageBox div {
+            vertical-align: middle;
+            display: table-cell;
+            padding: 0 5px;
+            text-align:center;
+        }
+        .multipleImageBox div img {
+            max-width: 100%;
+        }
+
+    </style>
+
 </head>
 <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
 
@@ -78,6 +110,15 @@
                 </div>
             </div>
         </header>
+
+        <div class="imgbox">
+            <img class="center-fit" src="@Url.Content("~/Advertisements/2022070101.jpg")">
+        </div>
+
+        <div class="multipleImageBox" style="margin-top: 10px;">
+            <div><img src="@Url.Content("~/Advertisements/2022071001.jpeg")"></div>
+            <div><img src="@Url.Content("~/Advertisements/2022071002.jpeg")"></div>
+        </div>
 
         @{Html.RenderAction("Article2022060101", "Articles");}
 

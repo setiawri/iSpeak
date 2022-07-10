@@ -269,7 +269,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ArticlesAssets\Article2022060101\Article202206010101.jpg" />
+    <Content Include="Advertisements\2022070101.jpg" />
+    <Content Include="Advertisements\2022071001.jpeg" />
+    <Content Include="Advertisements\2022071002.jpeg" />
     <Content Include="assets\css\animate.min.css" />
     <Content Include="assets\css\bootstrap-datetimepicker.css" />
     <Content Include="assets\css\bootstrap.min.css" />
@@ -475,6 +477,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="ArticlesAssets\Article2022060101\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\css\icons\fontawesome\fonts\fontawesome-webfont.eot" />
