@@ -269,6 +269,12 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.StudentSchedules_Edit, model.StudentSchedules_Edit, UserAccountRolesModel.COL_StudentSchedules_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.StudentSchedules_View, model.StudentSchedules_View, UserAccountRolesModel.COL_StudentSchedules_View.LogDisplay);
 
+                    //ClubSchedules
+                    log = Helper.append(log, originalModel.ClubSchedules_Notes, model.ClubSchedules_Notes, UserAccountRolesModel.COL_ClubSchedules_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.ClubSchedules_Add, model.ClubSchedules_Add, UserAccountRolesModel.COL_ClubSchedules_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.ClubSchedules_Edit, model.ClubSchedules_Edit, UserAccountRolesModel.COL_ClubSchedules_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.ClubSchedules_View, model.ClubSchedules_View, UserAccountRolesModel.COL_ClubSchedules_View.LogDisplay);
+
                     //Files
                     log = Helper.append(log, originalModel.Files_Notes, model.Files_Notes, UserAccountRolesModel.COL_Files_Notes.LogDisplay);
                     log = Helper.append(log, originalModel.Files_Add, model.Files_Add, UserAccountRolesModel.COL_Files_Add.LogDisplay);
@@ -465,6 +471,11 @@ namespace iSpeakWebApp.Controllers
                 if (item.StudentSchedules_Add) model.StudentSchedules_Add = true;
                 if (item.StudentSchedules_Edit) model.StudentSchedules_Edit = true;
                 if (item.StudentSchedules_View) model.StudentSchedules_View = true;
+
+                //ClubSchedules
+                if (item.ClubSchedules_Add) model.ClubSchedules_Add = true;
+                if (item.ClubSchedules_Edit) model.ClubSchedules_Edit = true;
+                if (item.ClubSchedules_View) model.ClubSchedules_View = true;
 
                 //Files
                 if (item.Files_Add) model.Files_Add = true;

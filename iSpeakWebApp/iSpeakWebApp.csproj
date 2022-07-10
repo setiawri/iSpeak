@@ -209,6 +209,7 @@
     <Compile Include="Controllers\ConsignmentsController.cs" />
     <Compile Include="Controllers\ExpenseCategoriesController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
+    <Compile Include="Controllers\ClubSchedulesController.cs" />
     <Compile Include="Controllers\StudentSchedulesController.cs" />
     <Compile Include="Controllers\TutorSchedulesController.cs" />
     <Compile Include="Controllers\UnitsController.cs" />
@@ -247,6 +248,7 @@
     <Compile Include="Models\ConsignmentsModel.cs" />
     <Compile Include="Models\ExpenseCategoriesModel.cs" />
     <Compile Include="Models\ProductsModel.cs" />
+    <Compile Include="Models\ClubSchedulesModel.cs" />
     <Compile Include="Models\StudentSchedulesModel.cs" />
     <Compile Include="Models\TutorSchedulesModel.cs" />
     <Compile Include="Models\ServicesModel.cs" />
@@ -467,6 +469,9 @@
     <Content Include="WebLive.config" />
     <Content Include="Views\Reports\IncomeStatement.cshtml" />
     <Content Include="Views\Articles\Article2022060101.cshtml" />
+    <Content Include="Views\ClubSchedules\Create.cshtml" />
+    <Content Include="Views\ClubSchedules\Edit.cshtml" />
+    <Content Include="Views\ClubSchedules\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

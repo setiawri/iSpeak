@@ -94,6 +94,10 @@
                         {
                             <a href="@Url.Action("Index", "StudentSchedules", new { rss = 1 })" class="dropdown-item">Student</a>
                         }
+                        @if (access.ClubSchedules_View)
+                        {
+                            <a href="@Url.Action("Index", "ClubSchedules", new { rss = 1 })" class="dropdown-item">The Club</a>
+                        }
                     </div>
                 </li>
                 @if (access.LessonSessions_View)

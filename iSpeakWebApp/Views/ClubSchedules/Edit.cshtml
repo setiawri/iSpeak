@@ -1,0 +1,136 @@
+﻿@model iSpeakWebApp.Models.ClubSchedulesModel
+@using iSpeakWebApp.Models
+@using iSpeakWebApp.Controllers
+
+@{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    string ControllerName = "ClubSchedules";
+    ViewBag.SelectedNavigationMenu = "Schedules";
+    ViewBag.Title = "STUDENT SCHEDULES";
+    ViewBag.Subtitle = "Edit";
+
+}
+
+<div class="content-wrapper">
+
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm("Edit", ControllerName, FormMethod.Post, new { id = "targetForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.LessonPackages_Name)
+            <!-- Form inputs -->
+            <div class="card">
+                <div class="card-header header-elements-inline">
+                    <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
+                </div>
+                <div class="card-body">
+                    <fieldset class="mb-3">
+                        <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Subtitle</legend>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.LessonPackages_Id, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
+                            <div class="col-lg-4">
+                                <select class="form-control" id="Tutor_UserAccounts_Id" name="Tutor_UserAccounts_Id"></select>
+                                @Html.ValidationMessage("Tutor_UserAccounts_Id", "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-1 required">Schedule</label>
+                            <div class="col-lg-4">
+                                <div class="row ml-0">
+                                    <div style="width:135px;">
+                                        @Html.EnumDropDownListFor(model => model.DayOfWeek, new { @class = "form-control select2" })
+                                    </div>
+                                    <div class="ml-1">
+                                        <div class="input-group">
+                                            <span class="input-group-prepend">
+                                                <span class="input-group-text">Start</span>
+                                            </span>
+                                            <input type="text" class="form-control anytime-picker" id="StartTime" name="StartTime" style="width:80px;">
+                                        </div>
+                                    </div>
+                                    <div class="ml-1">
+                                        <div class="input-group">
+                                            <span class="input-group-prepend">
+                                                <span class="input-group-text">End</span>
+                                            </span>
+                                            <input type="text" class="form-control anytime-picker" id="EndTime" name="EndTime" style="width:80px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                @Html.ValidationMessageFor(model => model.DayOfWeek, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                            <div class="col-lg-4">
+                                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                            <div class="col-lg-4">
+                                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    </fieldset>
+
+                    @if (access.ClubSchedules_Add)
+                    {
+                        <div>
+                            <button type="submit" onclick="" class="btn btn-primary"><i class="icon-paperplane mr-2"></i>Submit</button>
+                            <a href="javascript:void(0)" onclick="Action('Index', '@ControllerName')" class="btn btn-warning">Cancel<i class="icon-cross2 ml-2"></i></a>
+                        </div>
+                    }
+                </div>
+            </div>
+            <!-- /form inputs -->
+        }
+    </div>
+    <!-- /content area -->
+
+</div>
+
+<script type="text/javascript">
+
+    var InitialSaleInvoiceItemIdLoad;
+
+    $(document).ready(function () {
+
+        if ('@Model.LessonPackages_Id' != emptyGuid()) {
+            var $newOption = $("<option selected='selected'></option>").val('@Model.'').text('@Model.LessonPackages_Name');
+            $('#Tutor_UserAccounts_Id').append($newOption).trigger('change');
+        }
+
+        $('#StartTime').val('@string.Format("{0:HH:mm}", Model.StartTime)');
+        $('#EndTime').val('@string.Format("{0:HH:mm}", Model.EndTime)');
+    });
+
+    function applyLast() {
+    }
+
+    $('#targetForm').submit(function (e) {
+
+        if ($('#LessonPackages_Id').val() == null) {
+            showMessage('Please select Lesson Pacage', 'LessonPackages_Id');
+        } else if ($('#StartTime').val() >= $('#EndTime').val()) {
+            showMessage('Start Time cannot be the same or later than End Time', 'StartTime');
+        } else {
+            showLoadingSpinner();
+            $('#LessonPackages_Name').val(getDDLSelectedText('LessonPackages_Id'));
+            return true;
+        }
+
+        return false;
+    });
+
+</script>

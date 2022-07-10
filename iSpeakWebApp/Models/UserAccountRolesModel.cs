@@ -539,6 +539,24 @@ namespace iSpeakWebApp.Models
         public bool StudentSchedules_Edit { get; set; }
         public static ModelMember COL_StudentSchedules_Edit = new ModelMember { Name = "StudentSchedules_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("StudentSchedules Edit") };
 
+        /* CLUB SCHEDULES *************************************************************************************************************************************************************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string ClubSchedules_Notes { get; set; }
+        public static ModelMember COL_ClubSchedules_Notes = new ModelMember { Name = "ClubSchedules_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("ClubSchedules Notes") };
+
+        [Display(Name = "Add")]
+        public bool ClubSchedules_Add { get; set; }
+        public static ModelMember COL_ClubSchedules_Add = new ModelMember { Name = "ClubSchedules_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("ClubSchedules Add") };
+
+        [Display(Name = "View")]
+        public bool ClubSchedules_View { get; set; }
+        public static ModelMember COL_ClubSchedules_View = new ModelMember { Name = "ClubSchedules_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("ClubSchedules View") };
+
+        [Display(Name = "Edit")]
+        public bool ClubSchedules_Edit { get; set; }
+        public static ModelMember COL_ClubSchedules_Edit = new ModelMember { Name = "ClubSchedules_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("ClubSchedules Edit") };
+
         /* FILES **********************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]

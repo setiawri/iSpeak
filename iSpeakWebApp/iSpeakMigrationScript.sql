@@ -1,10 +1,14 @@
 ---- CLUB SCHEDULES ==========================================================================================================
 
+DROP TABLE ClubSchedules;
+GO
 CREATE TABLE [dbo].[ClubSchedules]
 (
 	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
     [Description] VARCHAR(MAX) NOT NULL, 
     [LessonPackages_Id] UNIQUEIDENTIFIER NOT NULL, 
+    [Languages_Id] UNIQUEIDENTIFIER NOT NULL, 
+    [Branches_Id] UNIQUEIDENTIFIER NULL,
     [DayOfWeek] TINYINT NOT NULL DEFAULT 0, 
     [StartTime] DATETIME NOT NULL, 
     [EndTime] DATETIME NOT NULL, 
@@ -12,8 +16,19 @@ CREATE TABLE [dbo].[ClubSchedules]
     [Active] BIT NOT NULL DEFAULT 1, 
     [Notes] VARCHAR(MAX) NULL
 )
+GO
 
-
+	--ClubSchedules
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubSchedules_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD ClubSchedules_Notes varchar(MAX) null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubSchedules_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD ClubSchedules_Add bit default 0 not null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubSchedules_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD ClubSchedules_View bit default 0 not null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubSchedules_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD ClubSchedules_Edit bit default 0 not null;
+	GO
+	
 ---- REPORTS =================================================================================================================
 
 --IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IncomeStatement_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 

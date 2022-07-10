@@ -68,7 +68,7 @@ namespace iSpeakWebApp.Controllers
             if (DayOfWeek != null) model.DayOfWeek = (DayOfWeekEnum)DayOfWeek;
             if (!string.IsNullOrEmpty(StartTime))
             {
-                model.StartTime = standardizeTime(StartTime);
+                model.StartTime = Util.standardizeTimeToIgnoreDate(StartTime);
                 model.EndTime = model.StartTime.AddHours(1);
             }
             return View(model);
@@ -82,13 +82,13 @@ namespace iSpeakWebApp.Controllers
             if (ModelState.IsValid)
             {
                 parseLessonLocation(ref model);
-                standardizeTime(model);
+                standardizeTimeToIgnoreDate(model);
                 if (isExists(null, model.Tutor_UserAccounts_Id, model.Student_UserAccounts_Id, model.DayOfWeek, model.StartTime, model.EndTime))
                     ModelState.AddModelError(StudentSchedulesModel.COL_DayOfWeek.Name, "Ada bentrok waktu dengan jadwal murid atau tutor");
                 else
                 {
                     add(model);
-                    return RedirectToAction(nameof(Index), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_UserAccounts_Name, FILTER_Custom = FILTER_UserAccounts_Name });
+                    return RedirectToAction(nameof(Index), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_UserAccounts_Name = FILTER_UserAccounts_Name, FILTER_Custom = FILTER_UserAccounts_Name });
                 }
             }
 
@@ -124,7 +124,7 @@ namespace iSpeakWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                standardizeTime(modifiedModel);
+                standardizeTimeToIgnoreDate(modifiedModel);
                 if (isExists(modifiedModel.Id, modifiedModel.Tutor_UserAccounts_Id, modifiedModel.Student_UserAccounts_Id, modifiedModel.DayOfWeek, modifiedModel.StartTime, modifiedModel.EndTime))
                     ModelState.AddModelError(StudentSchedulesModel.COL_DayOfWeek.Name, "Kombinasi sudah terdaftar atau ada jam bentrok");
                 else
@@ -147,7 +147,7 @@ namespace iSpeakWebApp.Controllers
                     if (!string.IsNullOrEmpty(log))
                         update(modifiedModel, log);
 
-                    return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_UserAccounts_Name, FILTER_Custom = FILTER_UserAccounts_Name });
+                    return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_UserAccounts_Name = FILTER_UserAccounts_Name, FILTER_Custom = FILTER_UserAccounts_Name });
                 }
             }
 
@@ -167,20 +167,10 @@ namespace iSpeakWebApp.Controllers
                 model.LessonLocation = null;
         }
 
-        public static void standardizeTime(StudentSchedulesModel model)
+        public static void standardizeTimeToIgnoreDate(StudentSchedulesModel model)
         {
-            model.StartTime = standardizeTime(model.StartTime);
-            model.EndTime = standardizeTime(model.EndTime);
-        }
-
-        public static DateTime standardizeTime(DateTime datetime)
-        {
-            return new DateTime(1970, 1, 1, datetime.Hour, datetime.Minute, 0);
-        }
-
-        public static DateTime standardizeTime(string time)
-        {
-            return new DateTime(1970, 1, 1, Convert.ToInt32(time.Split('_')[0]), Convert.ToInt32(time.Split('_')[1]), 0);
+            model.StartTime = Util.standardizeTimeToIgnoreDate(model.StartTime);
+            model.EndTime = Util.standardizeTimeToIgnoreDate(model.EndTime);
         }
 
         public JsonResult Ajax_Delete(Guid id)

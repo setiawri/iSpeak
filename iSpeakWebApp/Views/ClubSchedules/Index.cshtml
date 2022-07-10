@@ -1,10 +1,10 @@
-﻿@model IEnumerable<iSpeakWebApp.Models.StudentSchedulesModel>
+﻿@model IEnumerable<iSpeakWebApp.Models.ClubSchedulesModel>
 
 @{
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
-    string ControllerName = "StudentSchedules";
+    string ControllerName = "ClubSchedules";
     ViewBag.SelectedNavigationMenu = "Schedules";
-    ViewBag.Title = "STUDENT SCHEDULES";
+    ViewBag.Title = "CLUB SCHEDULES";
     ViewBag.Subtitle = "Index";
 
     List<iSpeakWebApp.Models.LanguagesModel> Languages = iSpeakWebApp.Controllers.LanguagesController.get();
@@ -23,7 +23,7 @@
                 <div class="card-body">
 
                     <div class="row mx-0">
-                        @if (access.StudentSchedules_Add)
+                        @if (access.ClubSchedules_Add)
                         {
                             <div class="mr-2">
                                 <label class="mb-0">&nbsp;</label>
@@ -38,13 +38,6 @@
                             </div>
                         </div>
 
-                        <div class="row ml-0 mr-2" style="width:150px;">
-                            <label class="mb-0">Tutor</label>
-                            <div class="input-group">
-                                <input type="text" name="FILTER_UserAccounts_Name" id="FILTER_UserAccounts_Name" class="form-control" />
-                            </div>
-                        </div>
-
                         <div class="ml-0 mr-2">
                             <label class="mb-0">&nbsp;</label>
                             <button id="LoadData" type="submit" onclick="showLoadingSpinner()" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>LOAD</button>
@@ -55,8 +48,7 @@
                         <table class="table table-hover datatable">
                             <thead>
                                 <tr>
-                                    <th style="width:300px;">@Html.DisplayNameFor(model => model.Student_UserAccounts_Id)</th>
-                                    <th style="width:200px;">@Html.DisplayNameFor(model => model.SaleInvoiceItems_Id)</th>
+                                    <th style="width:300px;">@Html.DisplayNameFor(model => model.LessonPackages_Id)</th>
                                     <th style="width:200px;">Schedule</th>
                                     <th class="non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
                                     <th class="non-searchable non-sortable" style="width:170px;"></th>
@@ -69,20 +61,16 @@
                                     {
                                         <tr>
                                             <td class="align-top">
-                                                <div>@Html.ActionLink(item.Student_UserAccounts_Name, "Index", "UserAccounts", new { FILTER_Keyword = @item.Student_UserAccounts_No }, new { @target = "_blank" })</div>
-                                                <div>Tutor: @Html.ActionLink(item.Tutor_UserAccounts_Name, "Index", "UserAccounts", new { FILTER_Keyword = @item.Tutor_UserAccounts_No }, new { @target = "_blank" })</div>
-                                            </td>
-                                            <td class="align-top">
-                                                <div>@Html.ActionLink(item.SaleInvoices_No, "Index", "SaleInvoices", new { FILTER_Keyword = @item.SaleInvoices_No }, new { @target = "_blank" }): @item.Languages_Name</div>
-                                                <div>Remaining: @item.SessionHours_Remaining hrs</div>
+                                                <div>@Html.ActionLink(item.LessonPackages_Name, "Index", "LessonPackages", new { FILTER_Keyword = @item.LessonPackages_Name }, new { @target = "_blank" })</div>
+                                                <div>Tutor: @Html.ActionLink(item.LessonPackages_Name, "Index", "LessonPackages", new { FILTER_Keyword = @item.LessonPackages_Name }, new { @target = "_blank" })</div>
                                             </td>
                                             <td class="align-top">
                                                 @Html.DisplayFor(modelItem => item.DayOfWeek), @Html.DisplayFor(modelItem => item.StartTime) - @Html.DisplayFor(modelItem => item.EndTime)
                                             </td>
                                             <td class="align-top">
-                                                @if (!string.IsNullOrWhiteSpace(item.LessonLocation))
+                                                @if (!string.IsNullOrWhiteSpace(item.Description))
                                                 {
-                                                    <div><strong>Location:</strong> @Html.DisplayFor(modelItem => item.LessonLocation)</div>
+                                                    <div><strong>Description:</strong> @Html.DisplayFor(modelItem => item.Description)</div>
                                                 }
                                                 @if (!string.IsNullOrWhiteSpace(item.Notes))
                                                 {
@@ -90,7 +78,7 @@
                                                 }
                                             </td>
                                             <td class="align-top">
-                                                @if (access.StudentSchedules_Edit)
+                                                @if (access.ClubSchedules_Edit)
                                                 {
                                                     <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a> @:•
                                                     <a href="javascript:void(0)" onclick="Delete('@item.Id')">DELETE</a> @:•
