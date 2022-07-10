@@ -1,3 +1,19 @@
+---- CLUB SCHEDULES ==========================================================================================================
+
+CREATE TABLE [dbo].[ClubSchedules]
+(
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+    [Description] VARCHAR(MAX) NOT NULL, 
+    [LessonPackages_Id] UNIQUEIDENTIFIER NOT NULL, 
+    [DayOfWeek] TINYINT NOT NULL DEFAULT 0, 
+    [StartTime] DATETIME NOT NULL, 
+    [EndTime] DATETIME NOT NULL, 
+    [OnlineLink] VARCHAR(MAX) NULL, 
+    [Active] BIT NOT NULL DEFAULT 1, 
+    [Notes] VARCHAR(MAX) NULL
+)
+
+
 ---- REPORTS =================================================================================================================
 
 --IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'IncomeStatement_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 

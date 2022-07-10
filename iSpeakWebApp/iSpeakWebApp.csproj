@@ -213,6 +213,7 @@
     <Compile Include="Controllers\TutorSchedulesController.cs" />
     <Compile Include="Controllers\UnitsController.cs" />
     <Compile Include="Controllers\SuppliersController.cs" />
+    <Compile Include="Controllers\ArticlesController.cs" />
     <Compile Include="Controllers\VouchersController.cs" />
     <Compile Include="Controllers\LessonPackagesController.cs" />
     <Compile Include="Controllers\LessonTypesController.cs" />
@@ -266,7 +267,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Advertisements\LanguageClub\2022070901.jpg" />
+    <Content Include="ArticlesAssets\Article2022060101\Article202206010101.jpg" />
     <Content Include="assets\css\animate.min.css" />
     <Content Include="assets\css\bootstrap-datetimepicker.css" />
     <Content Include="assets\css\bootstrap.min.css" />
@@ -465,6 +466,7 @@
     <Content Include="Views\Files\Index.cshtml" />
     <Content Include="WebLive.config" />
     <Content Include="Views\Reports\IncomeStatement.cshtml" />
+    <Content Include="Views\Articles\Article2022060101.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

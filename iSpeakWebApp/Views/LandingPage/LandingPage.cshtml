@@ -23,19 +23,6 @@
     <link href="~/assets/css/landingpage/aos.css" rel="stylesheet" />
     <!-- MAIN CSS -->
     <link href="~/assets/css/landingpage/style.css" rel="stylesheet" />
-
-    <style>
-        .imgbox {
-            display: grid;
-            height: 100%;
-        }
-
-        .center-fit {
-            max-width: 100%;
-            max-height: 100vh;
-            margin: auto;
-        }
-    </style>
 </head>
 <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
 
@@ -92,9 +79,7 @@
             </div>
         </header>
 
-        <div class="imgbox" style="margin:10px;">
-            <img class="center-fit" src="@Url.Content("~/Advertisements/LanguageClub/2022070901.jpg")">
-        </div>
+        @{Html.RenderAction("Article2022060101", "Articles");}
 
         <div class="ftco-blocks-cover-1">
             <div class="ftco-cover-1 overlay" style="background-image: url('@Url.Content("~/assets/img/landing_page.jpg")')">
