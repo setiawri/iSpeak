@@ -100,6 +100,12 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_SessionHours_Remaining = new ModelMember { Name = "SessionHours_Remaining", Display = "Remaining", LogDisplay = ActivityLogsController.editDecimalFormat("Remaining") };
 
 
+        [Display(Name = "Months")]
+        [DisplayFormat(DataFormatString = "{0:N0}")]
+        public byte ExpirationMonth { get; set; } = 0;
+        public static ModelMember COL_ExpirationMonth = new ModelMember { Name = "ExpirationMonth", Display = "Months", LogDisplay = ActivityLogsController.editIntFormat("Expiration Month") };
+
+
         [Required]
         [Display(Name = "TravelCost")]
         [DisplayFormat(DataFormatString = "{0:N0}")]
