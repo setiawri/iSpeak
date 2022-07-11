@@ -19,6 +19,13 @@ namespace iSpeakWebApp.Models
 
 
         [Required]
+        [Display(Name = "Language")]
+        public Guid Languages_Id { get; set; }
+        public static ModelMember COL_Languages_Id = new ModelMember { Name = "Languages_Id", Display = "Language", LogDisplay = ActivityLogsController.editStringFormat("Language") };
+        public string Languages_Name { get; set; }
+
+
+        [Required]
         [Display(Name = "Day")]
         public DayOfWeekEnum DayOfWeek { get; set; }
         public static ModelMember COL_DayOfWeek = new ModelMember { Name = "DayOfWeek", Display = "Day of Week", LogDisplay = ActivityLogsController.editStringFormat("Day of Week") };
@@ -47,6 +54,7 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Notes = new ModelMember { Name = "Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Notes") };
 
 
+        [Required]
         public string Description { get; set; } = null;
         public static ModelMember COL_Description = new ModelMember { Name = "Description", Display = "Description", LogDisplay = ActivityLogsController.editStringFormat("Description") };
 

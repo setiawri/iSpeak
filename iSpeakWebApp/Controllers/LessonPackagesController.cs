@@ -174,7 +174,7 @@ namespace iSpeakWebApp.Controllers
                             Languages.Name AS Languages_Name,
                             LessonTypes.Name AS LessonTypes_Name,
                             '['+Languages.Name+': '+LessonTypes.Name+'] '+LessonPackages.Name+' ('
-                                + CASE WHEN LessonPackages.SessionHours > 0 THEN FORMAT(LessonPackages.SessionHours,'N2') + ' hrs' ELSE '' END 
+                                + CASE WHEN LessonPackages.SessionHours > 0 THEN FORMAT(LessonPackages.SessionHours,'N2') + ' hours' ELSE '' END 
                                 + CASE WHEN LessonPackages.ExpirationMonth > 0 THEN FORMAT(LessonPackages.ExpirationMonth,'N0') + ' months' ELSE '' END
                                 + ') '+FORMAT(LessonPackages.Price,'N0') AS DDLDescription
                         FROM LessonPackages

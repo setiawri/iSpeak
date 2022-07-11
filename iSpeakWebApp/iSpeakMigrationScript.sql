@@ -2,7 +2,7 @@
 
 	alter table SaleInvoiceItems add ExpirationMonth tinyint NOT NULL default 0
 	GO
-
+	
 --DROP TABLE ClubSchedules;
 --GO
 --CREATE TABLE [dbo].[ClubSchedules]

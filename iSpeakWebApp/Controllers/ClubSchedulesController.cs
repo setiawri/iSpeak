@@ -47,7 +47,6 @@ namespace iSpeakWebApp.Controllers
 
             setViewBag(FILTER_Keyword);
             ClubSchedulesModel model = new ClubSchedulesModel();
-            model.Branches_Id = Helper.getActiveBranchId(Session);
             if (DayOfWeek != null) model.DayOfWeek = (DayOfWeekEnum)DayOfWeek;
             if (!string.IsNullOrEmpty(StartTime))
             {
@@ -64,8 +63,9 @@ namespace iSpeakWebApp.Controllers
             if (ModelState.IsValid)
             {
                 standardizeTimeToIgnoreDate(model);
+                model.Branches_Id = Helper.getActiveBranchId(Session);
                 if (isExists(null, model.Description, model.DayOfWeek, model.StartTime, model.EndTime))
-                    ModelState.AddModelError(ClubSchedulesModel.COL_DayOfWeek.Name, "Ada bentrok waktu dengan jadwal murid atau tutor");
+                    ModelState.AddModelError(ClubSchedulesModel.COL_DayOfWeek.Name, "Kombinasi sudah terdaftar");
                 else
                 {
                     add(model);
@@ -131,6 +131,7 @@ namespace iSpeakWebApp.Controllers
         {
             ViewBag.FILTER_Keyword = FILTER_Keyword;
             LessonPackagesController.setDropDownListViewBag(this);
+            LanguagesController.setDropDownListViewBag(this);
         }
 
         public static void standardizeTimeToIgnoreDate(ClubSchedulesModel model)
@@ -200,10 +201,13 @@ namespace iSpeakWebApp.Controllers
         {
             return new DBContext().Database.SqlQuery<ClubSchedulesModel>(@"
                         SELECT ClubSchedules.*,
-                            Languages.Name AS Languages_Name
+                            LessonPackages.Name AS LessonPackages_Name,
+                            Languages.Name AS Languages_Name,
+                            Branches.Name AS Branches_Name
                         FROM ClubSchedules
                             LEFT JOIN LessonPackages ON LessonPackages.Id = ClubSchedules.LessonPackages_Id
-                            LEFT JOIN Languages ON Languages.Id = LessonPackages.Languages_Id
+                            LEFT JOIN Languages ON Languages.Id = ClubSchedules.Languages_Id
+                            LEFT JOIN Branches ON Branches.Id = ClubSchedules.Branches_Id
                         WHERE 1=1
 							AND (@Id IS NULL OR ClubSchedules.Id = @Id)
 							AND (@Id IS NOT NULL OR (
@@ -217,14 +221,14 @@ namespace iSpeakWebApp.Controllers
                                 ))
                                 AND (@Branches_Id IS NULL OR ClubSchedules.Branches_Id = @Branches_Id)
                             ))
-						ORDER BY ClubSchedules.DayOfWeek ASC, Languages.Name ASC, ClubSchedules.StartTime ASC, ClubSchedules.EndTime ASC
+						ORDER BY ClubSchedules.DayOfWeek ASC, ClubSchedules.StartTime ASC, ClubSchedules.EndTime ASC, Languages.Name ASC
                     ",
                     DBConnection.getSqlParameter(ClubSchedulesModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(ClubSchedulesModel.COL_LessonPackages_Id.Name, LessonPackages_Id),
                     DBConnection.getSqlParameter(ClubSchedulesModel.COL_DayOfWeek.Name, DayOfWeek),
                     DBConnection.getSqlParameter(ClubSchedulesModel.COL_StartTime.Name, StartTime),
                     DBConnection.getSqlParameter(ClubSchedulesModel.COL_EndTime.Name, EndTime),
-                    DBConnection.getSqlParameter("Branches_Id", Helper.getActiveBranchId(Session)),
+                    DBConnection.getSqlParameter(ClubSchedulesModel.COL_Branches_Id.Name, Helper.getActiveBranchId(Session)),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
         }
@@ -233,11 +237,13 @@ namespace iSpeakWebApp.Controllers
         {
             LIBWebMVC.WebDBConnection.Insert(db.Database, "ClubSchedules",
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Id.Name, model.Id),
-                    DBConnection.getSqlParameter(ClubSchedulesModel.COL_LessonPackages_Id.Name, model.LessonPackages_Id),
+                DBConnection.getSqlParameter(ClubSchedulesModel.COL_LessonPackages_Id.Name, model.LessonPackages_Id),
+                DBConnection.getSqlParameter(ClubSchedulesModel.COL_Languages_Id.Name, model.Languages_Id),
+                DBConnection.getSqlParameter(ClubSchedulesModel.COL_Description.Name, model.Description),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_DayOfWeek.Name, model.DayOfWeek),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_StartTime.Name, model.StartTime),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_EndTime.Name, model.EndTime),
-                DBConnection.getSqlParameter(ClubSchedulesModel.COL_Description.Name, model.Description),
+                DBConnection.getSqlParameter(ClubSchedulesModel.COL_Branches_Id.Name, model.Branches_Id),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Active.Name, model.Active),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Notes.Name, model.Notes)
             );
@@ -249,11 +255,12 @@ namespace iSpeakWebApp.Controllers
         {
             LIBWebMVC.WebDBConnection.Update(db.Database, "ClubSchedules",
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Id.Name, model.Id),
-                    DBConnection.getSqlParameter(ClubSchedulesModel.COL_LessonPackages_Id.Name, model.LessonPackages_Id),
+                DBConnection.getSqlParameter(ClubSchedulesModel.COL_LessonPackages_Id.Name, model.LessonPackages_Id),
+                DBConnection.getSqlParameter(ClubSchedulesModel.COL_Languages_Id.Name, model.Languages_Id),
+                DBConnection.getSqlParameter(ClubSchedulesModel.COL_Description.Name, model.Description),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_DayOfWeek.Name, model.DayOfWeek),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_StartTime.Name, model.StartTime),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_EndTime.Name, model.EndTime),
-                DBConnection.getSqlParameter(ClubSchedulesModel.COL_Description.Name, model.Description),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Notes.Name, model.Notes)
             );
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
