@@ -118,6 +118,7 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append<LanguagesModel>(log, originalModel.Languages_Id, modifiedModel.Languages_Id, LessonPackagesModel.COL_Languages_Id.LogDisplay);
                     log = Helper.append<LessonTypesModel>(log, originalModel.LessonTypes_Id, modifiedModel.LessonTypes_Id, LessonPackagesModel.COL_LessonTypes_Id.LogDisplay);
                     log = Helper.append(log, originalModel.SessionHours, modifiedModel.SessionHours, LessonPackagesModel.COL_SessionHours.LogDisplay);
+                    log = Helper.append(log, originalModel.ExpirationMonth, modifiedModel.ExpirationMonth, LessonPackagesModel.COL_ExpirationMonth.LogDisplay);
                     log = Helper.append(log, originalModel.Price, modifiedModel.Price, LessonPackagesModel.COL_Price.LogDisplay);
                     log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, LessonPackagesModel.COL_Notes.LogDisplay);
 
@@ -204,7 +205,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_Languages_Id.Name, model.Languages_Id),
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_LessonTypes_Id.Name, model.LessonTypes_Id),
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_SessionHours.Name, model.SessionHours),
-                DBConnection.getSqlParameter(LessonPackagesModel.COL_ExpirationDay.Name, model.ExpirationDay),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_ExpirationMonth.Name, model.ExpirationMonth),
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_Price.Name, model.Price)
             );
 
@@ -222,7 +223,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_Languages_Id.Name, model.Languages_Id),
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_LessonTypes_Id.Name, model.LessonTypes_Id),
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_SessionHours.Name, model.SessionHours),
-                DBConnection.getSqlParameter(LessonPackagesModel.COL_ExpirationDay.Name, model.ExpirationDay),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_ExpirationMonth.Name, model.ExpirationMonth),
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_Price.Name, model.Price)
             );
 

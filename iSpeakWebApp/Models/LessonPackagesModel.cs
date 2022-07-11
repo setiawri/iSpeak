@@ -50,7 +50,13 @@ namespace iSpeakWebApp.Models
         [Required]
         [Display(Name = "Expire")]
         public int ExpirationDay { get; set; } = 0;
-        public static ModelMember COL_ExpirationDay = new ModelMember { Name = "ExpirationDay", Display = "Expire", LogDisplay = ActivityLogsController.editIntFormat("Expiration") };
+        public static ModelMember COL_ExpirationDay = new ModelMember { Name = "ExpirationDay", Display = "Expire", LogDisplay = ActivityLogsController.editIntFormat("Expiration Day") };
+
+
+        [Required]
+        [Display(Name = "Expire")]
+        public byte ExpirationMonth { get; set; } = 0;
+        public static ModelMember COL_ExpirationMonth = new ModelMember { Name = "ExpirationMonth", Display = "Expire", LogDisplay = ActivityLogsController.editIntFormat("Expiration Month") };
 
 
         [Required]

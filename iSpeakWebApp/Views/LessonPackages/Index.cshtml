@@ -69,10 +69,10 @@
                         <table class="table table-hover datatable">
                             <thead>
                                 <tr>
-                                    <th>Package</th>
-                                    <th class="text-right">@Html.DisplayNameFor(model => model.SessionHours)</th>
-                                    <th class="text-right">@Html.DisplayNameFor(model => model.ExpirationDay)</th>
-                                    <th class="text-right">@Html.DisplayNameFor(model => model.Price)</th>
+                                    <th style="width:300px;">Package</th>
+                                    <th class="text-right" style="width:100px;">@Html.DisplayNameFor(model => model.SessionHours)</th>
+                                    <th class="text-right" style="width:100px;">@Html.DisplayNameFor(model => model.ExpirationMonth)</th>
+                                    <th class="text-right" style="width:100px;">@Html.DisplayNameFor(model => model.Price)</th>
                                     <th>@Html.DisplayNameFor(model => model.Notes)</th>
                                     <th class="non-searchable non-sortable" style="width:130px;"></th>
                                 </tr>
@@ -88,7 +88,7 @@
                                                 <div>[@Html.DisplayFor(modelItem => item.Languages_Name)] @Html.DisplayFor(modelItem => item.LessonTypes_Name)</div>
                                             </td>
                                             <td class="align-top text-right">@Html.DisplayFor(modelItem => item.SessionHours)</td>
-                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.ExpirationDay)</td>
+                                            <td class="align-top text-right">@Html.DisplayFor(modelItem => item.ExpirationMonth)</td>
                                             <td class="align-top text-right">@Html.DisplayFor(modelItem => item.Price)</td>
                                             <td class="align-top tablecellwrap">@Html.DisplayFor(modelItem => item.Notes)</td>
                                             <td>

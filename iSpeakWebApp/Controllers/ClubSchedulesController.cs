@@ -12,13 +12,6 @@ namespace iSpeakWebApp.Controllers
     {
         private readonly DBContext db = new DBContext();
 
-        /* FILTER *********************************************************************************************************************************************/
-
-        public void setViewBag(string FILTER_Keyword)
-        {
-            ViewBag.FILTER_Keyword = FILTER_Keyword;
-        }
-
         /* INDEX **********************************************************************************************************************************************/
 
         public ActionResult Index(int? rss, string FILTER_Keyword, string FILTER_Custom)
@@ -133,6 +126,12 @@ namespace iSpeakWebApp.Controllers
         }
 
         /* METHODS ********************************************************************************************************************************************/
+
+        public void setViewBag(string FILTER_Keyword)
+        {
+            ViewBag.FILTER_Keyword = FILTER_Keyword;
+            LessonPackagesController.setDropDownListViewBag(this);
+        }
 
         public static void standardizeTimeToIgnoreDate(ClubSchedulesModel model)
         {

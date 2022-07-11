@@ -5,7 +5,7 @@
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     string ControllerName = "ClubSchedules";
     ViewBag.SelectedNavigationMenu = "Schedules";
-    ViewBag.Title = "STUDENT SCHEDULES";
+    ViewBag.Title = "CLUB SCHEDULES";
     ViewBag.Subtitle = "Create";
 
 }
@@ -30,7 +30,7 @@
                         <div class="form-group row">
                             @Html.LabelFor(model => model.LessonPackages_Id, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
                             <div class="col-lg-4">
-                                <select class="form-control" id="Tutor_UserAccounts_Id" name="Tutor_UserAccounts_Id"></select>
+                                @Html.DropDownListFor(model => model.LessonPackages_Id, ViewBag.LessonPackages as SelectList, "Please Select", new { @class = "form-control select2"})
                                 @Html.ValidationMessage("LessonPackages_Id", "", new { @class = "text-danger" })
                             </div>
                         </div>
