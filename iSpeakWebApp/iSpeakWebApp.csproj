@@ -477,7 +477,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="ArticlesAssets\Article2022060101\" />
+    <Folder Include="ArticlesAssets\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\css\icons\fontawesome\fonts\fontawesome-webfont.eot" />

@@ -225,15 +225,13 @@ namespace iSpeakWebApp.Controllers
             }
             else
             {
-                if (userAccount.ResetPassword)
+                setLoginSession(Session, userAccount, ConnectToLiveDatabase);
+                if (!userAccount.ResetPassword)
+                    return RedirectToLocal(returnUrl);
+                else
                 {
                     TempData["UserAccountsModel"] = userAccount;
                     return RedirectToAction(nameof(UserAccountsController.ChangePassword), CONTROLLERNAME, new { returnUrl = returnUrl });
-                }
-                else
-                {
-                    setLoginSession(Session, userAccount, ConnectToLiveDatabase);
-                    return RedirectToLocal(returnUrl);
                 }
             }
         }
@@ -244,6 +242,8 @@ namespace iSpeakWebApp.Controllers
         {
             ViewBag.ReturnUrl = returnUrl;
             UserAccountsModel model = (UserAccountsModel)TempData["UserAccountsModel"];
+            if (model != null && model.ResetPassword)
+                ViewBag.CurrentPassword = SettingsController.get().ResetPassword;
             object Id = getUserId(Session);
             if (model == null)
             {
