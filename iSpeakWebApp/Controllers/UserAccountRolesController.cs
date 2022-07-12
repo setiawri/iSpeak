@@ -305,7 +305,7 @@ namespace iSpeakWebApp.Controllers
 
         /* METHODS ********************************************************************************************************************************************/
 
-        public static void setDropDownListViewBag(ControllerBase controller) { setDropDownListViewBag(controller, false); }
+        public static void setDropDownListViewBag(ControllerBase controller) { setDropDownListViewBag(controller, true); }
         public static void setDropDownListViewBag(ControllerBase controller, bool UserAccounts_EditRoles)
         {
             List<UserAccountRolesModel> models = new List<UserAccountRolesModel>();

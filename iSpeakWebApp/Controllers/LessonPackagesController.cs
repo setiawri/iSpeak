@@ -165,7 +165,7 @@ namespace iSpeakWebApp.Controllers
         }
 
         public List<LessonPackagesModel> get(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id) { return get(null, FILTER_Active, FILTER_Keyword, FILTER_Languages_Id, FILTER_LessonTypes_Id); }
-        public LessonPackagesModel get(Guid Id) { return get(Id, null, null, null, null).FirstOrDefault(); }
+        public static LessonPackagesModel get(Guid Id) { return get(Id, null, null, null, null).FirstOrDefault(); }
         public static List<LessonPackagesModel> get(int? Active) { return get(null, Active, null, null, null); }
         public static List<LessonPackagesModel> get(Guid? Id, int? Active, string FILTER_Keyword, Guid? Languages_Id, Guid? LessonTypes_Id)
         {
