@@ -6,6 +6,8 @@
     ViewBag.SelectedNavigationMenu = "Sales";
     ViewBag.Title = "SALE INVOICES";
     ViewBag.Subtitle = "Index";
+
+    bool isStudent = iSpeakWebApp.Controllers.UserAccountsController.getUserAccount(Session).Roles_List.Contains(iSpeakWebApp.Controllers.SettingsController.get().StudentRole.ToString());
 }
 
 <div class="content-wrapper">
@@ -23,7 +25,7 @@
 
                     <div class="row mx-0">
                         <div class="row ml-0 mr-2" style="width:120px;">
-                            <label class="mb-0">No / Customer</label>
+                            <label class="mb-0">Keyword</label>
                             <div class="input-group">
                                 <input type="text" name="FILTER_Keyword" id="FILTER_Keyword" class="form-control" />
                             </div>
@@ -60,23 +62,23 @@
                             </div>
                         </div>
 
-                        <div class="row ml-0 mr-2" style="width:80px;">
+                        <div class="row ml-0 mr-2 @(isStudent?"d-none" : "")" style="width:80px;">
                             <label class="mb-0">Cancelled</label>
                             <div class="input-group">
                                 <select id="FILTER_Cancelled" name="FILTER_Cancelled" class="custom-select">
-                                    <option value="" selected>ALL</option>
+                                    <option value="">ALL</option>
                                     <option value="1">YES</option>
                                     <option value="0">NO</option>
                                 </select>
                             </div>
                         </div>
 
-                        <div class="row ml-0 mr-2" style="width:80px;">
+                        <div class="row ml-0 mr-2 @(isStudent?"d-none" : "")" style="width:80px;">
                             <label class="mb-0">Has Due</label>
                             <div class="input-group">
                                 <select id="FILTER_HasDueAmount" name="FILTER_HasDueAmount" class="custom-select">
                                     <option value="">ALL</option>
-                                    <option value="1" selected>YES</option>
+                                    <option value="1">YES</option>
                                     <option value="0">NO</option>
                                 </select>
                             </div>

@@ -28,8 +28,11 @@ namespace iSpeakWebApp.Controllers
             {
                 //FILTER_chkDateFrom = true;
                 //FILTER_DateFrom = Helper.getCurrentDateTime();
-                FILTER_HasDueAmount = 1;
                 FILTER_Cancelled = 0;
+                if (UserAccountsController.getUserAccount(Session).Roles_List.Contains(SettingsController.get().StudentRole.ToString()))
+                    FILTER_HasDueAmount = null;
+                else
+                    FILTER_HasDueAmount = 1;
             }
 
             setViewBag(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_HasDueAmount, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);

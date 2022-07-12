@@ -6,6 +6,8 @@
     ViewBag.SelectedNavigationMenu = "Sessions";
     ViewBag.Title = "Lesson Sessions";
     ViewBag.Subtitle = "Index";
+
+    bool isStudent = iSpeakWebApp.Controllers.UserAccountsController.getUserAccount(Session).Roles_List.Contains(iSpeakWebApp.Controllers.SettingsController.get().StudentRole.ToString());
 }
 
 <div class="content-wrapper">
@@ -68,11 +70,11 @@
                             </div>
                         </div>
 
-                        <div class="row ml-0 mr-2" style="width:80px;">
+                        <div class="row ml-0 mr-2 @(isStudent?"d-none" : "")" style="width:80px;">
                             <label class="mb-0">Cancelled</label>
                             <div class="input-group">
                                 <select id="FILTER_Cancelled" name="FILTER_Cancelled" class="custom-select">
-                                    <option value="" selected>ALL</option>
+                                    <option value="">ALL</option>
                                     <option value="1">YES</option>
                                     <option value="0">NO</option>
                                 </select>

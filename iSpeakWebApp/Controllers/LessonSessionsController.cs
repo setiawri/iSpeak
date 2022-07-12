@@ -27,6 +27,8 @@ namespace iSpeakWebApp.Controllers
             {
                 FILTER_chkDateFrom = true;
                 FILTER_DateFrom = Helper.getCurrentDateTime();
+                if (UserAccountsController.getUserAccount(Session).Roles_List.Contains(SettingsController.get().StudentRole.ToString()))
+                    FILTER_Cancelled = 0;
             }
 
             setViewBag(FILTER_Keyword, FILTER_InvoiceNo, FILTER_Cancelled, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
