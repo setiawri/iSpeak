@@ -111,6 +111,7 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.StartTime, modifiedModel.StartTime, ClubSchedulesModel.COL_StartTime.LogDisplay);
                     log = Helper.append(log, originalModel.EndTime, modifiedModel.EndTime, ClubSchedulesModel.COL_EndTime.LogDisplay);
                     log = Helper.append(log, originalModel.Description, modifiedModel.Description, ClubSchedulesModel.COL_Description.LogDisplay);
+                    log = Helper.append(log, originalModel.OnlineLink, modifiedModel.OnlineLink, ClubSchedulesModel.COL_OnlineLink.LogDisplay);
                     log = Helper.append(log, originalModel.Active, modifiedModel.Active, ClubSchedulesModel.COL_Active.LogDisplay);
                     log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, ClubSchedulesModel.COL_Notes.LogDisplay);
 
@@ -240,6 +241,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_LessonPackages_Id.Name, model.LessonPackages_Id),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Languages_Id.Name, model.Languages_Id),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Description.Name, model.Description),
+                DBConnection.getSqlParameter(ClubSchedulesModel.COL_OnlineLink.Name, model.OnlineLink),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_DayOfWeek.Name, model.DayOfWeek),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_StartTime.Name, model.StartTime),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_EndTime.Name, model.EndTime),
@@ -258,9 +260,11 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_LessonPackages_Id.Name, model.LessonPackages_Id),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Languages_Id.Name, model.Languages_Id),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Description.Name, model.Description),
+                DBConnection.getSqlParameter(ClubSchedulesModel.COL_OnlineLink.Name, model.OnlineLink),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_DayOfWeek.Name, model.DayOfWeek),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_StartTime.Name, model.StartTime),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_EndTime.Name, model.EndTime),
+                DBConnection.getSqlParameter(ClubSchedulesModel.COL_Active.Name, model.Active),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Notes.Name, model.Notes)
             );
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
