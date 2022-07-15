@@ -339,6 +339,8 @@ namespace iSpeakWebApp.Controllers
         public static List<TutorSchedulesModel> get(HttpSessionStateBase Session, Guid? Id, Guid? Tutor_UserAccounts_Id, DayOfWeekEnum? DayOfWeek, DateTime? StartTime, DateTime? EndTime, 
             Guid? Languages_Id, int? Active, string FILTER_Keyword)
         {
+            UserAccountsModel UserAccount = UserAccountsController.getUserAccount(Session);
+
             List<TutorSchedulesModel> models = new DBContext().Database.SqlQuery<TutorSchedulesModel>(@"
                         SELECT TutorSchedules.*,
                             UserAccounts.Fullname AS Tutor_UserAccounts_Name,
@@ -351,6 +353,7 @@ namespace iSpeakWebApp.Controllers
 							AND (@Id IS NOT NULL OR (
                                 (@Active IS NULL OR TutorSchedules.Active = @Active)
                                 AND (@Tutor_UserAccounts_Id IS NULL OR TutorSchedules.Tutor_UserAccounts_Id = @Tutor_UserAccounts_Id)
+                                AND (@ShowOnlyOwnUserData = 0 OR (TutorSchedules.Tutor_UserAccounts_Id = @UserAccounts_Id))
                                 AND (@DayOfWeek IS NULL OR TutorSchedules.[DayOfWeek] = @DayOfWeek)
                                 AND ((@StartTime IS NULL OR (@StartTime >= TutorSchedules.StartTime OR @StartTime <= TutorSchedules.EndTime))
                                     OR (@EndTime IS NULL OR (@EndTime >= TutorSchedules.StartTime OR @EndTime <= TutorSchedules.EndTime))
@@ -372,7 +375,9 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(TutorSchedulesModel.COL_EndTime.Name, EndTime),
                     DBConnection.getSqlParameter("Branches_Id", Helper.getActiveBranchId(Session)),
                     DBConnection.getSqlParameter("Languages_Id", Languages_Id),
-                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
+                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
+                    DBConnection.getSqlParameter("ShowOnlyOwnUserData", SettingsController.ShowOnlyOwnUserData(UserAccount.Roles_List)),
+                    DBConnection.getSqlParameter("UserAccounts_Id", UserAccount.Id)
                 ).ToList();
 
             foreach (TutorSchedulesModel model in models)

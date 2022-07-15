@@ -62,7 +62,7 @@ namespace iSpeakWebApp.Controllers
                     string roles = "";
                     if (!getUserAccess(Session).UserAccounts_EditRoles)
                         roles = SettingsController.get().StudentRole.ToString();
-                    return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, roles));
+                    return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, roles, false));
                 }
             }
         }
@@ -76,7 +76,7 @@ namespace iSpeakWebApp.Controllers
             string roles = "";
             if (!getUserAccess(Session).UserAccounts_ViewAllRoles)
                 roles = SettingsController.get().StudentRole.ToString();
-            return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, roles));
+            return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, roles, false));
         }
 
         /* CREATE *********************************************************************************************************************************************/
@@ -355,7 +355,7 @@ namespace iSpeakWebApp.Controllers
 
         public static UserAccountsModel getUserAccount(HttpSessionStateBase Session)
         {
-            if (Session[SESSION_UserAccount] == null)
+            if (Session == null || Session[SESSION_UserAccount] == null)
                 return null;
             else
                 return (UserAccountsModel)Session[SESSION_UserAccount];
@@ -457,7 +457,7 @@ namespace iSpeakWebApp.Controllers
         public JsonResult Ajax_GetDDLItems(string keyword, int page, int take, string key)
         {
             int skip = take * (page - 1);
-            List<UserAccountsModel> models = get(skip, take, keyword, 1, null, key);
+            List<UserAccountsModel> models = get(skip, take, keyword, 1, null, key, SettingsController.ShowOnlyOwnUserData(getUserAccount(Session).Roles_List));
 
             List<Select2Pagination.Select2Results> results = new List<Select2Pagination.Select2Results>();
             results.AddRange(models.Select(model => new Select2Pagination.Select2Results
@@ -503,12 +503,17 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public UserAccountsModel get(string Username, string Password) { return get(null, null, null, true, null, Username, Password, null, null, null, null, null, null).FirstOrDefault(); }
-        public List<UserAccountsModel> getBirthdays(Guid Branches_Id, Guid? UserAccountRoles_Id, int BirthdayListMonth) { return get(null, null, Branches_Id, false, null, null, null, 1, UserAccountRoles_Id, BirthdayListMonth, null, null, null); }
-        public List<UserAccountsModel> get(int? skip, int? take, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, string Role) { return get(skip, take, null, false, null, null, null, FILTER_Active, null, null, FILTER_Keyword, FILTER_Languages_Id, Role); }
-        public UserAccountsModel get(Guid Id) { return get(null, null, null, true, Id, null, null, null, null, null, null, null, null).FirstOrDefault(); }
-        public List<UserAccountsModel> get(int? skip, int? take, Guid? Default_Branches_Id, bool showAllBranches, Guid? Id, string Username, string Password, int? Active, Guid? UserAccountRoles_Id, int? BirthdayListMonth, string FILTER_Keyword, Guid? Language_Id, string Role)
+        public UserAccountsModel get(string Username, string Password) { return get(null, null, null, true, null, Username, Password, null, null, null, null, null, null, false).FirstOrDefault(); }
+        public List<UserAccountsModel> getBirthdays(Guid Branches_Id, Guid? UserAccountRoles_Id, int BirthdayListMonth) { return get(null, null, Branches_Id, false, null, null, null, 1, UserAccountRoles_Id, BirthdayListMonth, null, null, null, false); }
+        public List<UserAccountsModel> get(int? skip, int? take, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, string Role, bool ShowOnlyOwnUserData) { return get(skip, take, null, false, null, null, null, FILTER_Active, null, null, FILTER_Keyword, FILTER_Languages_Id, Role, ShowOnlyOwnUserData); }
+        public UserAccountsModel get(Guid Id) { return get(null, null, null, true, Id, null, null, null, null, null, null, null, null, false).FirstOrDefault(); }
+        public List<UserAccountsModel> get(int? skip, int? take, Guid? Default_Branches_Id, bool showAllBranches, Guid? Id, string Username, string Password, int? Active, Guid? UserAccountRoles_Id, int? BirthdayListMonth, string FILTER_Keyword, Guid? Language_Id, string Role, bool ShowOnlyOwnUserData)
         {
+            UserAccountsModel UserAccount = getUserAccount(Session);
+            Guid? UserAccountId = null;
+            if (UserAccount != null)
+                UserAccountId = UserAccount.Id;
+
             string BranchClause = null;
             if (!showAllBranches)
                 BranchClause = string.Format(" AND UserAccounts.Branches LIKE '%{0}%' ", Helper.getActiveBranchId(Session));
@@ -547,6 +552,7 @@ namespace iSpeakWebApp.Controllers
                                         OR UserAccounts.Username LIKE '%'+@FILTER_Keyword+'%'
                                         OR UserAccounts.No LIKE '%'+@FILTER_Keyword+'%'
                                     ))
+                                AND (@ShowOnlyOwnUserData = 0 OR (UserAccounts.Id = @UserAccounts_Id))
                                 {0}{1}
                             )
 						ORDER BY UserAccounts.Fullname ASC
@@ -566,7 +572,9 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter("Languages_Id", Language_Id),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
                     DBConnection.getSqlParameter("SKIP", skip),
-                    DBConnection.getSqlParameter("TAKE", take)
+                    DBConnection.getSqlParameter("TAKE", take),
+                    DBConnection.getSqlParameter("ShowOnlyOwnUserData", ShowOnlyOwnUserData),
+                    DBConnection.getSqlParameter("UserAccounts_Id", UserAccountId)
                 ).ToList();
 
             foreach (UserAccountsModel model in models)

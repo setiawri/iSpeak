@@ -9,7 +9,7 @@ namespace iSpeakWebApp.Models
         [Required]
         [Display(Name = "Auto Entry For Cash Payments")]
         public Guid? AutoEntryForCashPayments { get; set; }
-        public static ModelMember COL_AutoEntryForCashPayments = new ModelMember { Name = "AutoEntryForCashPayments", Id = new Guid("5c62ee59-03a9-453a-95c9-a234f537adf1") };
+        public static ModelMember COL_AutoEntryForCashPayments = new ModelMember { Name = "AutoEntryForCashPayments", Display = "Auto Entry For Cash Payments", Id = new Guid("5c62ee59-03a9-453a-95c9-a234f537adf1") };
         public string AutoEntryForCashPayments_Notes { get; set; }
         public static ModelMember COL_AutoEntryForCashPayments_Notes = new ModelMember { Name = "AutoEntryForCashPayments_Notes" };
 
@@ -33,14 +33,14 @@ namespace iSpeakWebApp.Models
         [Required]
         [Display(Name = "Reset Password")]
         public string ResetPassword { get; set; }
-        public static ModelMember COL_ResetPassword = new ModelMember { Name = "ResetPassword", Id = new Guid("01f2d64d-f402-4a96-b854-128f9a9ae42f") };
+        public static ModelMember COL_ResetPassword = new ModelMember { Name = "ResetPassword", Display = "Reset Password", Id = new Guid("01f2d64d-f402-4a96-b854-128f9a9ae42f") };
         public string ResetPassword_Notes { get; set; }
         public static ModelMember COL_ResetPassword_Notes = new ModelMember { Name = "ResetPassword_Notes" };
 
 
         [Display(Name = "Full Access for Tutor Schedules")]
         public string FullAccessForTutorSchedules { get; set; }
-        public static ModelMember COL_FullAccessForTutorSchedules = new ModelMember { Name = "FullAccessForTutorSchedules", Id = new Guid("9b5ab31f-ce5e-4942-9e07-0fe107058910") };
+        public static ModelMember COL_FullAccessForTutorSchedules = new ModelMember { Name = "FullAccessForTutorSchedules", Display = "Full Access for Tutor Schedules", Id = new Guid("9b5ab31f-ce5e-4942-9e07-0fe107058910") };
         public string FullAccessForTutorSchedules_Notes { get; set; }
         public static ModelMember COL_FullAccessForTutorSchedules_Notes = new ModelMember { Name = "FullAccessForTutorSchedules_Notes" };
         public List<string> FullAccessForTutorSchedules_List { get; set; }
@@ -49,7 +49,7 @@ namespace iSpeakWebApp.Models
 
         [Display(Name = "Show Only Own User Data")]
         public string ShowOnlyOwnUserData { get; set; }
-        public static ModelMember COL_ShowOnlyOwnUserData = new ModelMember { Name = "ShowOnlyOwnUserData", Id = new Guid("70adb944-1917-4cd7-817d-6ca5fa789d5e") };
+        public static ModelMember COL_ShowOnlyOwnUserData = new ModelMember { Name = "ShowOnlyOwnUserData", Display = "Show Only Own User Data", Id = new Guid("70adb944-1917-4cd7-817d-6ca5fa789d5e") };
         public string ShowOnlyOwnUserData_Notes { get; set; }
         public static ModelMember COL_ShowOnlyOwnUserData_Notes = new ModelMember { Name = "ShowOnlyOwnUserData_Notes" };
         public List<string> ShowOnlyOwnUserData_List { get; set; }
@@ -58,20 +58,11 @@ namespace iSpeakWebApp.Models
 
         [Display(Name = "Payroll Rates Roles")]
         public string PayrollRatesRoles { get; set; }
-        public static ModelMember COL_PayrollRatesRoles = new ModelMember { Name = "PayrollRatesRoles", Id = new Guid("65644f81-e712-4a72-966b-4ae1ee2462c2") };
+        public static ModelMember COL_PayrollRatesRoles = new ModelMember { Name = "PayrollRatesRoles", Display = "Rates Roles", Id = new Guid("65644f81-e712-4a72-966b-4ae1ee2462c2") };
         public string PayrollRatesRoles_Notes { get; set; }
         public static ModelMember COL_PayrollRatesRoles_Notes = new ModelMember { Name = "PayrollRatesRoles_Notes" };
         public List<string> PayrollRatesRoles_List { get; set; }
         public static ModelMember COL_PayrollRatesRoles_List = new ModelMember { Name = "PayrollRatesRoles_List" };
-
-
-        [Display(Name = "The Language Club Subscription")]
-        public string ClubLessonPackages { get; set; }
-        public static ModelMember COL_ClubLessonPackages = new ModelMember { Name = "ClubLessonPackages", Id = new Guid("D94EFCAB-4FF1-417C-9600-311DFC39479A") };
-        public string ClubLessonPackages_Notes { get; set; }
-        public static ModelMember COL_ClubLessonPackages_Notes = new ModelMember { Name = "ClubLessonPackages_Notes" };
-        public List<string> ClubLessonPackages_List { get; set; }
-        public static ModelMember COL_ClubLessonPackages_List = new ModelMember { Name = "ClubLessonPackages_List" };
 
         /******************************************************************************************************************************************************/
     }

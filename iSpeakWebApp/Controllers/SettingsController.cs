@@ -48,35 +48,35 @@ namespace iSpeakWebApp.Controllers
                 SettingsModel originalModel = get();
                 string log = string.Empty;
 
-                log = addLog(log, SettingsModel.COL_AutoEntryForCashPayments.Id, SettingsModel.COL_AutoEntryForCashPayments.Name,
+                log = addLog(log, SettingsModel.COL_AutoEntryForCashPayments.Id, SettingsModel.COL_AutoEntryForCashPayments.Display,
                     db.PettyCashRecordsCategories.Where(x=> x.Id == originalModel.AutoEntryForCashPayments).FirstOrDefault().Name,
                     db.PettyCashRecordsCategories.Where(x => x.Id == modifiedModel.AutoEntryForCashPayments).FirstOrDefault().Name, 
                     "Update: '{1}'");
-                log = addLog(log, SettingsModel.COL_AutoEntryForCashPayments.Id, SettingsModel.COL_AutoEntryForCashPayments.Name, originalModel.AutoEntryForCashPayments_Notes, modifiedModel.AutoEntryForCashPayments_Notes, "Notes: '{1}'");
+                log = addLog(log, SettingsModel.COL_AutoEntryForCashPayments.Id, SettingsModel.COL_AutoEntryForCashPayments.Display, originalModel.AutoEntryForCashPayments_Notes, modifiedModel.AutoEntryForCashPayments_Notes, "Notes: '{1}'");
 
-                log = addLog(log, SettingsModel.COL_StudentRole.Id, SettingsModel.COL_StudentRole.Name,
+                log = addLog(log, SettingsModel.COL_StudentRole.Id, SettingsModel.COL_StudentRole.Display,
                     originalModel.StudentRole == null ? "" : db.UserAccountRoles.Where(x => x.Id == originalModel.StudentRole).FirstOrDefault().Name,
                     modifiedModel.StudentRole == null ? "" : db.UserAccountRoles.Where(x => x.Id == modifiedModel.StudentRole).FirstOrDefault().Name,
                     "Update: '{1}'");
-                log = addLog(log, SettingsModel.COL_StudentRole.Id, SettingsModel.COL_StudentRole.Name, originalModel.StudentRole_Notes, modifiedModel.StudentRole_Notes, "Notes: '{1}'");
+                log = addLog(log, SettingsModel.COL_StudentRole.Id, SettingsModel.COL_StudentRole.Display, originalModel.StudentRole_Notes, modifiedModel.StudentRole_Notes, "Notes: '{1}'");
 
-                log = addLog(log, SettingsModel.COL_TutorRole.Id, SettingsModel.COL_TutorRole.Name,
+                log = addLog(log, SettingsModel.COL_TutorRole.Id, SettingsModel.COL_TutorRole.Display,
                     originalModel.TutorRole == null ? "" : db.UserAccountRoles.Where(x => x.Id == originalModel.TutorRole).FirstOrDefault().Name,
                     modifiedModel.TutorRole == null ? "" : db.UserAccountRoles.Where(x => x.Id == modifiedModel.TutorRole).FirstOrDefault().Name,
                     "Update: '{1}'");
-                log = addLog(log, SettingsModel.COL_TutorRole.Id, SettingsModel.COL_TutorRole.Name, originalModel.TutorRole_Notes, modifiedModel.TutorRole_Notes, "Notes: '{1}'");
+                log = addLog(log, SettingsModel.COL_TutorRole.Id, SettingsModel.COL_TutorRole.Display, originalModel.TutorRole_Notes, modifiedModel.TutorRole_Notes, "Notes: '{1}'");
 
-                log = addLog(log, SettingsModel.COL_ResetPassword.Id, SettingsModel.COL_ResetPassword.Name, originalModel.ResetPassword, modifiedModel.ResetPassword, "UPDATE: '{1}'");
-                log = addLog(log, SettingsModel.COL_ResetPassword.Id, SettingsModel.COL_ResetPassword.Name, originalModel.ResetPassword_Notes, modifiedModel.ResetPassword_Notes, "Notes: '{1}'");
+                log = addLog(log, SettingsModel.COL_ResetPassword.Id, SettingsModel.COL_ResetPassword.Display, originalModel.ResetPassword, modifiedModel.ResetPassword, "UPDATE: '{1}'");
+                log = addLog(log, SettingsModel.COL_ResetPassword.Id, SettingsModel.COL_ResetPassword.Display, originalModel.ResetPassword_Notes, modifiedModel.ResetPassword_Notes, "Notes: '{1}'");
 
-                log = addLogForList<UserAccountRolesModel>(log, SettingsModel.COL_FullAccessForTutorSchedules.Id, SettingsModel.COL_FullAccessForTutorSchedules.Name, originalModel.FullAccessForTutorSchedules_List, modifiedModel.FullAccessForTutorSchedules_List);
-                log = addLog(log, SettingsModel.COL_FullAccessForTutorSchedules.Id, SettingsModel.COL_FullAccessForTutorSchedules.Name, originalModel.FullAccessForTutorSchedules_Notes, modifiedModel.FullAccessForTutorSchedules_Notes, "Notes: '{1}'");
+                log = addLogForList<UserAccountRolesModel>(log, SettingsModel.COL_FullAccessForTutorSchedules.Id, SettingsModel.COL_FullAccessForTutorSchedules.Display, originalModel.FullAccessForTutorSchedules_List, modifiedModel.FullAccessForTutorSchedules_List);
+                log = addLog(log, SettingsModel.COL_FullAccessForTutorSchedules.Id, SettingsModel.COL_FullAccessForTutorSchedules.Display, originalModel.FullAccessForTutorSchedules_Notes, modifiedModel.FullAccessForTutorSchedules_Notes, "Notes: '{1}'");
 
-                log = addLogForList<UserAccountRolesModel>(log, SettingsModel.COL_ShowOnlyOwnUserData.Id, SettingsModel.COL_ShowOnlyOwnUserData.Name, originalModel.ShowOnlyOwnUserData_List, modifiedModel.ShowOnlyOwnUserData_List);
-                log = addLog(log, SettingsModel.COL_ShowOnlyOwnUserData.Id, SettingsModel.COL_ShowOnlyOwnUserData.Name, originalModel.ShowOnlyOwnUserData_Notes, modifiedModel.ShowOnlyOwnUserData_Notes, "Notes: '{1}'");
+                log = addLogForList<UserAccountRolesModel>(log, SettingsModel.COL_ShowOnlyOwnUserData.Id, SettingsModel.COL_ShowOnlyOwnUserData.Display, originalModel.ShowOnlyOwnUserData_List, modifiedModel.ShowOnlyOwnUserData_List);
+                log = addLog(log, SettingsModel.COL_ShowOnlyOwnUserData.Id, SettingsModel.COL_ShowOnlyOwnUserData.Display, originalModel.ShowOnlyOwnUserData_Notes, modifiedModel.ShowOnlyOwnUserData_Notes, "Notes: '{1}'");
 
-                log = addLogForList<UserAccountRolesModel>(log, SettingsModel.COL_PayrollRatesRoles.Id, SettingsModel.COL_PayrollRatesRoles.Name, originalModel.PayrollRatesRoles_List, modifiedModel.PayrollRatesRoles_List);
-                log = addLog(log, SettingsModel.COL_PayrollRatesRoles.Id, SettingsModel.COL_PayrollRatesRoles.Name, originalModel.PayrollRatesRoles_Notes, modifiedModel.PayrollRatesRoles_Notes, "Notes: '{1}'");
+                log = addLogForList<UserAccountRolesModel>(log, SettingsModel.COL_PayrollRatesRoles.Id, SettingsModel.COL_PayrollRatesRoles.Display, originalModel.PayrollRatesRoles_List, modifiedModel.PayrollRatesRoles_List);
+                log = addLog(log, SettingsModel.COL_PayrollRatesRoles.Id, SettingsModel.COL_PayrollRatesRoles.Display, originalModel.PayrollRatesRoles_Notes, modifiedModel.PayrollRatesRoles_Notes, "Notes: '{1}'");
 
                 //Update Database
                 if (string.IsNullOrEmpty(log))
@@ -255,6 +255,15 @@ namespace iSpeakWebApp.Controllers
                 value = LessonPackagesController.get(new Guid(value)).Name;
 
             return Util.append(log, value, ", ");
+        }
+
+        public static bool ShowOnlyOwnUserData(List<string> UserRoles_List)
+        {
+            List<string> ShowOnlyOwnUserData_List = get().ShowOnlyOwnUserData_List;
+            foreach (string Role in UserRoles_List)
+                if (!ShowOnlyOwnUserData_List.Contains(Role))
+                    return false;
+            return true;
         }
 
         #endregion METHODS

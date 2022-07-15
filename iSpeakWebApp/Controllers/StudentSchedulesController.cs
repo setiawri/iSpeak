@@ -234,6 +234,8 @@ namespace iSpeakWebApp.Controllers
         public static List<StudentSchedulesModel> get(HttpSessionStateBase Session, Guid? Id, Guid? Tutor_UserAccounts_Id, Guid? Student_UserAccounts_Id, DayOfWeekEnum? DayOfWeek, DateTime? StartTime, DateTime? EndTime, Guid? SaleInvoiceItems_Id,
             Guid? Languages_Id, string FILTER_Keyword, string FILTER_UserAccounts_Name)
         {
+            UserAccountsModel UserAccount = UserAccountsController.getUserAccount(Session);
+
             return new DBContext().Database.SqlQuery<StudentSchedulesModel>(@"
                         SELECT StudentSchedules.*,
                             StudentSchedules.LessonLocation AS LessonLocationRadioButton,
@@ -258,6 +260,7 @@ namespace iSpeakWebApp.Controllers
 							AND (@Id IS NOT NULL OR (
                                 (@Tutor_UserAccounts_Id IS NULL OR StudentSchedules.Tutor_UserAccounts_Id = @Tutor_UserAccounts_Id)
                                 AND (@Student_UserAccounts_Id IS NULL OR StudentSchedules.Student_UserAccounts_Id = @Student_UserAccounts_Id)
+                                AND (@ShowOnlyOwnUserData = 0 OR (StudentSchedules.Student_UserAccounts_Id = @UserAccounts_Id OR StudentSchedules.Tutor_UserAccounts_Id = @UserAccounts_Id))
                                 AND (@DayOfWeek IS NULL OR StudentSchedules.[DayOfWeek] = @DayOfWeek)
                                 AND ((@StartTime IS NULL OR (@StartTime >= StudentSchedules.StartTime OR @StartTime <= StudentSchedules.EndTime))
                                     OR (@EndTime IS NULL OR (@EndTime >= StudentSchedules.StartTime OR @EndTime <= StudentSchedules.EndTime))
@@ -287,7 +290,9 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(StudentSchedulesModel.COL_Languages_Id.Name, Languages_Id),
                     DBConnection.getSqlParameter("Branches_Id", Helper.getActiveBranchId(Session)),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
-                    DBConnection.getSqlParameter("FILTER_UserAccounts_Name", FILTER_UserAccounts_Name)
+                    DBConnection.getSqlParameter("FILTER_UserAccounts_Name", FILTER_UserAccounts_Name),
+                    DBConnection.getSqlParameter("ShowOnlyOwnUserData", SettingsController.ShowOnlyOwnUserData(UserAccount.Roles_List)),
+                    DBConnection.getSqlParameter("UserAccounts_Id", UserAccount.Id)
                 ).ToList();
         }
 
