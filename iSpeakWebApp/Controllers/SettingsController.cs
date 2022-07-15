@@ -257,6 +257,7 @@ namespace iSpeakWebApp.Controllers
             return Util.append(log, value, ", ");
         }
 
+        public static bool ShowOnlyOwnUserData(HttpSessionStateBase Session) { return ShowOnlyOwnUserData(UserAccountsController.getUserAccount(Session).Roles_List); }
         public static bool ShowOnlyOwnUserData(List<string> UserRoles_List)
         {
             List<string> ShowOnlyOwnUserData_List = get().ShowOnlyOwnUserData_List;

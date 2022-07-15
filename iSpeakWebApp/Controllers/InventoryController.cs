@@ -120,7 +120,7 @@ namespace iSpeakWebApp.Controllers
         public void setViewBag(string FILTER_Keyword)
         {
             ViewBag.FILTER_Keyword = FILTER_Keyword;
-            ProductsController.setDropDownListViewBag(Session, this, ProductsModel.COL_Name.Name);
+            ProductsController.setDropDownListViewBag(this, ProductsModel.COL_Name.Name);
             SuppliersController.setDropDownListViewBag(this);
         }
 

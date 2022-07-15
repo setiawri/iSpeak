@@ -137,7 +137,7 @@ namespace iSpeakWebApp.Controllers
 
         /* METHODS ********************************************************************************************************************************************/
 
-        public static void setDropDownListViewBag(ControllerBase controller)
+        public static void setDropDownListViewBag(Controller controller)
         {
             controller.ViewBag.Branches = new SelectList(get(), BranchesModel.COL_Id.Name, BranchesModel.COL_Name.Name);
         }

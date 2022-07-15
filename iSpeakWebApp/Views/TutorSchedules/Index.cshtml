@@ -7,7 +7,7 @@
     ViewBag.Title = "TUTOR SCHEDULES";
     ViewBag.Subtitle = "Index";
 
-    List<iSpeakWebApp.Models.LanguagesModel> Languages = iSpeakWebApp.Controllers.LanguagesController.get();
+    List<iSpeakWebApp.Models.LanguagesModel> Languages = iSpeakWebApp.Controllers.LanguagesController.get(Session);
 }
 
 <div class="content-wrapper">
@@ -50,7 +50,7 @@
                         </div>
                         <div class="ml-0 mr-2">
                             <label class="mb-0">&nbsp;</label>
-                            <button type="submit" onclick="showLoadingSpinner()" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>LOAD</button>
+                            <button id="LoadData" type="submit" onclick="showLoadingSpinner()" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>LOAD</button>
                         </div>
                     </div>
 
@@ -75,7 +75,8 @@
                                     {
                                         <tr>
                                             <td class="align-top">
-                                                @Html.ActionLink(item.Tutor_UserAccounts_Name, "Index", "UserAccounts", new { FILTER_Keyword = @item.Tutor_UserAccounts_No }, new { @target = "_blank" })</td>
+                                                @Html.ActionLink(item.Tutor_UserAccounts_Name, "Index", "UserAccounts", new { FILTER_Keyword = @item.Tutor_UserAccounts_No }, new { @target = "_blank" })
+                                            </td>
                                             <td class="align-top">
                                                 @{
                                                     if (item.UserAccounts_Interest_List != null)
@@ -129,3 +130,13 @@
     </div>
     <!-- /content area -->
 </div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+    });
+
+    function applyLast() {
+    }
+
+</script>

@@ -457,7 +457,7 @@ namespace iSpeakWebApp.Controllers
         public JsonResult Ajax_GetDDLItems(string keyword, int page, int take, string key)
         {
             int skip = take * (page - 1);
-            List<UserAccountsModel> models = get(skip, take, keyword, 1, null, key, SettingsController.ShowOnlyOwnUserData(getUserAccount(Session).Roles_List));
+            List<UserAccountsModel> models = get(skip, take, keyword, 1, null, key, SettingsController.ShowOnlyOwnUserData(Session));
 
             List<Select2Pagination.Select2Results> results = new List<Select2Pagination.Select2Results>();
             results.AddRange(models.Select(model => new Select2Pagination.Select2Results

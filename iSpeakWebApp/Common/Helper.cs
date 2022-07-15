@@ -92,7 +92,7 @@ namespace iSpeakWebApp
             return (Guid)Session[UserAccountsController.SESSION_ActiveBranches_Id];
         }
 
-        public static DateTime setFilterViewBag(ControllerBase controller, int? year, int? month, DateTime? PayPeriod, string search, string periodChange, int? ActionType)
+        public static DateTime setFilterViewBag(Controller controller, int? year, int? month, DateTime? PayPeriod, string search, string periodChange, int? ActionType)
         {
             DateTime payPeriod;
 

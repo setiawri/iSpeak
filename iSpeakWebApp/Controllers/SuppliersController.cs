@@ -132,7 +132,7 @@ namespace iSpeakWebApp.Controllers
             ViewBag.FILTER_Active = FILTER_Active;
         }
 
-        public static void setDropDownListViewBag(ControllerBase controller)
+        public static void setDropDownListViewBag(Controller controller)
         {
             controller.ViewBag.Suppliers = new SelectList(get(), SuppliersModel.COL_Id.Name, SuppliersModel.COL_Name.Name);
         }

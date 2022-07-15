@@ -134,9 +134,9 @@ namespace iSpeakWebApp.Controllers
 
         /* METHODS ********************************************************************************************************************************************/
 
-        public static void setDropDownListViewBag(ControllerBase controller)
+        public static void setDropDownListViewBag(Controller controller)
         {
-            controller.ViewBag.Languages = new SelectList(get(), LanguagesModel.COL_Id.Name, LanguagesModel.COL_Name.Name);
+            controller.ViewBag.Languages = new SelectList(get(controller.Session), LanguagesModel.COL_Id.Name, LanguagesModel.COL_Name.Name);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
@@ -155,10 +155,10 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public List<LanguagesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Active, FILTER_Keyword); }
-        public LanguagesModel get(Guid Id) { return get(Id, null, null).FirstOrDefault(); }
-        public static List<LanguagesModel> get() { return get(null, null, null); }
-        public static List<LanguagesModel> get(Guid? Id, int? FILTER_Active, string FILTER_Keyword)
+        public List<LanguagesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(Session, null, FILTER_Active, FILTER_Keyword); }
+        public LanguagesModel get(Guid Id) { return get(Session, Id, null, null).FirstOrDefault(); }
+        public static List<LanguagesModel> get(HttpSessionStateBase Session) { return get(Session, null, null, null); }
+        public static List<LanguagesModel> get(HttpSessionStateBase Session, Guid? Id, int? FILTER_Active, string FILTER_Keyword)
         {
             return new DBContext().Database.SqlQuery<LanguagesModel>(@"
                         SELECT Languages.*

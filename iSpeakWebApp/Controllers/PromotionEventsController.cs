@@ -139,7 +139,7 @@ namespace iSpeakWebApp.Controllers
 
         /* METHODS ********************************************************************************************************************************************/
 
-        public static void setDropDownListViewBag(ControllerBase controller)
+        public static void setDropDownListViewBag(Controller controller)
         {
             controller.ViewBag.PromotionEvents = new SelectList(get(), PromotionEventsModel.COL_Id.Name, PromotionEventsModel.COL_Name.Name);
         }

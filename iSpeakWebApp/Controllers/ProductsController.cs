@@ -131,16 +131,16 @@ namespace iSpeakWebApp.Controllers
             UnitsController.setDropDownListViewBag(this);
         }
 
-        public static void setDropDownListViewBag(HttpSessionStateBase Session, ControllerBase controller, string dataTextField) { setDropDownListViewBag(Session, controller, dataTextField, null, null); }
-        public static void setDropDownListViewBag(HttpSessionStateBase Session, ControllerBase controller, string dataTextField, int? Active, int? ForSale)
+        public static void setDropDownListViewBag(Controller controller, string dataTextField) { setDropDownListViewBag(controller, dataTextField, null, null); }
+        public static void setDropDownListViewBag(Controller controller, string dataTextField, int? Active, int? ForSale)
         {
-            controller.ViewBag.Products = new SelectList(get(Session, Active, ForSale).OrderBy(x => x.Description), ProductsModel.COL_Id.Name, dataTextField);
+            controller.ViewBag.Products = new SelectList(get(controller.Session, Active, ForSale).OrderBy(x => x.Description), ProductsModel.COL_Id.Name, dataTextField);
         }
 
-        public static void setViewBag(HttpSessionStateBase Session, ControllerBase controller) { setViewBag(Session, controller, null, null); }
-        public static void setViewBag(HttpSessionStateBase Session, ControllerBase controller, int? Active, int? ForSale)
+        public static void setViewBag(Controller controller) { setViewBag(controller, null, null); }
+        public static void setViewBag(Controller controller, int? Active, int? ForSale)
         {
-            controller.ViewBag.ProductsModels = get(Session, Active, ForSale);
+            controller.ViewBag.ProductsModels = get(controller.Session, Active, ForSale);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/

@@ -31,7 +31,7 @@ namespace iSpeakWebApp.Controllers
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
             setViewBag(FILTER_Keyword, FILTER_UserAccounts_Name, FILTER_Custom);
-            if (rss != null)
+            if (rss != null && !SettingsController.ShowOnlyOwnUserData(Session))
             {
                 ViewBag.RemoveDatatablesStateSave = rss;
                 return View();
