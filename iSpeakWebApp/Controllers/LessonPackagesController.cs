@@ -121,6 +121,7 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.ExpirationMonth, modifiedModel.ExpirationMonth, LessonPackagesModel.COL_ExpirationMonth.LogDisplay);
                     log = Helper.append(log, originalModel.Price, modifiedModel.Price, LessonPackagesModel.COL_Price.LogDisplay);
                     log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, LessonPackagesModel.COL_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.IsClubSubscription, modifiedModel.IsClubSubscription, LessonPackagesModel.COL_IsClubSubscription.LogDisplay);
 
                     if (!string.IsNullOrEmpty(log))
                         update(modifiedModel, log);
@@ -209,7 +210,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_LessonTypes_Id.Name, model.LessonTypes_Id),
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_SessionHours.Name, model.SessionHours),
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_ExpirationMonth.Name, model.ExpirationMonth),
-                DBConnection.getSqlParameter(LessonPackagesModel.COL_Price.Name, model.Price)
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_Price.Name, model.Price),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_IsClubSubscription.Name, model.IsClubSubscription)
             );
 
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
@@ -227,7 +229,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_LessonTypes_Id.Name, model.LessonTypes_Id),
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_SessionHours.Name, model.SessionHours),
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_ExpirationMonth.Name, model.ExpirationMonth),
-                DBConnection.getSqlParameter(LessonPackagesModel.COL_Price.Name, model.Price)
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_Price.Name, model.Price),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_IsClubSubscription.Name, model.IsClubSubscription)
             );
 
             ActivityLogsController.AddCreateLog(db, Session, model.Id);

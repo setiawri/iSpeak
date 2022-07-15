@@ -1,7 +1,10 @@
 ---- CLUB SCHEDULES ==========================================================================================================
 
-	alter table SaleInvoiceItems add ExpirationMonth tinyint NOT NULL default 0
-	GO
+--ALTER TABLE LessonPackages ADD IsClubSubscription bit NOT NULL DEFAULT 0
+--GO
+
+	--alter table SaleInvoiceItems add ExpirationMonth tinyint NOT NULL default 0
+	--GO
 	
 --DROP TABLE ClubSchedules;
 --GO

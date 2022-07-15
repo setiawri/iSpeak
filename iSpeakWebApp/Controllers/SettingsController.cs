@@ -78,9 +78,6 @@ namespace iSpeakWebApp.Controllers
                 log = addLogForList<UserAccountRolesModel>(log, SettingsModel.COL_PayrollRatesRoles.Id, SettingsModel.COL_PayrollRatesRoles.Name, originalModel.PayrollRatesRoles_List, modifiedModel.PayrollRatesRoles_List);
                 log = addLog(log, SettingsModel.COL_PayrollRatesRoles.Id, SettingsModel.COL_PayrollRatesRoles.Name, originalModel.PayrollRatesRoles_Notes, modifiedModel.PayrollRatesRoles_Notes, "Notes: '{1}'");
 
-                log = addLogForList<LessonPackagesModel>(log, SettingsModel.COL_ClubLessonPackages.Id, SettingsModel.COL_ClubLessonPackages.Name, originalModel.ClubLessonPackages_List, modifiedModel.ClubLessonPackages_List);
-                log = addLog(log, SettingsModel.COL_ClubLessonPackages.Id, SettingsModel.COL_ClubLessonPackages.Name, originalModel.ClubLessonPackages_Notes, modifiedModel.ClubLessonPackages_Notes, "Notes: '{1}'");
-
                 //Update Database
                 if (string.IsNullOrEmpty(log))
                     UtilWebMVC.setBootboxMessage(this, "No change to update");
@@ -117,9 +114,7 @@ namespace iSpeakWebApp.Controllers
                     ISNULL(Settings_ShowOnlyOwnUserData.Value_String,'') AS ShowOnlyOwnUserData,
                     ISNULL(Settings_ShowOnlyOwnUserData.Notes,'') AS ShowOnlyOwnUserData_Notes,
                     ISNULL(Settings_PayrollRatesRoles.Value_String,'') AS PayrollRatesRoles,
-                    ISNULL(Settings_PayrollRatesRoles.Notes,'') AS PayrollRatesRoles_Notes,
-                    ISNULL(Settings_ClubLessonPackages.Value_String,'') AS ClubLessonPackages,
-                    ISNULL(Settings_ClubLessonPackages.Notes,'') AS ClubLessonPackages_Notes
+                    ISNULL(Settings_PayrollRatesRoles.Notes,'') AS PayrollRatesRoles_Notes
                 FROM Settings Settings_AutoEntryForCashPayments
                     LEFT JOIN Settings Settings_StudentRole ON Settings_StudentRole.Id = @StudentRoleId
                     LEFT JOIN Settings Settings_TutorRole ON Settings_TutorRole.Id = @TutorRoleId
@@ -127,7 +122,6 @@ namespace iSpeakWebApp.Controllers
                     LEFT JOIN Settings Settings_FullAccessForTutorSchedules ON Settings_FullAccessForTutorSchedules.Id = @FullAccessForTutorSchedulesId
                     LEFT JOIN Settings Settings_ShowOnlyOwnUserData ON Settings_ShowOnlyOwnUserData.Id = @ShowOnlyOwnUserDataId
                     LEFT JOIN Settings Settings_PayrollRatesRoles ON Settings_PayrollRatesRoles.Id = @PayrollRatesRolesId
-                    LEFT JOIN Settings Settings_ClubLessonPackages ON Settings_ClubLessonPackages.Id = @ClubLessonPackagesId
                 WHERE Settings_AutoEntryForCashPayments.Id = @AutoEntryForCashPaymentsId
                 ",
                     DBConnection.getSqlParameter(SettingsModel.COL_AutoEntryForCashPayments.Name + "Id", SettingsModel.COL_AutoEntryForCashPayments.Id),
@@ -136,8 +130,7 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(SettingsModel.COL_ResetPassword.Name + "Id", SettingsModel.COL_ResetPassword.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_FullAccessForTutorSchedules.Name + "Id", SettingsModel.COL_FullAccessForTutorSchedules.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_ShowOnlyOwnUserData.Name + "Id", SettingsModel.COL_ShowOnlyOwnUserData.Id),
-                    DBConnection.getSqlParameter(SettingsModel.COL_PayrollRatesRoles.Name + "Id", SettingsModel.COL_PayrollRatesRoles.Id),
-                    DBConnection.getSqlParameter(SettingsModel.COL_ClubLessonPackages.Name + "Id", SettingsModel.COL_ClubLessonPackages.Id)
+                    DBConnection.getSqlParameter(SettingsModel.COL_PayrollRatesRoles.Name + "Id", SettingsModel.COL_PayrollRatesRoles.Id)
                 ).ToList();
 
             foreach(SettingsModel model in models)
@@ -145,7 +138,6 @@ namespace iSpeakWebApp.Controllers
                 if (!string.IsNullOrEmpty(model.FullAccessForTutorSchedules)) model.FullAccessForTutorSchedules_List = model.FullAccessForTutorSchedules.Split(',').ToList();
                 if (!string.IsNullOrEmpty(model.ShowOnlyOwnUserData)) model.ShowOnlyOwnUserData_List = model.ShowOnlyOwnUserData.Split(',').ToList();
                 if (!string.IsNullOrEmpty(model.PayrollRatesRoles)) model.PayrollRatesRoles_List = model.PayrollRatesRoles.Split(',').ToList();
-                if (!string.IsNullOrEmpty(model.ClubLessonPackages)) model.ClubLessonPackages_List = model.ClubLessonPackages.Split(',').ToList();
             }
 
             return models.Count == 0 ? null : models[0];
@@ -156,7 +148,6 @@ namespace iSpeakWebApp.Controllers
             if (modifiedModel.FullAccessForTutorSchedules_List != null) modifiedModel.FullAccessForTutorSchedules = string.Join(",", modifiedModel.FullAccessForTutorSchedules_List.ToArray());
             if (modifiedModel.ShowOnlyOwnUserData_List != null) modifiedModel.ShowOnlyOwnUserData = string.Join(",", modifiedModel.ShowOnlyOwnUserData_List.ToArray());
             if (modifiedModel.PayrollRatesRoles_List != null) modifiedModel.PayrollRatesRoles = string.Join(",", modifiedModel.PayrollRatesRoles_List.ToArray());
-            if (modifiedModel.ClubLessonPackages_List != null) modifiedModel.ClubLessonPackages = string.Join(",", modifiedModel.ClubLessonPackages_List.ToArray());
 
             db.Database.ExecuteSqlCommand(@"
                     IF (SELECT COUNT(Id) FROM Settings WHERE Id = @AutoEntryForCashPaymentsId) = 0 INSERT INTO Settings (Id) VALUES(@AutoEntryForCashPaymentsId);
@@ -179,9 +170,6 @@ namespace iSpeakWebApp.Controllers
 
                     IF (SELECT COUNT(Id) FROM Settings WHERE Id = @PayrollRatesRolesId) = 0 INSERT INTO Settings (Id) VALUES(@PayrollRatesRolesId);
                     UPDATE Settings SET Value_String=@PayrollRatesRoles, Notes=@PayrollRatesRoles_Notes WHERE Id=@PayrollRatesRolesId;
-
-                    IF (SELECT COUNT(Id) FROM Settings WHERE Id = @ClubLessonPackagesId) = 0 INSERT INTO Settings (Id) VALUES(@ClubLessonPackagesId);
-                    UPDATE Settings SET Value_String=@ClubLessonPackages, Notes=@ClubLessonPackages_Notes WHERE Id=@ClubLessonPackagesId;
                 ",
                     DBConnection.getSqlParameter(SettingsModel.COL_AutoEntryForCashPayments.Name + "Id", SettingsModel.COL_AutoEntryForCashPayments.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_AutoEntryForCashPayments.Name, Util.wrapNullable(modifiedModel.AutoEntryForCashPayments)),
@@ -203,10 +191,7 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(SettingsModel.COL_ShowOnlyOwnUserData_Notes.Name, Util.wrapNullable(modifiedModel.ShowOnlyOwnUserData_Notes)),
                     DBConnection.getSqlParameter(SettingsModel.COL_PayrollRatesRoles.Name + "Id", SettingsModel.COL_PayrollRatesRoles.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_PayrollRatesRoles.Name, Util.wrapNullable(modifiedModel.PayrollRatesRoles)),
-                    DBConnection.getSqlParameter(SettingsModel.COL_PayrollRatesRoles_Notes.Name, Util.wrapNullable(modifiedModel.PayrollRatesRoles_Notes)),
-                    DBConnection.getSqlParameter(SettingsModel.COL_ClubLessonPackages.Name + "Id", SettingsModel.COL_ClubLessonPackages.Id),
-                    DBConnection.getSqlParameter(SettingsModel.COL_ClubLessonPackages.Name, Util.wrapNullable(modifiedModel.ClubLessonPackages)),
-                    DBConnection.getSqlParameter(SettingsModel.COL_ClubLessonPackages_Notes.Name, Util.wrapNullable(modifiedModel.ClubLessonPackages_Notes))
+                    DBConnection.getSqlParameter(SettingsModel.COL_PayrollRatesRoles_Notes.Name, Util.wrapNullable(modifiedModel.PayrollRatesRoles_Notes))
             );
         }
 

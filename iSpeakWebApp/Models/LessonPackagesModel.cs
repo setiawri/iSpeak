@@ -54,9 +54,9 @@ namespace iSpeakWebApp.Models
 
 
         [Required]
-        [Display(Name = "Expire")]
+        [Display(Name = "Month Expire")]
         public byte ExpirationMonth { get; set; } = 0;
-        public static ModelMember COL_ExpirationMonth = new ModelMember { Name = "ExpirationMonth", Display = "Expire", LogDisplay = ActivityLogsController.editIntFormat("Expiration Month") };
+        public static ModelMember COL_ExpirationMonth = new ModelMember { Name = "ExpirationMonth", Display = "Month Expire", LogDisplay = ActivityLogsController.editIntFormat("Expiration Month") };
 
 
         [Required]
@@ -64,6 +64,10 @@ namespace iSpeakWebApp.Models
         public int Price { get; set; } = 0;
         public static ModelMember COL_Price = new ModelMember { Name = "Price", Display = "Price", LogDisplay = ActivityLogsController.editIntFormat("Price") };
 
+
+        [Display(Name = "Club Subscription")]
+        public bool IsClubSubscription { get; set; } = true;
+        public static ModelMember COL_IsClubSubscription = new ModelMember { Name = "IsClubSubscription", Display = "Club", LogDisplay = ActivityLogsController.editBooleanFormat("Club Subscription") };
 
         /******************************************************************************************************************************************************/
 
