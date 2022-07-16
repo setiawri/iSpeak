@@ -36,17 +36,11 @@ namespace iSpeakWebApp.Controllers
             }
 
             setViewBag(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_HasDueAmount, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
-            if (rss == null || !string.IsNullOrEmpty(FILTER_Keyword))
-            {
-                List<SaleInvoicesModel> models = get(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_HasDueAmount, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo)
+            ViewBag.RemoveDatatablesStateSave = rss;
+
+            List<SaleInvoicesModel> models = get(FILTER_Keyword, FILTER_PaymentNo, FILTER_Cancelled, FILTER_Approved, FILTER_HasDueAmount, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo)
                     .OrderByDescending(x => x.No).ToList();
                 return View(models);
-            }
-            else
-            {
-                ViewBag.RemoveDatatablesStateSave = rss;
-                return View();
-            }
         }
 
         // POST: SaleInvoices

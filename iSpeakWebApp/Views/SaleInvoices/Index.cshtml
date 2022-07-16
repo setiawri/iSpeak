@@ -179,7 +179,10 @@
                                             @if (access.SaleInvoices_Approve)
                                             {
                                                 <td class="align-top" style="text-align:center;">
-                                                    <input type="checkbox" id='@("chkApprove_" + rowno)' onclick="Update_Approved(this, '@item.Id')" @(item.Approved ? "checked" : "") />
+                                                    @if (item.Due == 0 || item.Cancelled)
+                                                    {
+                                                        <input type="checkbox" id='@("chkApprove_" + rowno)' onclick="Update_Approved(this, '@item.Id')" @(item.Approved ? "checked" : "") />
+                                                    }
                                                 </td>
                                             }
                                             @if (access.SaleInvoices_Edit)

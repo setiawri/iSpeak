@@ -174,9 +174,11 @@ namespace iSpeakWebApp.Controllers
                         SELECT LessonPackages.*,
                             Languages.Name AS Languages_Name,
                             LessonTypes.Name AS LessonTypes_Name,
-                            '['+Languages.Name+': '+LessonTypes.Name+'] '+LessonPackages.Name+' ('
-                                + CASE WHEN LessonPackages.SessionHours > 0 THEN FORMAT(LessonPackages.SessionHours,'N2') + ' hours' ELSE '' END 
-                                + CASE WHEN LessonPackages.ExpirationMonth > 0 THEN FORMAT(LessonPackages.ExpirationMonth,'N0') + ' months' ELSE '' END
+                            '['+Languages.Name+': '+LessonTypes.Name+'] '+LessonPackages.Name+' (' + 
+                                CASE WHEN LessonPackages.IsClubSubscription = 0 
+                                    THEN FORMAT(LessonPackages.SessionHours,'N2') + ' hours' 
+                                    ELSE FORMAT(LessonPackages.ExpirationMonth,'N0') + ' months' 
+                                END
                                 + ') '+FORMAT(LessonPackages.Price,'N0') AS DDLDescription
                         FROM LessonPackages
                             LEFT JOIN Languages ON Languages.Id = LessonPackages.Languages_Id
