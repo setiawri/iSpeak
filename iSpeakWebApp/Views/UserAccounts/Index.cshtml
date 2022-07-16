@@ -8,7 +8,7 @@
     ViewBag.Subtitle = "Index";
 
     List<iSpeakWebApp.Models.UserAccountRolesModel> UserAccountRoles = iSpeakWebApp.Controllers.UserAccountRolesController.get();
-    List<iSpeakWebApp.Models.LanguagesModel> Languages = iSpeakWebApp.Controllers.LanguagesController.get();
+    List<iSpeakWebApp.Models.LanguagesModel> Languages = iSpeakWebApp.Controllers.LanguagesController.get(Session);
 }
 
 <div class="content-wrapper">
