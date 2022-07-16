@@ -88,9 +88,9 @@
                             <thead>
                                 <tr>
                                     <th style="width:50px;">@Html.DisplayNameFor(model => model.No)</th>
-                                    <th class="px-0" style="width:80px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
-                                    <th>@Html.DisplayNameFor(model => model.UserAccounts_Id)</th>
-                                    <th class="non-sortable text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Amount)</th>
+                                    <th style="width:80px;" class="px-0">@Html.DisplayNameFor(model => model.Timestamp)</th>
+                                    <th style="width:300px;">@Html.DisplayNameFor(model => model.UserAccounts_Id)</th>
+                                    <th style="width:120px;" class="non-sortable text-right">@Html.DisplayNameFor(model => model.Amount)</th>
                                     @if (access.PayrollPayments_Approve)
                                     {
                                         <th class="non-searchable non-sortable px-0" style="width:0px;">Approved</th>

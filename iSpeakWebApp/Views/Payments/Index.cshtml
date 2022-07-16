@@ -96,10 +96,10 @@
                             <thead>
                                 <tr>
                                     <th style="width:50px;">@Html.DisplayNameFor(model => model.No)</th>
-                                    <th class="non-sortable" style="width:150px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
-                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.CashAmount)</th>
-                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.DebitNumber)</th>
-                                    <th class="text-right" style="width:120px;">@Html.DisplayNameFor(model => model.ConsignmentAmount)</th>
+                                    <th style="width:150px;" class="non-sortable">@Html.DisplayNameFor(model => model.Timestamp)</th>
+                                    <th style="width:120px;" class="text-right">@Html.DisplayNameFor(model => model.CashAmount)</th>
+                                    <th style="width:120px;" class="text-right">@Html.DisplayNameFor(model => model.DebitNumber)</th>
+                                    <th style="width:120px;" class="text-right">@Html.DisplayNameFor(model => model.ConsignmentAmount)</th>
                                     @if (access.Payments_Approve)
                                     {
                                         <th class="non-searchable non-sortable" style="width:0px;">Approved</th>

@@ -9,15 +9,15 @@ namespace iSpeakWebApp.Models
     public class BranchesModel
     {
         [Key]
-		public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public static ModelMember COL_Id = new ModelMember { Name = "Id" };
 
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = String.Empty;
         public static ModelMember COL_Name = new ModelMember { Name = "Name", Display = "Name", LogDisplay = ActivityLogsController.editStringFormat("Name") };
 
         [Required]
-        public string Address { get; set; }
+        public string Address { get; set; } = String.Empty;
         public static ModelMember COL_Address = new ModelMember { Name = "Address", Display = "Address", LogDisplay = ActivityLogsController.editStringFormat("Address") };
 
         [Display(Name = "Phone Number")]

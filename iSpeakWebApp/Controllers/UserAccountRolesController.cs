@@ -44,7 +44,7 @@ namespace iSpeakWebApp.Controllers
             if (!UserAccountsController.getUserAccess(Session).UserAccountRoles_Add)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            return View();
+            return View(new UserAccountRolesModel());
         }
 
         // POST: UserAccountRoles/Create

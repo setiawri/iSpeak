@@ -25,8 +25,8 @@
                         <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Subtitle</legend>
 
                         <div class="form-group row">
-                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label col-lg-2 required" })
-                            <div class="col-lg-5">
+                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
+                            <div class="col-lg-3">
                                 @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                             </div>

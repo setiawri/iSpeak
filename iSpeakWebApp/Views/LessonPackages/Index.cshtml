@@ -70,10 +70,10 @@
                             <thead>
                                 <tr>
                                     <th style="width:300px;">Package</th>
-                                    <th class="text-right" style="width:100px;">@Html.DisplayNameFor(model => model.SessionHours)</th>
-                                    <th class="text-right" style="width:140px;">@Html.DisplayNameFor(model => model.ExpirationMonth)</th>
-                                    <th class="text-right" style="width:100px;">@Html.DisplayNameFor(model => model.Price)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Notes)</th>
+                                    <th style="width:100px;" class="text-right">@Html.DisplayNameFor(model => model.SessionHours)</th>
+                                    <th style="width:140px;" class="text-right">@Html.DisplayNameFor(model => model.ExpirationMonth)</th>
+                                    <th style="width:100px;" class="text-right">@Html.DisplayNameFor(model => model.Price)</th>
+                                    <th class="non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
                                     <th class="non-searchable non-sortable" style="width:130px;"></th>
                                 </tr>
                             </thead>
@@ -108,7 +108,7 @@
                                                 }
                                                 @if (access.LessonPackages_Edit)
                                                 {
-                                                    <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a>@:•
+                                                    <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a> @:•
                                                 }
                                                 <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                             </td>

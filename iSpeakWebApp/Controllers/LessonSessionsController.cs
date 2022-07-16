@@ -66,7 +66,7 @@ namespace iSpeakWebApp.Controllers
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
             setViewBag(FILTER_Keyword, FILTER_InvoiceNo, FILTER_Cancelled, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
-            return View();
+            return View(new LessonSessionsModel());
         }
 
         //POST: LessonSessions/Create

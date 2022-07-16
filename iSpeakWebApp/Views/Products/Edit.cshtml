@@ -27,7 +27,7 @@
 
                         <div class="form-group row">
                             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
-                            <div class="col-lg-5">
+                            <div class="col-lg-3">
                                 @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                             </div>
@@ -35,7 +35,7 @@
 
                         <div class="form-group row">
                             @Html.LabelFor(model => model.Units_Id, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 @Html.DropDownListFor(model => model.Units_Id, ViewBag.Units as SelectList, "Please Select", new { @class = "form-control select2" })
                                 @Html.ValidationMessageFor(model => model.Units_Id, "", new { @class = "text-danger" })
                             </div>
@@ -43,7 +43,7 @@
 
                         <div class="form-group row">
                             @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "col-form-label col-lg-1" })
-                            <div class="col-lg-5">
+                            <div class="col-lg-3">
                                 @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
                             </div>
@@ -51,7 +51,7 @@
 
                         <div class="form-group row">
                             @Html.LabelFor(model => model.Barcode, htmlAttributes: new { @class = "col-form-label col-lg-1" })
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 @Html.EditorFor(model => model.Barcode, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Barcode, "", new { @class = "text-danger" })
                             </div>
@@ -59,7 +59,7 @@
 
                         <div class="form-group row">
                             @Html.LabelFor(model => model.BuyPrice, htmlAttributes: new { @class = "col-form-label col-lg-1" })
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 @Html.EditorFor(model => model.BuyPrice, new { htmlAttributes = new { @class = "form-control positiveintegeronly", @type = "text" } })
                                 @Html.ValidationMessageFor(model => model.BuyPrice, "", new { @class = "text-danger" })
                             </div>
@@ -67,7 +67,7 @@
 
                         <div class="form-group row">
                             @Html.LabelFor(model => model.SellPrice, htmlAttributes: new { @class = "col-form-label col-lg-1" })
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 @Html.EditorFor(model => model.SellPrice, new { htmlAttributes = new { @class = "form-control positiveintegeronly", @type = "text" } })
                                 @Html.ValidationMessageFor(model => model.SellPrice, "", new { @class = "text-danger" })
                             </div>
@@ -75,7 +75,7 @@
 
                         <div class="form-group row">
                             @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "col-form-label col-lg-1" })
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
                             </div>
@@ -83,7 +83,7 @@
 
                         <div class="form-group row">
                             @Html.LabelFor(model => model.ForSale, htmlAttributes: new { @class = "col-form-label col-lg-1" })
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 <div class="form-check form-check-switchery">
                                     <label class="form-check-label">
                                         @Html.EditorFor(model => model.ForSale, new { htmlAttributes = new { @class = "form-check-input-switchery" } })
@@ -95,7 +95,7 @@
 
                         <div class="form-group row">
                             @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "col-form-label col-lg-1" })
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 <div class="form-check form-check-switchery">
                                     <label class="form-check-label">
                                         @Html.EditorFor(model => model.Active, new { htmlAttributes = new { @class = "form-check-input-switchery" } })

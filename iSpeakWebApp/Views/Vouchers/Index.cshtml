@@ -57,9 +57,9 @@
                                 <tr>
                                     <th>@Html.DisplayNameFor(model => model.Code)</th>
                                     <th>@Html.DisplayNameFor(model => model.Description)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Amount)</th>
-                                    <th class="non-searchable non-sortable" style="width:130px;"></th>
-                                    <th class="non-searchable non-sortable" style="width:100px;"></th>
+                                    <th style="width:100px;" class="text-right">@Html.DisplayNameFor(model => model.Amount)</th>
+                                    <th style="width:100px;" class="non-searchable non-sortable"></th>
+                                    <th style="width:100px;" class="non-searchable non-sortable"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -70,7 +70,7 @@
                                     <tr>
                                         <td class="align-top">@Html.DisplayFor(modelItem => item.Code)</td>
                                         <td class="align-top">@Html.DisplayFor(modelItem => item.Description)</td>
-                                        <td class="align-top">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                        <td class="align-top text-right">@Html.DisplayFor(modelItem => item.Amount)</td>
                                         <td>
                                             @if (item.Active)
                                             {

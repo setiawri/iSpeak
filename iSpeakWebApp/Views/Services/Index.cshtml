@@ -55,13 +55,13 @@
                         <table class="table table-hover datatable">
                             <thead>
                                 <tr>
-                                    <th>@Html.DisplayNameFor(model => model.Name)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Description)</th>
-                                    <th class="text-right">@Html.DisplayNameFor(model => model.SellPrice)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Notes)</th>
-                                    <th class="non-searchable non-sortable" style="width:60px;">@Html.DisplayNameFor(model => model.ForSale)</th>
-                                    <th class="non-searchable non-sortable" style="width:130px;"></th>
-                                    <th class="non-searchable non-sortable" style="width:100px;"></th>
+                                    <th style="width:300px;">@Html.DisplayNameFor(model => model.Name)</th>
+                                    <th style="width:300px;">@Html.DisplayNameFor(model => model.Description)</th>
+                                    <th style="width:150px;" class="text-right">@Html.DisplayNameFor(model => model.SellPrice)</th>
+                                    <th class="non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
+                                    <th style="width:60px;" class="non-searchable non-sortable">@Html.DisplayNameFor(model => model.ForSale)</th>
+                                    <th style="width:130px;" class="non-searchable non-sortable"></th>
+                                    <th style="width:100px;" class="non-searchable non-sortable"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -97,7 +97,7 @@
                                             <td>
                                                 @if (access.Services_Edit)
                                                 {
-                                                    <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a>@:•
+                                                    <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a> @:•
                                                 }
                                                 <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                             </td>

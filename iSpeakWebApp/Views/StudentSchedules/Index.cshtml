@@ -57,7 +57,7 @@
                                     <th style="width:200px;">@Html.DisplayNameFor(model => model.SaleInvoiceItems_Id)</th>
                                     <th style="width:200px;">Schedule</th>
                                     <th class="non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
-                                    <th class="non-searchable non-sortable" style="width:170px;"></th>
+                                    <th style="width:170px;" class="non-searchable non-sortable"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -90,8 +90,8 @@
                                             <td class="align-top">
                                                 @if (access.StudentSchedules_Edit)
                                                 {
-                                                    <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a> @:•
-                                                    <a href="javascript:void(0)" onclick="Delete('@item.Id')">DELETE</a> @:•
+                                                    <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a> @:• 
+                                                    <a href="javascript:void(0)" onclick="Delete('@item.Id')">DELETE</a> @:• 
                                                 }
                                                 <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                             </td>

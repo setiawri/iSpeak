@@ -85,19 +85,19 @@
                             <thead>
                                 <tr>
                                     <th style="width:50px;">@Html.DisplayNameFor(model => model.No)</th>
-                                    <th class="non-sortable" style="width:150px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
-                                    <th class="non-sortable">@Html.DisplayNameFor(model => model.PettyCashRecordsCategories_Id)</th>
+                                    <th style="width:150px;" class="non-sortable">@Html.DisplayNameFor(model => model.Timestamp)</th>
+                                    <th style="width:300px;" class="non-sortable">@Html.DisplayNameFor(model => model.PettyCashRecordsCategories_Id)</th>
                                     <th class="non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
-                                    <th class="non-sortable text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Amount)</th>
-                                    <th class="non-sortable text-right" style="width:120px;">@Html.DisplayNameFor(model => model.Balance)</th>
-                                    <th class="non-sortable" style="width:150px;">@Html.DisplayNameFor(model => model.UserAccounts_Id)</th>
+                                    <th style="width:120px;" class="non-sortable text-right">@Html.DisplayNameFor(model => model.Amount)</th>
+                                    <th style="width:120px;" class="non-sortable text-right">@Html.DisplayNameFor(model => model.Balance)</th>
+                                    <th style="width:150px;" class="non-sortable">@Html.DisplayNameFor(model => model.UserAccounts_Id)</th>
                                     @if (access.PettyCashRecords_Approve)
                                     {
-                                        <th class="non-searchable non-sortable" style="width:0px;">Approved</th>
+                                        <th style="width:0px;" class="non-searchable non-sortable">Approved</th>
                                     }
                                     @if (access.PettyCashRecords_Approve)
                                     {
-                                        <th class="non-searchable non-sortable" style="width:70px;"></th>
+                                        <th style="width:70px;" class="non-searchable non-sortable"></th>
                                     }
                                 </tr>
                             </thead>
@@ -113,7 +113,7 @@
                                                 @item.PettyCashRecordsCategories_Name
                                                 @if (item.ExpenseCategories_Id != null)
                                                 { 
-                                                    <br /><strong>Expense Category: </strong>@(item.ExpenseCategories_Name)
+                                                    <br /><strong>Expense: </strong>@(item.ExpenseCategories_Name)
                                                 }
                                             </td>
                                             <td class="align-top tablecellwrap">@Html.DisplayFor(modelItem => item.Notes)</td>

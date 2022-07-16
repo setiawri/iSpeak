@@ -46,14 +46,14 @@
                         <table class="table table-hover datatable">
                             <thead>
                                 <tr>
-                                    <th>@Html.DisplayNameFor(model => model.Name)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Location)</th>
-                                    <th>@Html.DisplayNameFor(model => model.TotalDays)</th>
-                                    <th>@Html.DisplayNameFor(model => model.EventFee)</th>
-                                    <th>@Html.DisplayNameFor(model => model.PersonnelCost)</th>
-                                    <th>@Html.DisplayNameFor(model => model.AdditionalCost)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Notes)</th>
-                                    <th class="non-searchable non-sortable" style="width:100px;"></th>
+                                    <th style="width:350px;">@Html.DisplayNameFor(model => model.Name)</th>
+                                    <th style="width:300px;">@Html.DisplayNameFor(model => model.Location)</th>
+                                    <th style="width:100px;" class="text-right">@Html.DisplayNameFor(model => model.TotalDays)</th>
+                                    <th style="width:150px;" class="text-right">@Html.DisplayNameFor(model => model.EventFee)</th>
+                                    <th style="width:150px;" class="text-right">@Html.DisplayNameFor(model => model.PersonnelCost)</th>
+                                    <th style="width:150px;" class="text-right">@Html.DisplayNameFor(model => model.AdditionalCost)</th>
+                                    <th class="non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
+                                    <th style="width:100px;" class="non-searchable non-sortable"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -64,15 +64,15 @@
                                         <tr>
                                             <td>@Html.DisplayFor(modelItem => item.Name)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Location)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.TotalDays)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.EventFee)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.PersonnelCost)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.AdditionalCost)</td>
+                                            <td class="text-right">@Html.DisplayFor(modelItem => item.TotalDays)</td>
+                                            <td class="text-right">@Html.DisplayFor(modelItem => item.EventFee)</td>
+                                            <td class="text-right">@Html.DisplayFor(modelItem => item.PersonnelCost)</td>
+                                            <td class="text-right">@Html.DisplayFor(modelItem => item.AdditionalCost)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Notes)</td>
                                             <td>
                                                 @if (access.PromotionEvents_Edit)
                                                 {
-                                                    <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a>@:•
+                                                    <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a> @:•
                                                 }
                                                 <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                             </td>

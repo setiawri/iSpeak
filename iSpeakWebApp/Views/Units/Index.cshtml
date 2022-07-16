@@ -56,8 +56,8 @@
                             <thead>
                                 <tr>
                                     <th>@Html.DisplayNameFor(model => model.Name)</th>
-                                    <th class="non-searchable non-sortable" style="width:130px;"></th>
-                                    <th class="non-searchable non-sortable" style="width:100px;"></th>
+                                    <th style="width:130px;" class="non-searchable non-sortable"></th>
+                                    <th style="width:100px;" class="non-searchable non-sortable"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -80,7 +80,7 @@
                                         <td>
                                             @if (access.Units_Edit)
                                             {
-                                                <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a>@:•
+                                                <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a> @:•
                                             }
                                             <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
 

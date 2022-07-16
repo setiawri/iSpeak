@@ -32,7 +32,7 @@ namespace iSpeakWebApp.Controllers
             if (!UserAccountsController.getUserAccess(Session).Reminders_Add)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            return View();
+            return View(new RemindersModel());
         }
 
         [HttpPost]

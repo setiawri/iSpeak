@@ -29,31 +29,15 @@
 
                             <div class="form-group row">
                                 @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
-                                <div class="col-lg-5">
+                                <div class="col-lg-4">
                                     @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                @Html.LabelFor(model => model.Branches_Id, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
-                                <div class="col-lg-2">
-                                    @Html.DropDownListFor(model => model.Branches_Id, ViewBag.Branches as SelectList, "Please Select", new { @class = "form-control select2" })
-                                    @Html.ValidationMessageFor(model => model.Branches_Id, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                @Html.LabelFor(model => model.Branches, htmlAttributes: new { @class = "col-form-label col-lg-1" })
-                                <div class="col-lg-5">
-                                    @Html.ListBoxFor(model => model.Branches_List, ViewBag.Branches as SelectList, new { @class = "form-control select2", @multiple = "multiple" })
-                                    @Html.ValidationMessageFor(model => model.Branches_List, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
                                 @Html.LabelFor(model => model.Fullname, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
-                                <div class="col-lg-5">
+                                <div class="col-lg-4">
                                     @Html.EditorFor(model => model.Fullname, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Fullname, "", new { @class = "text-danger" })
                                 </div>
@@ -73,8 +57,24 @@
                             </div>
 
                             <div class="form-group row">
+                                @Html.LabelFor(model => model.Branches_Id, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
+                                <div class="col-lg-2">
+                                    @Html.DropDownListFor(model => model.Branches_Id, ViewBag.Branches as SelectList, "Please Select", new { @class = "form-control select2" })
+                                    @Html.ValidationMessageFor(model => model.Branches_Id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Branches, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                                <div class="col-lg-4">
+                                    @Html.ListBoxFor(model => model.Branches_List, ViewBag.Branches as SelectList, new { @class = "form-control select2", @multiple = "multiple" })
+                                    @Html.ValidationMessageFor(model => model.Branches_List, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
                                 @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "col-form-label col-lg-1" })
-                                <div class="col-lg-5">
+                                <div class="col-lg-4">
                                     @Html.ListBoxFor(model => model.Roles_List, ViewBag.UserAccountRoles as SelectList, new { @class = "form-control select2", @multiple = "multiple" })
                                     @Html.ValidationMessageFor(model => model.Roles_List, "", new { @class = "text-danger" })
                                 </div>
@@ -82,7 +82,7 @@
 
                             <div class="form-group row">
                                 @Html.LabelFor(model => model.Interest, htmlAttributes: new { @class = "col-form-label col-lg-1" })
-                                <div class="col-lg-5">
+                                <div class="col-lg-4">
                                     @Html.ListBoxFor(model => model.Interest_List, ViewBag.Languages as SelectList, new { @class = "form-control select2", @multiple = "multiple" })
                                     @Html.ValidationMessageFor(model => model.Interest_List, "", new { @class = "text-danger" })
                                 </div>
@@ -90,7 +90,7 @@
 
                             <div class="form-group row">
                                 @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "col-form-label col-lg-1" })
-                                <div class="col-lg-5">
+                                <div class="col-lg-4">
                                     @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                                 </div>
@@ -98,7 +98,7 @@
 
                             <div class="form-group row">
                                 @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "col-form-label col-lg-1" })
-                                <div class="col-lg-5">
+                                <div class="col-lg-4">
                                     @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
                                 </div>
@@ -106,7 +106,7 @@
 
                             <div class="form-group row">
                                 @Html.LabelFor(model => model.Phone1, htmlAttributes: new { @class = "col-form-label col-lg-1" })
-                                <div class="col-lg-5">
+                                <div class="col-lg-4">
                                     @Html.EditorFor(model => model.Phone1, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Phone1, "", new { @class = "text-danger" })
                                 </div>
@@ -114,7 +114,7 @@
 
                             <div class="form-group row">
                                 @Html.LabelFor(model => model.Phone2, htmlAttributes: new { @class = "col-form-label col-lg-1" })
-                                <div class="col-lg-5">
+                                <div class="col-lg-4">
                                     @Html.EditorFor(model => model.Phone2, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Phone2, "", new { @class = "text-danger" })
                                 </div>
@@ -130,7 +130,7 @@
 
                             <div class="form-group row">
                                 @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "col-form-label col-lg-1" })
-                                <div class="col-lg-5">
+                                <div class="col-lg-4">
                                     @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
                                 </div>
@@ -138,7 +138,7 @@
 
                             <div class="form-group row">
                                 @Html.LabelFor(model => model.Active, htmlAttributes: new { @class = "col-form-label col-lg-1" })
-                                <div class="col-lg-5">
+                                <div class="col-lg-4">
                                     <div class="form-check form-check-switchery">
                                         <label class="form-check-label">
                                             @Html.EditorFor(model => model.Active, new { htmlAttributes = new { @class = "form-check-input-switchery" } })
