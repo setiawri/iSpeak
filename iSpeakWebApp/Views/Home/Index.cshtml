@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<iSpeakWebApp.Models.ClubSchedulesModel>
+@{
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     ViewBag.SelectedNavigationMenu = "Home";
     ViewBag.Subtitle = "Dashboard";
@@ -38,8 +39,14 @@
                             </div>
                         }
                     </div>
-                } else { 
-                    <label class="text-primary col-form-label col-lg-12 text-center"><h3>Welcome to iSpeak website</h3></label>                    
+                }
+                else if(true)
+                {
+                     
+                }
+                else
+                {
+                    <label class="text-primary col-form-label col-lg-12 text-center mt-5"><h3>Welcome to iSpeak website</h3></label>
                 }
             </div>
         </div>

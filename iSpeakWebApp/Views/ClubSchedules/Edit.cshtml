@@ -28,14 +28,6 @@
                         <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Subtitle</legend>
 
                         <div class="form-group row">
-                            @Html.LabelFor(model => model.LessonPackages_Id, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
-                            <div class="col-lg-4">
-                                @Html.DropDownListFor(model => model.LessonPackages_Id, ViewBag.LessonPackages as SelectList, "Please Select", new { @class = "form-control select2" })
-                                @Html.ValidationMessageFor(model => model.LessonPackages_Id, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
                             @Html.LabelFor(model => model.Languages_Id, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
                             <div class="col-lg-4">
                                 @Html.DropDownListFor(model => model.Languages_Id, ViewBag.Languages as SelectList, "Please Select", new { @class = "form-control select2" })
@@ -142,9 +134,7 @@
 
     $('#targetForm').submit(function (e) {
 
-        if ($('#LessonPackages_Id').val() == null) {
-            showMessage('Please select Lesson Package', 'LessonPackages_Id');
-        } else if ($('#StartTime').val() >= $('#EndTime').val()) {
+        if ($('#StartTime').val() >= $('#EndTime').val()) {
             showMessage('Start Time cannot be the same or later than End Time', 'StartTime');
         } else {
             showLoadingSpinner();

@@ -371,6 +371,126 @@
     function setDateRangePickerStartDate(id, daterangepickerId) { $('#' + id).val($('#' + daterangepickerId).val().split(' - ')[0]); }
     function setDateRangePickerEndDate(id, daterangepickerId) { $('#' + id).val($('#' + daterangepickerId).val().split(' - ')[1]); }
 
+    // DATE MANIPULATOR ============================================================================================================================================
+
+    function parseJSONDate(value) {
+        if (value == null)
+            return null
+        else
+            return new Date(parseInt(value.replace("/Date(", "").replace(")/", ""), 10));
+        //return new Date(parseInt((value).match(/\d+/)[0])); //returns incorrect date when json date value is negative. (negative when earlier than year 1970)
+    }
+
+    var monthNames = ["Jan", "Feb", "Mar", "Apr",
+        "May", "Jun", "Jul", "Aug",
+        "Sep", "Oct", "Nov", "Dec"];
+
+    function formatDate(value, format) {
+        var result = [];
+        var date = "";
+        var month = "";
+        var year = "";
+
+        var delimiter = getDateDelimiter(format);
+
+        format = format.split(delimiter);
+        for (i = 0; i < format.length; i++) {
+
+            if (format[i] == 'dd') {
+                result.push((('' + value.getDate()).length < 2 ? '0' : '') + value.getDate() + ' ');
+            }
+
+            if (format[i].includes('M')) {
+                if (format[i] == 'MMM') {
+                    month = monthNames[value.getMonth()];
+                } else if (format[i] == 'MM') {
+                    month = (('' + (value.getMonth() + 1)).length < 2 ? '0' : '') + (value.getMonth() + 1) + ' ';
+                }
+                result.push(month);
+            }
+
+            if (format[i] == 'yyyy')
+                result.push(value.getFullYear());
+            else if (format[i] == 'yy')
+                result.push(value.getFullYear().toString().substr(-2));
+
+            if (format[i] == 'HH')
+                result.push(padLeft(value.getHours(), format[i].length, "0"));
+
+            if (format[i] == 'mm')
+                result.push(padLeft(value.getMinutes(), format[i].length, "0"));
+
+            if (format[i] == 'ss')
+                result.push(padLeft(value.getSeconds(), format[i].length, "0"));
+        }
+
+        var finalResult = result.filter(Boolean).join(delimiter);
+        if (delimiter != ' ')
+            finalResult = finalResult.replaceAll(' ', '');
+
+        return finalResult;
+    }
+
+    function getDateDelimiter(value) {
+        if (value.split(" ").length > 1)
+            return " ";
+        else if (value.split("-").length > 1)
+            return "-";
+        else if (value.split("/").length > 1)
+            return "/";
+        else if (value.split(":").length > 1)
+            return ":";
+    }
+
+    function addMonths(date, value) {
+        var d = date.getDate();
+        date.setMonth(date.getMonth() + +value);
+        if (date.getDate() != d) {
+            date.setDate(0);
+        }
+        return date;
+    }
+
+    function utcAsLocal(date) {
+        if (isNotValidDate(date)) {
+            return null;
+        }
+
+        return new Date(
+            date.getUTCFullYear(),
+            date.getUTCMonth(),
+            date.getUTCDate(),
+            date.getUTCHours(),
+            date.getUTCMinutes(),
+            date.getUTCSeconds(),
+            date.getUTCMilliseconds()
+        );
+    }
+
+    function localAsUtc(date) {
+        if (isNotValidDate(date)) {
+            return null;
+        }
+
+        return new Date(Date.UTC(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate(),
+            date.getHours(),
+            date.getMinutes(),
+            date.getSeconds(),
+            date.getMilliseconds()
+        ));
+    }
+
+    function isValidDate(date) {
+        return !isNotValidDate(date);
+    }
+
+    function isNotValidDate(date) {
+        return date == null || isNaN(date.getTime());
+    }
+
     // CHECKBOXES ==================================================================================================================================================
 
     function setCheckboxState(id, value) {
@@ -422,84 +542,6 @@
             }
         });
         return idList;
-    }
-
-    // DATE MANIPULATOR ============================================================================================================================================
-
-    function parseJSONDate(value) {
-        if (value == null)
-            return null
-        else
-            return new Date(parseInt(value.replace("/Date(", "").replace(")/", ""), 10));
-        //return new Date(parseInt((value).match(/\d+/)[0])); //returns incorrect date when json date value is negative. (negative when earlier than year 1970)
-    }
-
-    var monthNames = ["Jan", "Feb", "Mar", "Apr",
-        "May", "Jun", "Jul", "Aug",
-        "Sep", "Oct", "Nov", "Dec"];
-
-    function formatDate(value, format) {
-        var result = [];
-        var date = "";
-        var month = "";
-        var year = "";
-
-        var delimiter = getDateDelimiter(format);
-
-        format = format.split(delimiter);
-        for (i = 0; i < format.length; i++) {
-
-            if (format[i] == 'dd') {
-                result.push((('' + value.getDate()).length < 2 ? '0' : '') + value.getDate() + ' ');
-            }
-
-            if (format[i].includes('M')) {
-                if (format[i] == 'MMM') {
-                    month = monthNames[value.getMonth()];
-                } else if (format[i] == 'MM') {
-                    month = (('' + (value.getMonth() + 1)).length < 2 ? '0' : '') + (value.getMonth() + 1) + ' ';
-                }
-                result.push(month);
-            }
-
-            if (format[i] == 'yyyy')
-                result.push(value.getFullYear());
-
-            if (format[i] == 'HH')
-                result.push(padLeft(value.getHours(), format[i].length, "0"));
-
-            if (format[i] == 'mm')
-                result.push(padLeft(value.getMinutes(), format[i].length, "0"));
-
-            if (format[i] == 'ss')
-                result.push(padLeft(value.getSeconds(), format[i].length, "0"));
-        }
-
-        var finalResult = result.filter(Boolean).join(delimiter);
-        if (delimiter != ' ')
-            finalResult = finalResult.replaceAll(' ', '');
-
-        return finalResult;
-    }
-
-    function getDateDelimiter(value) {
-        if (value.split(" ").length > 1)
-            return " ";
-        else if (value.split("-").length > 1)
-            return "-";
-        else if (value.split("/").length > 1)
-            return "/";
-        else if (value.split(":").length > 1)
-            return ":";
-    }
-
-    function addMonths(date, value) {
-        var d = date.getDate();
-        date.setMonth(date.getMonth() + +value);
-        if (date.getDate() != d) {
-            date.setDate(0);
-        }
-        return date;
     }
 
     // STRING MANIPULATOR ==========================================================================================================================================

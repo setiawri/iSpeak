@@ -12,13 +12,6 @@ namespace iSpeakWebApp.Models
 
 
         [Required]
-        [Display(Name = "Lesson Package")]
-        public Guid LessonPackages_Id { get; set; }
-        public static ModelMember COL_LessonPackages_Id = new ModelMember { Name = "LessonPackages_Id", Display = "Tutor", LogDisplay = ActivityLogsController.editStringFormat("Lesson Package") };
-        public string LessonPackages_Name { get; set; }
-
-
-        [Required]
         [Display(Name = "Language")]
         public Guid Languages_Id { get; set; }
         public static ModelMember COL_Languages_Id = new ModelMember { Name = "Languages_Id", Display = "Language", LogDisplay = ActivityLogsController.editStringFormat("Language") };

@@ -186,6 +186,18 @@ namespace iSpeakWebApp.Controllers
                 if (access.SaleInvoices_TutorTravelCost_View)
                     log = string.Format("<a href='javascript: void(0)' onclick=\"Log('{0}')\">{1}</a>", model.Id.ToString(), model.RowNo);
 
+                string remaining = "";
+                if (!model.IsClubSubscription)
+                    remaining = string.Format("<br/><strong>Available Hours:</strong> {0:N2}", model.SessionHours_Remaining);
+                else
+                {
+                    DateTime expirationDate = model.StartingDate.AddMonths(model.ExpirationMonth).AddSeconds(-1);
+                    int remainingDays = 0;
+                    if (expirationDate > DateTime.Now.Date)
+                        remainingDays = (expirationDate - DateTime.Now.Date).Days;
+                    remaining = string.Format("<br/><strong>Expired:</strong> {0:dd/MM/yy} ({1:N0} days)", expirationDate, remainingDays);
+                }
+
                 content += string.Format(@"
                             <tr>
                                 <td class='align-top' style='width:10px;'>{0}</td>
@@ -202,7 +214,7 @@ namespace iSpeakWebApp.Controllers
                         ",
                         log,
                         model.Description,
-                        model.LessonPackages_Id != null ? string.Format("<br/><strong>Available Hours:</strong> {0:N2}", model.SessionHours_Remaining) : "",
+                        model.LessonPackages_Id == null ? "" : remaining,
                         !string.IsNullOrWhiteSpace(model.VouchersName) ? string.Format("<br/>Vouchers: {0}", model.VouchersName) : "",
                         !string.IsNullOrWhiteSpace(model.Notes) ? string.Format("<br/>Notes: {0}", model.Notes) : "",
                         model.Qty,

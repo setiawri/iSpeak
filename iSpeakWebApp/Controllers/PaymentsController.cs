@@ -154,7 +154,7 @@ namespace iSpeakWebApp.Controllers
 
         public ActionResult setCreateViewBagsAndReturn(string saleInvoiceIdList)
         {
-            List<SaleInvoiceItemsModel> SaleInvoiceItems = SaleInvoiceItemsController.get(null, null, saleInvoiceIdList, null, null, null, null, null, null)
+            List<SaleInvoiceItemsModel> SaleInvoiceItems = SaleInvoiceItemsController.get(null, null, saleInvoiceIdList, null, null, null, null, null, null, null)
                 .OrderBy(x => x.SaleInvoices_No)
                 .ThenBy(x => x.RowNo)
                 .ToList();
@@ -181,7 +181,7 @@ namespace iSpeakWebApp.Controllers
             PaymentsModel model = get((Guid)id);
 
             ViewBag.InvoiceHeaderText = new BranchesController().get(Helper.getActiveBranchId(Session)).InvoiceHeaderText;
-            ViewData["SaleInvoiceItems"] = SaleInvoiceItemsController.get(null, null, null, model.Id, null, null, null, null, null)
+            ViewData["SaleInvoiceItems"] = SaleInvoiceItemsController.get(null, null, null, model.Id, null, null, null, null, null, null)
                 .OrderBy(x => x.SaleInvoices_No)
                 .ThenBy(x => x.RowNo)
                 .ToList(); 

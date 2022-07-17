@@ -17,7 +17,6 @@
         @using (Html.BeginForm("Create", ControllerName, FormMethod.Post, new { id = "targetForm" }))
         {
             @Html.AntiForgeryToken()
-            @Html.HiddenFor(model => model.LessonPackages_Name)
             <!-- Form inputs -->
             <div class="card">
                 <div class="card-header header-elements-inline">
@@ -26,14 +25,6 @@
                 <div class="card-body">
                     <fieldset class="mb-3">
                         <legend class="text-uppercase font-size-sm font-weight-bold">@ViewBag.Subtitle</legend>
-
-                        <div class="form-group row">
-                            @Html.LabelFor(model => model.LessonPackages_Id, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
-                            <div class="col-lg-4">
-                                @Html.DropDownListFor(model => model.LessonPackages_Id, ViewBag.LessonPackages as SelectList, "Please Select", new { @class = "form-control select2" })
-                                @Html.ValidationMessageFor(model => model.LessonPackages_Id, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
 
                         <div class="form-group row">
                             @Html.LabelFor(model => model.Languages_Id, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
@@ -119,11 +110,6 @@
 
     $(document).ready(function () {
 
-        if ('@Model.LessonPackages_Id' != emptyGuid()) {
-            var $newOption = $("<option selected='selected'></option>").val('@Model.LessonPackages_Id').text('@Model.LessonPackages_Name');
-            $('#LessonPackages_Id').append($newOption).trigger('change');
-        }
-
         $('#StartTime').val('@string.Format("{0:HH:mm}", Model.StartTime)');
         $('#EndTime').val('@string.Format("{0:HH:mm}", Model.EndTime)');
     });
@@ -133,13 +119,10 @@
 
     $('#targetForm').submit(function (e) {
 
-        if ($('#LessonPackages_Id').val() == null) {
-            showMessage('Please select Lesson Package', 'LessonPackages_Id');
-        } else if ($('#StartTime').val() >= $('#EndTime').val()) {
+        if ($('#StartTime').val() >= $('#EndTime').val()) {
             showMessage('Start Time cannot be the same or later than End Time', 'StartTime');
         } else {
             showLoadingSpinner();
-            $('#LessonPackages_Name').val(getDDLSelectedText('LessonPackages_Id'));
             return true;
         }
 

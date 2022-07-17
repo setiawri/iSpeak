@@ -21,12 +21,19 @@ namespace iSpeakWebApp.Controllers
             return Json(new { content = content }, JsonRequestBehavior.AllowGet);
         }
 
+        public static bool hasActiveClubSubscription(HttpSessionStateBase Session)
+        {
+            return hasActiveClubSubscriptions((Guid)UserAccountsController.getUserId(Session), 0).Count > 0;
+        }
+
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public static List<SaleInvoiceItemsModel> getActiveLessonPackages(Guid Customer_UserAccounts_Id, int? hasLessonHours) { return get(null, null, null, null, Customer_UserAccounts_Id, hasLessonHours, 1, null, 0); }
-        public static List<SaleInvoiceItemsModel> get_by_SaleInvoices_Id(Guid SaleInvoices_Id) { return get(null, SaleInvoices_Id, null, null, null, null, null, null, null); }
-        public static List<SaleInvoiceItemsModel> get_by_IdList(string IdList) { return get(null, null, null, null, null, null, null, IdList, null); }
-        public static List<SaleInvoiceItemsModel> get(Guid? Id, Guid? SaleInvoices_Id, string SaleInvoices_IdList, Guid? Payments_Id, Guid? Customer_UserAccounts_Id, int? hasLessonHours, int? isFullyPaid, string IdList, int? SaleInvoices_Cancelled)
+        public static List<SaleInvoiceItemsModel> hasActiveClubSubscriptions(Guid Customer_UserAccounts_Id, int? hasExpired) { return get(null, null, null, null, Customer_UserAccounts_Id, null, hasExpired, 1, null, 0); }
+        public static List<SaleInvoiceItemsModel> getActiveLessonPackages(Guid Customer_UserAccounts_Id, int? hasLessonHours) { return get(null, null, null, null, Customer_UserAccounts_Id, hasLessonHours, null, 1, null, 0); }
+        public static List<SaleInvoiceItemsModel> get_by_SaleInvoices_Id(Guid SaleInvoices_Id) { return get(null, SaleInvoices_Id, null, null, null, null, null, null, null, null); }
+        public static List<SaleInvoiceItemsModel> get_by_IdList(string IdList) { return get(null, null, null, null, null, null, null, null, IdList, null); }
+        public static List<SaleInvoiceItemsModel> get(Guid? Id, Guid? SaleInvoices_Id, string SaleInvoices_IdList, Guid? Payments_Id, Guid? Customer_UserAccounts_Id, int? hasLessonHours, 
+            int? hasExpired, int? isFullyPaid, string IdList, int? SaleInvoices_Cancelled)
         {
             string IdList_Clause = "";
             if (!string.IsNullOrEmpty(IdList))
@@ -43,6 +50,7 @@ namespace iSpeakWebApp.Controllers
                         LessonPackages.Name AS LessonPackages_Name,
                         Services.Name AS Services_Name,
                         Products.Name AS Products_Name,
+                        --IIF(DATEADD(month, SaleInvoiceItems.ExpirationMonth, SaleInvoiceItems.StartingDate) > CURRENT_TIMESTAMP, 0, 1) AS HasExpired,
                         (SaleInvoiceItems.Qty * SaleInvoiceItems.Price) + COALESCE(SaleInvoiceItems.TravelCost,0) - COALESCE(SaleInvoiceItems.DiscountAmount,0) - COALESCE(SaleInvoiceItems.VouchersAmount,0) AS TotalAmount,
                         SaleInvoiceItems.Description + ', Available: ' + FORMAT(SaleInvoiceItems.SessionHours_Remaining,'N2') + ' hours, Invoice ' + SaleInvoices.No AS DDLDescription
                     FROM SaleInvoiceItems
@@ -75,6 +83,11 @@ namespace iSpeakWebApp.Controllers
                                     OR (@hasLessonHours = 1 AND SaleInvoiceItems.SessionHours_Remaining > 0) 
                                 )
                             AND (
+                                    @hasExpired IS NULL 
+                                    OR (@hasExpired = 0 AND DATEADD(month, SaleInvoiceItems.ExpirationMonth, SaleInvoiceItems.StartingDate) > CURRENT_TIMESTAMP)
+                                    OR (@hasExpired = 1 AND DATEADD(month, SaleInvoiceItems.ExpirationMonth, SaleInvoiceItems.StartingDate) < CURRENT_TIMESTAMP) 
+                                )
+                            AND (
                                     @isFullyPaid IS NULL 
                                     OR (@isFullyPaid = 0 AND SaleInvoices.Amount - COALESCE(Payments.Amount,0) > 0)
                                     OR (@isFullyPaid = 1 AND SaleInvoices.Amount - COALESCE(Payments.Amount,0) = 0)
@@ -90,6 +103,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SaleInvoices_Id.Name, SaleInvoices_Id),
                 DBConnection.getSqlParameter("Customer_UserAccounts_Id", Customer_UserAccounts_Id),
                 DBConnection.getSqlParameter("hasLessonHours", hasLessonHours),
+                DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_HasExpired.Name, hasExpired),
                 DBConnection.getSqlParameter("isFullyPaid", isFullyPaid),
                 DBConnection.getSqlParameter("SaleInvoices_Cancelled", SaleInvoices_Cancelled)
             ).ToList();
@@ -120,7 +134,10 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SessionHours.Name, saleInvoiceItem.SessionHours),
                     DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_SessionHours_Remaining.Name, saleInvoiceItem.SessionHours_Remaining),
                     DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_TravelCost.Name, saleInvoiceItem.TravelCost),
-                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_TutorTravelCost.Name, saleInvoiceItem.TutorTravelCost)
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_TutorTravelCost.Name, saleInvoiceItem.TutorTravelCost),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_ExpirationMonth.Name, saleInvoiceItem.ExpirationMonth),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_StartingDate.Name, saleInvoiceItem.StartingDate),
+                    DBConnection.getSqlParameter(SaleInvoiceItemsModel.COL_IsClubSubscription.Name, saleInvoiceItem.IsClubSubscription)
                 );
 
                 if (saleInvoiceItem.Products_Id != null)

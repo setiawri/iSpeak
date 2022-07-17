@@ -88,6 +88,12 @@ namespace iSpeakWebApp.Models
         public string LessonPackages_Name { get; set; }
 
 
+        [Display(Name = "Start")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yy HH:mm}")]
+        public DateTime StartingDate { get; set; }
+        public static ModelMember COL_StartingDate = new ModelMember { Name = "StartingDate", Display = "Start Date" };
+
+
         [Display(Name = "Hours")]
         [DisplayFormat(DataFormatString = "{0:N0}")]
         public decimal SessionHours { get; set; } = 0;
@@ -120,6 +126,11 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_TutorTravelCost = new ModelMember { Name = "TutorTravelCost", Display = "Tutor Travel", LogDisplay = ActivityLogsController.editIntFormat("Tutor Travel Cost") };
 
 
+        [Display(Name = "Club Subscription")]
+        public bool IsClubSubscription { get; set; } = true;
+        public static ModelMember COL_IsClubSubscription = new ModelMember { Name = "IsClubSubscription", Display = "Club", LogDisplay = ActivityLogsController.editBooleanFormat("Club Subscription") };
+
+
         /******************************************************************************************************************************************************/
 
         [DisplayFormat(DataFormatString = "{0:N0}")]
@@ -130,6 +141,9 @@ namespace iSpeakWebApp.Models
 
         public string DDLDescription { get; set; } = "";
         public static ModelMember COL_DDLDescription = new ModelMember { Name = "DDLDescription" };
+
+        public bool HasExpired { get; set; } = false;
+        public static ModelMember COL_HasExpired = new ModelMember { Name = "HasExpired" };
 
     }
 }

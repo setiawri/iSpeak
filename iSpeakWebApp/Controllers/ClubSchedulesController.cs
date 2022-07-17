@@ -20,7 +20,7 @@ namespace iSpeakWebApp.Controllers
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
             setViewBag(FILTER_Keyword);
-            if (rss != null)
+            if (rss != null && !SettingsController.ShowOnlyOwnUserData(Session))
             {
                 ViewBag.RemoveDatatablesStateSave = rss;
                 return View();
@@ -106,7 +106,6 @@ namespace iSpeakWebApp.Controllers
                     ClubSchedulesModel originalModel = get(modifiedModel.Id);
 
                     string log = string.Empty;
-                    log = Helper.append<LessonPackagesModel>(log, originalModel.LessonPackages_Id, modifiedModel.LessonPackages_Id, ClubSchedulesModel.COL_LessonPackages_Id.LogDisplay);
                     log = Helper.append(log, originalModel.DayOfWeek, modifiedModel.DayOfWeek, ClubSchedulesModel.COL_DayOfWeek.LogDisplay);
                     log = Helper.append(log, originalModel.StartTime, modifiedModel.StartTime, ClubSchedulesModel.COL_StartTime.LogDisplay);
                     log = Helper.append(log, originalModel.EndTime, modifiedModel.EndTime, ClubSchedulesModel.COL_EndTime.LogDisplay);
@@ -202,11 +201,9 @@ namespace iSpeakWebApp.Controllers
         {
             return new DBContext().Database.SqlQuery<ClubSchedulesModel>(@"
                         SELECT ClubSchedules.*,
-                            LessonPackages.Name AS LessonPackages_Name,
                             Languages.Name AS Languages_Name,
                             Branches.Name AS Branches_Name
                         FROM ClubSchedules
-                            LEFT JOIN LessonPackages ON LessonPackages.Id = ClubSchedules.LessonPackages_Id
                             LEFT JOIN Languages ON Languages.Id = ClubSchedules.Languages_Id
                             LEFT JOIN Branches ON Branches.Id = ClubSchedules.Branches_Id
                         WHERE 1=1
@@ -225,7 +222,6 @@ namespace iSpeakWebApp.Controllers
 						ORDER BY ClubSchedules.DayOfWeek ASC, ClubSchedules.StartTime ASC, ClubSchedules.EndTime ASC, Languages.Name ASC
                     ",
                     DBConnection.getSqlParameter(ClubSchedulesModel.COL_Id.Name, Id),
-                    DBConnection.getSqlParameter(ClubSchedulesModel.COL_LessonPackages_Id.Name, LessonPackages_Id),
                     DBConnection.getSqlParameter(ClubSchedulesModel.COL_DayOfWeek.Name, DayOfWeek),
                     DBConnection.getSqlParameter(ClubSchedulesModel.COL_StartTime.Name, StartTime),
                     DBConnection.getSqlParameter(ClubSchedulesModel.COL_EndTime.Name, EndTime),
@@ -238,7 +234,6 @@ namespace iSpeakWebApp.Controllers
         {
             LIBWebMVC.WebDBConnection.Insert(db.Database, "ClubSchedules",
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Id.Name, model.Id),
-                DBConnection.getSqlParameter(ClubSchedulesModel.COL_LessonPackages_Id.Name, model.LessonPackages_Id),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Languages_Id.Name, model.Languages_Id),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Description.Name, model.Description),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_OnlineLink.Name, model.OnlineLink),
@@ -257,7 +252,6 @@ namespace iSpeakWebApp.Controllers
         {
             LIBWebMVC.WebDBConnection.Update(db.Database, "ClubSchedules",
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Id.Name, model.Id),
-                DBConnection.getSqlParameter(ClubSchedulesModel.COL_LessonPackages_Id.Name, model.LessonPackages_Id),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Languages_Id.Name, model.Languages_Id),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Description.Name, model.Description),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_OnlineLink.Name, model.OnlineLink),

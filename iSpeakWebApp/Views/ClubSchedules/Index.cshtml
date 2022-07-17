@@ -47,10 +47,10 @@
                             <thead>
                                 <tr>
                                     <th style="width:200px;">Schedule</th>
-                                    <th style="width:200px;">@Html.DisplayNameFor(model => model.LessonPackages_Id)</th>
+                                    @*<th style="width:200px;">@Html.DisplayNameFor(model => model.LessonPackages_Id)</th>*@
                                     <th style="width:100px;">@Html.DisplayNameFor(model => model.Languages_Id)</th>
                                     <th style="width:200px;">@Html.DisplayNameFor(model => model.Description)</th>
-                                    <th class="non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
+                                    <th class="non-sortable"></th>
                                     <th class="non-searchable non-sortable" style="width:170px;"></th>
                                 </tr>
                             </thead>
@@ -61,17 +61,22 @@
                                     {
                                         <tr>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.DayOfWeek), @Html.DisplayFor(modelItem => item.StartTime) - @Html.DisplayFor(modelItem => item.EndTime)</td>
-                                            <td class="align-top">@Html.ActionLink(item.LessonPackages_Name, "Index", "LessonPackages", new { FILTER_Keyword = @item.LessonPackages_Name }, new { @target = "_blank" })</td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Languages_Name)</td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Description)</td>
                                             <td class="align-top">
+                                                <div>
                                                 @if (!string.IsNullOrWhiteSpace(item.OnlineLink))
                                                 {
-                                                    <div><a href="@item.OnlineLink" target="_blank">@item.OnlineLink</a></div>
+                                                    <a href="@item.OnlineLink" target="_blank">Click here to join online class</a>
                                                 }
+                                                else
+                                                { 
+                                                    @("Online class is not available at the moment.")
+                                                }
+                                                </div>
                                                 @if (!string.IsNullOrWhiteSpace(item.Notes))
                                                 {
-                                                    <div>@Html.DisplayFor(modelItem => item.Notes)</div>
+                                                    <div><strong>Notes:</strong> @Html.DisplayFor(modelItem => item.Notes)</div>
                                                 }
                                             </td>
                                             <td class="align-top">

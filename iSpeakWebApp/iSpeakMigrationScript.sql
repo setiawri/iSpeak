@@ -1,5 +1,18 @@
 ---- CLUB SCHEDULES ==========================================================================================================
 
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'SaleInvoiceItems' AND COLUMN_NAME = 'IsClubSubscription' AND TABLE_SCHEMA='dbo') 
+    ALTER TABLE SaleInvoiceItems ADD IsClubSubscription bit NULL DEFAULT 0 
+
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'StartingDate' AND TABLE_NAME = 'SaleInvoiceItems' AND TABLE_SCHEMA='dbo') 
+--    ALTER TABLE SaleInvoiceItems ADD StartingDate datetime NULL 
+--GO
+
+--UPDATE SaleInvoiceItems 
+--SET StartingDate = CAST(SaleInvoices.Timestamp AS Date)
+--FROM SaleInvoiceItems 
+--LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
+
+
 --ALTER TABLE LessonPackages ADD IsClubSubscription bit NOT NULL DEFAULT 0
 --GO
 

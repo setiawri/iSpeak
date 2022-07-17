@@ -23,6 +23,7 @@
             @Html.HiddenFor(model => model.Amount)
             @Html.HiddenFor(model => model.CancelNotes)
             @Html.HiddenFor(model => model.Customer_UserAccounts_Name)
+            @Html.Hidden("IsClubSubscription");
             <input type="hidden" id="JsonSaleInvoiceItems" name="JsonSaleInvoiceItems" />
             <!-- Form inputs -->
             <div class="card">
@@ -86,6 +87,14 @@
                                         <div style="width:150px">
                                             @Html.Editor("ExpirationMonth", new { htmlAttributes = new { @class = "form-control positiveintegeronly", Value = "0" } })
                                             @Html.ValidationMessage("ExpirationMonth", "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        @Html.Label("Start Date", htmlAttributes: new { @class = "col-form-label required", @style = "width:150px;" })
+                                        <div style="width:150px">
+                                            @Html.Editor("StartingDate", new { htmlAttributes = new { @class = "form-control daterange-picker" } })
+                                            @Html.ValidationMessage("StartingDate", "", new { @class = "text-danger" })
                                         </div>
                                     </div>
 
@@ -191,11 +200,11 @@
                                                     @invoice.Description
                                                     @if (invoice.SessionHours > 0)
                                                     {
-                                                        @:(@invoice.SessionHours @(" hours)")
+                                                        @(string.Format(" ({0:N2} hours starting {1:dd/MM/yy}", invoice.SessionHours, invoice.StartingDate.Date))
                                                     }
                                                     @if (invoice.ExpirationMonth > 0)
                                                     {
-                                                        @:(@invoice.ExpirationMonth @(" months)")
+                                                        @(string.Format(" ({0:N0} months starting {1:dd/MM/yy}", invoice.SessionHours, invoice.StartingDate.Date))
                                                     }
                                                     @if (!string.IsNullOrEmpty(invoice.VouchersName))
                                                     {
@@ -288,6 +297,7 @@
         var item = getSelectedLessonPackage();
         setValue('SessionHours', item.SessionHours);
         setValue('ExpirationMonth', item.ExpirationMonth);
+        setValue('IsClubSubscription', item.IsClubSubscription);
         if (item.SessionHours > 0) {
             disableElement('SessionHours', false);
             disableElement('ExpirationMonth', true);
@@ -314,6 +324,8 @@
             var description = "";
             var sessionhours = 0;
             var expirationMonth = 0;
+            var startingDate;
+            var isClubSubscription = false;
             var price = 0;
             var subtotal = 0;
             var travelcoststring = "";
@@ -352,11 +364,17 @@
                     LessonPackages_Id = item.Id;
                     description = '[' + item.Languages_Name + ': ' + item.LessonTypes_Name + '] ' + item.Name;
                     sessionhours = getValueFloat('SessionHours') * qty;
-                    if (sessionhours > 0)
-                        description += ' (' + getValueFloat('SessionHours') + ' hours)';
+                    startingDate = localAsUtc(new Date($('#StartingDate').val()));
+                    isClubSubscription = $('#IsClubSubscription').val();
+                    if (isClubSubscription)
+                        description += ' (' + getValueInt('ExpirationMonth') + ' months subscription starting ' + formatDate(startingDate, 'dd/MM/yyyy') + ')';
+                    else {
+                        description += ' (' + getValueFloat('SessionHours') + ' hours starting ' + formatDate(startingDate, 'dd/MM/yyyy');
+                        if (expirationMonth > 0)
+                            description += ' for ' + expirationMonth + ' months';
+                        description += ')';
+                    }
                     expirationMonth = getValueInt('ExpirationMonth') * qty;
-                    if (expirationMonth > 0)
-                        description += ' (' + getValueInt('ExpirationMonth') + ' months)';
                     price = item.Price;
                     TravelCost = getValueInt('TravelCost') * qty;
                     TutorTravelCost = getValueInt('TutorTravelCost') * qty;
@@ -423,7 +441,6 @@
             setValue('Discount', 0);
             resetListbox('Vouchers');
             setValue('ItemNotes', '');
-
             var saleinvoiceitem = {
                 id: id,
                 Id: null,
@@ -443,8 +460,10 @@
                 SessionHours: sessionhours,
                 SessionHours_Remaining: sessionhours,
                 ExpirationMonth: expirationMonth,
+                StartingDate: startingDate,
                 TravelCost: TravelCost,
-                TutorTravelCost: TutorTravelCost
+                TutorTravelCost: TutorTravelCost,
+                isClubSubscription: isClubSubscription
             };
             saleinvoiceitems.push(saleinvoiceitem);
 
