@@ -524,15 +524,23 @@ namespace iSpeakWebApp.Controllers
 
             string sql = string.Format(@"
                         SELECT UserAccounts.*,
-                            COALESCE(LessonPackages.ActiveLessonPackages,0) AS ActiveLessonPackages
+                            COALESCE(LessonPackages.ActiveLessonPackages,0) AS ActiveLessonPackages,
+                            COALESCE(ClubSubscription.RemainingClubSubscriptionDays,0) AS RemainingClubSubscriptionDays
                         FROM UserAccounts
 							LEFT JOIN (
 									SELECT SaleInvoices.Customer_UserAccounts_Id, COUNT(SaleInvoiceItems.Id) AS ActiveLessonPackages
 									FROM SaleInvoiceItems
 										LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
-									WHERE SaleInvoiceItems.SessionHours_Remaining > 0 AND SaleInvoices.Cancelled = 0
+									WHERE SaleInvoices.Due = 0 AND SaleInvoiceItems.SessionHours_Remaining > 0 AND SaleInvoices.Cancelled = 0
 									GROUP BY SaleInvoices.Customer_UserAccounts_Id
 								) LessonPackages ON LessonPackages.Customer_UserAccounts_Id = UserAccounts.Id
+							LEFT JOIN (
+									SELECT SaleInvoices.Customer_UserAccounts_Id, MAX(DATEDIFF(DAY, CURRENT_TIMESTAMP, DATEADD(MONTH, SaleInvoiceItems.ExpirationMonth, SaleInvoiceItems.StartingDate))) AS RemainingClubSubscriptionDays
+									FROM SaleInvoiceItems
+										LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
+									WHERE SaleInvoices.Due = 0 AND SaleInvoiceItems.IsClubSubscription = 1 AND DATEDIFF(DAY, CURRENT_TIMESTAMP, DATEADD(MONTH, SaleInvoiceItems.ExpirationMonth, SaleInvoiceItems.StartingDate)) > 0
+									GROUP BY SaleInvoices.Customer_UserAccounts_Id
+								) ClubSubscription ON ClubSubscription.Customer_UserAccounts_Id = UserAccounts.Id
                         WHERE 1=1
 							AND (@Id IS NULL OR UserAccounts.Id = @Id)
                             AND (@Id IS NOT NULL OR (

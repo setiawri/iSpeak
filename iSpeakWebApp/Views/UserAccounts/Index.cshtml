@@ -68,7 +68,8 @@
                                 <tr>
                                     <th>@Html.DisplayNameFor(model => model.Fullname)</th>
                                     <th>Info</th>
-                                    <th class="text-right" style="width:150px;">@Html.DisplayNameFor(model => model.ActiveLessonPackages)</th>
+                                    <th class="text-right" style="width:200px;">@Html.DisplayNameFor(model => model.ActiveLessonPackages)</th>
+                                    <th class="text-right" style="width:200px;">@Html.DisplayNameFor(model => model.RemainingClubSubscriptionDays)</th>
                                     <th class="non-searchable non-sortable" style="width:200px;"></th>
                                 </tr>
                             </thead>
@@ -126,6 +127,12 @@
                                             </td>
                                             <td class="align-top text-right">
                                                 @Html.ActionLink(item.ActiveLessonPackages.ToString(), "Index", "SaleInvoices", new { FILTER_Keyword = @item.Fullname, FILTER_chkDateFrom = false, FILTER_chkDateTo = false }, new { @target="_blank"})
+                                            </td>
+                                            <td class="align-top text-right">
+                                                @if (item.RemainingClubSubscriptionDays > 0)
+                                                {
+                                                    @Html.DisplayFor(modelItem => item.RemainingClubSubscriptionDays)
+                                                }
                                             </td>
                                             <td class="align-top">
                                                 @if (item.Active)

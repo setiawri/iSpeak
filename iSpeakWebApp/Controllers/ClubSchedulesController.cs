@@ -14,12 +14,19 @@ namespace iSpeakWebApp.Controllers
 
         /* INDEX **********************************************************************************************************************************************/
 
-        public ActionResult Index(int? rss, string FILTER_Keyword, string FILTER_Custom)
+        public ActionResult Index(int? rss, string FILTER_Keyword, DayOfWeekEnum? FILTER_DayOfWeek, DateTime? FILTER_StartTime, DateTime? FILTER_EndTime)
         {
             if (!UserAccountsController.getUserAccess(Session).ClubSchedules_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            setViewBag(FILTER_Keyword);
+            if (FILTER_StartTime == null)
+                FILTER_StartTime = Util.standardizeTimeToIgnoreDate("00_00");
+
+            if (FILTER_EndTime == null)
+                FILTER_EndTime = Util.standardizeTimeToIgnoreDate("23_59");
+
+            setViewBag(FILTER_Keyword, FILTER_DayOfWeek, FILTER_StartTime, FILTER_EndTime);
+
             if (rss != null && !SettingsController.ShowOnlyOwnUserData(Session))
             {
                 ViewBag.RemoveDatatablesStateSave = rss;
@@ -27,38 +34,41 @@ namespace iSpeakWebApp.Controllers
             }
             else
             {
-                return View(get(FILTER_Keyword, FILTER_Custom));
+                return View(get(FILTER_Keyword, FILTER_DayOfWeek, FILTER_StartTime, FILTER_EndTime));
             }
         }
 
         [HttpPost]
-        public ActionResult Index(string FILTER_Keyword, string FILTER_Custom)
+        public ActionResult Index(string FILTER_Keyword, DayOfWeekEnum? FILTER_DayOfWeek, DateTime? FILTER_StartTime, DateTime? FILTER_EndTime)
         {
-            setViewBag(FILTER_Keyword);
-            return View(get(FILTER_Keyword, FILTER_Custom));
+            setViewBag(FILTER_Keyword, FILTER_DayOfWeek, FILTER_StartTime, FILTER_EndTime);
+            return View(get(FILTER_Keyword, FILTER_DayOfWeek, FILTER_StartTime, FILTER_EndTime));
         }
 
         /* CREATE *********************************************************************************************************************************************/
 
-        public ActionResult Create(string FILTER_Keyword, string FILTER_Custom, DayOfWeekEnum? DayOfWeek, string StartTime, Guid? Id)
+        public ActionResult Create(string FILTER_Keyword, DayOfWeekEnum? FILTER_DayOfWeek, DateTime? FILTER_StartTime, DateTime? FILTER_EndTime, DayOfWeekEnum? DayOfWeek, string StartTime, string EndTime, Guid? Id)
         {
             if (!UserAccountsController.getUserAccess(Session).ClubSchedules_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            setViewBag(FILTER_Keyword);
+            setViewBag(FILTER_Keyword, FILTER_DayOfWeek, FILTER_StartTime, FILTER_EndTime);
             ClubSchedulesModel model = new ClubSchedulesModel();
             if (DayOfWeek != null) model.DayOfWeek = (DayOfWeekEnum)DayOfWeek;
             if (!string.IsNullOrEmpty(StartTime))
             {
-                model.StartTime = Util.standardizeTimeToIgnoreDate(StartTime);
-                model.EndTime = model.StartTime.AddHours(1);
+                model.StartTime = (DateTime)Util.standardizeTimeToIgnoreDate(StartTime);
+            }
+            if (!string.IsNullOrEmpty(StartTime))
+            {
+                model.EndTime = (DateTime)Util.standardizeTimeToIgnoreDate(EndTime);
             }
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ClubSchedulesModel model, string FILTER_Keyword, string FILTER_Custom)
+        public ActionResult Create(ClubSchedulesModel model, string FILTER_Keyword, DayOfWeekEnum? FILTER_DayOfWeek, DateTime? FILTER_StartTime, DateTime? FILTER_EndTime)
         {
             if (ModelState.IsValid)
             {
@@ -69,17 +79,17 @@ namespace iSpeakWebApp.Controllers
                 else
                 {
                     add(model);
-                    return RedirectToAction(nameof(Index), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_Custom = FILTER_Custom });
+                    return RedirectToAction(nameof(Index), new { id = model.Id, FILTER_Keyword = FILTER_Keyword });
                 }
             }
 
-            setViewBag(FILTER_Keyword);
+            setViewBag(FILTER_Keyword, FILTER_DayOfWeek, FILTER_StartTime, FILTER_EndTime);
             return View(model);
         }
 
         /* EDIT ***********************************************************************************************************************************************/
 
-        public ActionResult Edit(Guid? id, string FILTER_Keyword, string FILTER_Custom)
+        public ActionResult Edit(Guid? id, string FILTER_Keyword, DayOfWeekEnum? FILTER_DayOfWeek, DateTime? FILTER_StartTime, DateTime? FILTER_EndTime)
         {
             if (!UserAccountsController.getUserAccess(Session).ClubSchedules_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
@@ -87,14 +97,14 @@ namespace iSpeakWebApp.Controllers
             if (id == null)
                 return RedirectToAction(nameof(Index));
 
-            setViewBag(FILTER_Keyword);
+            setViewBag(FILTER_Keyword, FILTER_DayOfWeek, FILTER_StartTime, FILTER_EndTime);
             ClubSchedulesModel model = get((Guid)id);
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(ClubSchedulesModel modifiedModel, string FILTER_Keyword, string FILTER_Custom)
+        public ActionResult Edit(ClubSchedulesModel modifiedModel, string FILTER_Keyword, DayOfWeekEnum? FILTER_DayOfWeek, DateTime? FILTER_StartTime, DateTime? FILTER_EndTime)
         {
             if (ModelState.IsValid)
             {
@@ -121,15 +131,18 @@ namespace iSpeakWebApp.Controllers
                 }
             }
 
-            setViewBag(FILTER_Keyword);
+            setViewBag(FILTER_Keyword, FILTER_DayOfWeek, FILTER_StartTime, FILTER_EndTime);
             return View(modifiedModel);
         }
 
         /* METHODS ********************************************************************************************************************************************/
 
-        public void setViewBag(string FILTER_Keyword)
+        public void setViewBag(string FILTER_Keyword, DayOfWeekEnum? FILTER_DayOfWeek, DateTime? FILTER_StartTime, DateTime? FILTER_EndTime)
         {
             ViewBag.FILTER_Keyword = FILTER_Keyword;
+            ViewBag.FILTER_DayOfWeek = FILTER_DayOfWeek;
+            ViewBag.FILTER_StartTime = FILTER_StartTime;
+            ViewBag.FILTER_EndTime = FILTER_EndTime;
             LessonPackagesController.setDropDownListViewBag(this);
             LanguagesController.setDropDownListViewBag(this);
         }
@@ -144,19 +157,6 @@ namespace iSpeakWebApp.Controllers
         {
             delete(id);
             return Json(new { Message = "" });
-        }
-
-        public static string generateFILTER_Custom(DayOfWeekEnum DayOfWeek, DateTime StartTime, DateTime EndTime)
-        {
-            return string.Format("{0}_{1:HH_mm}_{2:HH_mm}", (int)DayOfWeek, StartTime, EndTime);
-        }
-
-        public static void parseFILTER_Custom(string FILTER_Custom, ref DayOfWeekEnum? DayOfWeek, ref DateTime? StartTime, ref DateTime? EndTime)
-        {
-            List<int> filter = FILTER_Custom.Split('_').Select(Int32.Parse).ToList();
-            DayOfWeek = (DayOfWeekEnum)filter[0];
-            StartTime = new DateTime(1970, 1, 1, filter[1], filter[2], 0);
-            EndTime = new DateTime(1970, 1, 1, filter[3], filter[4], 0);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
@@ -182,23 +182,22 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public List<ClubSchedulesModel> get(string FILTER_Keyword, string FILTER_Custom) 
+        public List<ClubSchedulesModel> get(string FILTER_Keyword, DayOfWeekEnum? FILTER_DayOfWeek, DateTime? FILTER_StartTime, DateTime? FILTER_EndTime) 
         {
-            DayOfWeekEnum? DayOfWeek = null;
-            DateTime? StartTime = null;
-            DateTime? EndTime = null;
-            if (!string.IsNullOrEmpty(FILTER_Custom))
-                parseFILTER_Custom(FILTER_Custom, ref DayOfWeek, ref StartTime, ref EndTime);
-
-            return get(Session, null, null, DayOfWeek, StartTime, EndTime, FILTER_Keyword); 
+            return get(Session, null, FILTER_DayOfWeek, FILTER_StartTime, FILTER_EndTime, FILTER_Keyword); 
         }
-        public static List<ClubSchedulesModel> get(HttpSessionStateBase Session, Guid? LessonPackages_Id, DayOfWeekEnum? DayOfWeek, DateTime? StartTime, DateTime? EndTime)
-        { return get(Session, null, LessonPackages_Id, DayOfWeek, StartTime, EndTime, null); }
-        public ClubSchedulesModel get(Guid Id) { return get(Session, Id, null, null, null, null, null).FirstOrDefault(); }
-        public List<ClubSchedulesModel> get() { return get(Session, null, null, null, null, null, null); }
-        public static List<ClubSchedulesModel> get(HttpSessionStateBase Session, Guid? Id, Guid? LessonPackages_Id, DayOfWeekEnum? DayOfWeek, DateTime? StartTime, DateTime? EndTime,
+        public static List<ClubSchedulesModel> get(HttpSessionStateBase Session, DayOfWeekEnum? DayOfWeek, DateTime? StartTime, DateTime? EndTime)
+        { return get(Session, null, DayOfWeek, StartTime, EndTime, null); }
+        public ClubSchedulesModel get(Guid Id) { return get(Session, Id, null, null, null, null).FirstOrDefault(); }
+        public List<ClubSchedulesModel> get() { return get(Session, null, null, null, null, null); }
+        public static List<ClubSchedulesModel> get(HttpSessionStateBase Session, Guid? Id, DayOfWeekEnum? DayOfWeek, DateTime? StartTime, DateTime? EndTime,
             string FILTER_Keyword)
         {
+            if (StartTime != null)
+                StartTime = Util.standardizeTimeToIgnoreDate((DateTime)StartTime);
+            if (EndTime != null)
+                EndTime = Util.standardizeTimeToIgnoreDate((DateTime)EndTime);
+
             return new DBContext().Database.SqlQuery<ClubSchedulesModel>(@"
                         SELECT ClubSchedules.*,
                             Languages.Name AS Languages_Name,
@@ -225,7 +224,7 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(ClubSchedulesModel.COL_DayOfWeek.Name, DayOfWeek),
                     DBConnection.getSqlParameter(ClubSchedulesModel.COL_StartTime.Name, StartTime),
                     DBConnection.getSqlParameter(ClubSchedulesModel.COL_EndTime.Name, EndTime),
-                    DBConnection.getSqlParameter(ClubSchedulesModel.COL_Branches_Id.Name, Helper.getActiveBranchId(Session)),
+                    DBConnection.getSqlParameter(ClubSchedulesModel.COL_Branches_Id.Name, null),// Helper.getActiveBranchId(Session)),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
         }

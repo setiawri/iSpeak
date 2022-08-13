@@ -340,6 +340,9 @@ FILTERING
 <input type="hidden" id="FILTER_PaymentNo" name="FILTER_PaymentNo" value="@ViewBag.FILTER_PaymentNo" />
 <input type="hidden" id="FILTER_InvoiceNo" name="FILTER_InvoiceNo" value="@ViewBag.FILTER_InvoiceNo" />
 <input type="hidden" id="FILTER_UserAccounts_Name" name="FILTER_UserAccounts_Name" value="@ViewBag.FILTER_UserAccounts_Name" />
+<input type="hidden" id="FILTER_DayOfWeek" name="FILTER_DayOfWeek" value="@ViewBag.FILTER_DayOfWeek" />
+<input type="hidden" id="FILTER_StartTime" name="FILTER_StartTime" value="@ViewBag.FILTER_StartTime" />
+<input type="hidden" id="FILTER_EndTime" name="FILTER_EndTime" value="@ViewBag.FILTER_EndTime" />
 
 <script type="text/javascript">
 
@@ -358,6 +361,9 @@ FILTERING
         setValue('FILTER_PaymentNo', '@ViewBag.FILTER_PaymentNo');
         setValue('FILTER_InvoiceNo', '@ViewBag.FILTER_InvoiceNo');
         setValue('FILTER_UserAccounts_Name', '@ViewBag.FILTER_UserAccounts_Name');
+        setValue('FILTER_DayOfWeek', '@ViewBag.FILTER_DayOfWeek');
+        setValue('FILTER_StartTime', '@(ViewBag.FILTER_StartTime == null ? "" : string.Format("{0:HH:mm}", ViewBag.FILTER_StartTime))');
+        setValue('FILTER_EndTime', '@(ViewBag.FILTER_EndTime == null ? "" : string.Format("{0:HH:mm}", ViewBag.FILTER_EndTime))');
 
         setCheckboxFilter('FILTER_chkDateFrom', '@ViewBag.FILTER_chkDateFrom');
         setCheckboxFilter('FILTER_chkDateTo', '@ViewBag.FILTER_chkDateTo');

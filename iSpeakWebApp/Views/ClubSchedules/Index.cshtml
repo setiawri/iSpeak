@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<iSpeakWebApp.Models.ClubSchedulesModel>
 
 @{
+    iSpeakWebApp.Models.UserAccountsModel userAccount = iSpeakWebApp.Controllers.UserAccountsController.getUserAccount(Session);
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     string ControllerName = "ClubSchedules";
     ViewBag.SelectedNavigationMenu = "Schedules";
@@ -11,10 +12,35 @@
 <div class="content-wrapper">
     <!-- Content area -->
     <div class="content">
-        @using (Html.BeginForm("Index", ControllerName, FormMethod.Post))
+        @using (Html.BeginForm("Index", ControllerName, FormMethod.Post, new { id = "targetForm" }))
         {
             <!-- Form inputs -->
             <div class="card animated bounceInLeft">
+                @if(access.ClubSchedules_Edit || iSpeakWebApp.Controllers.UserAccountsController.getUserAccount(Session).RemainingClubSubscriptionDays > 0) 
+                {
+                    <div class="card-body">
+                        <div class="row mx-0">
+                            <div class="mr-2">
+                                <label class="mb-0">&nbsp;</label>
+                                <div><a href="javascript:void(0)" class="btn btn-primary"><i class="icon-video-camera3 mr-2"></i>ZOOM LINK TO CLASSROOMS</a></div>
+                            </div>
+
+                            @if (access.ClubSchedules_Edit)
+                            {
+                                <div class="row ml-0 mr-2" style="width:500px;">
+                                    <label class="mb-0">Link</label>
+                                    <div class="input-group">
+                                        <input type="text" name="ClubClassroomLink" id="ClubClassroomLink" class="form-control" />
+                                        <span class="input-group-append">
+                                            <a href="javascript:void(0)" onclick="ClubClassroomLink()" class="btn btn-primary"><i class="icon-paperplane mr-2"></i>SAVE</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
                 <div class="card-header header-elements-inline pb-1">
                     <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
                 </div>
@@ -33,6 +59,27 @@
                             <label class="mb-0">Keyword</label>
                             <div class="input-group">
                                 <input type="text" name="FILTER_Keyword" id="FILTER_Keyword" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:150px;">
+                            <label class="mb-0">Day</label>
+                            <div class="input-group">
+                                @Html.DropDownList("FILTER_DayOfWeek", EnumHelper.GetSelectList(typeof(DayOfWeek)), "ALL", new { @class = "form-control select2" })
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:80px;">
+                            <label class="mb-0">Start</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control anytime-picker" id="FILTER_StartTime" name="FILTER_StartTime" style="width:80px;">
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:80px;">
+                            <label class="mb-0">End</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control anytime-picker" id="FILTER_EndTime" name="FILTER_EndTime" style="width:80px;">
                             </div>
                         </div>
 
@@ -65,14 +112,14 @@
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Description)</td>
                                             <td class="align-top">
                                                 <div>
-                                                @if (!string.IsNullOrWhiteSpace(item.OnlineLink))
-                                                {
-                                                    <a href="@item.OnlineLink" target="_blank">Click here to join online class</a>
-                                                }
-                                                else
-                                                { 
-                                                    @("Online class is not available at the moment.")
-                                                }
+                                                    @if (!string.IsNullOrWhiteSpace(item.OnlineLink) && userAccount.RemainingClubSubscriptionDays > 0)
+                                                    {
+                                                        <a href="@item.OnlineLink" target="_blank">Materi</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        @("Online class is not available at the moment.")
+                                                    }
                                                 </div>
                                                 @if (!string.IsNullOrWhiteSpace(item.Notes))
                                                 {
@@ -104,7 +151,7 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-
+        setValue('ClubClassroomLink', '@iSpeakWebApp.Controllers.SettingsController.get().ClubClassroomLink');
     });
 
     function applyLast() {
@@ -119,5 +166,21 @@
             });
         }
     }
+
+    function ClubClassroomLink() {
+        AjaxUpdate('Ajax_Update_ClubClassroomLink', 'Settings', null, getValueString('ClubClassroomLink'));
+    }
+
+    $('#targetForm').submit(function (e) {
+
+        if ($('#StartTime').val() >= $('#EndTime').val()) {
+            showMessage('Start Time cannot be the same or later than End Time', 'StartTime');
+        } else {
+            showLoadingSpinner();
+            return true;
+        }
+
+        return false;
+    });
 
 </script>

@@ -68,7 +68,7 @@ namespace iSpeakWebApp.Controllers
             if (DayOfWeek != null) model.DayOfWeek = (DayOfWeekEnum)DayOfWeek;
             if (!string.IsNullOrEmpty(StartTime))
             {
-                model.StartTime = Util.standardizeTimeToIgnoreDate(StartTime);
+                model.StartTime = (DateTime)Util.standardizeTimeToIgnoreDate(StartTime);
                 model.EndTime = model.StartTime.AddHours(1);
             }
             return View(model);

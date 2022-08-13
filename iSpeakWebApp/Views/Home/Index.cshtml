@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<iSpeakWebApp.Models.ClubSchedulesModel>
 @{
+    iSpeakWebApp.Models.UserAccountsModel userAccount = iSpeakWebApp.Controllers.UserAccountsController.getUserAccount(Session);
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     ViewBag.SelectedNavigationMenu = "Home";
     ViewBag.Subtitle = "Dashboard";
@@ -11,6 +12,25 @@
         <!-- Form inputs -->
         <div class="card animated bounceInLeft">
             <div class="card-body" style="min-height:400px;">
+                @if (userAccount.RemainingClubSubscriptionDays > 0)
+                {
+                    <div class="card-body">
+                        <div class="row mx-0">
+                            <div class="mr-2">
+                                <label class="mb-0">Silahkan klik tombol ini untuk masuk ke kelas zoom</label>
+                                <div><a href="javascript:void(0)" class="btn btn-primary"><i class="icon-video-camera3 mr-2"></i>ZOOM LINK TO CLASSROOMS</a></div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row mx-0">
+                            <div class="mr-2">
+                                <label class="mb-0">Jadwal The Language Club</label>
+                                <div><a href="@Url.Action("Index", "ClubSchedules", new { rss = 1 })" class="btn btn-primary"><i class="icon-list-unordered mr-2"></i>SCHEDULES</a></div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
                 @if (access.Reminders_View || access.Birthdays_View)
                 {
                     <nav>
@@ -40,9 +60,9 @@
                         }
                     </div>
                 }
-                else if(true)
+                else if (true)
                 {
-                     
+
                 }
                 else
                 {

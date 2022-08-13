@@ -187,11 +187,11 @@ namespace iSpeakWebApp.Controllers
                     log = string.Format("<a href='javascript: void(0)' onclick=\"Log('{0}')\">{1}</a>", model.Id.ToString(), model.RowNo);
 
                 string remaining = "";
-                if (!model.IsClubSubscription)
+                if (model.SessionHours > 0)
                     remaining = string.Format("<br/><strong>Available Hours:</strong> {0:N2}", model.SessionHours_Remaining);
-                else
+                else if(model.IsClubSubscription && model.ExpirationMonth > 0 && model.StartingDate != null)
                 {
-                    DateTime expirationDate = model.StartingDate.AddMonths(model.ExpirationMonth).AddSeconds(-1);
+                    DateTime expirationDate = ((DateTime)model.StartingDate).AddMonths(model.ExpirationMonth).AddSeconds(-1);
                     int remainingDays = 0;
                     if (expirationDate > DateTime.Now.Date)
                         remainingDays = (expirationDate - DateTime.Now.Date).Days;

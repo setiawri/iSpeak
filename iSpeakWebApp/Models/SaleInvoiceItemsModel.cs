@@ -90,7 +90,7 @@ namespace iSpeakWebApp.Models
 
         [Display(Name = "Start")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yy HH:mm}")]
-        public DateTime StartingDate { get; set; }
+        public DateTime? StartingDate { get; set; } = null;
         public static ModelMember COL_StartingDate = new ModelMember { Name = "StartingDate", Display = "Start Date" };
 
 

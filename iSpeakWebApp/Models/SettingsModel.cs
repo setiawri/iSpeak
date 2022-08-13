@@ -64,6 +64,12 @@ namespace iSpeakWebApp.Models
         public List<string> PayrollRatesRoles_List { get; set; }
         public static ModelMember COL_PayrollRatesRoles_List = new ModelMember { Name = "PayrollRatesRoles_List" };
 
+
+        [Display(Name = "Club Classroom Link")]
+        public string ClubClassroomLink { get; set; }
+        public static ModelMember COL_ClubClassroomLink = new ModelMember { Name = "ClubClassroomLink", Display = "Club Classroom Link", Id = new Guid("596AA212-1A9C-4FF8-B95F-3EA414D262FF") };
+
+
         /******************************************************************************************************************************************************/
     }
 }

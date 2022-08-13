@@ -200,11 +200,15 @@
                                                     @invoice.Description
                                                     @if (invoice.SessionHours > 0)
                                                     {
-                                                        @(string.Format(" ({0:N2} hours starting {1:dd/MM/yy}", invoice.SessionHours, invoice.StartingDate.Date))
+                                                        @(string.Format(" ({0:N2} hours", invoice.SessionHours))
                                                     }
-                                                    @if (invoice.ExpirationMonth > 0)
+                                                    else if (invoice.ExpirationMonth > 0)
                                                     {
-                                                        @(string.Format(" ({0:N0} months starting {1:dd/MM/yy}", invoice.SessionHours, invoice.StartingDate.Date))
+                                                        @(string.Format(" ({0:N0} months", invoice.SessionHours))
+                                                    }
+                                                    @if (invoice.StartingDate != null)
+                                                    {
+                                                        @(string.Format(" starting {0:dd/MM/yy}", ((DateTime)invoice.StartingDate).Date))
                                                     }
                                                     @if (!string.IsNullOrEmpty(invoice.VouchersName))
                                                     {
@@ -366,7 +370,8 @@
                     sessionhours = getValueFloat('SessionHours') * qty;
                     startingDate = localAsUtc(new Date($('#StartingDate').val()));
                     isClubSubscription = $('#IsClubSubscription').val();
-                    if (isClubSubscription)
+                    console.log(isClubSubscription);
+                    if (isClubSubscription == 'true')
                         description += ' (' + getValueInt('ExpirationMonth') + ' months subscription starting ' + formatDate(startingDate, 'dd/MM/yyyy') + ')';
                     else {
                         description += ' (' + getValueFloat('SessionHours') + ' hours starting ' + formatDate(startingDate, 'dd/MM/yyyy');
