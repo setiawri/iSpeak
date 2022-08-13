@@ -16,7 +16,7 @@
         {
             <!-- Form inputs -->
             <div class="card animated bounceInLeft">
-                @if(access.ClubSchedules_Edit || iSpeakWebApp.Controllers.UserAccountsController.getUserAccount(Session).RemainingClubSubscriptionDays > 0) 
+                @if(access.ClubSchedules_Edit || iSpeakWebApp.Controllers.UserAccountsController.getUserAccount(Session).RemainingClubSubscriptionDays > 0 || userAccount.Roles_List.Contains(iSpeakWebApp.Controllers.SettingsController.get().TutorRole.ToString())) 
                 {
                     <div class="card-body">
                         <div class="row mx-0">
@@ -115,10 +115,6 @@
                                                     @if (!string.IsNullOrWhiteSpace(item.OnlineLink) && userAccount.RemainingClubSubscriptionDays > 0)
                                                     {
                                                         <a href="@item.OnlineLink" target="_blank">Materi</a>
-                                                    }
-                                                    else
-                                                    {
-                                                        @("Online class is not available at the moment.")
                                                     }
                                                 </div>
                                                 @if (!string.IsNullOrWhiteSpace(item.Notes))
