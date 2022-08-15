@@ -18,7 +18,7 @@
                         <div class="row mx-0">
                             <div class="mr-2">
                                 <label class="mb-0">Silahkan klik tombol ini untuk masuk ke kelas zoom</label>
-                                <div><a href="javascript:void(0)" class="btn btn-primary"><i class="icon-video-camera3 mr-2"></i>ZOOM LINK TO CLASSROOMS</a></div>
+                                <div><a href="@iSpeakWebApp.Controllers.SettingsController.get().ClubClassroomLink" class="btn btn-primary" target="_blank"><i class="icon-video-camera3 mr-2"></i>@(string.IsNullOrWhiteSpace(@iSpeakWebApp.Controllers.SettingsController.get().ClubClassroomLink) ? "CLASSROOM IS NOT CURRENTLY AVAILABLE" : "ZOOM LINK TO CLASSROOMS")</a></div>
                             </div>
                         </div>
                         <br/>

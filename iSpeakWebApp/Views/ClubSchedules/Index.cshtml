@@ -7,6 +7,8 @@
     ViewBag.SelectedNavigationMenu = "Schedules";
     ViewBag.Title = "CLUB SCHEDULES";
     ViewBag.Subtitle = "Index";
+
+    string ClubClassroomLink = iSpeakWebApp.Controllers.SettingsController.get().ClubClassroomLink;
 }
 
 <div class="content-wrapper">
@@ -22,7 +24,7 @@
                         <div class="row mx-0">
                             <div class="mr-2">
                                 <label class="mb-0">&nbsp;</label>
-                                <div><a href="javascript:void(0)" class="btn btn-primary"><i class="icon-video-camera3 mr-2"></i>ZOOM LINK TO CLASSROOMS</a></div>
+                                <div><a id="ClubClassroomLinkButton" href="@ClubClassroomLink" class="btn btn-primary" target="_blank"><i class="icon-video-camera3 mr-2"></i>@(string.IsNullOrWhiteSpace(@iSpeakWebApp.Controllers.SettingsController.get().ClubClassroomLink) ? "CLASSROOM IS NOT CURRENTLY AVAILABLE" : "ZOOM LINK TO CLASSROOMS")</a></div>
                             </div>
 
                             @if (access.ClubSchedules_Edit)
@@ -30,7 +32,7 @@
                                 <div class="row ml-0 mr-2" style="width:500px;">
                                     <label class="mb-0">Link</label>
                                     <div class="input-group">
-                                        <input type="text" name="ClubClassroomLink" id="ClubClassroomLink" class="form-control" />
+                                        <input type="text" name="ClubClassroomLink" id="ClubClassroomLink" value="@ClubClassroomLink" class="form-control" />
                                         <span class="input-group-append">
                                             <a href="javascript:void(0)" onclick="ClubClassroomLink()" class="btn btn-primary"><i class="icon-paperplane mr-2"></i>SAVE</a>
                                         </span>
@@ -112,7 +114,7 @@
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Description)</td>
                                             <td class="align-top">
                                                 <div>
-                                                    @if (!string.IsNullOrWhiteSpace(item.OnlineLink) && userAccount.RemainingClubSubscriptionDays > 0)
+                                                    @if (!string.IsNullOrWhiteSpace(item.OnlineLink) && (userAccount.RemainingClubSubscriptionDays > 0 || access.ClubSchedules_Edit))
                                                     {
                                                         <a href="@item.OnlineLink" target="_blank">Materi</a>
                                                     }
@@ -147,14 +149,12 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        setValue('ClubClassroomLink', '@iSpeakWebApp.Controllers.SettingsController.get().ClubClassroomLink');
     });
 
     function applyLast() {
     }
 
     function Delete(id) {
-
         if (confirm("Confirm delete schedule?")) {
             showLoadingSpinner();
             AjaxUpdate('Ajax_Delete', '@ControllerName', id, null, function () {
@@ -164,7 +164,11 @@
     }
 
     function ClubClassroomLink() {
-        AjaxUpdate('Ajax_Update_ClubClassroomLink', 'Settings', null, getValueString('ClubClassroomLink'));
+        $('#ClubClassroomLinkButton').attr("href", getValueString('ClubClassroomLink'));
+        AjaxUpdate('Ajax_Update_ClubClassroomLink', 'Settings', null, getValueString('ClubClassroomLink'), function () {
+            console.log('aaaa');
+            //$('#ClubClassroomLinkButton').attr("href", getValueString('ClubClassroomLink')); //ga jalan??
+        });
     }
 
     $('#targetForm').submit(function (e) {
