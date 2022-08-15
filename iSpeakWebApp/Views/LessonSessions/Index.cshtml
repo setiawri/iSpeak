@@ -141,7 +141,7 @@
                                                 {
                                                     <span class="badge badge-danger d-block">CANCELLED</span>
                                                 }
-                                                else if(access.LessonSessions_Edit)
+                                                else if (access.LessonSessions_Edit)
                                                 {
                                                     <a href="javascript:void(0)" class="badge badge-warning d-block"><span style="width:50px;" data-toggle="modal" data-target="#modal_cancel" onclick="PopulateCancelModal('@item.Id')">CANCEL</span></a>
                                                 }
@@ -149,7 +149,10 @@
                                                 {
                                                     <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a> @:•
                                                 }
-                                                <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                                @if (access.LessonSessions_Edit)
+                                                {
+                                                    <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                                }
                                             </td>
                                         </tr>
                                     }

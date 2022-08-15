@@ -171,7 +171,7 @@
                                                 }
                                             </td>
                                             <td class="align-top pl-1 pr-0">
-                                                @if (item.Due > 0 && !item.Cancelled)
+                                                @if (item.Due > 0 && !item.Cancelled && access.Payments_Add)
                                                 {
                                                     <input type="checkbox" class="due-checkbox" id="@item.Id" />
                                                 }
@@ -207,7 +207,10 @@
                                                 {
                                                     @Html.ActionLink("Payment", "Index", "Payments", new { FILTER_InvoiceNo = item.No, FILTER_chkDateFrom = false, FILTER_chkDateTo = false }, new { @target = "_blank" }) @:•
                                                 }
-                                                <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                                @if (access.SaleInvoices_Edit)
+                                                { 
+                                                    <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                                }
                                             </td>
                                         </tr>
                                     }
