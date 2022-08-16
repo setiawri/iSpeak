@@ -14,18 +14,45 @@
             <div class="card-body" style="min-height:400px;">
                 @if (userAccount.RemainingClubSubscriptionDays > 0)
                 {
+                    <div class="card-header header-elements-inline pb-1">
+                        <h5 class="card-title">
+                            Terima kasih telah bergabung dengan The Language Club.
+                        </h5>
+                    </div>
+                    <div class="card-header header-elements-inline pb-1">
+                        <h5 class="card-title">
+                            Membership Language Club anda aktif untuk
+                            @if (userAccount.RemainingClubSubscriptionDays > 14)
+                            {
+                                <span class="badge badge-success"> @userAccount.RemainingClubSubscriptionDays </span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-warning"> @userAccount.RemainingClubSubscriptionDays </span>
+                            }
+                            hari lagi.
+                            @if (userAccount.RemainingClubSubscriptionDays <= 14)
+                            {
+                                <span>Silahkan kontak admin untuk memperpanjang membership.</span>
+                            }
+                        </h5>
+                    </div>
                     <div class="card-body">
-                        <div class="row mx-0">
+                        <br />
+                        <div class="row mx-0 mb-1">
                             <div class="mr-2">
-                                <label class="mb-0">Silahkan klik tombol ini untuk masuk ke kelas zoom</label>
-                                <div><a href="@iSpeakWebApp.Controllers.SettingsController.get().ClubClassroomLink" class="btn btn-primary" target="_blank"><i class="icon-video-camera3 mr-2"></i>@(string.IsNullOrWhiteSpace(@iSpeakWebApp.Controllers.SettingsController.get().ClubClassroomLink) ? "CLASSROOM IS NOT CURRENTLY AVAILABLE" : "ZOOM LINK TO CLASSROOMS")</a></div>
+                                <div>
+                                    <a href="@iSpeakWebApp.Controllers.SettingsController.get().ClubClassroomLink" class="btn btn-primary" target="_blank"><i class="icon-video-camera3 mr-2"></i>@(string.IsNullOrWhiteSpace(@iSpeakWebApp.Controllers.SettingsController.get().ClubClassroomLink) ? "CLASSROOM IS NOT CURRENTLY AVAILABLE" : "ZOOM LINK TO CLASSROOMS")</a>
+                                    <label class="mb-0">Silahkan klik tombol ini untuk masuk ke kelas zoom</label>
+                                </div>
                             </div>
                         </div>
-                        <br/>
-                        <div class="row mx-0">
+                        <div class="row mx-0 mb-1">
                             <div class="mr-2">
-                                <label class="mb-0">Jadwal The Language Club</label>
-                                <div><a href="@Url.Action("Index", "ClubSchedules", new { rss = 1 })" class="btn btn-primary"><i class="icon-list-unordered mr-2"></i>SCHEDULES</a></div>
+                                <div>
+                                    <a href="@Url.Action("Index", "ClubSchedules", new { rss = 1 })" class="btn btn-primary"><i class="icon-list-unordered mr-2"></i>SCHEDULES</a>
+                                    <label class="mb-0">Jadwal The Language Club</label>
+                                </div>
                             </div>
                         </div>
                     </div>

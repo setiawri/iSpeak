@@ -199,17 +199,14 @@
                                                 {
                                                     <div><span class="badge badge-danger d-block mr-1">CANCELLED</span></div>
                                                 }
-                                                @if (access.SaleInvoices_Edit)
-                                                {
-                                                    <a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Invoice @item.No', 'large', 'Ajax_GetDetails', '@ControllerName')">View</a> @:•
-                                                }
+                                                <a href="javascript:void(0)" onclick="AjaxGet('@item.Id', 'Invoice @item.No', 'large', 'Ajax_GetDetails', '@ControllerName')">Details</a> 
                                                 @if (access.Payments_View)
                                                 {
-                                                    @Html.ActionLink("Payment", "Index", "Payments", new { FILTER_InvoiceNo = item.No, FILTER_chkDateFrom = false, FILTER_chkDateTo = false }, new { @target = "_blank" }) @:•
+                                                    @:• @Html.ActionLink("Payment", "Index", "Payments", new { FILTER_InvoiceNo = item.No, FILTER_chkDateFrom = false, FILTER_chkDateTo = false }, new { @target = "_blank" }) 
                                                 }
                                                 @if (access.SaleInvoices_Edit)
                                                 { 
-                                                    <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
+                                                    @:• <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                                 }
                                             </td>
                                         </tr>

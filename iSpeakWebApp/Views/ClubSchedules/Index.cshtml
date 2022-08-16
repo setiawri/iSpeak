@@ -116,7 +116,20 @@
                                                 <div>
                                                     @if (!string.IsNullOrWhiteSpace(item.OnlineLink) && (userAccount.RemainingClubSubscriptionDays > 0 || access.ClubSchedules_Edit))
                                                     {
-                                                        <a href="@item.OnlineLink" target="_blank">Materi</a>
+                                                        string[] links = item.OnlineLink.Split(new[] { "||" }, StringSplitOptions.None);
+                                                        foreach (string link in links)
+                                                        {
+                                                            if (!link.Contains("|"))
+                                                            {
+                                                                <a href="@link" target="_blank">materi</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                string[] linkitems = link.Split('|');
+                                                                <a href="@linkitems[1]" target="_blank">@linkitems[0]</a>
+                                                            }
+                                                            <br/>
+                                                        }
                                                     }
                                                 </div>
                                                 @if (!string.IsNullOrWhiteSpace(item.Notes))
