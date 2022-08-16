@@ -65,6 +65,13 @@
                         </div>
 
                         <div class="row ml-0 mr-2" style="width:150px;">
+                            <label class="mb-0">Language</label>
+                            <div class="input-group">
+                                @Html.DropDownList("FILTER_Languages_Id", ViewBag.Languages as SelectList, "ALL", new { @class = "form-control select2" })
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:150px;">
                             <label class="mb-0">Day</label>
                             <div class="input-group">
                                 @Html.DropDownList("FILTER_DayOfWeek", EnumHelper.GetSelectList(typeof(DayOfWeekEnum)), "ALL", new { @class = "form-control select2" })
