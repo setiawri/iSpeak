@@ -79,6 +79,17 @@
                         </div>
 
                         <div class="row ml-0 mr-2" style="width:80px;">
+                            <label class="mb-0">ON SITE</label>
+                            <div class="input-group">
+                                <select id="FILTER_OnSite" name="FILTER_OnSite" class="custom-select">
+                                    <option value="">ALL</option>
+                                    <option value="1">YES</option>
+                                    <option value="0">NO</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:80px;">
                             <label class="mb-0">Start</label>
                             <div class="input-group">
                                 <input type="text" class="form-control anytime-picker" id="FILTER_StartTime" name="FILTER_StartTime" style="width:80px;">
@@ -103,9 +114,8 @@
                             <thead>
                                 <tr>
                                     <th style="width:200px;">Schedule</th>
-                                    @*<th style="width:200px;">@Html.DisplayNameFor(model => model.LessonPackages_Id)</th>*@
-                                    <th style="width:100px;">@Html.DisplayNameFor(model => model.Languages_Id)</th>
-                                    <th style="width:200px;">@Html.DisplayNameFor(model => model.Description)</th>
+                                    <th style="width:150px;">@Html.DisplayNameFor(model => model.Languages_Name)</th>
+                                    <th style="width:300px;">@Html.DisplayNameFor(model => model.ClubClasses_Id)</th>
                                     <th class="non-sortable"></th>
                                     <th class="non-searchable non-sortable" style="width:170px;"></th>
                                 </tr>
@@ -118,7 +128,13 @@
                                         <tr>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.DayOfWeek), @Html.DisplayFor(modelItem => item.StartTime) - @Html.DisplayFor(modelItem => item.EndTime)</td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Languages_Name)</td>
-                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Description)</td>
+                                            <td class="align-top">
+                                                @if (item.OnSite)
+                                                {
+                                                    <span class="badge badge-primary mr-1" style="width:60px;">ON SITE</span> 
+                                                }
+                                                @Html.DisplayFor(modelItem => item.ClubClasses_Name)
+                                            </td>
                                             <td class="align-top">
                                                 <div>
                                                     @if (!string.IsNullOrWhiteSpace(item.OnlineLink) && (userAccount.RemainingClubSubscriptionDays > 0 || access.ClubSchedules_Edit))
@@ -147,6 +163,7 @@
                                             <td class="align-top">
                                                 @if (access.ClubSchedules_Edit)
                                                 {
+                                                    <span class="badge badge-@(item.Active ? "success" : "dark") d-block" style="width:100px;">@(item.Active ? "" : "NOT") ACTIVE</span>
                                                     <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a> @:•
                                                     <a href="javascript:void(0)" onclick="Delete('@item.Id')">DELETE</a> @:•
                                                     <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>

@@ -203,6 +203,10 @@
                                 {
                                     <a href="@Url.Action("Index", "LessonPackages", new { rss=1 })" class="dropdown-item">Packages</a>
                                 }
+                                @if (access.ClubClasses_View)
+                                {
+                                    <a href="@Url.Action("Index", "ClubClasses", new { rss = 1 })" class="dropdown-item">Club Classes</a>
+                                }
                             </div>
                         </div>
                         @if (access.ExpenseCategories_View)
@@ -341,6 +345,7 @@ FILTERING
 <input type="hidden" id="FILTER_InvoiceNo" name="FILTER_InvoiceNo" value="@ViewBag.FILTER_InvoiceNo" />
 <input type="hidden" id="FILTER_UserAccounts_Name" name="FILTER_UserAccounts_Name" value="@ViewBag.FILTER_UserAccounts_Name" />
 <input type="hidden" id="FILTER_DayOfWeek" name="FILTER_DayOfWeek" value="@ViewBag.FILTER_DayOfWeek" />
+<input type="hidden" id="FILTER_OnSite" name="FILTER_OnSite" value="@ViewBag.FILTER_OnSite" />
 <input type="hidden" id="FILTER_StartTime" name="FILTER_StartTime" value="@ViewBag.FILTER_StartTime" />
 <input type="hidden" id="FILTER_EndTime" name="FILTER_EndTime" value="@ViewBag.FILTER_EndTime" />
 
@@ -362,6 +367,7 @@ FILTERING
         setValue('FILTER_InvoiceNo', '@ViewBag.FILTER_InvoiceNo');
         setValue('FILTER_UserAccounts_Name', '@ViewBag.FILTER_UserAccounts_Name');
         setValue('FILTER_DayOfWeek', '@ViewBag.FILTER_DayOfWeek');
+        setValue('FILTER_OnSite', '@ViewBag.FILTER_OnSite');
         setValue('FILTER_StartTime', '@(ViewBag.FILTER_StartTime == null ? "" : string.Format("{0:HH:mm}", ViewBag.FILTER_StartTime))');
         setValue('FILTER_EndTime', '@(ViewBag.FILTER_EndTime == null ? "" : string.Format("{0:HH:mm}", ViewBag.FILTER_EndTime))');
 

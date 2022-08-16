@@ -204,6 +204,8 @@ namespace iSpeakWebApp
                 return db.PromotionEvents.Where(x => x.Id.ToString().ToLower() == id).FirstOrDefault().Name;
             else if (typeof(T) == typeof(LanguagesModel))
                 return db.Languages.Where(x => x.Id.ToString().ToLower() == id).FirstOrDefault().Name;
+            else if (typeof(T) == typeof(ClubClassesModel))
+                return ClubClassesController.get(new Guid(id)).Name;
             else if (typeof(T) == typeof(SaleInvoiceItemsModel))
                 return SaleInvoiceItemsController.get_by_IdList(id).FirstOrDefault().SaleInvoices_No;
             else

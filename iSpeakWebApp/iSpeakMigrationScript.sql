@@ -1,7 +1,91 @@
+
+---- CLUB CLASSES ============================================================================================================
+
+	--ClubSchedules
+--	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubClasses_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE UserAccountRoles ADD ClubClasses_Notes varchar(MAX) null;
+--	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubClasses_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE UserAccountRoles ADD ClubClasses_Add bit default 0 not null;
+--	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubClasses_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE UserAccountRoles ADD ClubClasses_View bit default 0 not null;
+--	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubClasses_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE UserAccountRoles ADD ClubClasses_Edit bit default 0 not null;
+--	GO
+
+--UPDATE ClubSchedules SET [Description] = REPLACE([Description],'Kindergaten','Kindergarten')
+
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ClubSchedules' AND COLUMN_NAME = 'Onsite' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE ClubSchedules ADD Onsite bit NOT NULL DEFAULT 0
+--GO
+
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ClubSchedules' AND COLUMN_NAME = 'ClubClasses_Id' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE ClubSchedules ADD ClubClasses_Id uniqueidentifier NULL
+--GO
+
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ClubClasses' AND TABLE_SCHEMA='dbo') 
+--BEGIN
+--	CREATE TABLE [dbo].[ClubClasses]
+--	(
+--		[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+--		[Name] VARCHAR(MAX) NOT NULL, 
+--		[Languages_Id] UNIQUEIDENTIFIER NOT NULL, 
+--		[Active] BIT NOT NULL DEFAULT 1,
+--		[Notes] VARCHAR(MAX) NULL
+--	)
+--END
+--GO
+--DELETE ClubClasses
+--GO
+
+--	IF(SELECT object_id('TempDB..#TEMP_INPUTARRAY')) IS NOT NULL
+--		DROP TABLE #TEMP_INPUTARRAY
+		
+--	SELECT * INTO #TEMP_INPUTARRAY FROM (SELECT * FROM ClubSchedules) AS x
+	
+--	DECLARE @Iteration_Id uniqueidentifier
+--	DECLARE @Description varchar(MAX)
+--	DECLARE @Languages_Id uniqueidentifier
+--	DECLARE @NewId uniqueidentifier
+--	WHILE EXISTS(SELECT * FROM #TEMP_INPUTARRAY)
+--	BEGIN
+--		SELECT TOP 1 @Iteration_Id = Id, @Description = [Description], @Languages_Id=Languages_Id FROM #TEMP_INPUTARRAY
+
+--		-- update onsite column
+--		IF CHARINDEX('(onsite)', @Description) > 0
+--		BEGIN
+--			UPDATE ClubSchedules SET Onsite=1, [Description]=RTRIM(LTRIM(REPLACE([Description],'(onsite)',''))) WHERE Id=@Iteration_Id
+--			SELECT @Description = [Description] FROM ClubSchedules WHERE Id=@Iteration_Id
+--		END
+
+--		-- create clubclasses
+--		IF NOT EXISTS (SELECT [Name] FROM ClubClasses WHERE [Name] = @Description)
+--		BEGIN
+--			INSERT INTO ClubClasses(Id, Name, Languages_Id) VALUES(NEWID(), @Description, @Languages_Id)
+--		END
+--		UPDATE ClubSchedules SET ClubClasses_Id=(SELECT Id FROM ClubClasses WHERE Name=@Description) WHERE Id = @Iteration_Id
+		
+--		-- remove row to iterate to the next row
+--		DELETE #TEMP_INPUTARRAY WHERE Id = @Iteration_Id
+--	END
+	
+--	-- clean up
+--	DROP TABLE #TEMP_INPUTARRAY
+--GO
+
+--ALTER TABLE ClubSchedules DROP COLUMN Languages_Id
+--ALTER TABLE ClubSchedules DROP COLUMN Description
+--UPDATE ClubSchedules SET Notes=null
+
+---- Kasih role access ke club classes
+
+--SELECT * FROM ClubClasses ORDER BY Name ASC
+--select * from ClubSchedules
+
+
 ---- CLUB SCHEDULES ==========================================================================================================
 
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'SaleInvoiceItems' AND COLUMN_NAME = 'IsClubSubscription' AND TABLE_SCHEMA='dbo') 
-    ALTER TABLE SaleInvoiceItems ADD IsClubSubscription bit NULL DEFAULT 0 
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'SaleInvoiceItems' AND COLUMN_NAME = 'IsClubSubscription' AND TABLE_SCHEMA='dbo') 
+--    ALTER TABLE SaleInvoiceItems ADD IsClubSubscription bit NULL DEFAULT 0 
 
 --IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'StartingDate' AND TABLE_NAME = 'SaleInvoiceItems' AND TABLE_SCHEMA='dbo') 
 --    ALTER TABLE SaleInvoiceItems ADD StartingDate datetime NULL 

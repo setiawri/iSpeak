@@ -275,6 +275,12 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.ClubSchedules_Edit, model.ClubSchedules_Edit, UserAccountRolesModel.COL_ClubSchedules_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.ClubSchedules_View, model.ClubSchedules_View, UserAccountRolesModel.COL_ClubSchedules_View.LogDisplay);
 
+                    //ClubClasses
+                    log = Helper.append(log, originalModel.ClubClasses_Notes, model.ClubClasses_Notes, UserAccountRolesModel.COL_ClubClasses_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.ClubClasses_Add, model.ClubClasses_Add, UserAccountRolesModel.COL_ClubClasses_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.ClubClasses_Edit, model.ClubClasses_Edit, UserAccountRolesModel.COL_ClubClasses_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.ClubClasses_View, model.ClubClasses_View, UserAccountRolesModel.COL_ClubClasses_View.LogDisplay);
+
                     //Files
                     log = Helper.append(log, originalModel.Files_Notes, model.Files_Notes, UserAccountRolesModel.COL_Files_Notes.LogDisplay);
                     log = Helper.append(log, originalModel.Files_Add, model.Files_Add, UserAccountRolesModel.COL_Files_Add.LogDisplay);
@@ -476,6 +482,11 @@ namespace iSpeakWebApp.Controllers
                 if (item.ClubSchedules_Add) model.ClubSchedules_Add = true;
                 if (item.ClubSchedules_Edit) model.ClubSchedules_Edit = true;
                 if (item.ClubSchedules_View) model.ClubSchedules_View = true;
+
+                //ClubClasses
+                if (item.ClubClasses_Add) model.ClubClasses_Add = true;
+                if (item.ClubClasses_Edit) model.ClubClasses_Edit = true;
+                if (item.ClubClasses_View) model.ClubClasses_View = true;
 
                 //Files
                 if (item.Files_Add) model.Files_Add = true;
