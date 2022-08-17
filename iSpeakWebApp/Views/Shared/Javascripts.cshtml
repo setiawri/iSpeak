@@ -698,9 +698,12 @@
         sPaginationType: "full_numbers",
         fnDrawCallback: function (o) {
             if (o._iDisplayStart != topOfDataTable) {
-                var targetOffset = $('.topOfDataTable').offset().top;
-                $('html,body').animate({ scrollTop: targetOffset }, 500);
-                topOfDataTable = o._iDisplayStart;
+                var marker = $('.content-nav');
+                if (marker.length) {
+                    var targetOffset = $('.topOfDataTable').offset().top;
+                    $('html,body').animate({ scrollTop: targetOffset }, 500);
+                    topOfDataTable = o._iDisplayStart;
+                }
             }
         },
         autoWidth: false,

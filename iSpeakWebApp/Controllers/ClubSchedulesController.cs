@@ -246,6 +246,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_DayOfWeek.Name, model.DayOfWeek),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_StartTime.Name, model.StartTime),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_EndTime.Name, model.EndTime),
+                DBConnection.getSqlParameter(ClubSchedulesModel.COL_OnSite.Name, model.OnSite),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Branches_Id.Name, model.Branches_Id),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Active.Name, model.Active),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Notes.Name, model.Notes)
@@ -263,6 +264,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_DayOfWeek.Name, model.DayOfWeek),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_StartTime.Name, model.StartTime),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_EndTime.Name, model.EndTime),
+                DBConnection.getSqlParameter(ClubSchedulesModel.COL_OnSite.Name, model.OnSite),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Active.Name, model.Active),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Notes.Name, model.Notes)
             );

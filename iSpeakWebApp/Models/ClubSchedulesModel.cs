@@ -51,7 +51,7 @@ namespace iSpeakWebApp.Models
 
 
         [Display(Name = "On Site")]
-        public bool OnSite { get; set; } = true;
+        public bool OnSite { get; set; } = false;
         public static ModelMember COL_OnSite = new ModelMember { Name = "OnSite", Display = "On Site", LogDisplay = ActivityLogsController.editBooleanFormat("On Site") };
 
 
