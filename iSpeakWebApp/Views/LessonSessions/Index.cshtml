@@ -148,9 +148,6 @@
                                                 @if (access.LessonSessions_Edit || access.LessonSessions_EditReviewAndInternalNotes)
                                                 {
                                                     <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a> @:•
-                                                }
-                                                @if (access.LessonSessions_Edit)
-                                                {
                                                     <a href="javascript:void(0)" onclick="Log('@item.Id')">Log</a>
                                                 }
                                             </td>
