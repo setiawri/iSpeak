@@ -1,4 +1,11 @@
 
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ClubClasses' AND COLUMN_NAME = 'PeriodStartDate' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE ClubClasses ADD PeriodStartDate datetime NULL 
+--GO
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ClubClasses' AND COLUMN_NAME = 'PeriodAdjustmentDayCount' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE ClubClasses ADD PeriodAdjustmentDayCount int NOT NULL DEFAULT 0 
+--GO
+
 ---- CLUB CLASSES ============================================================================================================
 
 	--ClubSchedules

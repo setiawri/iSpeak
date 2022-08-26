@@ -352,10 +352,9 @@
         }
     });
 
-    //function setDateRangePicker(id, value) {
-    //    $('#' + id).data('daterangepicker').setStartDate(value);
-    //    $('#' + id).data('daterangepicker').setEndDate(value);
-    //}
+    function setDateRangePickerValue(id, value) {
+        setDateRangePicker(id, value, value);
+    }
 
     function setDateRangePickerWithStringDate(id, start, end) { setDateRangePicker(id, parseJSONDate(start), parseJSONDate(end)); }
     function setDateRangePicker(id, start, end) {

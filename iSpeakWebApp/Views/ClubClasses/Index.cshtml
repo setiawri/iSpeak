@@ -65,6 +65,8 @@
                                 <tr>
                                     <th style="width:200px;">@Html.DisplayNameFor(model => model.Languages_Id)</th>
                                     <th style="width:500px;">@Html.DisplayNameFor(model => model.Name)</th>
+                                    <th style="width:200px;">@Html.DisplayNameFor(model => model.PeriodStartDate)</th>
+                                    <th style="width:200px;">@Html.DisplayNameFor(model => model.PeriodAdjustmentDayCount)</th>
                                     <th class="non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
                                     <th class="non-sortable" style="width:100px;"></th>
                                     <th class="non-searchable non-sortable" style="width:100px;"></th>
@@ -78,6 +80,8 @@
                                         <tr>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Languages_Name)</td>
                                             <td class="align-top">@Html.DisplayFor(modelItem => item.Name)</td>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.PeriodStartDate)</td>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.PeriodAdjustmentDayCount)</td>
                                             <td class="align-top tablecellwrap">@Html.DisplayFor(modelItem => item.Notes)</td>
                                             <td class="align-top"><span class="badge badge-@(item.Active ? "success" : "dark") d-block" style="width:100px;">@(item.Active ? "" : "NOT") ACTIVE</span></td>
                                             <td class="align-top">

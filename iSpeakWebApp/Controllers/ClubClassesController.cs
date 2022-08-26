@@ -98,6 +98,8 @@ namespace iSpeakWebApp.Controllers
                     string log = string.Empty;
                     log = Helper.append(log, originalModel.Name, modifiedModel.Name, ClubClassesModel.COL_Name.LogDisplay);
                     log = Helper.append<LanguagesModel>(log, originalModel.Languages_Id, modifiedModel.Languages_Id, ClubClassesModel.COL_Languages_Id.LogDisplay);
+                    log = Helper.append(log, originalModel.PeriodStartDate, modifiedModel.PeriodStartDate, ClubClassesModel.COL_PeriodStartDate.LogDisplay);
+                    log = Helper.append(log, originalModel.PeriodAdjustmentDayCount, modifiedModel.PeriodAdjustmentDayCount, ClubClassesModel.COL_PeriodAdjustmentDayCount.LogDisplay);
                     log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, ClubClassesModel.COL_Notes.LogDisplay);
                     log = Helper.append(log, originalModel.Active, modifiedModel.Active, ClubClassesModel.COL_Active.LogDisplay);
 
@@ -178,6 +180,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(ClubClassesModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(ClubClassesModel.COL_Name.Name, model.Name),
                 DBConnection.getSqlParameter(ClubClassesModel.COL_Languages_Id.Name, model.Languages_Id),
+                DBConnection.getSqlParameter(ClubClassesModel.COL_PeriodStartDate.Name, model.PeriodStartDate),
+                DBConnection.getSqlParameter(ClubClassesModel.COL_PeriodAdjustmentDayCount.Name, model.PeriodAdjustmentDayCount),
                 DBConnection.getSqlParameter(ClubClassesModel.COL_Active.Name, model.Active),
                 DBConnection.getSqlParameter(ClubClassesModel.COL_Notes.Name, model.Notes)
             );
@@ -191,6 +195,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(ClubClassesModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(ClubClassesModel.COL_Name.Name, model.Name),
                 DBConnection.getSqlParameter(ClubClassesModel.COL_Languages_Id.Name, model.Languages_Id),
+                DBConnection.getSqlParameter(ClubClassesModel.COL_PeriodStartDate.Name, model.PeriodStartDate),
+                DBConnection.getSqlParameter(ClubClassesModel.COL_PeriodAdjustmentDayCount.Name, model.PeriodAdjustmentDayCount),
                 DBConnection.getSqlParameter(ClubClassesModel.COL_Active.Name, model.Active),
                 DBConnection.getSqlParameter(ClubClassesModel.COL_Notes.Name, model.Notes)
             );
