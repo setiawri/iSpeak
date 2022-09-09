@@ -281,6 +281,12 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.ClubClasses_Edit, model.ClubClasses_Edit, UserAccountRolesModel.COL_ClubClasses_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.ClubClasses_View, model.ClubClasses_View, UserAccountRolesModel.COL_ClubClasses_View.LogDisplay);
 
+                    //ClubClassOnlineLinks
+                    log = Helper.append(log, originalModel.ClubClassOnlineLinks_Notes, model.ClubClassOnlineLinks_Notes, UserAccountRolesModel.COL_ClubClassOnlineLinks_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.ClubClassOnlineLinks_Add, model.ClubClassOnlineLinks_Add, UserAccountRolesModel.COL_ClubClassOnlineLinks_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.ClubClassOnlineLinks_Edit, model.ClubClassOnlineLinks_Edit, UserAccountRolesModel.COL_ClubClassOnlineLinks_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.ClubClassOnlineLinks_View, model.ClubClassOnlineLinks_View, UserAccountRolesModel.COL_ClubClassOnlineLinks_View.LogDisplay);
+
                     //Files
                     log = Helper.append(log, originalModel.Files_Notes, model.Files_Notes, UserAccountRolesModel.COL_Files_Notes.LogDisplay);
                     log = Helper.append(log, originalModel.Files_Add, model.Files_Add, UserAccountRolesModel.COL_Files_Add.LogDisplay);
@@ -487,6 +493,11 @@ namespace iSpeakWebApp.Controllers
                 if (item.ClubClasses_Add) model.ClubClasses_Add = true;
                 if (item.ClubClasses_Edit) model.ClubClasses_Edit = true;
                 if (item.ClubClasses_View) model.ClubClasses_View = true;
+
+                //ClubClassOnlineLinks
+                if (item.ClubClassOnlineLinks_Add) model.ClubClassOnlineLinks_Add = true;
+                if (item.ClubClassOnlineLinks_Edit) model.ClubClassOnlineLinks_Edit = true;
+                if (item.ClubClassOnlineLinks_View) model.ClubClassOnlineLinks_View = true;
 
                 //Files
                 if (item.Files_Add) model.Files_Add = true;

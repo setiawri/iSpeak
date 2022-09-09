@@ -207,6 +207,10 @@
                                 {
                                     <a href="@Url.Action("Index", "ClubClasses", new { rss = 1 })" class="dropdown-item">Club Classes</a>
                                 }
+                                @if (access.ClubClassOnlineLinks_View)
+                                {
+                                    <a href="@Url.Action("Index", "ClubClassOnlineLinks", new { rss = 1 })" class="dropdown-item">Club Class Online Links</a>
+                                }
                             </div>
                         </div>
                         @if (access.ExpenseCategories_View)

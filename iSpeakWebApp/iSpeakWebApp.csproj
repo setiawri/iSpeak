@@ -191,6 +191,7 @@
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Controllers\ActivityLogsController.cs" />
+    <Compile Include="Controllers\ClubClassOnlineLinksController.cs" />
     <Compile Include="Controllers\ClubClassesController.cs" />
     <Compile Include="Controllers\LandingPageController.cs" />
     <Compile Include="Controllers\PayrollPaymentItemsController.cs" />
@@ -233,6 +234,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ActivityLogsModel.cs" />
+    <Compile Include="Models\ClubClassOnlineLinksModel.cs" />
     <Compile Include="Models\ClubClassesModel.cs" />
     <Compile Include="Models\HourlyRatesModel.cs" />
     <Compile Include="Models\PaymentItemsModel.cs" />
@@ -484,6 +486,9 @@
     <Content Include="Views\ClubClasses\Create.cshtml" />
     <Content Include="Views\ClubClasses\Edit.cshtml" />
     <Content Include="Views\ClubClasses\Index.cshtml" />
+    <Content Include="Views\ClubClassOnlineLinks\Create.cshtml" />
+    <Content Include="Views\ClubClassOnlineLinks\Edit.cshtml" />
+    <Content Include="Views\ClubClassOnlineLinks\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

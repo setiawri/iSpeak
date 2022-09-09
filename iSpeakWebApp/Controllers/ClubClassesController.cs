@@ -170,7 +170,7 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(ClubClassesModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(ClubClassesModel.COL_Active.Name, FILTER_Active),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
-                    DBConnection.getSqlParameter("FILTER_Languages_Id", FILTER_Keyword)
+                    DBConnection.getSqlParameter("FILTER_Languages_Id", FILTER_Languages_Id)
                 ).ToList();
         }
 
