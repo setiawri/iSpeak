@@ -14,12 +14,12 @@ namespace iSpeakWebApp.Controllers
 
         /* INDEX **********************************************************************************************************************************************/
 
-        public ActionResult Index(int? rss, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_ClubClassess_Id)
+        public ActionResult Index(int? rss, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_ClubClasses_Id)
         {
             if (!UserAccountsController.getUserAccess(Session).ClubClassOnlineLinks_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_ClubClassess_Id);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_ClubClasses_Id);
             if (rss != null)
             {
                 ViewBag.RemoveDatatablesStateSave = rss;
@@ -27,31 +27,31 @@ namespace iSpeakWebApp.Controllers
             }
             else
             {
-                return View(get(FILTER_Keyword, FILTER_Active, FILTER_ClubClassess_Id));
+                return View(get(FILTER_Keyword, FILTER_Active, FILTER_ClubClasses_Id));
             }
         }
 
         [HttpPost]
-        public ActionResult Index(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_ClubClassess_Id)
+        public ActionResult Index(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_ClubClasses_Id)
         {
-            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_ClubClassess_Id);
-            return View(get(FILTER_Keyword, FILTER_Active, FILTER_ClubClassess_Id));
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_ClubClasses_Id);
+            return View(get(FILTER_Keyword, FILTER_Active, FILTER_ClubClasses_Id));
         }
 
         /* CREATE *********************************************************************************************************************************************/
 
-        public ActionResult Create(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_ClubClassess_Id)
+        public ActionResult Create(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_ClubClasses_Id)
         {
             if (!UserAccountsController.getUserAccess(Session).ClubClassOnlineLinks_Add)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_ClubClassess_Id);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_ClubClasses_Id);
             return View(new ClubClassOnlineLinksModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ClubClassOnlineLinksModel model, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_ClubClassess_Id)
+        public ActionResult Create(ClubClassOnlineLinksModel model, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_ClubClasses_Id)
         {
             if (ModelState.IsValid)
             {
@@ -61,17 +61,17 @@ namespace iSpeakWebApp.Controllers
                 {
                     model.Id = Guid.NewGuid();
                     add(model);
-                    return RedirectToAction(nameof(Index), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active, FILTER_ClubClassess_Id = FILTER_ClubClassess_Id });
+                    return RedirectToAction(nameof(Index), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active, FILTER_ClubClasses_Id = FILTER_ClubClasses_Id });
                 }
             }
 
-            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_ClubClassess_Id);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_ClubClasses_Id);
             return View(model);
         }
 
         /* EDIT ***********************************************************************************************************************************************/
 
-        public ActionResult Edit(Guid? id, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_ClubClassess_Id)
+        public ActionResult Edit(Guid? id, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_ClubClasses_Id)
         {
             if (!UserAccountsController.getUserAccess(Session).ClubClassOnlineLinks_Edit)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
@@ -79,13 +79,13 @@ namespace iSpeakWebApp.Controllers
             if (id == null)
                 return RedirectToAction(nameof(Index));
 
-            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_ClubClassess_Id);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_ClubClasses_Id);
             return View(get((Guid)id));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(ClubClassOnlineLinksModel modifiedModel, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_ClubClassess_Id)
+        public ActionResult Edit(ClubClassOnlineLinksModel modifiedModel, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_ClubClasses_Id)
         {
             if (ModelState.IsValid)
             {
@@ -107,21 +107,21 @@ namespace iSpeakWebApp.Controllers
                     if (!string.IsNullOrEmpty(log))
                         update(modifiedModel, log);
 
-                    return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active, FILTER_ClubClassess_Id = FILTER_ClubClassess_Id });
+                    return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active, FILTER_ClubClasses_Id = FILTER_ClubClasses_Id });
                 }
             }
 
-            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_ClubClassess_Id);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_ClubClasses_Id);
             return View(modifiedModel);
         }
 
         /* METHODS ********************************************************************************************************************************************/
 
-        public void setViewBag(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_ClubClassess_Id)
+        public void setViewBag(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_ClubClasses_Id)
         {
             ViewBag.FILTER_Keyword = FILTER_Keyword;
             ViewBag.FILTER_Active = FILTER_Active;
-            ViewBag.FILTER_ClubClassess_Id = FILTER_ClubClassess_Id;
+            ViewBag.FILTER_ClubClasses_Id = FILTER_ClubClasses_Id;
             ClubClassesController.setDropDownListViewBag(this);
         }
 
@@ -148,15 +148,18 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public static List<ClubClassOnlineLinksModel> get(int? FILTER_Active) { return get(null, FILTER_Active, null, null); }
-        public List<ClubClassOnlineLinksModel> get(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_ClubClassess_Id) { return get(null, FILTER_Active, FILTER_Keyword, FILTER_ClubClassess_Id); }
-        public static ClubClassOnlineLinksModel get(Guid Id) { return get(Id, null, null, null).FirstOrDefault(); }
-        public static List<ClubClassOnlineLinksModel> get() { return get(null, null, null, null); }
-        public static List<ClubClassOnlineLinksModel> get(Guid? Id, int? FILTER_Active, string FILTER_Keyword, Guid? FILTER_ClubClassess_Id)
+        public static List<ClubClassOnlineLinksModel> get(DateTime? DisplayStartDate, DateTime? DisplayEndDate) { return get(null, null, null, null, DisplayStartDate, DisplayEndDate); }
+        public static List<ClubClassOnlineLinksModel> get(int? FILTER_Active) { return get(null, FILTER_Active, null, null, null, null); }
+        public List<ClubClassOnlineLinksModel> get(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_ClubClasses_Id) { return get(null, FILTER_Active, FILTER_Keyword, FILTER_ClubClasses_Id, null, null); }
+        public static ClubClassOnlineLinksModel get(Guid Id) { return get(Id, null, null, null, null, null).FirstOrDefault(); }
+        public static List<ClubClassOnlineLinksModel> get() { return get(null, null, null, null, null, null); }
+        public static List<ClubClassOnlineLinksModel> get(Guid? Id, int? FILTER_Active, string FILTER_Keyword, Guid? FILTER_ClubClasses_Id, DateTime? DisplayStartDate, DateTime? DisplayEndDate)
         {
             string sql = string.Format(@"
                         SELECT ClubClassOnlineLinks.*,
-                            ClubClasses.Name AS ClubClasses_Name
+                            ClubClasses.Name AS ClubClasses_Name,
+                            DATEADD(day,ClubClasses.PeriodAdjustmentDayCount+(ClubClassOnlineLinks.WeekNo-1)*7,ISNULL(ClubClasses.PeriodStartDate,'1/1/1970')) AS DisplayStartDate,
+                            DATEADD(day,ClubClasses.PeriodAdjustmentDayCount+(ClubClassOnlineLinks.WeekNo-1)*7+ClubClassOnlineLinks.DurationDays,ISNULL(ClubClasses.PeriodStartDate,'1/1/1970')) AS DisplayEndDate
                         FROM ClubClassOnlineLinks
                             LEFT JOIN ClubClasses ON ClubClasses.Id = ClubClassOnlineLinks.ClubClasses_Id
                         WHERE 1=1
@@ -164,7 +167,9 @@ namespace iSpeakWebApp.Controllers
 							AND (@Id IS NOT NULL OR (
                                 (@Active IS NULL OR ClubClassOnlineLinks.Active = @Active)
     							AND (@FILTER_Keyword IS NULL OR (ClubClassOnlineLinks.Name LIKE '%'+@FILTER_Keyword+'%'))
-                                AND (@FILTER_ClubClassess_Id IS NULL OR ClubClassOnlineLinks.ClubClasses_Id = @FILTER_ClubClassess_Id)
+                                AND (@ClubClasses_Id IS NULL OR ClubClassOnlineLinks.ClubClasses_Id = @ClubClasses_Id)
+                                AND (@DisplayStartDate IS NULL OR (DATEADD(day,ClubClasses.PeriodAdjustmentDayCount+(ClubClassOnlineLinks.WeekNo-1)*7,ISNULL(ClubClasses.PeriodStartDate,'1/1/1970')) >= @DisplayStartDate))
+                                AND (@DisplayEndDate   IS NULL OR (DATEADD(day,ClubClasses.PeriodAdjustmentDayCount+(ClubClassOnlineLinks.WeekNo-1)*7+ClubClassOnlineLinks.DurationDays,ISNULL(ClubClasses.PeriodStartDate,'1/1/1970')) <= @DisplayEndDate))
                             ))
 						ORDER BY ClubClasses.Name ASC, ClubClassOnlineLinks.WeekNo ASC, ClubClassOnlineLinks.Name ASC
                     ");
@@ -172,8 +177,10 @@ namespace iSpeakWebApp.Controllers
             return new DBContext().Database.SqlQuery<ClubClassOnlineLinksModel>(sql,
                     DBConnection.getSqlParameter(ClubClassOnlineLinksModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(ClubClassOnlineLinksModel.COL_Active.Name, FILTER_Active),
-                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
-                    DBConnection.getSqlParameter("FILTER_ClubClassess_Id", FILTER_ClubClassess_Id)
+                    DBConnection.getSqlParameter(ClubClassOnlineLinksModel.COL_ClubClasses_Id.Name, FILTER_ClubClasses_Id),
+                    DBConnection.getSqlParameter(ClubClassOnlineLinksModel.COL_DisplayStartDate.Name, DisplayStartDate),
+                    DBConnection.getSqlParameter(ClubClassOnlineLinksModel.COL_DisplayEndDate.Name, DisplayEndDate),
+                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
         }
 

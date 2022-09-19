@@ -137,21 +137,11 @@
                                             </td>
                                             <td class="align-top">
                                                 <div>
-                                                    @if (!string.IsNullOrWhiteSpace(item.OnlineLink) && (userAccount.RemainingClubSubscriptionDays > 0 || access.ClubSchedules_Edit))
+                                                    @if((userAccount.RemainingClubSubscriptionDays > 0 || access.ClubSchedules_Edit) && item.ClubClassOnlineLinks != null && item.ClubClassOnlineLinks.Count > 0)
                                                     {
-                                                        string[] links = item.OnlineLink.Split(new[] { "||" }, StringSplitOptions.None);
-                                                        foreach (string link in links)
-                                                        {
-                                                            if (!link.Contains("|"))
-                                                            {
-                                                                <a href="@link" target="_blank">materi</a>
-                                                            }
-                                                            else
-                                                            {
-                                                                string[] linkitems = link.Split('|');
-                                                                <a href="@linkitems[1]" target="_blank">@linkitems[0]</a>
-                                                            }
-                                                            <br/>
+                                                        foreach(iSpeakWebApp.Models.ClubClassOnlineLinksModel ClubClassOnlineLink in item.ClubClassOnlineLinks)
+                                                        { 
+                                                            <a href="@ClubClassOnlineLink.OnlineLink" target="_blank">@ClubClassOnlineLink.Name</a><br />
                                                         }
                                                     }
                                                 </div>

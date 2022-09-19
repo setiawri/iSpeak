@@ -11,6 +11,7 @@ namespace iSpeakWebApp.Controllers
     public class ClubSchedulesController : Controller
     {
         private readonly DBContext db = new DBContext();
+        private const int CLUBCLASSONLINELINKS_WEEKSTODISPLAY = 2;
 
         /* INDEX **********************************************************************************************************************************************/
 
@@ -119,7 +120,6 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.DayOfWeek, modifiedModel.DayOfWeek, ClubSchedulesModel.COL_DayOfWeek.LogDisplay);
                     log = Helper.append(log, originalModel.StartTime, modifiedModel.StartTime, ClubSchedulesModel.COL_StartTime.LogDisplay);
                     log = Helper.append(log, originalModel.EndTime, modifiedModel.EndTime, ClubSchedulesModel.COL_EndTime.LogDisplay);
-                    log = Helper.append(log, originalModel.OnlineLink, modifiedModel.OnlineLink, ClubSchedulesModel.COL_OnlineLink.LogDisplay);
                     log = Helper.append<ClubClassesModel>(log, originalModel.ClubClasses_Id, modifiedModel.ClubClasses_Id, ClubSchedulesModel.COL_ClubClasses_Id.LogDisplay);
                     log = Helper.append(log, originalModel.Active, modifiedModel.Active, ClubSchedulesModel.COL_Active.LogDisplay);
                     log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, ClubSchedulesModel.COL_Notes.LogDisplay);
@@ -200,7 +200,7 @@ namespace iSpeakWebApp.Controllers
             if (EndTime != null)
                 EndTime = Util.standardizeTimeToIgnoreDate((DateTime)EndTime);
 
-            return new DBContext().Database.SqlQuery<ClubSchedulesModel>(@"
+            List<ClubSchedulesModel> models = new DBContext().Database.SqlQuery<ClubSchedulesModel>(@"
                         SELECT ClubSchedules.*,
                             Languages.Name AS Languages_Name,
                             Branches.Name AS Branches_Name,
@@ -235,6 +235,19 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter("FILTER_Languages_Id", FILTER_Languages_Id),
                     DBConnection.getSqlParameter("FILTER_OnSite", FILTER_OnSite)
                 ).ToList();
+
+            DateTime DisplayStartDate = (DateTime)Util.getAsStartDate(DateTime.Now);
+            DateTime DisplayEndDate = (DateTime)Util.getAsEndDate(DateTime.Now.AddDays(CLUBCLASSONLINELINKS_WEEKSTODISPLAY * 7));
+            List<ClubClassOnlineLinksModel> ClubClassOnlineLinksModels = ClubClassOnlineLinksController.get(DisplayStartDate, DisplayEndDate);
+            int Index;
+            foreach (ClubClassOnlineLinksModel clubClassOnlineLinksModel in ClubClassOnlineLinksModels)
+            {
+                Index = models.FindIndex(x => x.ClubClasses_Id == clubClassOnlineLinksModel.ClubClasses_Id);
+                if (Index > -1)
+                    models[Index].ClubClassOnlineLinks.Add(clubClassOnlineLinksModel);
+            }
+
+            return models;
         }
 
         public void add(ClubSchedulesModel model)
@@ -242,7 +255,6 @@ namespace iSpeakWebApp.Controllers
             LIBWebMVC.WebDBConnection.Insert(db.Database, "ClubSchedules",
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_ClubClasses_Id.Name, model.ClubClasses_Id),
-                DBConnection.getUnsanitizedSqlParameter(ClubSchedulesModel.COL_OnlineLink.Name, model.OnlineLink),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_DayOfWeek.Name, model.DayOfWeek),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_StartTime.Name, model.StartTime),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_EndTime.Name, model.EndTime),
@@ -260,7 +272,6 @@ namespace iSpeakWebApp.Controllers
             LIBWebMVC.WebDBConnection.Update(db.Database, "ClubSchedules",
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_Id.Name, model.Id),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_ClubClasses_Id.Name, model.ClubClasses_Id),
-                DBConnection.getUnsanitizedSqlParameter(ClubSchedulesModel.COL_OnlineLink.Name, model.OnlineLink),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_DayOfWeek.Name, model.DayOfWeek),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_StartTime.Name, model.StartTime),
                 DBConnection.getSqlParameter(ClubSchedulesModel.COL_EndTime.Name, model.EndTime),

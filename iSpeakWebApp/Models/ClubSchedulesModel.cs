@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 using iSpeakWebApp.Controllers;
 
 namespace iSpeakWebApp.Models
@@ -40,10 +41,6 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Notes = new ModelMember { Name = "Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Notes") };
 
 
-        public string OnlineLink { get; set; } = null;
-        public static ModelMember COL_OnlineLink = new ModelMember { Name = "OnlineLink", Display = "OnlineLink", LogDisplay = ActivityLogsController.editStringFormat("OnlineLink") };
-
-
         [Display(Name = "Branch")]
         public Guid Branches_Id { get; set; }
         public static ModelMember COL_Branches_Id = new ModelMember { Name = "Branches_Id", Display = "Branch", LogDisplay = ActivityLogsController.editStringFormat("Branch") };
@@ -66,5 +63,9 @@ namespace iSpeakWebApp.Models
 
         [Display(Name = "Language")]
         public string Languages_Name { get; set; }
+
+
+        [Display(Name = "Language")]
+        public List<ClubClassOnlineLinksModel> ClubClassOnlineLinks { get; set; } = new List<ClubClassOnlineLinksModel>();
     }
 }

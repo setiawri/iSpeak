@@ -50,5 +50,10 @@ namespace iSpeakWebApp.Models
 
         /******************************************************************************************************************************************************/
 
+        public DateTime? DisplayStartDate { get; set; }
+        public static ModelMember COL_DisplayStartDate = new ModelMember { Name = "DisplayStartDate" };
+
+        public DateTime? DisplayEndDate { get; set; }
+        public static ModelMember COL_DisplayEndDate = new ModelMember { Name = "DisplayEndDate" };
     }
 }
