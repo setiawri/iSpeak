@@ -55,7 +55,7 @@ namespace iSpeakWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (isExists(null, model.Name))
+                if (isExists(null, model.Name, model.ClubClasses_Id))
                     ModelState.AddModelError(ClubClassOnlineLinksModel.COL_Name.Name, $"{model.Name} sudah terdaftar");
                 else
                 {
@@ -89,7 +89,7 @@ namespace iSpeakWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (isExists(modifiedModel.Id, modifiedModel.Name))
+                if (isExists(modifiedModel.Id, modifiedModel.Name, modifiedModel.ClubClasses_Id))
                     ModelState.AddModelError(ClubClassOnlineLinksModel.COL_Name.Name, $"{modifiedModel.Name} sudah terdaftar");
                 else
                 {
@@ -132,17 +132,19 @@ namespace iSpeakWebApp.Controllers
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public bool isExists(Guid? Id, string Name)
+        public bool isExists(Guid? Id, string Name, Guid ClubClasses_Id)
         {
             return db.Database.SqlQuery<ClubClassOnlineLinksModel>(@"
                         SELECT ClubClassOnlineLinks.*
                         FROM ClubClassOnlineLinks
                         WHERE 1=1 
-							AND (@Id IS NOT NULL OR ClubClassOnlineLinks.Name = @Name)
-							AND (@Id IS NULL OR (ClubClassOnlineLinks.Name = @Name AND ClubClassOnlineLinks.Id <> @Id))
+							AND (@Id IS NULL OR (ClubClassOnlineLinks.Id <> @Id))
+                            AND ClubClassOnlineLinks.Name = @Name 
+                            AND ClubClassOnlineLinks.ClubClasses_Id = @ClubClasses_Id
                     ",
                     DBConnection.getSqlParameter(ClubClassOnlineLinksModel.COL_Id.Name, Id),
-                    DBConnection.getSqlParameter(ClubClassOnlineLinksModel.COL_Name.Name, Name)
+                    DBConnection.getSqlParameter(ClubClassOnlineLinksModel.COL_Name.Name, Name),
+                    DBConnection.getSqlParameter(ClubClassOnlineLinksModel.COL_ClubClasses_Id.Name, ClubClasses_Id)
                 ).Count() > 0;
         }
 

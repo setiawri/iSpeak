@@ -1,27 +1,27 @@
 ---- CLUB CLASS ONLINE LINKS ============================================================================================================
-CREATE TABLE [dbo].[ClubClassOnlineLinks]
-(
-	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
-    [ClubClasses_Id] UNIQUEIDENTIFIER NOT NULL, 
-    [Name] VARCHAR(MAX) NOT NULL, 
-    [OnlineLink] VARCHAR(MAX) NOT NULL, 
-    [WeekNo] TINYINT NOT NULL DEFAULT 0, 
-    [DurationDays] TINYINT NOT NULL DEFAULT 0,
-    [Active] BIT NOT NULL DEFAULT 1, 
-    [Notes] VARCHAR(MAX) NULL
-)
-GO
+--CREATE TABLE [dbo].[ClubClassOnlineLinks]
+--(
+--	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+--    [ClubClasses_Id] UNIQUEIDENTIFIER NOT NULL, 
+--    [Name] VARCHAR(MAX) NOT NULL, 
+--    [OnlineLink] VARCHAR(MAX) NOT NULL, 
+--    [WeekNo] TINYINT NOT NULL DEFAULT 0, 
+--    [DurationDays] TINYINT NOT NULL DEFAULT 0,
+--    [Active] BIT NOT NULL DEFAULT 1, 
+--    [Notes] VARCHAR(MAX) NULL
+--)
+--GO
 
-	--ClubSchedules
-	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubClassOnlineLinks_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE UserAccountRoles ADD ClubClassOnlineLinks_Notes varchar(MAX) null;
-	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubClassOnlineLinks_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE UserAccountRoles ADD ClubClassOnlineLinks_Add bit default 0 not null;
-	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubClassOnlineLinks_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE UserAccountRoles ADD ClubClassOnlineLinks_View bit default 0 not null;
-	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubClassOnlineLinks_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE UserAccountRoles ADD ClubClassOnlineLinks_Edit bit default 0 not null;
-	GO
+--	--ClubSchedules
+--	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubClassOnlineLinks_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE UserAccountRoles ADD ClubClassOnlineLinks_Notes varchar(MAX) null;
+--	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubClassOnlineLinks_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE UserAccountRoles ADD ClubClassOnlineLinks_Add bit default 0 not null;
+--	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubClassOnlineLinks_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE UserAccountRoles ADD ClubClassOnlineLinks_View bit default 0 not null;
+--	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ClubClassOnlineLinks_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE UserAccountRoles ADD ClubClassOnlineLinks_Edit bit default 0 not null;
+--	GO
 
 --IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ClubClasses' AND COLUMN_NAME = 'PeriodStartDate' AND TABLE_SCHEMA='dbo') 
 --	ALTER TABLE ClubClasses ADD PeriodStartDate datetime NULL 
@@ -29,6 +29,9 @@ GO
 --IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ClubClasses' AND COLUMN_NAME = 'PeriodAdjustmentDayCount' AND TABLE_SCHEMA='dbo') 
 --	ALTER TABLE ClubClasses ADD PeriodAdjustmentDayCount int NOT NULL DEFAULT 0 
 --GO
+--UPDATE ClubClasses SET PeriodStartDate = '8/15/2022', PeriodAdjustmentDayCount=0
+--GO
+
 
 ---- CLUB CLASSES ============================================================================================================
 
