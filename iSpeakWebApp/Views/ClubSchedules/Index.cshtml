@@ -131,16 +131,16 @@
                                             <td class="align-top">
                                                 @if (item.OnSite)
                                                 {
-                                                    <span class="badge badge-primary mr-1" style="width:60px;">ON SITE</span> 
+                                                    <span class="badge badge-primary mr-1" style="width:60px;">ON SITE</span>
                                                 }
                                                 @Html.DisplayFor(modelItem => item.ClubClasses_Name)
                                             </td>
                                             <td class="align-top">
                                                 <div>
-                                                    @if((userAccount.RemainingClubSubscriptionDays > 0 || access.ClubSchedules_Edit) && item.ClubClassOnlineLinks != null && item.ClubClassOnlineLinks.Count > 0)
+                                                    @if ((userAccount.RemainingClubSubscriptionDays > 0 || access.ClubSchedules_Edit) && item.ClubClassOnlineLinks != null && item.ClubClassOnlineLinks.Count > 0)
                                                     {
-                                                        foreach(iSpeakWebApp.Models.ClubClassOnlineLinksModel ClubClassOnlineLink in item.ClubClassOnlineLinks)
-                                                        { 
+                                                        foreach (iSpeakWebApp.Models.ClubClassOnlineLinksModel ClubClassOnlineLink in item.ClubClassOnlineLinks)
+                                                        {
                                                             <a href="@ClubClassOnlineLink.OnlineLink" target="_blank">@ClubClassOnlineLink.Name</a><br />
                                                         }
                                                     }
@@ -165,6 +165,11 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <div class="form-group row">
+                        <div id="summaryTable" class="table-responsive"></div>
+                    </div>
+
                 </div>
             </div>
             <!-- /form inputs -->
@@ -176,6 +181,11 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
+        @*var summaryTableData = '@TempData[iSpeakWebApp.Controllers.ClubSchedulesController.SUMMARYTABLE]';
+        if ('@Model.Count()' > 0 && summaryTableData != null && summaryTableData != '') {
+            $('#summaryTable').append(summaryTableData);
+            applyPopovers();
+        }*@
     });
 
     function applyLast() {

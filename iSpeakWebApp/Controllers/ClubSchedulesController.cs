@@ -11,7 +11,7 @@ namespace iSpeakWebApp.Controllers
     public class ClubSchedulesController : Controller
     {
         private readonly DBContext db = new DBContext();
-        private const int CLUBCLASSONLINELINKS_WEEKSTODISPLAY = 2;
+        public const string SUMMARYTABLE = "summaryTable";
 
         /* INDEX **********************************************************************************************************************************************/
 
@@ -43,7 +43,9 @@ namespace iSpeakWebApp.Controllers
         public ActionResult Index(string FILTER_Keyword, DayOfWeekEnum? FILTER_DayOfWeek, DateTime? FILTER_StartTime, DateTime? FILTER_EndTime, Guid? FILTER_Languages_Id, int? FILTER_OnSite)
         {
             setViewBag(FILTER_Keyword, FILTER_DayOfWeek, FILTER_StartTime, FILTER_EndTime, FILTER_Languages_Id, FILTER_OnSite);
-            return View(get(FILTER_Keyword, FILTER_DayOfWeek, FILTER_StartTime, FILTER_EndTime, FILTER_Languages_Id, FILTER_OnSite));
+            List<ClubSchedulesModel> models = get(FILTER_Keyword, FILTER_DayOfWeek, FILTER_StartTime, FILTER_EndTime, FILTER_Languages_Id, FILTER_OnSite);
+            TempData[SUMMARYTABLE] = "";
+            return View(models);
         }
 
         /* CREATE *********************************************************************************************************************************************/
@@ -237,15 +239,10 @@ namespace iSpeakWebApp.Controllers
                 ).ToList();
 
             DateTime DisplayStartDate = (DateTime)Util.getAsStartDate(DateTime.Now);
-            DateTime DisplayEndDate = (DateTime)Util.getAsEndDate(DateTime.Now.AddDays(CLUBCLASSONLINELINKS_WEEKSTODISPLAY * 7));
+            DateTime DisplayEndDate = (DateTime)Util.getAsEndDate(DateTime.Now.AddDays(8)); //display material for the next 8 days
             List<ClubClassOnlineLinksModel> ClubClassOnlineLinksModels = ClubClassOnlineLinksController.get(DisplayStartDate, DisplayEndDate);
-            int Index;
-            foreach (ClubClassOnlineLinksModel clubClassOnlineLinksModel in ClubClassOnlineLinksModels)
-            {
-                Index = models.FindIndex(x => x.ClubClasses_Id == clubClassOnlineLinksModel.ClubClasses_Id);
-                if (Index > -1)
-                    models[Index].ClubClassOnlineLinks.Add(clubClassOnlineLinksModel);
-            }
+            foreach (ClubSchedulesModel model in models)
+                model.ClubClassOnlineLinks.AddRange(ClubClassOnlineLinksModels.Where(x=>x.ClubClasses_Id == model.ClubClasses_Id).ToList());
 
             return models;
         }

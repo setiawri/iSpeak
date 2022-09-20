@@ -148,7 +148,7 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public static List<ClubClassOnlineLinksModel> get(DateTime? DisplayStartDate, DateTime? DisplayEndDate) { return get(null, null, null, null, DisplayStartDate, DisplayEndDate); }
+        public static List<ClubClassOnlineLinksModel> get(DateTime? DisplayStartDate, DateTime? DisplayEndDate) { return get(null, 1, null, null, DisplayStartDate, DisplayEndDate); }
         public static List<ClubClassOnlineLinksModel> get(int? FILTER_Active) { return get(null, FILTER_Active, null, null, null, null); }
         public List<ClubClassOnlineLinksModel> get(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_ClubClasses_Id) { return get(null, FILTER_Active, FILTER_Keyword, FILTER_ClubClasses_Id, null, null); }
         public static ClubClassOnlineLinksModel get(Guid Id) { return get(Id, null, null, null, null, null).FirstOrDefault(); }
@@ -168,8 +168,18 @@ namespace iSpeakWebApp.Controllers
                                 (@Active IS NULL OR ClubClassOnlineLinks.Active = @Active)
     							AND (@FILTER_Keyword IS NULL OR (ClubClassOnlineLinks.Name LIKE '%'+@FILTER_Keyword+'%'))
                                 AND (@ClubClasses_Id IS NULL OR ClubClassOnlineLinks.ClubClasses_Id = @ClubClasses_Id)
-                                AND (@DisplayStartDate IS NULL OR (DATEADD(day,ClubClasses.PeriodAdjustmentDayCount+(ClubClassOnlineLinks.WeekNo-1)*7,ISNULL(ClubClasses.PeriodStartDate,'1/1/1970')) >= @DisplayStartDate))
-                                AND (@DisplayEndDate   IS NULL OR (DATEADD(day,ClubClasses.PeriodAdjustmentDayCount+(ClubClassOnlineLinks.WeekNo-1)*7+ClubClassOnlineLinks.DurationDays,ISNULL(ClubClasses.PeriodStartDate,'1/1/1970')) <= @DisplayEndDate))
+                                AND (@DisplayStartDate IS NULL OR @DisplayEndDate IS NULL OR (
+                                    (
+                                        @DisplayStartDate >= DATEADD(day,ClubClasses.PeriodAdjustmentDayCount+(ClubClassOnlineLinks.WeekNo-1)*7,ISNULL(ClubClasses.PeriodStartDate,'1/1/1970'))
+                                        AND @DisplayStartDate < DATEADD(day,ClubClasses.PeriodAdjustmentDayCount+(ClubClassOnlineLinks.WeekNo-1)*7+ClubClassOnlineLinks.DurationDays,ISNULL(ClubClasses.PeriodStartDate,'1/1/1970'))
+                                    ) OR (
+                                        @DisplayStartDate <= DATEADD(day,ClubClasses.PeriodAdjustmentDayCount+(ClubClassOnlineLinks.WeekNo-1)*7,ISNULL(ClubClasses.PeriodStartDate,'1/1/1970'))
+                                        AND @DisplayEndDate >= DATEADD(day,ClubClasses.PeriodAdjustmentDayCount+(ClubClassOnlineLinks.WeekNo-1)*7,ISNULL(ClubClasses.PeriodStartDate,'1/1/1970'))
+                                    ) OR (
+                                        @DisplayEndDate > DATEADD(day,ClubClasses.PeriodAdjustmentDayCount+(ClubClassOnlineLinks.WeekNo-1)*7,ISNULL(ClubClasses.PeriodStartDate,'1/1/1970'))
+                                        AND @DisplayEndDate <= DATEADD(day,ClubClasses.PeriodAdjustmentDayCount+(ClubClassOnlineLinks.WeekNo-1)*7+ClubClassOnlineLinks.DurationDays,ISNULL(ClubClasses.PeriodStartDate,'1/1/1970'))
+                                    )
+                                ))
                             ))
 						ORDER BY ClubClasses.Name ASC, ClubClassOnlineLinks.WeekNo ASC, ClubClassOnlineLinks.Name ASC
                     ");
