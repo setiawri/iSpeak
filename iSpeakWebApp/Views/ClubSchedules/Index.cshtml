@@ -9,6 +9,10 @@
     ViewBag.Subtitle = "Index";
 
     string ClubClassroomLink = iSpeakWebApp.Controllers.SettingsController.get().ClubClassroomLink;
+
+    bool isModelEmpty = Model == null;
+    bool isStudent = iSpeakWebApp.Controllers.UserAccountsController.getUserAccount(Session).Roles_List.Contains(iSpeakWebApp.Controllers.SettingsController.get().StudentRole.ToString());
+    bool isTutor = iSpeakWebApp.Controllers.UserAccountsController.getUserAccount(Session).Roles_List.Contains(iSpeakWebApp.Controllers.SettingsController.get().TutorRole.ToString());
 }
 
 <div class="content-wrapper">
@@ -18,7 +22,7 @@
         {
             <!-- Form inputs -->
             <div class="card animated bounceInLeft">
-                @if(access.ClubSchedules_Edit || iSpeakWebApp.Controllers.UserAccountsController.getUserAccount(Session).RemainingClubSubscriptionDays > 0 || userAccount.Roles_List.Contains(iSpeakWebApp.Controllers.SettingsController.get().TutorRole.ToString())) 
+                @if(access.ClubSchedules_Edit || iSpeakWebApp.Controllers.UserAccountsController.getUserAccount(Session).RemainingClubSubscriptionDays > 0 || isTutor) 
                 {
                     <div class="card-body">
                         <div class="row mx-0">
@@ -34,7 +38,7 @@
                                     <div class="input-group">
                                         <input type="text" name="ClubClassroomLink" id="ClubClassroomLink" value="@ClubClassroomLink" class="form-control" />
                                         <span class="input-group-append">
-                                            <a href="javascript:void(0)" onclick="ClubClassroomLink()" class="btn btn-primary"><i class="icon-paperplane mr-2"></i>SAVE</a>
+                                            <a href="javascript:void(0)" onclick="SaveClubClassroomLink()" class="btn btn-primary"><i class="icon-paperplane mr-2"></i>SAVE</a>
                                         </span>
                                     </div>
                                 </div>
@@ -104,10 +108,25 @@
                             </div>
                         </div>
 
+                        <div class="row ml-0 mr-2 @(isStudent ? "d-none" : "")" style="width:80px;">
+                            <label class="mb-0">Active</label>
+                            <div class="input-group">
+                                <select id="FILTER_Active" name="FILTER_Active" class="select2">
+                                    <option value="">ALL</option>
+                                    <option value="1">YES</option>
+                                    <option value="0">NO</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="ml-0 mr-2">
                             <label class="mb-0">&nbsp;</label>
                             <button id="LoadData" type="submit" onclick="showLoadingSpinner()" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>LOAD</button>
                         </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div id="summaryTable" class="table-responsive"></div>
                     </div>
 
                     <div class="table-responsive">
@@ -166,11 +185,6 @@
                             </tbody>
                         </table>
                     </div>
-
-                    <div class="form-group row">
-                        <div id="summaryTable" class="table-responsive"></div>
-                    </div>
-
                 </div>
             </div>
             <!-- /form inputs -->
@@ -182,11 +196,11 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        @*var summaryTableData = '@TempData[iSpeakWebApp.Controllers.ClubSchedulesController.SUMMARYTABLE]';
-        if ('@Model.Count()' > 0 && summaryTableData != null && summaryTableData != '') {
-            $('#summaryTable').append(summaryTableData);
-            applyPopovers();
-        }*@
+        LoadSummaryTable();
+
+        if ('@isStudent' == 'True') {
+            setDDLSelectedValue('FILTER_Active', "1");
+        }
     });
 
     function applyLast() {
@@ -202,11 +216,10 @@
         }
     }
 
-    function ClubClassroomLink() {
-        $('#ClubClassroomLinkButton').attr("href", getValueString('ClubClassroomLink'));
+    function SaveClubClassroomLink() {
         AjaxUpdate('Ajax_Update_ClubClassroomLink', 'Settings', null, getValueString('ClubClassroomLink'), function () {
-            console.log('aaaa');
-            //$('#ClubClassroomLinkButton').attr("href", getValueString('ClubClassroomLink')); //ga jalan??
+            showMessage('Link has been updated');
+            $('#ClubClassroomLinkButton').attr("href", getValueString('ClubClassroomLink'));
         });
     }
 
@@ -221,5 +234,14 @@
 
         return false;
     });
+
+    function LoadSummaryTable() {
+        if ('@isModelEmpty' != 'True') {
+            var summaryTableData = '@Html.Raw(HttpUtility.JavaScriptStringEncode((string)TempData[iSpeakWebApp.Controllers.ClubSchedulesController.SUMMARYTABLE]))';
+            $('#summaryTable').empty();
+            $('#summaryTable').append(summaryTableData);
+            applyPopovers();
+        }
+    }
 
 </script>

@@ -618,7 +618,7 @@
         });
     }
 
-    function AjaxUpdate(action, controller, id, value, executeIfSuccess) {
+    function AjaxUpdate(action, controller, id, value, executeIfHasNoMessage) {
         var url = '@Url.Action("__action", "__controller")';
         url = url.replace("__action", action).replace("__controller", controller);
         $.ajax({
@@ -627,7 +627,7 @@
                 if (data.Message != '') {
                     bootbox.alert({ backdrop: true, message: data.Message });
                 } else {
-                    executeIfSuccess();
+                    executeIfHasNoMessage();
                 }
             },
             error: function (result) { bootbox.alert({ backdrop: true, message: "Error " + result }); }

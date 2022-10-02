@@ -107,7 +107,7 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(SettingsModel.COL_ClubClassroomLink.Name, Util.wrapNullable(value))
             );
 
-            return Json(new { Message = "Link has been updated" });
+            return Json(new { Message = "" });
         }
 
         private string addLog(string log, Guid ReferenceId, string Name, object oldValue, object newValue, string format)
