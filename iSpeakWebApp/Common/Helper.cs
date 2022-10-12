@@ -59,7 +59,7 @@ namespace iSpeakWebApp
 
         public const string DEVCOMPUTERNAME = "RQ";
         private const string SERVERNAME_DEV = @".";
-        private const string SERVERNAME_LIVE = "43.255.152.25";
+        private const string SERVERNAME_LIVE = "SG2NWPLS19SQL-v09.mssql.shr.prod.sin2.secureserver.net"; // "43.255.152.25"; //182.50.132.53
         private const string DBNAME = "iSpeakWeb";
         private const string USERID = "ispeak";
         private const string PASSWORD = "1SpeakWell";
