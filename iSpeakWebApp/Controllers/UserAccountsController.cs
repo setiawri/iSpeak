@@ -23,6 +23,7 @@ namespace iSpeakWebApp.Controllers
         public const string SESSION_ShowOnlyUserData = "ShowOnlyUserData";
         public const string SESSION_ConnectToLiveDatabase = "ConnectToLiveDatabase";
 
+        public static string ACTIVITYLOGREFERENCEID_UserAccounts_Login = "6451CDF5-6057-4972-90AE-53670E2B8805";
 
         private readonly DBContext db = new DBContext();
 
@@ -226,6 +227,14 @@ namespace iSpeakWebApp.Controllers
             else
             {
                 setLoginSession(Session, userAccount, ConnectToLiveDatabase);
+
+                //create log for analysis
+                ActivityLogsController.Add(db, Session, new Guid(ACTIVITYLOGREFERENCEID_UserAccounts_Login), string.Format("User Login ({0})", Helper.getName<BranchesModel>(userAccount.Branches_Id)));
+                db.SaveChanges();
+
+                //delete old data to keep database slim
+                ActivityLogsController.delete(new Guid(ACTIVITYLOGREFERENCEID_UserAccounts_Login), null, new DateTime(DateTime.Now.Year - 1, 1, 1)); 
+
                 if (!userAccount.ResetPassword)
                     return RedirectToLocal(returnUrl);
                 else
@@ -472,6 +481,14 @@ namespace iSpeakWebApp.Controllers
             };
 
             return Json(new { results, pagination }, JsonRequestBehavior.AllowGet);
+        }
+
+        public static void setDropDownListViewBag_ReferenceIds(Controller controller)
+        {
+            List<SelectListItem> ReferenceIds = new List<SelectListItem>();
+            ReferenceIds.Add(new SelectListItem() { Text = "Account Login", Value = ACTIVITYLOGREFERENCEID_UserAccounts_Login });
+
+            controller.ViewBag.ReferenceIds = new SelectList(ReferenceIds, "Value", "Text");
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/

@@ -18,6 +18,17 @@ namespace iSpeakWebApp.Models
         public string Notes { get; set; }
         public static ModelMember COL_Notes = new ModelMember { Name = "Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Notes") };
 
+        /* ACTIVITY LOGS **************************************************************************************************************************************************************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string ActivityLogs_Notes { get; set; }
+        public static ModelMember COL_ActivityLogs_Notes = new ModelMember { Name = "ActivityLogs_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Activity Logs Notes") };
+
+        [Display(Name = "View")]
+        public bool ActivityLogs_View { get; set; }
+        public static ModelMember COL_ActivityLogs_View = new ModelMember { Name = "ActivityLogs_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("Activity Logs View") };
+
+
         /* REMINDERS ******************************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]

@@ -11,6 +11,7 @@ using LIBWebMVC;
 
 namespace iSpeakWebApp
 {
+
     public struct ModelMember
     {
         public string Name;

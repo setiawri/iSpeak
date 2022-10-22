@@ -100,6 +100,10 @@ namespace iSpeakWebApp.Controllers
                     string log = string.Empty;
                     log = Helper.append(log, originalModel.Name, model.Name, UserAccountRolesModel.COL_Name.LogDisplay);
 
+                    //ActivityLogs
+                    log = Helper.append(log, originalModel.ActivityLogs_Notes, model.ActivityLogs_Notes, UserAccountRolesModel.COL_ActivityLogs_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.ActivityLogs_View, model.ActivityLogs_View, UserAccountRolesModel.COL_ActivityLogs_View.LogDisplay);
+
                     //Reminders
                     log = Helper.append(log, originalModel.Reminders_Notes, model.Reminders_Notes, UserAccountRolesModel.COL_Reminders_Notes.LogDisplay);
                     log = Helper.append(log, originalModel.Reminders_Add, model.Reminders_Add, UserAccountRolesModel.COL_Reminders_Add.LogDisplay);
@@ -342,6 +346,9 @@ namespace iSpeakWebApp.Controllers
             UserAccountRolesModel model = new UserAccountRolesModel();
             foreach( UserAccountRolesModel item in get(null, UserAccount))
             {
+                //ActivityLogs
+                if (item.ActivityLogs_View) model.ActivityLogs_View = true;
+
                 //Reminders
                 if (item.Reminders_Add) model.Reminders_Add = true;
                 if (item.Reminders_Edit) model.Reminders_Edit = true;

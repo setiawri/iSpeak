@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using LIBUtil;
+using LIBWebMVC;
 
 namespace iSpeakWebApp.Controllers
 {
@@ -23,6 +24,52 @@ namespace iSpeakWebApp.Controllers
         public static string editDateTimeFormat(string fieldName) { return fieldName + ": '{0:dd/MM/yyyy HH:mm}' to '{1:dd/MM/yyyy HH:mm}'"; }
         public static string editDecimalFormat(string fieldName) { return fieldName + ": '{0:G29}' to '{1:G29}'"; }
         public static string editBooleanFormat(string fieldName) { return fieldName + ": {1}"; }
+
+        /* INDEX **********************************************************************************************************************************************/
+
+        public ActionResult Index(int? rss, string FILTER_Keyword, Guid? FILTER_ReferenceId,
+            bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
+        {
+            if (!UserAccountsController.getUserAccess(Session).Branches_View)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
+            if (UtilWebMVC.hasNoFilter(FILTER_Keyword, FILTER_ReferenceId, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo))
+            {
+                FILTER_chkDateFrom = true;
+                FILTER_DateFrom = Util.getAsStartDate(Helper.getCurrentDateTime().AddMonths(-1));
+            }
+
+            setViewBag(FILTER_Keyword, FILTER_ReferenceId, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
+            if (rss != null)
+            {
+                ViewBag.RemoveDatatablesStateSave = rss;
+                return View();
+            }
+            else
+            {
+                return View(get(FILTER_Keyword, FILTER_ReferenceId, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo));
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Index(string FILTER_Keyword, Guid? FILTER_ReferenceId,
+            bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
+        {
+            setViewBag(FILTER_Keyword, FILTER_ReferenceId, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo);
+            return View(get(FILTER_Keyword, FILTER_ReferenceId, FILTER_chkDateFrom, FILTER_DateFrom, FILTER_chkDateTo, FILTER_DateTo));
+        }
+
+        public void setViewBag(string FILTER_Keyword, Guid? FILTER_ReferenceId,
+            bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
+        {
+            ViewBag.FILTER_Keyword = FILTER_Keyword;
+            ViewBag.FILTER_ReferenceId = FILTER_ReferenceId;
+            ViewBag.FILTER_chkDateFrom = FILTER_chkDateFrom;
+            ViewBag.FILTER_DateFrom = FILTER_DateFrom;
+            ViewBag.FILTER_chkDateTo = FILTER_chkDateTo;
+            ViewBag.FILTER_DateTo = FILTER_DateTo;
+            UserAccountsController.setDropDownListViewBag_ReferenceIds(this);
+        }
 
         /* DISPLAY LOG ****************************************************************************************************************************************/
 
@@ -73,8 +120,16 @@ namespace iSpeakWebApp.Controllers
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public List<ActivityLogsModel> get(Guid ReferenceId)
+        public List<ActivityLogsModel> get(Guid? ReferenceId) { return get(null, ReferenceId, null, null, null, null); }
+        public List<ActivityLogsModel> get(string FILTER_Keyword, Guid? ReferenceId,
+            bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
+            if (FILTER_chkDateFrom == null || !(bool)FILTER_chkDateFrom)
+                FILTER_DateFrom = null;
+
+            if (FILTER_chkDateTo == null || !(bool)FILTER_chkDateTo)
+                FILTER_DateTo = null;
+
             return db.Database.SqlQuery<ActivityLogsModel>(@"
                         SELECT ActivityLogs.Id,
                             ActivityLogs.Timestamp,
@@ -84,13 +139,35 @@ namespace iSpeakWebApp.Controllers
                             UserAccounts.Fullname AS UserAccounts_Fullname
                         FROM ActivityLogs
                             LEFT JOIN UserAccounts ON UserAccounts.Id = ActivityLogs.UserAccounts_Id
-                        WHERE ActivityLogs.ReferenceId = @ReferenceId
+                        WHERE 1=1 
+    						AND (@ReferenceId IS NULL OR ActivityLogs.ReferenceId = @ReferenceId)
+    						AND (@FILTER_Keyword IS NULL OR (ActivityLogs.Description LIKE '%'+@FILTER_Keyword+'%'))
+                            AND (@FILTER_DateFrom IS NULL OR ActivityLogs.Timestamp >= @FILTER_DateFrom)
+                            AND (@FILTER_DateTo IS NULL OR ActivityLogs.Timestamp <= @FILTER_DateTo)
 						ORDER BY ActivityLogs.Timestamp DESC
                     ",
-                    DBConnection.getSqlParameter(ActivityLogsModel.COL_ReferenceId.Name, ReferenceId)
+                    DBConnection.getSqlParameter(ActivityLogsModel.COL_ReferenceId.Name, ReferenceId),
+                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
+                    DBConnection.getSqlParameter("FILTER_DateFrom", FILTER_DateFrom),
+                    DBConnection.getSqlParameter("FILTER_DateTo", Util.getAsEndDate(FILTER_DateTo))
                 ).ToList();
         }
 
+        public static void delete(Guid? ReferenceId, DateTime? StartDate, DateTime? EndDate)
+        {
+            new DBContext().Database.ExecuteSqlCommand(@"       
+                IF @ReferenceId IS NOT NULL OR @StartDate IS NOT NULL OR @EndDate IS NOT NULL
+	                DELETE ActivityLogs
+	                WHERE 1=1
+		                AND (@ReferenceId IS NULL OR ActivityLogs.ReferenceId = @ReferenceId)
+		                AND (@StartDate IS NULL OR ActivityLogs.Timestamp >= @StartDate)
+		                AND (@EndDate IS NULL OR ActivityLogs.Timestamp <= @EndDate)
+            ",
+                DBConnection.getSqlParameter(ActivityLogsModel.COL_ReferenceId.Name, ReferenceId),
+                DBConnection.getSqlParameter("StartDate", StartDate),
+                DBConnection.getSqlParameter("EndDate", EndDate)
+            );
+        }
         /******************************************************************************************************************************************************/
     }
 }

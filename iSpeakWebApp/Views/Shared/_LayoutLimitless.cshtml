@@ -164,6 +164,10 @@
                         {
                             <a href="@Url.Action("SendEmails", "Reports", new { rss=1 })" class="dropdown-item">Send Emails</a>
                         }
+                        @if (access.ActivityLogs_View)
+                        {
+                            <a href="@Url.Action("Index", "ActivityLogs", new { rss=1 })" class="dropdown-item">Activity Logs</a>
+                        }
                     </div>
                 </li>
                 <li id="Menu_Settings" class="nav-item dropdown">
@@ -372,6 +376,7 @@ FILTERING
         setValue('FILTER_UserAccounts_Name', '@ViewBag.FILTER_UserAccounts_Name');
         setValue('FILTER_DayOfWeek', '@ViewBag.FILTER_DayOfWeek');
         setValue('FILTER_OnSite', '@ViewBag.FILTER_OnSite');
+        setValue('FILTER_ReferenceIds', '@ViewBag.FILTER_ReferenceId');
         setValue('FILTER_StartTime', '@(ViewBag.FILTER_StartTime == null ? "" : string.Format("{0:HH:mm}", ViewBag.FILTER_StartTime))');
         setValue('FILTER_EndTime', '@(ViewBag.FILTER_EndTime == null ? "" : string.Format("{0:HH:mm}", ViewBag.FILTER_EndTime))');
 

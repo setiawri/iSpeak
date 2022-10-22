@@ -1,3 +1,13 @@
+
+---- ACTIVITY LOGS ======================================================================================================================
+
+	----ActivityLogs
+	--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ActivityLogs_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	--ALTER TABLE UserAccountRoles ADD ActivityLogs_Notes varchar(MAX) null;
+	--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'ActivityLogs_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	--ALTER TABLE UserAccountRoles ADD ActivityLogs_View bit default 0 not null;
+	--GO
+
 ---- CLUB CLASS ONLINE LINKS ============================================================================================================
 --CREATE TABLE [dbo].[ClubClassOnlineLinks]
 --(

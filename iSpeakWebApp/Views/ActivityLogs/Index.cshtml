@@ -1,0 +1,98 @@
+﻿@model IEnumerable<iSpeakWebApp.Models.ActivityLogsModel>
+
+@{
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+    string ControllerName = "ActivityLogs";
+    ViewBag.SelectedNavigationMenu = "Internal";
+    ViewBag.Title = "Activity Logs";
+    ViewBag.Subtitle = "Index";
+}
+
+<div class="content-wrapper">
+    <!-- Content area -->
+    <div class="content">
+        @using (Html.BeginForm("Index", ControllerName, FormMethod.Post))
+        {
+            <!-- Form inputs -->
+            <div class="card animated bounceInLeft">
+                <div class="card-header header-elements-inline pb-1">
+                    <h5 class="card-title text-uppercase">@ViewBag.Title</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row mx-0">
+                        <div class="row ml-0 mr-2" style="width:100px;">
+                            <label class="mb-0">Keyword</label>
+                            <div class="input-group">
+                                <input type="text" name="FILTER_Keyword" id="FILTER_Keyword" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:150px;">
+                            <label class="mb-0">Category</label>
+                            <div class="input-group">
+                                @Html.DropDownList("FILTER_ReferenceId", ViewBag.ReferenceIds as SelectList, "ALL", new { @class = "form-control select2" })
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:150px;">
+                            <label class="mb-0">Date From</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        @Html.CheckBox("FILTER_chkDateFrom", true, new { @class = "form-check-input check-styled" })
+                                    </div>
+                                </div>
+                                @Html.Editor("FILTER_DateFrom", new { htmlAttributes = new { @class = "form-control daterange-picker" } })
+                            </div>
+                        </div>
+
+                        <div class="row ml-0 mr-2" style="width:150px;">
+                            <label class="mb-0">Date To</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        @Html.CheckBox("FILTER_chkDateTo", true, new { @class = "form-check-input check-styled" })
+                                    </div>
+                                </div>
+                                @Html.Editor("FILTER_DateTo", new { htmlAttributes = new { @class = "form-control daterange-picker" } })
+                            </div>
+                        </div>
+
+                        <div class="ml-0 mr-2">
+                            <label class="mb-0">&nbsp;</label>
+                            <button type="submit" onclick="showLoadingSpinner()" class="btn btn-outline-primary form-control"><i class="icon-reload-alt mr-2"></i>LOAD</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover datatable">
+                            <thead>
+                                <tr>
+                                    <th style="width:150px;">@Html.DisplayNameFor(model => model.Timestamp)</th>
+                                    <th class="non-sortable">@Html.DisplayNameFor(model => model.Description)</th>
+                                    <th style="width:200px;" class="non-sortable">@Html.DisplayNameFor(model => model.UserAccounts_Id)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Timestamp)</td>
+                                            <td class="align-top">@Html.Raw(Html.DisplayFor(modelItem => item.Description))</td>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.UserAccounts_Fullname)</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- /form inputs -->
+        }
+    </div>
+    <!-- /content area -->
+</div>
