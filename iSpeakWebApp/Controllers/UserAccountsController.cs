@@ -217,7 +217,7 @@ namespace iSpeakWebApp.Controllers
             string hashedPassword = HashPassword(model.Password);
             UserAccountsModel userAccount = get(model.Username, hashedPassword);
 
-            if (userAccount == null || string.IsNullOrWhiteSpace(hashedPassword))
+            if (userAccount == null || string.IsNullOrWhiteSpace(hashedPassword) || !userAccount.Active)
             {
                 ModelState.AddModelError("", "Invalid username or password");
                 ViewBag.Username = model.Username;
