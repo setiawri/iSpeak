@@ -274,7 +274,6 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
-            db.SaveChanges();
         }
 
         public void update(InventoryModel model, string log)
@@ -292,7 +291,6 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
-            db.SaveChanges();
         }
 
         /******************************************************************************************************************************************************/

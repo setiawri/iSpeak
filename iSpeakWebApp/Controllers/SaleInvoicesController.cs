@@ -333,7 +333,6 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(SaleInvoicesModel.COL_Approved.Name, value)
                 );
             ActivityLogsController.AddEditLog(db, Session, Id, string.Format(SaleInvoicesModel.COL_Approved.LogDisplay, null, value));
-            db.SaveChanges();
         }
 
         public static void update_Due(HttpSessionStateBase Session, DBContext db, Guid Id, int originalValue, int newValue)
@@ -344,7 +343,6 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddEditLog(db, Session, Id, string.Format(SaleInvoicesModel.COL_Due.LogDisplay, originalValue, newValue));
-            db.SaveChanges();
         }
 
         public string update_CancelNotes(Guid Id, string CancelNotes)
@@ -387,7 +385,6 @@ namespace iSpeakWebApp.Controllers
             else
             {
                 ActivityLogsController.AddEditLog(db, Session, Id, string.Format(SaleInvoicesModel.COL_CancelNotes.LogDisplay, CancelNotes));
-                db.SaveChanges();
                 return null;
             }
         }
@@ -422,7 +419,6 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
-            db.SaveChanges();
 
             SaleInvoiceItemsController.add(Session, SaleInvoiceItems, model.Id);
         }

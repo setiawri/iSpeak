@@ -230,7 +230,6 @@ namespace iSpeakWebApp.Controllers
 
                 //create log for analysis
                 ActivityLogsController.Add(db, Session, new Guid(ACTIVITYLOGREFERENCEID_UserAccounts_Login), string.Format("User Login ({0})", Helper.getName<BranchesModel>(userAccount.Branches_Id)));
-                db.SaveChanges();
 
                 //delete old data to keep database slim
                 ActivityLogsController.delete(new Guid(ACTIVITYLOGREFERENCEID_UserAccounts_Login), null, new DateTime(DateTime.Now.Year - 1, 1, 1)); 
@@ -627,7 +626,6 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
-            db.SaveChanges();
         }
 
         public static void update_OnlineToken(DBContext db, string Id, string OnlineToken)
@@ -666,7 +664,6 @@ namespace iSpeakWebApp.Controllers
             updateLoginSession(Session);
 
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
-            db.SaveChanges();
         }
 
         public void add(UserAccountsModel model)

@@ -269,7 +269,6 @@ namespace iSpeakWebApp.Controllers
                 );
 
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
-            db.SaveChanges();
         }
 
         public void update_Approved(Guid Id, bool value)
@@ -279,7 +278,6 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(FilesModel.COL_Approved.Name, value)
                 );
             ActivityLogsController.AddEditLog(db, Session, Id, string.Format(FilesModel.COL_Approved.LogDisplay, null, value));
-            db.SaveChanges();
         }
 
         public void update_IsDeleted(Guid Id, bool value)
@@ -289,7 +287,6 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(FilesModel.COL_IsDeleted.Name, value)
                 );
             ActivityLogsController.AddEditLog(db, Session, Id, string.Format(FilesModel.COL_IsDeleted.LogDisplay, null, value));
-            db.SaveChanges();
         }
 
         public void add(FilesModel model)

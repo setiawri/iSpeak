@@ -219,7 +219,6 @@ namespace iSpeakWebApp.Controllers
                 });
 
                 ActivityLogsController.AddCreateLog(db, Session, Id);
-                db.SaveChanges();
             }
 
             return Json(new { Message = "" });
@@ -322,7 +321,6 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_Amount.Name, model.Amount)
                 );
                 ActivityLogsController.AddEditLog(db, Session, model.Id, log);
-                db.SaveChanges();
             }
         }
 

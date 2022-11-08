@@ -107,15 +107,13 @@ namespace iSpeakWebApp.Controllers
         public static void AddCreateLog(DBContext db, HttpSessionStateBase Session, Guid ReferenceId) { Add(db, Session, ReferenceId, "Created"); }
         public static void Add(DBContext db, HttpSessionStateBase Session, Guid ReferenceId, string description)
         {
-            db.ActivityLogs.Add(new ActivityLogsModel
-            {
-                Id = Guid.NewGuid(),
-                ReferenceId = ReferenceId,
-                Timestamp = Helper.getCurrentDateTime(),
-                Description = description,
-                UserAccounts_Id = (Guid)UserAccountsController.getUserId(Session),
-                UserAccounts_Fullname = null
-            });
+            LIBWebMVC.WebDBConnection.Insert(db.Database, "ActivityLogs",
+                DBConnection.getSqlParameter(ActivityLogsModel.COL_Id.Name, Guid.NewGuid()),
+                DBConnection.getSqlParameter(ActivityLogsModel.COL_Timestamp.Name, Helper.getCurrentDateTime()),
+                DBConnection.getSqlParameter(ActivityLogsModel.COL_ReferenceId.Name, ReferenceId),
+                DBConnection.getSqlParameter(ActivityLogsModel.COL_Description.Name, description),
+                DBConnection.getSqlParameter(ActivityLogsModel.COL_UserAccounts_Id.Name, (Guid)UserAccountsController.getUserId(Session))
+            );
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
@@ -130,13 +128,14 @@ namespace iSpeakWebApp.Controllers
             if (FILTER_chkDateTo == null || !(bool)FILTER_chkDateTo)
                 FILTER_DateTo = null;
 
-            return db.Database.SqlQuery<ActivityLogsModel>(@"
+            List<ActivityLogsModel> models = db.Database.SqlQuery<ActivityLogsModel>(@"
                         SELECT ActivityLogs.Id,
                             ActivityLogs.Timestamp,
                             ActivityLogs.ReferenceId,
                             ActivityLogs.Description,
                             ActivityLogs.UserAccounts_Id,
-                            UserAccounts.Fullname AS UserAccounts_Fullname
+                            UserAccounts.Fullname AS UserAccounts_Fullname,
+                            UserAccounts.Roles AS Roles
                         FROM ActivityLogs
                             LEFT JOIN UserAccounts ON UserAccounts.Id = ActivityLogs.UserAccounts_Id
                         WHERE 1=1 
@@ -151,6 +150,13 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter("FILTER_DateFrom", FILTER_DateFrom),
                     DBConnection.getSqlParameter("FILTER_DateTo", Util.getAsEndDate(FILTER_DateTo))
                 ).ToList();
+
+            foreach (ActivityLogsModel model in models)
+            {
+                if (!string.IsNullOrEmpty(model.Roles)) model.Roles_List = model.Roles.Split(',').ToList();
+            }
+
+            return models;
         }
 
         public static void delete(Guid? ReferenceId, DateTime? StartDate, DateTime? EndDate)

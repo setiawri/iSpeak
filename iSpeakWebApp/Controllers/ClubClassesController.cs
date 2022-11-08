@@ -186,7 +186,6 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(ClubClassesModel.COL_Notes.Name, model.Notes)
             );
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
-            db.SaveChanges();
         }
 
         public void update(ClubClassesModel model, string log)
@@ -201,7 +200,6 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(ClubClassesModel.COL_Notes.Name, model.Notes)
             );
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
-            db.SaveChanges();
         }
 
         /******************************************************************************************************************************************************/

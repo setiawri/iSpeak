@@ -60,8 +60,8 @@ namespace iSpeakWebApp.Controllers
                 {
                     model.Id = Guid.NewGuid();
                     db.UserAccountRoles.Add(model);
-                    ActivityLogsController.AddCreateLog(db, Session, model.Id);
                     db.SaveChanges();
+                    ActivityLogsController.AddCreateLog(db, Session, model.Id);
                     return RedirectToAction(nameof(Edit), new { id = model.Id });
                 }
             }
@@ -306,8 +306,8 @@ namespace iSpeakWebApp.Controllers
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
-                        ActivityLogsController.AddEditLog(db, Session, model.Id, log);
                         db.SaveChanges();
+                        ActivityLogsController.AddEditLog(db, Session, model.Id, log);
                     }
 
                     UserAccountsController.updateLoginSession(Session);

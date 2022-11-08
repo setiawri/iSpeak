@@ -213,7 +213,6 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddEditLog(db, Session, Id, string.Format(PettyCashRecordsModel.COL_Approved.LogDisplay, null, value));
-            db.SaveChanges();
         }
 
         /******************************************************************************************************************************************************/

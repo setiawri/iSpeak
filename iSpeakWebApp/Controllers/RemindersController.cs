@@ -44,8 +44,8 @@ namespace iSpeakWebApp.Controllers
                 model.Id = Guid.NewGuid();
                 model.Branches_Id = Helper.getActiveBranchId(Session);
                 db.Reminders.Add(model);
-                ActivityLogsController.AddCreateLog(db, Session, model.Id);
                 db.SaveChanges();
+                ActivityLogsController.AddCreateLog(db, Session, model.Id);
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
 
@@ -76,8 +76,8 @@ namespace iSpeakWebApp.Controllers
                 string log = string.Format("[{0}] {1}", Util.GetEnumDescription<EnumReminderStatuses>(model.Status_enumid), Notes);
 
                 db.Entry(model).State = EntityState.Modified;
-                ActivityLogsController.Add(db, Session, model.Id, log);
                 db.SaveChanges();
+                ActivityLogsController.Add(db, Session, model.Id, log);
 
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }

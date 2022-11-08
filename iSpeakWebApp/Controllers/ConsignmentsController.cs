@@ -185,7 +185,6 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
-            db.SaveChanges();
         }
 
         public void add(ConsignmentsModel model)
@@ -199,7 +198,6 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
-            db.SaveChanges();
         }
 
         /******************************************************************************************************************************************************/

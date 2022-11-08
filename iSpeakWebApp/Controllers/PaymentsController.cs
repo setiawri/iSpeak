@@ -361,7 +361,6 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(PaymentsModel.COL_CancelNotes.Name, model.CancelNotes)
                 );
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
-            db.SaveChanges();
         }
 
         public void update_Approved(Guid Id, bool value)
@@ -371,7 +370,6 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(PaymentsModel.COL_Approved.Name, value)
                 );
             ActivityLogsController.AddEditLog(db, Session, Id, string.Format(PaymentsModel.COL_Approved.LogDisplay, null, value));
-            db.SaveChanges();
         }
 
         public void update_Cancelled(Guid Id, string CancelNotes)
@@ -395,8 +393,6 @@ namespace iSpeakWebApp.Controllers
                             DBConnection.getSqlParameter(SaleInvoicesModel.COL_Due.Name, saleInvoices[0].Due + paymentitem.Amount)
                         );
             }
-
-            db.SaveChanges();
         }
 
         /******************************************************************************************************************************************************/

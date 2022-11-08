@@ -137,7 +137,6 @@ namespace iSpeakWebApp.Controllers
                     SaleInvoiceItemsController.update_SessionHours_Remaining(db, Session, saleInvoiceItem.Id, saleInvoiceItem.SessionHours_Remaining,
                         string.Format("Lesson Session on {0:dd/MM/yy HH:mm} for {1:N2} hours. Remaining hours: {2:N2} hours.", session.Timestamp, session.SessionHours, saleInvoiceItem.SessionHours_Remaining));
                 }
-                db.SaveChanges();
 
                 //create payrollpaymentitem
                 if (!model.IsScheduleChange)
@@ -389,7 +388,6 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
-            db.SaveChanges();
         }
 
         public void update(LessonSessionsModel model, string log)
@@ -403,7 +401,6 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(LessonSessionsModel.COL_InternalNotes.Name, model.InternalNotes)
                 );
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
-            db.SaveChanges();
         }
 
         public void update_Cancelled(Guid Id, string CancelNotes)
@@ -432,7 +429,6 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddEditLog(db, Session, Id, string.Format(LessonSessionsModel.COL_Cancelled.LogDisplay, null, true));
-            db.SaveChanges();
         }
 
         /******************************************************************************************************************************************************/

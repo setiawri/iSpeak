@@ -84,7 +84,6 @@ namespace iSpeakWebApp.Controllers
                 else
                 {
                     update(modifiedModel); //update setting values
-                    db.SaveChanges(); //insert activity logs
                     UtilWebMVC.setBootboxMessage(this, log);
                     return RedirectToAction(nameof(Edit));
                 }

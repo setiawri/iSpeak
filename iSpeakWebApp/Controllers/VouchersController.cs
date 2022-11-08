@@ -193,7 +193,6 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(VouchersModel.COL_Amount.Name, model.Amount)
                 );
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
-            db.SaveChanges();
         }
 
         public void add(VouchersModel model)
@@ -206,7 +205,6 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(VouchersModel.COL_Amount.Name, model.Amount)
                 );
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
-            db.SaveChanges();
         }
 
         /******************************************************************************************************************************************************/

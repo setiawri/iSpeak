@@ -148,7 +148,6 @@ namespace iSpeakWebApp
             else
             {
                 ActivityLogsController.Add(db, Session, ReferenceId, newlog);
-                db.SaveChanges();
                 return Util.append(log, string.Format("UPDATE: {0} to {1}", oldValue, newValue), Environment.NewLine + Environment.NewLine);
             }
         }

@@ -202,8 +202,6 @@ namespace iSpeakWebApp.Controllers
             ActivityLogsController.Add(db, Session, model.Id, log);
 
             PayrollPaymentItemsController.update_PayrollPayments_Id(db, Session, model.Id, items);
-
-            db.SaveChanges();
         }
 
         public void update_Approved(Guid Id, bool value)
@@ -214,7 +212,6 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddEditLog(db, Session, Id, string.Format(PayrollPaymentsModel.COL_Approved.LogDisplay, null, value));
-            db.SaveChanges();
         }
 
         public void update_CancelNotes(Guid Id, string CancelNotes)
@@ -233,7 +230,6 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddEditLog(db, Session, Id, string.Format(PayrollPaymentsModel.COL_CancelNotes.LogDisplay, CancelNotes));
-            db.SaveChanges();
         }
 
         /******************************************************************************************************************************************************/

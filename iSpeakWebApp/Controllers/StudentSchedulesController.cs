@@ -311,7 +311,6 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(StudentSchedulesModel.COL_Notes.Name, model.Notes)
             );
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
-            db.SaveChanges();
         }
 
         public void update(StudentSchedulesModel model, string log)
@@ -328,7 +327,6 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(StudentSchedulesModel.COL_Notes.Name, model.Notes)
             );
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
-            db.SaveChanges();
         }
 
         public void delete(Guid Id)

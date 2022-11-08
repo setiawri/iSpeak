@@ -200,7 +200,6 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
-            db.SaveChanges();
         }
 
         public void add(HourlyRatesModel model)
@@ -218,7 +217,6 @@ namespace iSpeakWebApp.Controllers
             );
 
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
-            db.SaveChanges();
         }
 
         public static List<HourlyRatesModel> getActiveFullTimeEmployeePayrates(HttpSessionStateBase Session)
