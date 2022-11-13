@@ -281,6 +281,9 @@
     <Content Include="Advertisements\2022082901.jpeg" />
     <Content Include="Advertisements\2022081302.jpeg" />
     <Content Include="Advertisements\2022082001.jpeg" />
+    <Content Include="Advertisements\2022111301.png" />
+    <Content Include="Advertisements\2022111302.png" />
+    <Content Include="Advertisements\2022111303.png" />
     <Content Include="assets\css\animate.min.css" />
     <Content Include="assets\css\bootstrap-datetimepicker.css" />
     <Content Include="assets\css\bootstrap.min.css" />
@@ -493,7 +496,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="ArticlesAssets\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\css\icons\fontawesome\fonts\fontawesome-webfont.eot" />
