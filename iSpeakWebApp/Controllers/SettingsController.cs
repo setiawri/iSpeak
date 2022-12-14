@@ -105,6 +105,7 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(SettingsModel.COL_ClubClassroomLink.Name + "Id", SettingsModel.COL_ClubClassroomLink.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_ClubClassroomLink.Name, Util.wrapNullable(value))
             );
+            ActivityLogsController.Add(db, Session, SettingsModel.COL_ClubClassroomLink.Id, $"Updated to {value}");
 
             return Json(new { Message = "" });
         }
