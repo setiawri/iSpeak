@@ -46,6 +46,16 @@
                             </div>
                         </div>
 
+                        @if (iSpeakWebApp.Controllers.UserAccountsController.IsUserHasAccess(Session, iSpeakWebApp.Controllers.SettingsController.get().FullAccessForTutorSchedules_List))
+                        {
+                            <div class="row ml-0 mr-2">
+                                <label class="mb-0">Role</label>
+                                <div class="input-group">
+                                    @Html.DropDownList("FILTER_UserAccountRoles_Id", ViewBag.UserAccountRoles as SelectList, "ALL", new { @class = "select2", @style = "height:auto;" })
+                                </div>
+                            </div>
+                        }
+
                         <div class="row ml-0 mr-2">
                             <label class="mb-0">Active</label>
                             <div class="input-group">

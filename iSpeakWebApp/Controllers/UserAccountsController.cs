@@ -29,7 +29,7 @@ namespace iSpeakWebApp.Controllers
 
         /* FILTER *********************************************************************************************************************************************/
 
-        public void setViewBag(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
+        public void setViewBag(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_UserAccountRoles_Id)
         {
             ViewBag.FILTER_Keyword = FILTER_Keyword;
             ViewBag.FILTER_Active = FILTER_Active;
@@ -43,12 +43,12 @@ namespace iSpeakWebApp.Controllers
         /* INDEX **********************************************************************************************************************************************/
 
         // GET: UserAccounts
-        public ActionResult Index(int? rss, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
+        public ActionResult Index(int? rss, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_UserAccountRoles_Id)
         {
             if (!UserAccountsController.getUserAccess(Session).UserAccounts_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id);
             if (rss != null)
             {
                 ViewBag.RemoveDatatablesStateSave = rss;
@@ -56,46 +56,46 @@ namespace iSpeakWebApp.Controllers
             }
             else
             {
-                if (UtilWebMVC.hasNoFilter(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id))
+                if (UtilWebMVC.hasNoFilter(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id))
                     return View();
                 else
                 {
                     string roles = "";
                     if (!getUserAccess(Session).UserAccounts_EditRoles)
                         roles = SettingsController.get().StudentRole.ToString();
-                    return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, roles, false));
+                    return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id, roles, false));
                 }
             }
         }
 
         // POST: UserAccounts
         [HttpPost]
-        public ActionResult Index(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
+        public ActionResult Index(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_UserAccountRoles_Id)
         {
-            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id);
 
             string roles = "";
             if (!getUserAccess(Session).UserAccounts_ViewAllRoles)
                 roles = SettingsController.get().StudentRole.ToString();
-            return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, roles, false));
+            return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id, roles, false));
         }
 
         /* CREATE *********************************************************************************************************************************************/
 
         // GET: UserAccounts/Create
-        public ActionResult Create(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
+        public ActionResult Create(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_UserAccountRoles_Id)
         {
             if (!UserAccountsController.getUserAccess(Session).UserAccounts_Add)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
-            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id);
             return View(new UserAccountsModel());
         }
 
         // POST: UserAccounts/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(UserAccountsModel model, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
+        public ActionResult Create(UserAccountsModel model, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_UserAccountRoles_Id)
         {
             if (ModelState.IsValid)
             {
@@ -113,18 +113,18 @@ namespace iSpeakWebApp.Controllers
 
                     add(model);
                     db.SaveChanges();
-                    return RedirectToAction(nameof(Edit), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active, FILTER_Languages_Id = FILTER_Languages_Id });
+                    return RedirectToAction(nameof(Edit), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active, FILTER_Languages_Id = FILTER_Languages_Id, FILTER_UserAccountRoles_Id = FILTER_UserAccountRoles_Id });
                 }
             }
 
-            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id);
             return View(model);
         }
 
         /* EDIT ***********************************************************************************************************************************************/
 
         // GET: UserAccounts/Edit/{id}
-        public ActionResult Edit(Guid? id, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
+        public ActionResult Edit(Guid? id, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_UserAccountRoles_Id)
         {
             if (!UserAccountsController.getUserAccess(Session).UserAccounts_Edit)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
@@ -132,14 +132,14 @@ namespace iSpeakWebApp.Controllers
             if (id == null)
                 return RedirectToAction(nameof(Index));
 
-            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id);
             return View(get((Guid)id));
         }
 
         // POST: UserAccounts/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(UserAccountsModel modifiedModel, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id)
+        public ActionResult Edit(UserAccountsModel modifiedModel, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_UserAccountRoles_Id)
         {
             if (ModelState.IsValid)
             {
@@ -171,11 +171,11 @@ namespace iSpeakWebApp.Controllers
                     if (!string.IsNullOrEmpty(log))
                         update(modifiedModel, log);
 
-                    return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active, FILTER_Languages_Id = FILTER_Languages_Id });
+                    return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active, FILTER_Languages_Id = FILTER_Languages_Id, FILTER_UserAccountRoles_Id = FILTER_UserAccountRoles_Id });
                 }
             }
 
-            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id);
+            setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id);
             return View(modifiedModel);
         }
 
@@ -465,7 +465,7 @@ namespace iSpeakWebApp.Controllers
         public JsonResult Ajax_GetDDLItems(string keyword, int page, int take, string key)
         {
             int skip = take * (page - 1);
-            List<UserAccountsModel> models = get(skip, take, keyword, 1, null, key, SettingsController.ShowOnlyOwnUserData(Session));
+            List<UserAccountsModel> models = get(skip, take, keyword, 1, null, null, key, SettingsController.ShowOnlyOwnUserData(Session));
 
             List<Select2Pagination.Select2Results> results = new List<Select2Pagination.Select2Results>();
             results.AddRange(models.Select(model => new Select2Pagination.Select2Results
@@ -488,6 +488,15 @@ namespace iSpeakWebApp.Controllers
             ReferenceIds.Add(new SelectListItem() { Text = "Account Login", Value = ACTIVITYLOGREFERENCEID_UserAccounts_Login });
 
             controller.ViewBag.ReferenceIds = new SelectList(ReferenceIds, "Value", "Text");
+        }
+
+        public static bool IsUserHasAccess(HttpSessionStateBase Session, List<string> RolesWithAccess)
+        {
+            List<string> UserRoles_List = getUserAccount(Session).Roles_List;
+            foreach (string Role in UserRoles_List)
+                if (RolesWithAccess.Contains(Role))
+                    return true;
+            return false;
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
@@ -521,7 +530,7 @@ namespace iSpeakWebApp.Controllers
 
         public UserAccountsModel get(string Username, string Password) { return get(null, null, null, true, null, Username, Password, null, null, null, null, null, null, false).FirstOrDefault(); }
         public List<UserAccountsModel> getBirthdays(Guid Branches_Id, Guid? UserAccountRoles_Id, int BirthdayListMonth) { return get(null, null, Branches_Id, false, null, null, null, 1, UserAccountRoles_Id, BirthdayListMonth, null, null, null, false); }
-        public List<UserAccountsModel> get(int? skip, int? take, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, string Role, bool ShowOnlyOwnUserData) { return get(skip, take, null, false, null, null, null, FILTER_Active, null, null, FILTER_Keyword, FILTER_Languages_Id, Role, ShowOnlyOwnUserData); }
+        public List<UserAccountsModel> get(int? skip, int? take, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_UserAccountRoles_Id, string Role, bool ShowOnlyOwnUserData) { return get(skip, take, null, false, null, null, null, FILTER_Active, FILTER_UserAccountRoles_Id, null, FILTER_Keyword, FILTER_Languages_Id, Role, ShowOnlyOwnUserData); }
         public UserAccountsModel get(Guid Id) { return get(null, null, null, true, Id, null, null, null, null, null, null, null, null, false).FirstOrDefault(); }
         public List<UserAccountsModel> get(int? skip, int? take, Guid? Default_Branches_Id, bool showAllBranches, Guid? Id, string Username, string Password, int? Active, Guid? UserAccountRoles_Id, int? BirthdayListMonth, string FILTER_Keyword, Guid? Language_Id, string Role, bool ShowOnlyOwnUserData)
         {
