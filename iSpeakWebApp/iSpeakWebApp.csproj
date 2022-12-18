@@ -284,6 +284,9 @@
     <Content Include="Advertisements\2022111301.png" />
     <Content Include="Advertisements\2022111302.png" />
     <Content Include="Advertisements\2022111303.png" />
+    <Content Include="Advertisements\2022121801.jpeg" />
+    <Content Include="Advertisements\2022121802.jpeg" />
+    <Content Include="Advertisements\2022121803.jpeg" />
     <Content Include="assets\css\animate.min.css" />
     <Content Include="assets\css\bootstrap-datetimepicker.css" />
     <Content Include="assets\css\bootstrap.min.css" />
