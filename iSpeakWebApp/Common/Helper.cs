@@ -56,6 +56,9 @@ namespace iSpeakWebApp
         public const string IMAGEFOLDERPATH = "~"+ IMAGEFOLDERURL;
         public const string NOIMAGEFILE = "no-image.jpg";
 
+        public const string IMAGEUPLOADFOLDER = "/App_ImageUploads/";
+        public const string IMAGEUPLOADPATH = "~" + IMAGEUPLOADFOLDER;
+
         /* DATABASE INFORMATION *******************************************************************************************************************************/
 
         public const string DEVCOMPUTERNAME = "RQ";
@@ -71,6 +74,19 @@ namespace iSpeakWebApp
                 bool ConnectToLiveDB = Convert.ToBoolean(Util.getConfigVariable("ConnectToLiveDB"));
                 string datasource = Environment.MachineName == DEVCOMPUTERNAME && !ConnectToLiveDB ? SERVERNAME_DEV : SERVERNAME_LIVE;
                 return DBConnection.getWebConnectionString(datasource, DBNAME, USERID, PASSWORD); } }
+
+        public static string getImageUploadUrl(string imageName, HttpRequestBase Request, HttpServerUtilityBase Server)
+        {
+            if (!string.IsNullOrEmpty(imageName))
+            {
+                string dir = Server.MapPath(IMAGEUPLOADPATH);
+                string path = Path.Combine(dir, imageName);
+                if (File.Exists(path))
+                    return (Request.ApplicationPath + IMAGEUPLOADFOLDER + imageName).Replace("//", "/");
+            }
+
+            return null;
+        }
 
         public static string getImageUrl(string imageName, HttpRequestBase Request, HttpServerUtilityBase Server)
         {

@@ -273,20 +273,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Advertisements\2022070101.jpg" />
-    <Content Include="Advertisements\2022071001.jpeg" />
-    <Content Include="Advertisements\2022071002.jpeg" />
     <Content Include="Advertisements\2022071201.jpg" />
-    <Content Include="Advertisements\2022081301.jpeg" />
-    <Content Include="Advertisements\2022082901.jpeg" />
-    <Content Include="Advertisements\2022081302.jpeg" />
-    <Content Include="Advertisements\2022082001.jpeg" />
-    <Content Include="Advertisements\2022111301.png" />
-    <Content Include="Advertisements\2022111302.png" />
-    <Content Include="Advertisements\2022111303.png" />
-    <Content Include="Advertisements\2022121801.jpeg" />
-    <Content Include="Advertisements\2022121802.jpeg" />
-    <Content Include="Advertisements\2022121803.jpeg" />
+    <Content Include="Advertisements\2023011201.png" />
+    <Content Include="Advertisements\2023011202.png" />
+    <Content Include="Advertisements\2023011203.png" />
+    <Content Include="Advertisements\2023012201.png" />
+    <Content Include="Advertisements\2023012202.png" />
+    <Content Include="Advertisements\2023012203.png" />
     <Content Include="assets\css\animate.min.css" />
     <Content Include="assets\css\bootstrap-datetimepicker.css" />
     <Content Include="assets\css\bootstrap.min.css" />
@@ -499,6 +492,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="App_ImageUploads\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\css\icons\fontawesome\fonts\fontawesome-webfont.eot" />

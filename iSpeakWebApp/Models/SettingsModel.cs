@@ -70,6 +70,19 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_ClubClassroomLink = new ModelMember { Name = "ClubClassroomLink", Display = "Club Classroom Link", Id = new Guid("596AA212-1A9C-4FF8-B95F-3EA414D262FF") };
 
 
+        public string AdvertisementBanner1 { get; set; }
+        public static ModelMember COL_AdvertisementBanner1 = new ModelMember { Name = "AdvertisementBanner1", Display = "Advertisement Banner 1", Id = new Guid("40C4CB20-26C3-4196-AA04-6E03A418225B") };
+
+        public string ClubScheduleImage1 { get; set; }
+        public static ModelMember COL_ClubScheduleImage1 = new ModelMember { Name = "ClubScheduleImage1", Display = "Club Schedule Image 1", Id = new Guid("DE5D02AA-9E30-4ADA-9655-7F34A953A213") };
+
+        public string ClubScheduleImage2 { get; set; }
+        public static ModelMember COL_ClubScheduleImage2 = new ModelMember { Name = "ClubScheduleImage2", Display = "Club Schedule Image 2", Id = new Guid("000416E9-1022-43BF-AD2E-683C257F9EA7") };
+
+        public string ClubScheduleImage3 { get; set; }
+        public static ModelMember COL_ClubScheduleImage3 = new ModelMember { Name = "ClubScheduleImage3", Display = "Club Schedule Image 3", Id = new Guid("ABDC9DFB-8B07-4AA5-A550-C80ED1C40BE2") };
+
+
         /******************************************************************************************************************************************************/
     }
 }

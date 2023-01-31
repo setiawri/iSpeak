@@ -1,7 +1,8 @@
-﻿
-@{
+﻿@{
     Layout = null;
     ViewBag.Title = "iSpeak Language Center";
+
+    iSpeakWebApp.Models.SettingsModel settings = iSpeakWebApp.Controllers.SettingsController.get();
 }
 
 <!doctype html>
@@ -30,6 +31,7 @@
             display: grid;
             width: 100%;
         }
+
         .center-fit {
             max-width: 100%;
             max-height: 100vh;
@@ -43,16 +45,17 @@
             max-width: 100%;
             margin: auto;
         }
-        .multipleImageBox div {
-            vertical-align: middle;
-            display: table-cell;
-            padding: 0 5px;
-            text-align:center;
-        }
-        .multipleImageBox div img {
-            max-width: 100%;
-        }
 
+            .multipleImageBox div {
+                vertical-align: middle;
+                display: table-cell;
+                padding: 0 5px;
+                text-align: center;
+            }
+
+                .multipleImageBox div img {
+                    max-width: 100%;
+                }
     </style>
 
 </head>
@@ -74,8 +77,9 @@
                 <div class="row">
                     <div class="col-12">
                         @*<a href="#" class=""><span class="mr-2 icon-envelope-open-o"></span> <span class="d-none d-md-inline-block">ispeak@gmail.com</span></a>
-                        <span class="mx-md-2 d-inline-block"></span>*@
-                        <a href="#" class=""><span class="mr-2 fa fa-whatsapp"></span> 
+                            <span class="mx-md-2 d-inline-block"></span>*@
+                        <a href="#" class="">
+                            <span class="mr-2 fa fa-whatsapp"></span>
                             <span class="d-none d-md-inline-block">
                                 Paskal Hypersquare: 0821.3050.6011 • Sumbersari Junction: 0811.2233.1101 • Gyana (Gatot Subroto): 0811.2233.1106
                             </span>
@@ -83,7 +87,7 @@
 
                         <div class="float-right">
                             @*<a href="http://www.ispeakgroup.com/" target="_blank" class=""><span class="mr-2 fa fa-globe"></span><span class="d-none d-md-inline-block">Website</span></a>
-                            <span class="mx-md-2 d-inline-block"></span>*@
+                                <span class="mx-md-2 d-inline-block"></span>*@
                             <a href="https://www.instagram.com/ispeak.id/" target="_blank" class=""><span class="mr-2 icon-instagram"></span><span class="d-none d-md-inline-block">ispeak.id</span></a>
                         </div>
                     </div>
@@ -115,15 +119,90 @@
             </div>
         </header>
 
-        <div class="imgbox">
-            <img class="center-fit" src="@Url.Content("~/Advertisements/2022071201.jpg")">
-        </div>
+        @using (Html.BeginForm("LandingPage", "LandingPage", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            if (true)
+            {
+                <div class="row col-lg-12 mt-2">
+                    <div class="col-lg-4 pl-4">
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="uploadFileBanner1" name="uploadFileBanner1">
+                                <label class="custom-file-label" for="inputGroupFile04">Banner</label>
+                            </div>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="submit">UPLOAD</button>
+                            </div>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-danger font-weight-bold" type="button">X</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="imgbox mt-2">
+                <img class="center-fit" src="@Url.Content("~/Advertisements/2022071201.jpg")">
+            </div>
 
-        <div class="multipleImageBox" style="margin-top: 10px;">
-            <div><img src="@Url.Content("~/Advertisements/2022121801.jpeg")"></div>
-            <div><img src="@Url.Content("~/Advertisements/2022121802.jpeg")"></div>
-            <div><img src="@Url.Content("~/Advertisements/2022121803.jpeg")"></div>
-        </div>
+            if (true)
+            {
+                <div class="row col-lg-12 mt-2">
+                    <div class="col-lg-4 pl-4">
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="uploadFileClubSchedule1" name="uploadFileClubSchedule1">
+                                <label class="custom-file-label" for="inputGroupFile04">Club Schedule 1</label>
+                            </div>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="submit">UPLOAD</button>
+                            </div>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-danger font-weight-bold" type="button">X</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 pl-4">
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="uploadFileClubSchedule2" name="uploadFileClubSchedule2">
+                                <label class="custom-file-label" for="inputGroupFile04">Club Schedule 2</label>
+                            </div>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="submit">UPLOAD</button>
+                            </div>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-danger font-weight-bold" type="button">X</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 pl-4">
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="uploadFileClubSchedule3" name="uploadFileClubSchedule3">
+                                <label class="custom-file-label" for="inputGroupFile04">Club Schedule 3</label>
+                            </div>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="submit">UPLOAD</button>
+                            </div>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-danger font-weight-bold" type="button">X</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="multipleImageBox mt-2">
+                @if(@Helper.getImageUploadUrl(settings.ClubScheduleImage1, Request, Server) != null)
+                {
+                    <div><img src="@Helper.getImageUploadUrl(settings.ClubScheduleImage1, Request, Server)" /></div>
+                }
+                @*<div><img src="@Url.Content("~/Advertisements/" + iSpeakWebApp.Models.SettingsModel.COL_ClubScheduleImage1.Id + ".jpeg")"></div>*@
+                <div><img src="@Url.Content("~/Advertisements/2023012202.png")"></div>
+                <div><img src="@Url.Content("~/Advertisements/2023012203.png")"></div>
+            </div>
+
+        }
 
         @{Html.RenderAction("Article2022060101", "Articles");}
 
@@ -135,11 +214,11 @@
                             <h1>Speak a new language today!</h1>
                             <p class="mb-5">Class and private system language courses.</p>
                             @*<form action="#">
-                                <div class="form-group d-flex">
-                                    <input type="text" class="form-control" placeholder="Your tracking number">
-                                    <input type="submit" class="btn btn-primary text-white px-4" value="Track Now">
-                                </div>
-                            </form>*@
+                                    <div class="form-group d-flex">
+                                        <input type="text" class="form-control" placeholder="Your tracking number">
+                                        <input type="submit" class="btn btn-primary text-white px-4" value="Track Now">
+                                    </div>
+                                </form>*@
                         </div>
                     </div>
                 </div>
@@ -237,22 +316,22 @@
                         </div>
                     </div>
                     @*<div class="col-md-4 ml-auto">
-                        <div class="mb-5">
-                            <h2 class="footer-heading mb-4">Subscribe to Newsletter</h2>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control border-secondary text-white bg-transparent" placeholder="Enter Email" aria-label="Enter Email" aria-describedby="button-addon2">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary text-white" type="button" id="button-addon2">Subscribe</button>
+                            <div class="mb-5">
+                                <h2 class="footer-heading mb-4">Subscribe to Newsletter</h2>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control border-secondary text-white bg-transparent" placeholder="Enter Email" aria-label="Enter Email" aria-describedby="button-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary text-white" type="button" id="button-addon2">Subscribe</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <h2 class="footer-heading mb-4">Follow Us</h2>
-                        <a href="#about-section" class="smoothscroll pl-0 pr-3"><span class="icon-facebook"></span></a>
-                        <a href="#" class="pl-3 pr-3"><span class="icon-twitter"></span></a>
-                        <a href="#" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
-                        <a href="#" class="pl-3 pr-3"><span class="icon-linkedin"></span></a>
-                    </div>*@
+                            <h2 class="footer-heading mb-4">Follow Us</h2>
+                            <a href="#about-section" class="smoothscroll pl-0 pr-3"><span class="icon-facebook"></span></a>
+                            <a href="#" class="pl-3 pr-3"><span class="icon-twitter"></span></a>
+                            <a href="#" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
+                            <a href="#" class="pl-3 pr-3"><span class="icon-linkedin"></span></a>
+                        </div>*@
                 </div>
                 <div class="row pt-5 mt-5 text-center">
                     <div class="col-md-12">
@@ -280,3 +359,22 @@
 </body>
 
 </html>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.custom-file-input').on('change', function () {
+            var fileLabel = $(this).next('.custom-file-label');
+            var uploadFiles = $(this)[0].files;
+            if (uploadFiles.length > 1) {
+                fileLabel.html(uploadFiles.length + ' files selected');
+            }
+            else if (uploadFiles.length == 1) {
+                fileLabel.html(uploadFiles[0].name);
+            }
+        });
+    });
+
+    //function DeleteSignatureImage() {
+    //    $('.custom-file-label').html("");
+    //}
+</script>
