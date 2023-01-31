@@ -273,13 +273,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Advertisements\2022071201.jpg" />
-    <Content Include="Advertisements\2023011201.png" />
-    <Content Include="Advertisements\2023011202.png" />
-    <Content Include="Advertisements\2023011203.png" />
-    <Content Include="Advertisements\2023012201.png" />
-    <Content Include="Advertisements\2023012202.png" />
-    <Content Include="Advertisements\2023012203.png" />
     <Content Include="assets\css\animate.min.css" />
     <Content Include="assets\css\bootstrap-datetimepicker.css" />
     <Content Include="assets\css\bootstrap.min.css" />
