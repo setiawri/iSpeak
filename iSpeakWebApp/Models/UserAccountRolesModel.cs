@@ -640,6 +640,16 @@ namespace iSpeakWebApp.Models
         public bool IncomeStatement_ViewProfit { get; set; }
         public static ModelMember COL_IncomeStatement_ViewProfit = new ModelMember { Name = "IncomeStatement_ViewProfit", Display = "View Profit", LogDisplay = ActivityLogsController.editBooleanFormat("Income Statement View Profit") };
 
+        /* LANDING PAGE UPDATE ********************************************************************************************************************************************************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string LandingPageUpdate_Notes { get; set; }
+        public static ModelMember COL_LandingPageUpdate_Notes = new ModelMember { Name = "LandingPageUpdate_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Landing Page Update Notes") };
+
+        [Display(Name = "Edit")]
+        public bool LandingPageUpdate_Edit { get; set; }
+        public static ModelMember COL_LandingPageUpdate_Edit = new ModelMember { Name = "LandingPageUpdate_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Landing Page Update Edit") };
+
         /******************************************************************************************************************************************************************************************************************************************************************************************************/
 
     }

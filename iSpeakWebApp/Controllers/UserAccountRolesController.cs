@@ -11,8 +11,8 @@ using LIBUtil;
  * - add items in UserAccountRolesModel
  * - add items to database table UserAccountRoles
  * - add items in UserAccountRoles > Edit.cshtml
- * - add items in Post UserAccountRolesController.Edit() 
- * - add items in UserAccountRolesController.getAccesses() 
+ * - add items in Controller Post UserAccountRolesController.Edit() 
+ * - add items in Controller UserAccountRolesController.getAccesses() 
  * - update views that use the items including main layout file
  */
 
@@ -303,6 +303,10 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.IncomeStatement_View, model.IncomeStatement_View, UserAccountRolesModel.COL_IncomeStatement_View.LogDisplay);
                     log = Helper.append(log, originalModel.IncomeStatement_ViewProfit, model.IncomeStatement_ViewProfit, UserAccountRolesModel.COL_IncomeStatement_ViewProfit.LogDisplay);
 
+                    //LandingPageUpdate
+                    log = Helper.append(log, originalModel.LandingPageUpdate_Notes, model.LandingPageUpdate_Notes, UserAccountRolesModel.COL_LandingPageUpdate_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.LandingPageUpdate_Edit, model.LandingPageUpdate_Edit, UserAccountRolesModel.COL_LandingPageUpdate_Edit.LogDisplay);
+
                     if (!string.IsNullOrEmpty(log))
                     {
                         db.Entry(model).State = EntityState.Modified;
@@ -515,6 +519,10 @@ namespace iSpeakWebApp.Controllers
                 //Income Statement
                 if (item.IncomeStatement_View) model.IncomeStatement_View = true;
                 if (item.IncomeStatement_ViewProfit) model.IncomeStatement_ViewProfit = true;
+
+                //LandingPageUpdate
+                if (item.LandingPageUpdate_Edit) model.LandingPageUpdate_Edit = true;
+
             }
 
             return model;

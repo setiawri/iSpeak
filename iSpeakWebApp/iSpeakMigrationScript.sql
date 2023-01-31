@@ -1,4 +1,11 @@
 
+	----LandingPageUpdate
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'LandingPageUpdate_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD LandingPageUpdate_Notes varchar(MAX) null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'LandingPageUpdate_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD LandingPageUpdate_Edit bit default 0 not null;
+	GO
+
 ---- ACTIVITY LOGS ======================================================================================================================
 
 	----ActivityLogs

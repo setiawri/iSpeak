@@ -205,7 +205,10 @@ namespace iSpeakWebApp.Controllers
                     ISNULL(Settings_PayrollRatesRoles.Value_String,'') AS PayrollRatesRoles,
                     ISNULL(Settings_PayrollRatesRoles.Notes,'') AS PayrollRatesRoles_Notes,
                     ISNULL(Settings_ClubClassroomLink.Value_String,'') AS ClubClassroomLink,
-                    ISNULL(Settings_ClubScheduleImage1.Value_String,'') AS ClubScheduleImage1
+                    ISNULL(Settings_AdvertisementBanner1.Value_String,'') AS AdvertisementBanner1,
+                    ISNULL(Settings_ClubScheduleImage1.Value_String,'') AS ClubScheduleImage1,
+                    ISNULL(Settings_ClubScheduleImage2.Value_String,'') AS ClubScheduleImage2,
+                    ISNULL(Settings_ClubScheduleImage3.Value_String,'') AS ClubScheduleImage3
                 FROM Settings Settings_AutoEntryForCashPayments
                     LEFT JOIN Settings Settings_StudentRole ON Settings_StudentRole.Id = @StudentRoleId
                     LEFT JOIN Settings Settings_TutorRole ON Settings_TutorRole.Id = @TutorRoleId
@@ -214,7 +217,10 @@ namespace iSpeakWebApp.Controllers
                     LEFT JOIN Settings Settings_ShowOnlyOwnUserData ON Settings_ShowOnlyOwnUserData.Id = @ShowOnlyOwnUserDataId
                     LEFT JOIN Settings Settings_PayrollRatesRoles ON Settings_PayrollRatesRoles.Id = @PayrollRatesRolesId
                     LEFT JOIN Settings Settings_ClubClassroomLink ON Settings_ClubClassroomLink.Id = @ClubClassroomLinkId
+                    LEFT JOIN Settings Settings_AdvertisementBanner1 ON Settings_AdvertisementBanner1.Id = @AdvertisementBanner1Id
                     LEFT JOIN Settings Settings_ClubScheduleImage1 ON Settings_ClubScheduleImage1.Id = @ClubScheduleImage1Id
+                    LEFT JOIN Settings Settings_ClubScheduleImage2 ON Settings_ClubScheduleImage2.Id = @ClubScheduleImage2Id
+                    LEFT JOIN Settings Settings_ClubScheduleImage3 ON Settings_ClubScheduleImage3.Id = @ClubScheduleImage3Id
                 WHERE Settings_AutoEntryForCashPayments.Id = @AutoEntryForCashPaymentsId
                 ",
                     DBConnection.getSqlParameter(SettingsModel.COL_AutoEntryForCashPayments.Name + "Id", SettingsModel.COL_AutoEntryForCashPayments.Id),
@@ -225,7 +231,10 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(SettingsModel.COL_ShowOnlyOwnUserData.Name + "Id", SettingsModel.COL_ShowOnlyOwnUserData.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_PayrollRatesRoles.Name + "Id", SettingsModel.COL_PayrollRatesRoles.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_ClubClassroomLink.Name + "Id", SettingsModel.COL_ClubClassroomLink.Id),
-                    DBConnection.getSqlParameter(SettingsModel.COL_ClubScheduleImage1.Name + "Id", SettingsModel.COL_ClubScheduleImage1.Id)
+                    DBConnection.getSqlParameter(SettingsModel.COL_AdvertisementBanner1.Name + "Id", SettingsModel.COL_AdvertisementBanner1.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_ClubScheduleImage1.Name + "Id", SettingsModel.COL_ClubScheduleImage1.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_ClubScheduleImage2.Name + "Id", SettingsModel.COL_ClubScheduleImage2.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_ClubScheduleImage3.Name + "Id", SettingsModel.COL_ClubScheduleImage3.Id)
                 ).ToList();
 
             foreach(SettingsModel model in models)
@@ -266,8 +275,17 @@ namespace iSpeakWebApp.Controllers
                     IF (SELECT COUNT(Id) FROM Settings WHERE Id = @PayrollRatesRolesId) = 0 INSERT INTO Settings (Id) VALUES(@PayrollRatesRolesId);
                     UPDATE Settings SET Value_String=@PayrollRatesRoles, Notes=@PayrollRatesRoles_Notes WHERE Id=@PayrollRatesRolesId;
 
+                    IF (SELECT COUNT(Id) FROM Settings WHERE Id = @AdvertisementBanner1Id) = 0 INSERT INTO Settings (Id) VALUES(@AdvertisementBanner1Id);
+                    UPDATE Settings SET Value_String=@AdvertisementBanner1, Notes=NULL WHERE Id=@AdvertisementBanner1Id;
+
                     IF (SELECT COUNT(Id) FROM Settings WHERE Id = @ClubScheduleImage1Id) = 0 INSERT INTO Settings (Id) VALUES(@ClubScheduleImage1Id);
                     UPDATE Settings SET Value_String=@ClubScheduleImage1, Notes=NULL WHERE Id=@ClubScheduleImage1Id;
+
+                    IF (SELECT COUNT(Id) FROM Settings WHERE Id = @ClubScheduleImage2Id) = 0 INSERT INTO Settings (Id) VALUES(@ClubScheduleImage2Id);
+                    UPDATE Settings SET Value_String=@ClubScheduleImage2, Notes=NULL WHERE Id=@ClubScheduleImage2Id;
+
+                    IF (SELECT COUNT(Id) FROM Settings WHERE Id = @ClubScheduleImage3Id) = 0 INSERT INTO Settings (Id) VALUES(@ClubScheduleImage3Id);
+                    UPDATE Settings SET Value_String=@ClubScheduleImage3, Notes=NULL WHERE Id=@ClubScheduleImage3Id;
                 ",
                     DBConnection.getSqlParameter(SettingsModel.COL_AutoEntryForCashPayments.Name + "Id", SettingsModel.COL_AutoEntryForCashPayments.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_AutoEntryForCashPayments.Name, Util.wrapNullable(modifiedModel.AutoEntryForCashPayments)),
@@ -290,8 +308,14 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(SettingsModel.COL_PayrollRatesRoles.Name + "Id", SettingsModel.COL_PayrollRatesRoles.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_PayrollRatesRoles.Name, Util.wrapNullable(modifiedModel.PayrollRatesRoles)),
                     DBConnection.getSqlParameter(SettingsModel.COL_PayrollRatesRoles_Notes.Name, Util.wrapNullable(modifiedModel.PayrollRatesRoles_Notes)),
+                    DBConnection.getSqlParameter(SettingsModel.COL_AdvertisementBanner1.Name + "Id", SettingsModel.COL_AdvertisementBanner1.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_AdvertisementBanner1.Name, Util.wrapNullable(modifiedModel.AdvertisementBanner1)),
                     DBConnection.getSqlParameter(SettingsModel.COL_ClubScheduleImage1.Name + "Id", SettingsModel.COL_ClubScheduleImage1.Id),
-                    DBConnection.getSqlParameter(SettingsModel.COL_ClubScheduleImage1.Name, Util.wrapNullable(modifiedModel.ClubScheduleImage1))
+                    DBConnection.getSqlParameter(SettingsModel.COL_ClubScheduleImage1.Name, Util.wrapNullable(modifiedModel.ClubScheduleImage1)),
+                    DBConnection.getSqlParameter(SettingsModel.COL_ClubScheduleImage2.Name + "Id", SettingsModel.COL_ClubScheduleImage2.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_ClubScheduleImage2.Name, Util.wrapNullable(modifiedModel.ClubScheduleImage2)),
+                    DBConnection.getSqlParameter(SettingsModel.COL_ClubScheduleImage3.Name + "Id", SettingsModel.COL_ClubScheduleImage3.Id),
+                    DBConnection.getSqlParameter(SettingsModel.COL_ClubScheduleImage3.Name, Util.wrapNullable(modifiedModel.ClubScheduleImage3))
             );
         }
 

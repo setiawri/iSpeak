@@ -2,6 +2,7 @@
     Layout = null;
     ViewBag.Title = "iSpeak Language Center";
 
+    iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
     iSpeakWebApp.Models.SettingsModel settings = iSpeakWebApp.Controllers.SettingsController.get();
 }
 
@@ -77,7 +78,7 @@
                 <div class="row">
                     <div class="col-12">
                         @*<a href="#" class=""><span class="mr-2 icon-envelope-open-o"></span> <span class="d-none d-md-inline-block">ispeak@gmail.com</span></a>
-                            <span class="mx-md-2 d-inline-block"></span>*@
+                        <span class="mx-md-2 d-inline-block"></span>*@
                         <a href="#" class="">
                             <span class="mr-2 fa fa-whatsapp"></span>
                             <span class="d-none d-md-inline-block">
@@ -87,7 +88,7 @@
 
                         <div class="float-right">
                             @*<a href="http://www.ispeakgroup.com/" target="_blank" class=""><span class="mr-2 fa fa-globe"></span><span class="d-none d-md-inline-block">Website</span></a>
-                                <span class="mx-md-2 d-inline-block"></span>*@
+                            <span class="mx-md-2 d-inline-block"></span>*@
                             <a href="https://www.instagram.com/ispeak.id/" target="_blank" class=""><span class="mr-2 icon-instagram"></span><span class="d-none d-md-inline-block">ispeak.id</span></a>
                         </div>
                     </div>
@@ -122,13 +123,13 @@
         @using (Html.BeginForm("LandingPage", "LandingPage", FormMethod.Post, new { @enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
-            if (true)
+            if (access != null && access.LandingPageUpdate_Edit)
             {
-                <div class="row col-lg-12 mt-2">
+                <div class="row col-lg-12 mt-5">
                     <div class="col-lg-4 pl-4">
                         <div class="input-group">
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="uploadFileBanner1" name="uploadFileBanner1">
+                                <input type="file" class="custom-file-input" id="AdvertisementBanner1" name="AdvertisementBanner1">
                                 <label class="custom-file-label" for="inputGroupFile04">Banner</label>
                             </div>
                             <div class="input-group-append">
@@ -141,17 +142,20 @@
                     </div>
                 </div>
             }
-            <div class="imgbox mt-2">
-                <img class="center-fit" src="@Url.Content("~/Advertisements/2022071201.jpg")">
-            </div>
+            if (Helper.getImageUploadUrl(settings.AdvertisementBanner1, Request, Server) != null)
+            {
+                <div class="imgbox mt-2">
+                    <img class="center-fit" src="@Helper.getImageUploadUrl(settings.AdvertisementBanner1, Request, Server)">
+                </div>
+            }
 
-            if (true)
+            if (access != null && access.LandingPageUpdate_Edit)
             {
                 <div class="row col-lg-12 mt-2">
                     <div class="col-lg-4 pl-4">
                         <div class="input-group">
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="uploadFileClubSchedule1" name="uploadFileClubSchedule1">
+                                <input type="file" class="custom-file-input" id="ClubScheduleImage1" name="ClubScheduleImage1">
                                 <label class="custom-file-label" for="inputGroupFile04">Club Schedule 1</label>
                             </div>
                             <div class="input-group-append">
@@ -165,7 +169,7 @@
                     <div class="col-lg-4 pl-4">
                         <div class="input-group">
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="uploadFileClubSchedule2" name="uploadFileClubSchedule2">
+                                <input type="file" class="custom-file-input" id="ClubScheduleImage2" name="ClubScheduleImage2">
                                 <label class="custom-file-label" for="inputGroupFile04">Club Schedule 2</label>
                             </div>
                             <div class="input-group-append">
@@ -179,7 +183,7 @@
                     <div class="col-lg-4 pl-4">
                         <div class="input-group">
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="uploadFileClubSchedule3" name="uploadFileClubSchedule3">
+                                <input type="file" class="custom-file-input" id="ClubScheduleImage3" name="ClubScheduleImage3">
                                 <label class="custom-file-label" for="inputGroupFile04">Club Schedule 3</label>
                             </div>
                             <div class="input-group-append">
@@ -193,13 +197,18 @@
                 </div>
             }
             <div class="multipleImageBox mt-2">
-                @if(@Helper.getImageUploadUrl(settings.ClubScheduleImage1, Request, Server) != null)
+                @if (@Helper.getImageUploadUrl(settings.ClubScheduleImage1, Request, Server) != null)
                 {
                     <div><img src="@Helper.getImageUploadUrl(settings.ClubScheduleImage1, Request, Server)" /></div>
                 }
-                @*<div><img src="@Url.Content("~/Advertisements/" + iSpeakWebApp.Models.SettingsModel.COL_ClubScheduleImage1.Id + ".jpeg")"></div>*@
-                <div><img src="@Url.Content("~/Advertisements/2023012202.png")"></div>
-                <div><img src="@Url.Content("~/Advertisements/2023012203.png")"></div>
+                @if (@Helper.getImageUploadUrl(settings.ClubScheduleImage2, Request, Server) != null)
+                {
+                    <div><img src="@Helper.getImageUploadUrl(settings.ClubScheduleImage2, Request, Server)" /></div>
+                }
+                @if (@Helper.getImageUploadUrl(settings.ClubScheduleImage3, Request, Server) != null)
+                {
+                    <div><img src="@Helper.getImageUploadUrl(settings.ClubScheduleImage3, Request, Server)" /></div>
+                }
             </div>
 
         }
@@ -214,11 +223,11 @@
                             <h1>Speak a new language today!</h1>
                             <p class="mb-5">Class and private system language courses.</p>
                             @*<form action="#">
-                                    <div class="form-group d-flex">
-                                        <input type="text" class="form-control" placeholder="Your tracking number">
-                                        <input type="submit" class="btn btn-primary text-white px-4" value="Track Now">
-                                    </div>
-                                </form>*@
+                                <div class="form-group d-flex">
+                                    <input type="text" class="form-control" placeholder="Your tracking number">
+                                    <input type="submit" class="btn btn-primary text-white px-4" value="Track Now">
+                                </div>
+                            </form>*@
                         </div>
                     </div>
                 </div>
@@ -316,22 +325,22 @@
                         </div>
                     </div>
                     @*<div class="col-md-4 ml-auto">
-                            <div class="mb-5">
-                                <h2 class="footer-heading mb-4">Subscribe to Newsletter</h2>
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control border-secondary text-white bg-transparent" placeholder="Enter Email" aria-label="Enter Email" aria-describedby="button-addon2">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary text-white" type="button" id="button-addon2">Subscribe</button>
-                                    </div>
+                        <div class="mb-5">
+                            <h2 class="footer-heading mb-4">Subscribe to Newsletter</h2>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control border-secondary text-white bg-transparent" placeholder="Enter Email" aria-label="Enter Email" aria-describedby="button-addon2">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary text-white" type="button" id="button-addon2">Subscribe</button>
                                 </div>
                             </div>
+                        </div>
 
-                            <h2 class="footer-heading mb-4">Follow Us</h2>
-                            <a href="#about-section" class="smoothscroll pl-0 pr-3"><span class="icon-facebook"></span></a>
-                            <a href="#" class="pl-3 pr-3"><span class="icon-twitter"></span></a>
-                            <a href="#" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
-                            <a href="#" class="pl-3 pr-3"><span class="icon-linkedin"></span></a>
-                        </div>*@
+                        <h2 class="footer-heading mb-4">Follow Us</h2>
+                        <a href="#about-section" class="smoothscroll pl-0 pr-3"><span class="icon-facebook"></span></a>
+                        <a href="#" class="pl-3 pr-3"><span class="icon-twitter"></span></a>
+                        <a href="#" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
+                        <a href="#" class="pl-3 pr-3"><span class="icon-linkedin"></span></a>
+                    </div>*@
                 </div>
                 <div class="row pt-5 mt-5 text-center">
                     <div class="col-md-12">
