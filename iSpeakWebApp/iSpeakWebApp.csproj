@@ -483,7 +483,7 @@
     <Content Include="Views\ClubClassOnlineLinks\Edit.cshtml" />
     <Content Include="Views\ClubClassOnlineLinks\Index.cshtml" />
     <Content Include="Views\ActivityLogs\Index.cshtml" />
-    <Content Include="Views\PrivacyPolicies\Index.cshtml" />
+    <Content Include="Views\PrivacyPolicies\PrivacyPolicy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
