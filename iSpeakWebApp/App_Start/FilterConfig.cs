@@ -20,7 +20,7 @@ namespace iSpeakWebApp
                 if (context.ActionDescriptor.ActionName != nameof(UserAccountsController.Login)
                     && context.ActionDescriptor.ActionName != nameof(UserAccountsController.ChangePassword)
                     && context.ActionDescriptor.ActionName != nameof(LandingPageController.LandingPage)
-                    && context.ActionDescriptor.ActionName != nameof(PrivacyPoliciesController.Index)
+                    && context.ActionDescriptor.ActionName != nameof(PrivacyPoliciesController.PrivacyPolicy)
                     && context.ActionDescriptor.ControllerDescriptor.ControllerName != ArticlesController.CONTROLLERNAME)
                 {
                     if (!UserAccountsController.isLoggedIn(context.HttpContext.Session))

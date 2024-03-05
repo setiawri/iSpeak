@@ -7,7 +7,7 @@ namespace iSpeakWebApp.Controllers
 
         /* INDEX PAGE *****************************************************************************************************************************************/
 
-        public ActionResult Index()
+        public ActionResult PrivacyPolicy()
         {
             return View();
         }
