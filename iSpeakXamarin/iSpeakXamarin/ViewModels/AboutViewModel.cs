@@ -11,8 +11,10 @@ namespace iSpeakXamarin.ViewModels
         {
             Title = "About";
             OpenWebCommand = new Command(async () => await Browser.OpenAsync("http://www.ispeakgroup.com"));
+            OpenPrivacyPoliciesCommand = new Command(async () => await Browser.OpenAsync("http://www.ispeakgroup.com/PrivacyPolicies/Index"));
         }
 
         public ICommand OpenWebCommand { get; }
+        public ICommand OpenPrivacyPoliciesCommand { get; }
     }
 }

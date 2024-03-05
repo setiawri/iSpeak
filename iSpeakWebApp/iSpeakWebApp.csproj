@@ -190,6 +190,7 @@
     <Compile Include="Common\GoogleDrive\GoogleDriveAPIHelper.cs" />
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\Helper.cs" />
+    <Compile Include="Controllers\PrivacyPoliciesController.cs" />
     <Compile Include="Controllers\ActivityLogsController.cs" />
     <Compile Include="Controllers\ClubClassOnlineLinksController.cs" />
     <Compile Include="Controllers\ClubClassesController.cs" />
@@ -482,6 +483,7 @@
     <Content Include="Views\ClubClassOnlineLinks\Edit.cshtml" />
     <Content Include="Views\ClubClassOnlineLinks\Index.cshtml" />
     <Content Include="Views\ActivityLogs\Index.cshtml" />
+    <Content Include="Views\PrivacyPolicies\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
