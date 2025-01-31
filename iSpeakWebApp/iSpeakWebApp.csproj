@@ -190,6 +190,7 @@
     <Compile Include="Common\GoogleDrive\GoogleDriveAPIHelper.cs" />
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\Helper.cs" />
+    <Compile Include="Controllers\FranchisesController.cs" />
     <Compile Include="Controllers\PrivacyPoliciesController.cs" />
     <Compile Include="Controllers\ActivityLogsController.cs" />
     <Compile Include="Controllers\ClubClassOnlineLinksController.cs" />
@@ -235,6 +236,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ActivityLogsModel.cs" />
+    <Compile Include="Models\FranchisesModel.cs" />
     <Compile Include="Models\ClubClassOnlineLinksModel.cs" />
     <Compile Include="Models\ClubClassesModel.cs" />
     <Compile Include="Models\HourlyRatesModel.cs" />
@@ -407,6 +409,7 @@
     <Content Include="Common\GoogleDrive\credential-live.json" />
     <None Include="iSpeakMigrationScript.sql" />
     <None Include="Notes.txt" />
+    <Content Include="BilliardDatabaseScript.sql" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -484,6 +487,9 @@
     <Content Include="Views\ClubClassOnlineLinks\Index.cshtml" />
     <Content Include="Views\ActivityLogs\Index.cshtml" />
     <Content Include="Views\PrivacyPolicies\PrivacyPolicy.cshtml" />
+    <Content Include="Views\Franchises\Create.cshtml" />
+    <Content Include="Views\Franchises\Edit.cshtml" />
+    <Content Include="Views\Franchises\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

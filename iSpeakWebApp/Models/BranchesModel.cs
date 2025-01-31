@@ -5,7 +5,6 @@ using iSpeakWebApp.Controllers;
 
 namespace iSpeakWebApp.Models
 {
-    [Table("Branches")]
     public class BranchesModel
     {
         [Key]
@@ -28,10 +27,16 @@ namespace iSpeakWebApp.Models
         public string InvoiceHeaderText { get; set; }
         public static ModelMember COL_InvoiceHeaderText = new ModelMember { Name = "InvoiceHeaderText", Display = "Invoice Header Text", LogDisplay = ActivityLogsController.editStringFormat("Invoice Header Text") };
 
+        [Required]
+        [Display(Name = "Franchise")]
+        public Guid Franchises_Id { get; set; }
+        public static ModelMember COL_Franchises_Id = new ModelMember { Name = "Franchises_Id", Display = "Franchise", LogDisplay = ActivityLogsController.editStringFormat("Franchise") };
+        public string Franchises_Name { get; set; }
+
         public string Notes { get; set; }
         public static ModelMember COL_Notes = new ModelMember { Name = "Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Notes") };
 
-        public bool Active { get; set; }
+        public bool Active { get; set; } = true;
         public static ModelMember COL_Active = new ModelMember { Name = "Active", Display = "Active", LogDisplay = ActivityLogsController.editBooleanFormat("Active") };
 
     }

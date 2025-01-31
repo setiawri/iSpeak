@@ -18,6 +18,7 @@ namespace iSpeakWebApp.Controllers
         {
             ViewBag.FILTER_Keyword = FILTER_Keyword;
             ViewBag.FILTER_Active = FILTER_Active;
+            FranchisesController.setDropDownListViewBag(this);
         }
 
         /* INDEX **********************************************************************************************************************************************/
@@ -72,9 +73,7 @@ namespace iSpeakWebApp.Controllers
                 else
                 {
                     model.Id = Guid.NewGuid();
-                    model.Active = true;
-                    db.Branches.Add(model);
-                    db.SaveChanges();
+                    add(model);
                     ActivityLogsController.AddCreateLog(db, Session, model.Id);
                     return RedirectToAction(nameof(Index), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
                 }
@@ -110,10 +109,11 @@ namespace iSpeakWebApp.Controllers
                     ModelState.AddModelError(BranchesModel.COL_Name.Name, $"{modifiedModel.Name} sudah terdaftar");
                 else
                 {
-                    BranchesModel originalModel = db.Branches.AsNoTracking().Where(x => x.Id == modifiedModel.Id).FirstOrDefault();
+                    BranchesModel originalModel = get(modifiedModel.Id);
 
                     string log = string.Empty;
                     log = Helper.append(log, originalModel.Name, modifiedModel.Name, BranchesModel.COL_Name.LogDisplay);
+                    log = Helper.append(log, originalModel.Franchises_Id, modifiedModel.Franchises_Id, BranchesModel.COL_Franchises_Id.LogDisplay);
                     log = Helper.append(log, originalModel.Address, modifiedModel.Address, BranchesModel.COL_Address.LogDisplay);
                     log = Helper.append(log, originalModel.PhoneNumber, modifiedModel.PhoneNumber, BranchesModel.COL_PhoneNumber.LogDisplay);
                     log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, BranchesModel.COL_Notes.LogDisplay);
@@ -122,9 +122,7 @@ namespace iSpeakWebApp.Controllers
 
                     if (!string.IsNullOrEmpty(log))
                     {
-                        db.Entry(modifiedModel).State = EntityState.Modified;
-                        db.SaveChanges();
-                        ActivityLogsController.AddEditLog(db, Session, modifiedModel.Id, log);
+                        update(modifiedModel, log);
                     }
 
                     return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
@@ -169,8 +167,10 @@ namespace iSpeakWebApp.Controllers
                 IdListClause = string.Format(" AND Branches.Id IN ({0}) ", LIBWebMVC.UtilWebMVC.convertToSqlIdList(IdList));
 
             string sql = string.Format(@"
-                        SELECT Branches.*
+                        SELECT Branches.*,
+                            Franchises.Name AS Franchises_Name
                         FROM Branches
+                            LEFT JOIN Franchises ON Franchises.Id = Branches.Franchises_Id
                         WHERE 1=1
 							AND (@Id IS NULL OR Branches.Id = @Id)
 							AND (@Id IS NOT NULL OR (
@@ -187,6 +187,36 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
                     DBConnection.getSqlParameter("IdList", IdList)
                 ).ToList();
+        }
+
+        public void add(BranchesModel model)
+        {
+            LIBWebMVC.WebDBConnection.Insert(db.Database, "Branches",
+                DBConnection.getSqlParameter(BranchesModel.COL_Id.Name, model.Id),
+                DBConnection.getSqlParameter(BranchesModel.COL_Name.Name, model.Name),
+                DBConnection.getSqlParameter(BranchesModel.COL_Franchises_Id.Name, model.Franchises_Id),
+                DBConnection.getSqlParameter(BranchesModel.COL_Address.Name, model.Address),
+                DBConnection.getSqlParameter(BranchesModel.COL_PhoneNumber.Name, model.PhoneNumber),
+                DBConnection.getSqlParameter(BranchesModel.COL_InvoiceHeaderText.Name, model.InvoiceHeaderText),
+                DBConnection.getSqlParameter(BranchesModel.COL_Active.Name, model.Active),
+                DBConnection.getSqlParameter(BranchesModel.COL_Notes.Name, model.Notes)
+            );
+            ActivityLogsController.AddCreateLog(db, Session, model.Id);
+        }
+
+        public void update(BranchesModel model, string log)
+        {
+            LIBWebMVC.WebDBConnection.Update(db.Database, "Branches",
+                DBConnection.getSqlParameter(BranchesModel.COL_Id.Name, model.Id),
+                DBConnection.getSqlParameter(BranchesModel.COL_Name.Name, model.Name),
+                DBConnection.getSqlParameter(BranchesModel.COL_Franchises_Id.Name, model.Franchises_Id),
+                DBConnection.getSqlParameter(BranchesModel.COL_Address.Name, model.Address),
+                DBConnection.getSqlParameter(BranchesModel.COL_PhoneNumber.Name, model.PhoneNumber),
+                DBConnection.getSqlParameter(BranchesModel.COL_InvoiceHeaderText.Name, model.InvoiceHeaderText),
+                DBConnection.getSqlParameter(BranchesModel.COL_Active.Name, model.Active),
+                DBConnection.getSqlParameter(BranchesModel.COL_Notes.Name, model.Notes)
+            );
+            ActivityLogsController.AddEditLog(db, Session, model.Id, log);
         }
 
         /******************************************************************************************************************************************************/

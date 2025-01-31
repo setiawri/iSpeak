@@ -134,6 +134,12 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.Settings_Edit, model.Settings_Edit, UserAccountRolesModel.COL_Settings_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.Settings_View, model.Settings_View, UserAccountRolesModel.COL_Settings_View.LogDisplay);
 
+                    //Franchises
+                    log = Helper.append(log, originalModel.Franchises_Notes, model.Franchises_Notes, UserAccountRolesModel.COL_Franchises_Notes.LogDisplay);
+                    log = Helper.append(log, originalModel.Franchises_Add, model.Franchises_Add, UserAccountRolesModel.COL_Franchises_Add.LogDisplay);
+                    log = Helper.append(log, originalModel.Franchises_Edit, model.Franchises_Edit, UserAccountRolesModel.COL_Franchises_Edit.LogDisplay);
+                    log = Helper.append(log, originalModel.Franchises_View, model.Franchises_View, UserAccountRolesModel.COL_Franchises_View.LogDisplay);
+
                     //Branches
                     log = Helper.append(log, originalModel.Branches_Notes, model.Branches_Notes, UserAccountRolesModel.COL_Branches_Notes.LogDisplay);
                     log = Helper.append(log, originalModel.Branches_Add, model.Branches_Add, UserAccountRolesModel.COL_Branches_Add.LogDisplay);
@@ -377,6 +383,11 @@ namespace iSpeakWebApp.Controllers
                 //Settings
                 if (item.Settings_Edit) model.Settings_Edit = true;
                 if (item.Settings_View) model.Settings_View = true;
+
+                //Franchises
+                if (item.Franchises_Add) model.Franchises_Add = true;
+                if (item.Franchises_Edit) model.Franchises_Edit = true;
+                if (item.Franchises_View) model.Franchises_View = true;
 
                 //Branches
                 if (item.Branches_Add) model.Branches_Add = true;

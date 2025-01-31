@@ -143,6 +143,25 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Branches_Edit = new ModelMember { Name = "Branches_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Branches Edit") };
 
 
+        /* FRANCHISES *****************************************************************************************************************************************************************************************************************************************************************************************/
+
+        [Display(Name = "Notes")]
+        public string Franchises_Notes { get; set; }
+        public static ModelMember COL_Franchises_Notes = new ModelMember { Name = "Franchises_Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Franchises Notes") };
+
+        [Display(Name = "Add")]
+        public bool Franchises_Add { get; set; }
+        public static ModelMember COL_Franchises_Add = new ModelMember { Name = "Franchises_Add", Display = "Add", LogDisplay = ActivityLogsController.editBooleanFormat("Franchises Add") };
+
+        [Display(Name = "View")]
+        public bool Franchises_View { get; set; }
+        public static ModelMember COL_Franchises_View = new ModelMember { Name = "Franchises_View", Display = "View", LogDisplay = ActivityLogsController.editBooleanFormat("Franchises View") };
+
+        [Display(Name = "Edit")]
+        public bool Franchises_Edit { get; set; }
+        public static ModelMember COL_Franchises_Edit = new ModelMember { Name = "Franchises_Edit", Display = "Edit", LogDisplay = ActivityLogsController.editBooleanFormat("Franchises Edit") };
+
+
         /* PROMOTION EVENTS ***********************************************************************************************************************************************************************************************************************************************************************************/
 
         [Display(Name = "Notes")]

@@ -1,10 +1,10 @@
-﻿@model iSpeakWebApp.Models.BranchesModel
+﻿@model iSpeakWebApp.Models.FranchisesModel
 
 @{
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
-    string ControllerName = "Branches";
+    string ControllerName = "Franchises";
     ViewBag.SelectedNavigationMenu = "Settings";
-    ViewBag.Title = "BRANCHES";
+    ViewBag.Title = "FRANCHISES";
     ViewBag.Subtitle = "Edit";
 }
 
@@ -35,42 +35,10 @@
                             </div>
 
                             <div class="form-group row">
-                                @Html.LabelFor(model => model.Franchises_Id, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
-                                <div class="col-lg-3">
-                                    @Html.DropDownListFor(model => model.Franchises_Id, ViewBag.Franchises as SelectList, "Please Select", new { @class = "form-control select2" })
-                                    @Html.ValidationMessageFor(model => model.Franchises_Id, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
-                                <div class="col-lg-3">
-                                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "col-form-label col-lg-1" })
-                                <div class="col-lg-3">
-                                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
                                 @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "col-form-label col-lg-1" })
                                 <div class="col-lg-3">
                                     @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                @Html.LabelFor(model => model.InvoiceHeaderText, htmlAttributes: new { @class = "col-form-label col-lg-1" })
-                                <div class="col-lg-3">
-                                    @Html.TextAreaFor(model => model.InvoiceHeaderText, new { @class = "form-control", @rows = 3 })
-                                    @Html.ValidationMessageFor(model => model.InvoiceHeaderText, "", new { @class = "text-danger" })
                                 </div>
                             </div>
 
@@ -88,7 +56,7 @@
 
                         </fieldset>
 
-                        @if (access.Branches_Edit)
+                        @if (access.Franchises_Edit)
                         {
                             <div>
                                 <button type="submit" onclick="showLoadingSpinner()" class="btn btn-primary"><i class="icon-paperplane mr-2"></i>Submit</button>

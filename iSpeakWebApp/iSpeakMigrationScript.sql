@@ -1,10 +1,51 @@
 
-	----LandingPageUpdate
-	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'LandingPageUpdate_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE UserAccountRoles ADD LandingPageUpdate_Notes varchar(MAX) null;
-	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'LandingPageUpdate_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE UserAccountRoles ADD LandingPageUpdate_Edit bit default 0 not null;
+
+
+---- FRANCHISE TABLE ====================================================================================================================
+
+	--Franchises
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD Franchises_Notes varchar(MAX) null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD Franchises_Add bit default 0 not null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD Franchises_View bit default 0 not null;
+	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD Franchises_Edit bit default 0 not null;
 	GO
+
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Franchises' AND TABLE_SCHEMA='dbo') 
+BEGIN
+	CREATE TABLE [dbo].[Franchises]
+	(
+		[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+		[Name] VARCHAR(MAX) NOT NULL, 
+		[Active] BIT NOT NULL DEFAULT 1,
+		[Notes] VARCHAR(MAX) NULL
+	)
+END
+GO
+
+INSERT INTO Franchises(Id, Name, Active) VALUES(NEWID(), 'MAIN', 1);
+
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'Branches' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE Branches ADD Franchises_Id UNIQUEIDENTIFIER NULL;
+GO
+
+UPDATE Branches SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
+
+ALTER TABLE Branches ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
+
+
+
+---- LANDING PAGE UPDATE ================================================================================================================
+
+	------LandingPageUpdate
+	--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'LandingPageUpdate_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	--ALTER TABLE UserAccountRoles ADD LandingPageUpdate_Notes varchar(MAX) null;
+	--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'LandingPageUpdate_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	--ALTER TABLE UserAccountRoles ADD LandingPageUpdate_Edit bit default 0 not null;
+	--GO
 
 ---- ACTIVITY LOGS ======================================================================================================================
 

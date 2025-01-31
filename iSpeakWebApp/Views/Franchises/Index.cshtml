@@ -1,10 +1,10 @@
-﻿@model IEnumerable<iSpeakWebApp.Models.BranchesModel>
+﻿@model IEnumerable<iSpeakWebApp.Models.FranchisesModel>
 
 @{
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
-    string ControllerName = "Branches";
+    string ControllerName = "Franchises";
     ViewBag.SelectedNavigationMenu = "Settings";
-    ViewBag.Title = "BRANCHES";
+    ViewBag.Title = "FRANCHISES";
     ViewBag.Subtitle = "Index";
 }
 
@@ -21,7 +21,7 @@
                 <div class="card-body">
 
                     <div class="row mx-0">
-                        @if (access.Branches_Add)
+                        @if (access.Franchises_Add)
                         {
                             <div class="mr-2">
                                 <label class="mb-0">&nbsp;</label>
@@ -56,10 +56,7 @@
                         <table class="table table-hover datatable">
                             <thead>
                                 <tr>
-                                    <th style="width:150px;">@Html.DisplayNameFor(model => model.Name)</th>
-                                    <th style="width:300px;">@Html.DisplayNameFor(model => model.Address)</th>
-                                    <th style="width:150px;">@Html.DisplayNameFor(model => model.PhoneNumber)</th>
-                                    <th style="width:400px;">@Html.DisplayNameFor(model => model.InvoiceHeaderText)</th>
+                                    <th style="width:100px;">@Html.DisplayNameFor(model => model.Name)</th>
                                     <th class="non-sortable">@Html.DisplayNameFor(model => model.Notes)</th>
                                     <th class="non-searchable non-sortable" style="width:100px;"></th>
                                 </tr>
@@ -70,20 +67,7 @@
                                     foreach (var item in Model)
                                     {
                                         <tr>
-                                            <td class="align-top">
-                                                <div>
-                                                    @Html.DisplayFor(modelItem => item.Name)
-                                                </div>
-                                                @if (access.Franchises_View)
-                                                {
-                                                    <div class="font-italic">
-                                                        @Html.DisplayFor(modelItem => item.Franchises_Name)
-                                                    </div>
-                                                }
-                                            </td>
-                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Address)</td>
-                                            <td class="align-top">@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
-                                            <td class="align-top tablecellwrap">@Html.DisplayFor(modelItem => item.InvoiceHeaderText)</td>
+                                            <td class="align-top">@Html.DisplayFor(modelItem => item.Name)</td>
                                             <td class="align-top tablecellwrap">@Html.DisplayFor(modelItem => item.Notes)</td>
                                             <td class="align-top">
                                                 @if (item.Active)
@@ -94,7 +78,7 @@
                                                 {
                                                     <span class="badge badge-dark d-block" style="width:100px;">NOT ACTIVE</span>
                                                 }
-                                                @if (access.Branches_Edit)
+                                                @if (access.Franchises_Edit)
                                                 {
                                                     <a href="javascript:void(0)" onclick="ActionWithId('@item.Id', 'Edit', '@ControllerName')">Edit</a> @:•
                                                 }

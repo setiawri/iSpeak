@@ -205,6 +205,36 @@
 
                             <hr />
 
+                            <label class="h5 mb-0">FRANCHISES</label>
+                            <div class="pl-0">
+                                <div id="Franchises_Div">
+                                    <button id="Franchises" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
+                                    <label id="Franchises_Label" class="col-form-label">@Model.Franchises_Notes</label>
+                                </div>
+                                <div id="Franchises_Edit" class="input-group d-none mb-1">
+                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
+                                    @Html.EditorFor(model => model.Franchises_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes" } })
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    @Html.CheckBoxFor(model => model.Franchises_View)
+                                </div>
+                                <div class="input-group-append">
+                                    @Html.LabelFor(model => model.Franchises_View, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.Franchises_Add)
+                                    </div>
+                                    @Html.LabelFor(model => model.Franchises_Add, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                    <div class="input-group-text">
+                                        @Html.CheckBoxFor(model => model.Franchises_Edit)
+                                    </div>
+                                    @Html.LabelFor(model => model.Franchises_Edit, htmlAttributes: new { @class = "input-group-text mr-2" })
+                                </div>
+                            </div>
+
+                            <hr />
+
                             <label class="h5 mb-0">BRANCHES</label>
                             <div class="pl-0">
                                 <div id="Branches_Div">
@@ -1040,7 +1070,7 @@
                                     @Html.LabelFor(model => model.IncomeStatement_ViewProfit, htmlAttributes: new { @class = "input-group-text mr-2" })
                                 </div>
                             </div>
-                            
+
                             <hr />
 
                             <label class="h5 mb-0">LANDING PAGE UPDATE</label>

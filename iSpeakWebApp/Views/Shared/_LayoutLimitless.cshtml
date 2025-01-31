@@ -25,6 +25,14 @@
             <img src="@Helper.getImageUrl("LogoWithBorder.png", Request, Server)" class="navbar-text ml-md-0 mr-md-auto h1 my-0 py-0" style="width:110px;" onclick="Action('LandingPage','LandingPage')" />
             <span class="navbar-text">
             </span>
+            
+            @if (access.Franchises_View)
+            {
+                <span class="navbar-text mr-1" style="width:120px;">
+                    @Html.DropDownList("FranchiseId", FranchisesController.getDropDownListSelectList() as SelectList, new { @class = "select2", @onchange = "updateActiveFranchise()" })
+                </span>
+            }
+
             <span class="navbar-text" style="width:120px;">
                 @Html.DropDownList("BranchId", UserAccountsController.getDDLBranches(Session) as SelectList, new { @class = "select2", @onchange = "updateActiveBranch()" })
             </span>
@@ -245,6 +253,10 @@
                         {
                             <a href="@Url.Action("Index", "UserAccountRoles", new { rss=1 })" class="dropdown-item">User Roles</a>
                         }
+                        @if (access.Franchises_View)
+                        {
+                            <a href="@Url.Action("Index", "Franchises", new { rss=1 })" class="dropdown-item">Franchises</a>
+                        }
                         @if (access.Branches_View)
                         {
                             <a href="@Url.Action("Index", "Branches", new { rss=1 })" class="dropdown-item">Branches</a>
@@ -315,6 +327,20 @@
 @Html.Partial("Javascripts")
 
 <script type="text/javascript">
+
+    function updateActiveFranchise() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Ajax_UpdateActiveFranchise", "UserAccounts")',
+            data: {
+                FranchiseId: $('#FranchiseId').val(),
+                returnUrl: window.location.pathname
+            },
+            error: function (result) {
+                bootbox.alert({ backdrop: true, message: "Error " + result });
+            } //end error
+        }); //end ajax
+    }
 
     function updateActiveBranch() {
         $.ajax({

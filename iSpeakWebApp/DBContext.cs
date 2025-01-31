@@ -15,7 +15,7 @@ namespace iSpeakWebApp
 
         /******************************************************************************************************************************************************/
 
-        public DbSet<BranchesModel> Branches { get; set; }
+        public DbSet<FranchisesModel> Franchises { get; set; }
         public DbSet<RemindersModel> Reminders { get; set; }
         public DbSet<PettyCashRecordsCategoriesModel> PettyCashRecordsCategories { get; set; }
         public DbSet<PromotionEventsModel> PromotionEvents { get; set; }
