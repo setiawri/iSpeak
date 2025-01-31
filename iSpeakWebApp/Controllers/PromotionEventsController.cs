@@ -141,7 +141,7 @@ namespace iSpeakWebApp.Controllers
 
         public static void setDropDownListViewBag(Controller controller)
         {
-            controller.ViewBag.PromotionEvents = new SelectList(get(), PromotionEventsModel.COL_Id.Name, PromotionEventsModel.COL_Name.Name);
+            controller.ViewBag.PromotionEvents = new SelectList(new PromotionEventsController().get(), PromotionEventsModel.COL_Id.Name, PromotionEventsModel.COL_Name.Name);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
@@ -160,11 +160,14 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public List<PromotionEventsModel> get(string FILTER_Keyword) { return get(null, FILTER_Keyword); }
-        public PromotionEventsModel get(Guid Id) { return get(Id, null).FirstOrDefault(); }
-        public static List<PromotionEventsModel> get() { return get(null, null); }
-        public static List<PromotionEventsModel> get(Guid? Id, string FILTER_Keyword)
+        public List<PromotionEventsModel> get(string FILTER_Keyword) { return get(null, FILTER_Keyword, null); }
+        public PromotionEventsModel get(Guid Id) { return get(Id, null, null).FirstOrDefault(); }
+        public List<PromotionEventsModel> get() { return get(null, null, null); }
+        public List<PromotionEventsModel> get(Guid? Id, string FILTER_Keyword, Guid? Branches_Id)
         {
+            if (Branches_Id == null)
+                Branches_Id = Helper.getActiveBranchId(this.Session);
+
             return new DBContext().Database.SqlQuery<PromotionEventsModel>(@"
                         SELECT PromotionEvents.*
                         FROM PromotionEvents
@@ -173,9 +176,11 @@ namespace iSpeakWebApp.Controllers
 							AND (@Id IS NOT NULL OR (
     							(@FILTER_Keyword IS NULL OR (PromotionEvents.Name LIKE '%'+@FILTER_Keyword+'%'))
                             ))
+							AND (@Branches_Id IS NULL OR PromotionEvents.Branches_Id = @Branches_Id)
 						ORDER BY PromotionEvents.Name ASC
                     ",
                     DBConnection.getSqlParameter(PromotionEventsModel.COL_Id.Name, Id),
+                    DBConnection.getSqlParameter(UserAccountsModel.COL_Branches_Id.Name, Branches_Id),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
         }

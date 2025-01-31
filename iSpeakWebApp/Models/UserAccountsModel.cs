@@ -45,6 +45,7 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Branches_Id = new ModelMember { Name = "Branches_Id", Display = "Branch", LogDisplay = ActivityLogsController.editStringFormat("Branch") };
 
 
+        //to populate dropdownlist in branches ddl in master layout
         public string Branches { get; set; } = string.Empty;
         public static ModelMember COL_Branches = new ModelMember { Name = "Branches", Display = "Branches", LogDisplay = ActivityLogsController.editListStringFormat("Branches") };
         public List<string> Branches_List { get; set; }
@@ -97,6 +98,9 @@ namespace iSpeakWebApp.Models
 
         /******************************************************************************************************************************************************/
 
+        public Guid Franchises_Id { get; set; } = Guid.Empty;
+        public static ModelMember COL_Franchises_Id = new ModelMember { Name = "Franchises_Id", Display = "Franchise", LogDisplay = ActivityLogsController.editListStringFormat("Franchise") };
+        public string Franchises_Name { get; set; } = string.Empty;
 
         [Display(Name = "Roles")]
         public string Roles { get; set; }

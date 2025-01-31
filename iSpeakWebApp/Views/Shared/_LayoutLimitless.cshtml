@@ -1,6 +1,9 @@
 ﻿@using iSpeakWebApp.Controllers
 @{
     iSpeakWebApp.Models.UserAccountRolesModel access = iSpeakWebApp.Controllers.UserAccountsController.getUserAccess(Session);
+
+    SelectList slBranches = UserAccountsController.getDDLBranches(Session);
+    SelectList slFranchises = FranchisesController.getDropDownListSelectList(new BranchesController().get(Guid.Parse(slBranches.SelectedValue.ToString())).Franchises_Id);
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -29,12 +32,12 @@
             @if (access.Franchises_View)
             {
                 <span class="navbar-text mr-1" style="width:120px;">
-                    @Html.DropDownList("FranchiseId", FranchisesController.getDropDownListSelectList() as SelectList, new { @class = "select2", @onchange = "updateActiveFranchise()" })
+                    @Html.DropDownList("FranchiseId", slFranchises, new { @class = "select2" })
                 </span>
             }
 
             <span class="navbar-text" style="width:120px;">
-                @Html.DropDownList("BranchId", UserAccountsController.getDDLBranches(Session) as SelectList, new { @class = "select2", @onchange = "updateActiveBranch()" })
+                @Html.DropDownList("BranchId", slBranches, new { @class = "select2", @onchange = "updateActiveBranch()" })
             </span>
             <ul class="navbar-nav">
                 <li class="nav-item dropdown dropdown-user">
@@ -328,21 +331,8 @@
 
 <script type="text/javascript">
 
-    function updateActiveFranchise() {
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("Ajax_UpdateActiveFranchise", "UserAccounts")',
-            data: {
-                FranchiseId: $('#FranchiseId').val(),
-                returnUrl: window.location.pathname
-            },
-            error: function (result) {
-                bootbox.alert({ backdrop: true, message: "Error " + result });
-            } //end error
-        }); //end ajax
-    }
-
     function updateActiveBranch() {
+
         $.ajax({
             type: "POST",
             url: '@Url.Action("Ajax_UpdateActiveBranch", "UserAccounts")',
@@ -350,6 +340,9 @@
                 BranchId: $('#BranchId').val(),
                 returnUrl: window.location.pathname
             },
+            success: function (data) {
+                setDDLSelectedValue('FranchiseId', data.content);
+            }, //end success
             error: function (result) {
                 bootbox.alert({ backdrop: true, message: "Error " + result });
             } //end error

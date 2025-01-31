@@ -31,7 +31,7 @@ namespace iSpeakWebApp.Models
         [Display(Name = "Franchise")]
         public Guid Franchises_Id { get; set; }
         public static ModelMember COL_Franchises_Id = new ModelMember { Name = "Franchises_Id", Display = "Franchise", LogDisplay = ActivityLogsController.editStringFormat("Franchise") };
-        public string Franchises_Name { get; set; }
+        public string Franchises_Name { get; set; } = string.Empty;
 
         public string Notes { get; set; }
         public static ModelMember COL_Notes = new ModelMember { Name = "Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Notes") };

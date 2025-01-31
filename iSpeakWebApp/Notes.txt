@@ -15,6 +15,10 @@ FINAL: check for UTC date conversion
 ===============================================================================================================================================================
 
 TO DO:
+
+* Currently franchise manager can only see student/tutor roles. Add column supervisor and column franchise manager in user account roles table / edit page so this can be controlled
+*
+
 - troubleshoot:
 	> cancel invoice shows error:
 		1. bad request from wrong domain: i-speak.co

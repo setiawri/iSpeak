@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using iSpeakWebApp.Models;
 using LIBUtil;
+using System.Web;
 
 namespace iSpeakWebApp.Controllers
 {
@@ -137,7 +138,7 @@ namespace iSpeakWebApp.Controllers
 
         public static void setDropDownListViewBag(Controller controller)
         {
-            controller.ViewBag.Branches = new SelectList(get(), BranchesModel.COL_Id.Name, BranchesModel.COL_Name.Name);
+            controller.ViewBag.Branches = new SelectList(get(Helper.getUserFranchiseIdForQuery(controller.Session)), BranchesModel.COL_Id.Name, BranchesModel.COL_Name.Name);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
@@ -156,11 +157,11 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public static List<BranchesModel> get(int? FILTER_Active, string IdList) { return get(null, FILTER_Active, null, IdList); }
-        public List<BranchesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Active, FILTER_Keyword, null); }
-        public BranchesModel get(Guid Id) { return get(Id, null, null, null).FirstOrDefault(); }
-        public static List<BranchesModel> get() { return get(null, null, null, null); }
-        public static List<BranchesModel> get(Guid? Id, int? FILTER_Active, string FILTER_Keyword, string IdList)
+        public static List<BranchesModel> get(int? FILTER_Active, string IdList) { return get(null, FILTER_Active, null, IdList, null); }
+        public List<BranchesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Active, FILTER_Keyword, null, null); }
+        public BranchesModel get(Guid Id) { return get(Id, null, null, null, null).FirstOrDefault(); }
+        public static List<BranchesModel> get(Guid? Franchises_Id) { return get(null, null, null, null, Franchises_Id); }
+        public static List<BranchesModel> get(Guid? Id, int? FILTER_Active, string FILTER_Keyword, string IdList, Guid? Franchises_Id)
         {
             string IdListClause = "";
             if (!string.IsNullOrEmpty(IdList))
@@ -176,6 +177,7 @@ namespace iSpeakWebApp.Controllers
 							AND (@Id IS NOT NULL OR (
                                 (@Active IS NULL OR Branches.Active = @Active)
     							AND (@FILTER_Keyword IS NULL OR (Branches.Name LIKE '%'+@FILTER_Keyword+'%'))
+                                AND (@Franchises_Id IS NULL OR Branches.Franchises_Id = @Franchises_Id)
                                 {0}
                             ))
 						ORDER BY Branches.Name ASC
@@ -184,6 +186,7 @@ namespace iSpeakWebApp.Controllers
             return new DBContext().Database.SqlQuery<BranchesModel>(sql,
                     DBConnection.getSqlParameter(BranchesModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(BranchesModel.COL_Active.Name, FILTER_Active),
+                    DBConnection.getSqlParameter(BranchesModel.COL_Franchises_Id.Name, Franchises_Id),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
                     DBConnection.getSqlParameter("IdList", IdList)
                 ).ToList();

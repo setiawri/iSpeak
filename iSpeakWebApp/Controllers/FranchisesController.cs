@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using iSpeakWebApp.Models;
 using LIBUtil;
+using System.Web;
 
 namespace iSpeakWebApp.Controllers
 {
@@ -139,9 +140,9 @@ namespace iSpeakWebApp.Controllers
             controller.ViewBag.Franchises = new SelectList(get(), FranchisesModel.COL_Id.Name, FranchisesModel.COL_Name.Name);
         }
 
-        public static SelectList getDropDownListSelectList()
+        public static SelectList getDropDownListSelectList(Guid selectedBranchId)
         {
-            return new SelectList(get(), FranchisesModel.COL_Id.Name, FranchisesModel.COL_Name.Name);
+            return new SelectList(get(), FranchisesModel.COL_Id.Name, FranchisesModel.COL_Name.Name, selectedBranchId);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/

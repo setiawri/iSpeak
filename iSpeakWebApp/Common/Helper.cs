@@ -109,6 +109,14 @@ namespace iSpeakWebApp
             return (Guid)Session[UserAccountsController.SESSION_ActiveBranches_Id];
         }
 
+        public static Guid? getUserFranchiseIdForQuery(HttpSessionStateBase Session)
+        {
+            if (UserAccountsController.getUserAccess(Session).Franchises_View)
+                return null;
+            else
+                return UserAccountsController.getUserAccount(Session).Franchises_Id;
+        }
+
         public static DateTime setFilterViewBag(Controller controller, int? year, int? month, DateTime? PayPeriod, string search, string periodChange, int? ActionType)
         {
             DateTime payPeriod;
@@ -215,7 +223,6 @@ namespace iSpeakWebApp
             else if (typeof(T) == typeof(UserAccountsModel))
                 return new UserAccountsController().get((Guid)value).Fullname;
             else if (typeof(T) == typeof(BranchesModel))
-                //return db.Branches.Where(x => x.Id.ToString().ToLower() == id).FirstOrDefault().Name;
                 return new BranchesController().get(new Guid(id)).Name;
             else if (typeof(T) == typeof(PromotionEventsModel))
                 return db.PromotionEvents.Where(x => x.Id.ToString().ToLower() == id).FirstOrDefault().Name;

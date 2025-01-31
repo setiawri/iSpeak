@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 using LIBUtil;
 using LIBWebMVC;
+using System.Web.Services.Description;
 
 namespace iSpeakWebApp.Controllers
 {
@@ -18,6 +19,7 @@ namespace iSpeakWebApp.Controllers
         public const string SESSION_UserAccount = "UserAccount";
         public const string SESSION_UserAccountAccess = "UserAccountAccess";
         public const string SESSION_ActiveBranches_Id = "ActiveBranches_Id";
+        public const string SESSION_ActiveFranchises_Id = "ActiveFranchises_Id";
         public const string SESSION_OnlineToken = "OnlineToken";
         public const string SESSION_Branches_Models = "Branches_Models";
         public const string SESSION_ShowOnlyUserData = "ShowOnlyUserData";
@@ -34,7 +36,7 @@ namespace iSpeakWebApp.Controllers
             ViewBag.FILTER_Keyword = FILTER_Keyword;
             ViewBag.FILTER_Active = FILTER_Active;
             ViewBag.FILTER_Languages_Id = FILTER_Languages_Id;
-            UserAccountRolesController.setDropDownListViewBag(this, getUserAccess(Session).UserAccounts_EditRoles);
+            UserAccountRolesController.setDropDownListViewBag(this, getUserAccess(Session).UserAccounts_ViewAllRoles);
             BranchesController.setDropDownListViewBag(this);
             LanguagesController.setDropDownListViewBag(this);
             PromotionEventsController.setDropDownListViewBag(this);
@@ -61,7 +63,7 @@ namespace iSpeakWebApp.Controllers
                 else
                 {
                     string roles = "";
-                    if (!getUserAccess(Session).UserAccounts_EditRoles)
+                    if (!getUserAccess(Session).UserAccounts_ViewAllRoles)
                         roles = SettingsController.get().StudentRole.ToString();
                     return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id, roles, false));
                 }
@@ -108,7 +110,7 @@ namespace iSpeakWebApp.Controllers
                     model.Branches_Id = Helper.getActiveBranchId(Session);
                     model.Branches = model.Branches_Id.ToString();
                     model.Username = generateUsername(model.Fullname, model.Birthday);
-                    if (!getUserAccess(Session).UserAccounts_EditRoles)
+                    if (!getUserAccess(Session).UserAccounts_ViewAllRoles)
                         model.Roles = SettingsController.get().StudentRole.ToString();
 
                     add(model);
@@ -208,10 +210,21 @@ namespace iSpeakWebApp.Controllers
             //bypass login
             if (Server.MachineName == Helper.DEVCOMPUTERNAME)
             {
-                if (string.IsNullOrEmpty(model.Username))
+                if (string.IsNullOrEmpty(model.Username) && string.IsNullOrEmpty(model.Password))
+                {
                     model.Username = "ricky";
-                if (string.IsNullOrEmpty(model.Password))
                     model.Password = "A2cdefGH";
+                }
+                else if (string.IsNullOrEmpty(model.Username) && model.Password == "Mgr")
+                {
+                    model.Username = "rickymanager";
+                    model.Password = "A2cdefGH";
+                }
+                else if (string.IsNullOrEmpty(model.Username) && model.Password == "Std")
+                {
+                    model.Username = "rickystudent";
+                    model.Password = "A2cdefGH";
+                }
             }
 
             string hashedPassword = HashPassword(model.Password);
@@ -313,12 +326,14 @@ namespace iSpeakWebApp.Controllers
         }
 
         /* METHODS ********************************************************************************************************************************************/
-
+        
         public ActionResult Ajax_UpdateActiveBranch(Guid BranchId, string returnUrl)
         {
             Session[SESSION_ActiveBranches_Id] = BranchId;
 
-            return RedirectToLocal(returnUrl);
+            Guid message = new BranchesController().get(BranchId).Franchises_Id;
+            Session[SESSION_ActiveFranchises_Id] = message;
+            return Json(new { content = message }, JsonRequestBehavior.AllowGet);
         }
 
         private ActionResult RedirectToLocal(string returnUrl)
@@ -396,8 +411,8 @@ namespace iSpeakWebApp.Controllers
             {
                 Session[SESSION_UserAccount] = model;
                 Session[SESSION_ActiveBranches_Id] = model.Branches_Id;
-                Session[SESSION_Branches_Models] = BranchesController.get(1, model.Branches);
                 Session[SESSION_UserAccountAccess] = UserAccountRolesController.getAccesses(model);
+                Session[SESSION_Branches_Models] = BranchesController.get(1, model.Branches);
                 if (ConnectToLiveDatabase != null) Session[SESSION_ConnectToLiveDatabase] = ConnectToLiveDatabase;
 
                 Session[SESSION_ShowOnlyUserData] = true;
@@ -550,9 +565,13 @@ namespace iSpeakWebApp.Controllers
 
             string sql = string.Format(@"
                         SELECT UserAccounts.*,
+                            Franchises.Id AS Franchises_Id,
+                            Franchises.Name AS Franchises_Name,
                             COALESCE(LessonPackages.ActiveLessonPackages,0) AS ActiveLessonPackages,
                             COALESCE(ClubSubscription.RemainingClubSubscriptionDays,0) AS RemainingClubSubscriptionDays
                         FROM UserAccounts
+                            LEFT JOIN Branches ON Branches.Id = UserAccounts.Branches_Id
+                            LEFT JOIN Franchises ON Franchises.Id = Branches.Franchises_Id
 							LEFT JOIN (
 									SELECT SaleInvoices.Customer_UserAccounts_Id, COUNT(SaleInvoiceItems.Id) AS ActiveLessonPackages
 									FROM SaleInvoiceItems

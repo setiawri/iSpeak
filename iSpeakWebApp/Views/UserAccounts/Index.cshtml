@@ -9,6 +9,7 @@
 
     List<iSpeakWebApp.Models.UserAccountRolesModel> UserAccountRoles = iSpeakWebApp.Controllers.UserAccountRolesController.get();
     List<iSpeakWebApp.Models.LanguagesModel> Languages = iSpeakWebApp.Controllers.LanguagesController.get(Session);
+    List<iSpeakWebApp.Models.BranchesModel> Branches = iSpeakWebApp.Controllers.BranchesController.get(Helper.getUserFranchiseIdForQuery(Session));
 }
 
 <div class="content-wrapper">
@@ -91,14 +92,34 @@
                                         <tr>
                                             <td class="align-top">
                                                 <div>@Html.DisplayFor(modelItem => item.Fullname)</div>
-                                                <div>Id: @Html.DisplayFor(modelItem => item.No), Username: @Html.DisplayFor(modelItem => item.Username)</div>
+                                                <div>Id: @Html.DisplayFor(modelItem => item.No), Username: @Html.DisplayFor(modelItem => item.Username) 
+                                                    @{
+                                                        string branchList = "";
+                                                        if (item.Branches_List != null)
+                                                        {
+                                                            foreach (string obj in item.Branches_List)
+                                                            {
+                                                                Guid Id = new Guid(obj);
+                                                                for (int i = 0; i < Branches.Count; i++)
+                                                                {
+                                                                    if (Branches[i].Id == Id)
+                                                                    {
+                                                                        branchList = LIBUtil.Util.append(branchList, Branches[i].Name, ", ");
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        @:(@branchList)
+                                                    }
+                                                </div>
                                                 <div>
                                                     @{
                                                         if (item.Roles_List != null)
                                                         {
-                                                            foreach (string Roles_Id in item.Roles_List)
+                                                            foreach (string obj in item.Roles_List)
                                                             {
-                                                                Guid Id = new Guid(Roles_Id);
+                                                                Guid Id = new Guid(obj);
                                                                 for (int i = 0; i < UserAccountRoles.Count; i++)
                                                                 {
                                                                     if (UserAccountRoles[i].Id == Id)
@@ -119,9 +140,9 @@
                                                     @{
                                                         if (item.Interest_List != null)
                                                         {
-                                                            foreach (string Languages_Id in item.Interest_List)
+                                                            foreach (string obj in item.Interest_List)
                                                             {
-                                                                Guid Id = new Guid(Languages_Id);
+                                                                Guid Id = new Guid(obj);
                                                                 for (int i = 0; i < Languages.Count; i++)
                                                                 {
                                                                     if (Languages[i].Id == Id)
