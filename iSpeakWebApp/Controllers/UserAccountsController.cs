@@ -411,6 +411,7 @@ namespace iSpeakWebApp.Controllers
             {
                 Session[SESSION_UserAccount] = model;
                 Session[SESSION_ActiveBranches_Id] = model.Branches_Id;
+                Session[SESSION_ActiveFranchises_Id] = model.Franchises_Id;
                 Session[SESSION_UserAccountAccess] = UserAccountRolesController.getAccesses(model);
                 Session[SESSION_Branches_Models] = BranchesController.get(1, model.Branches);
                 if (ConnectToLiveDatabase != null) Session[SESSION_ConnectToLiveDatabase] = ConnectToLiveDatabase;

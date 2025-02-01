@@ -17,7 +17,12 @@ FINAL: check for UTC date conversion
 TO DO:
 
 * Currently franchise manager can only see student/tutor roles. Add column supervisor and column franchise manager in user account roles table / edit page so this can be controlled
+	- Superuser can see all roles
+	- Franchise manager and Manager should be able to see all roles except superuser and franchise manager roles.
+	- Admin can only see student and tutor roles
+	- Student and tutor can only see their info. They cannot see other roles
 *
+
 
 - troubleshoot:
 	> cancel invoice shows error:

@@ -102,6 +102,11 @@ namespace iSpeakWebApp
             return (Request.ApplicationPath + IMAGEFOLDERURL + filename).Replace("//", "/");
         }
 
+        public static bool isActiveFranchiseAvailable(HttpSessionStateBase Session) { return Session[UserAccountsController.SESSION_ActiveFranchises_Id] != null; }
+        public static Guid getActiveFranchiseId(HttpSessionStateBase Session)
+        {
+            return (Guid)Session[UserAccountsController.SESSION_ActiveFranchises_Id];
+        }
 
         public static bool isActiveBranchAvailable(HttpSessionStateBase Session) { return Session[UserAccountsController.SESSION_ActiveBranches_Id] != null; }
         public static Guid getActiveBranchId(HttpSessionStateBase Session) 
