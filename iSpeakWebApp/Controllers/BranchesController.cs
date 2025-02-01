@@ -138,7 +138,7 @@ namespace iSpeakWebApp.Controllers
 
         public static void setDropDownListViewBag(Controller controller)
         {
-            controller.ViewBag.Branches = new SelectList(get(Helper.getUserFranchiseIdForQuery(controller.Session)), BranchesModel.COL_Id.Name, BranchesModel.COL_Name.Name);
+            controller.ViewBag.Branches = new SelectList(get(controller.Session), BranchesModel.COL_Id.Name, BranchesModel.COL_Name.Name);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
@@ -157,11 +157,11 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public static List<BranchesModel> get(int? FILTER_Active, string IdList) { return get(null, FILTER_Active, null, IdList, null); }
-        public List<BranchesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Active, FILTER_Keyword, null, null); }
-        public BranchesModel get(Guid Id) { return get(Id, null, null, null, null).FirstOrDefault(); }
-        public static List<BranchesModel> get(Guid? Franchises_Id) { return get(null, null, null, null, Franchises_Id); }
-        public static List<BranchesModel> get(Guid? Id, int? FILTER_Active, string FILTER_Keyword, string IdList, Guid? Franchises_Id)
+        public BranchesModel get(Guid Id) { return get(this.Session, Id, null, null, null).FirstOrDefault(); }
+        public static List<BranchesModel> get(int? FILTER_Active, string IdList) { return get(null, null, FILTER_Active, null, IdList); }
+        public List<BranchesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(this.Session, null, FILTER_Active, FILTER_Keyword, null); }
+        public static List<BranchesModel> get(HttpSessionStateBase Session) { return get(Session, null, null, null, null); }
+        public static List<BranchesModel> get(HttpSessionStateBase Session, Guid? Id, int? FILTER_Active, string FILTER_Keyword, string IdList)
         {
             string IdListClause = "";
             if (!string.IsNullOrEmpty(IdList))
@@ -186,7 +186,7 @@ namespace iSpeakWebApp.Controllers
             return new DBContext().Database.SqlQuery<BranchesModel>(sql,
                     DBConnection.getSqlParameter(BranchesModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(BranchesModel.COL_Active.Name, FILTER_Active),
-                    DBConnection.getSqlParameter(BranchesModel.COL_Franchises_Id.Name, Franchises_Id),
+                    DBConnection.getSqlParameter("Franchises_Id", Helper.getUserFranchiseIdForQuery(Session)),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
                     DBConnection.getSqlParameter("IdList", IdList)
                 ).ToList();

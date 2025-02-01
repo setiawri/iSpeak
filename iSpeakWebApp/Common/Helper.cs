@@ -103,7 +103,7 @@ namespace iSpeakWebApp
         }
 
         public static bool isActiveFranchiseAvailable(HttpSessionStateBase Session) { return Session[UserAccountsController.SESSION_ActiveFranchises_Id] != null; }
-        public static Guid getActiveFranchiseId(HttpSessionStateBase Session)
+        public static Guid? getActiveFranchiseId(HttpSessionStateBase Session)
         {
             return (Guid)Session[UserAccountsController.SESSION_ActiveFranchises_Id];
         }
@@ -116,10 +116,10 @@ namespace iSpeakWebApp
 
         public static Guid? getUserFranchiseIdForQuery(HttpSessionStateBase Session)
         {
-            if (UserAccountsController.getUserAccess(Session).Franchises_View)
+            if (Session == null || UserAccountsController.getUserAccess(Session).Franchises_View)
                 return null;
             else
-                return UserAccountsController.getUserAccount(Session).Franchises_Id;
+                return getActiveFranchiseId(Session);
         }
 
         public static DateTime setFilterViewBag(Controller controller, int? year, int? month, DateTime? PayPeriod, string search, string periodChange, int? ActionType)

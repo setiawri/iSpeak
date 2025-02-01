@@ -180,7 +180,7 @@ namespace iSpeakWebApp.Controllers
                     ",
                     DBConnection.getSqlParameter(PromotionEventsModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(PromotionEventsModel.COL_Branches_Id.Name, Branches_Id),
-                    DBConnection.getSqlParameter("Franchises_Id", Helper.getActiveFranchiseId(controller.Session)),
+                    DBConnection.getSqlParameter("Franchises_Id", Helper.getUserFranchiseIdForQuery(controller.Session)),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
         }

@@ -9,7 +9,7 @@
 
     List<iSpeakWebApp.Models.UserAccountRolesModel> UserAccountRoles = iSpeakWebApp.Controllers.UserAccountRolesController.get();
     List<iSpeakWebApp.Models.LanguagesModel> Languages = iSpeakWebApp.Controllers.LanguagesController.get(Session);
-    List<iSpeakWebApp.Models.BranchesModel> Branches = iSpeakWebApp.Controllers.BranchesController.get(Helper.getUserFranchiseIdForQuery(Session));
+    List<iSpeakWebApp.Models.BranchesModel> Branches = iSpeakWebApp.Controllers.BranchesController.get(null);
 }
 
 <div class="content-wrapper">
