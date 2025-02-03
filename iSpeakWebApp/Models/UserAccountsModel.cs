@@ -105,6 +105,8 @@ namespace iSpeakWebApp.Models
         [Display(Name = "Roles")]
         public string Roles { get; set; }
         public static ModelMember COL_Roles = new ModelMember { Name = "Roles", LogDisplay = ActivityLogsController.editListStringFormat("Roles") };
+        [Required]
+        [Display(Name = "Roles")]
         public List<string> Roles_List { get; set; }
         public static ModelMember COL_Roles_List = new ModelMember { Name = "Roles_List" };
 

@@ -33,8 +33,24 @@ IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Fra
 GO
 
 UPDATE Branches SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
+GO
 
 ALTER TABLE Branches ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
+GO
+
+---- PETTY CASH CATEGORIES TABLE ========================================================================================================
+
+
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'PettyCashRecordsCategories' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE PettyCashRecordsCategories ADD Franchises_Id UNIQUEIDENTIFIER NULL;
+GO
+
+UPDATE PettyCashRecordsCategories SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
+GO
+
+ALTER TABLE PettyCashRecordsCategories ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
+GO
+
 
 
 

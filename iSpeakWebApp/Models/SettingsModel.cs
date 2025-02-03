@@ -7,14 +7,6 @@ namespace iSpeakWebApp.Models
     public class SettingsModel
     {
         [Required]
-        [Display(Name = "Auto Entry For Cash Payments")]
-        public Guid? AutoEntryForCashPayments { get; set; }
-        public static ModelMember COL_AutoEntryForCashPayments = new ModelMember { Name = "AutoEntryForCashPayments", Display = "Auto Entry For Cash Payments", Id = new Guid("5c62ee59-03a9-453a-95c9-a234f537adf1") };
-        public string AutoEntryForCashPayments_Notes { get; set; }
-        public static ModelMember COL_AutoEntryForCashPayments_Notes = new ModelMember { Name = "AutoEntryForCashPayments_Notes" };
-
-
-        [Required]
         [Display(Name = "Student Role")]
         public Guid? StudentRole { get; set; }
         public static ModelMember COL_StudentRole = new ModelMember { Name = "StudentRole", Display = "Student Role", Id = new Guid("A94B2FFC-3547-40CB-96CD-F82729768926") };

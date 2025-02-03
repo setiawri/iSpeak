@@ -14,6 +14,11 @@ DB MIGRATION
 FINAL: check for UTC date conversion
 ===============================================================================================================================================================
 
+ONGOING:
+* Add Franchises_Id to pettycashrecordscategories
+	- pakai hardocded value di GlobalVariables.PETTYCASHRECORDSCATEGORIES_CASHPAYMENT 
+	- hapus cashpayment dari pettycashrecordscategories table dan dari application settings edit page. 
+
 TO DO:
 
 * Currently franchise manager can only see student/tutor roles. Add column supervisor and column franchise manager in user account roles table / edit page so this can be controlled

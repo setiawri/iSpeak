@@ -48,12 +48,6 @@ namespace iSpeakWebApp.Controllers
                 SettingsModel originalModel = get();
                 string log = string.Empty;
 
-                log = addLog(log, SettingsModel.COL_AutoEntryForCashPayments.Id, SettingsModel.COL_AutoEntryForCashPayments.Display,
-                    db.PettyCashRecordsCategories.Where(x=> x.Id == originalModel.AutoEntryForCashPayments).FirstOrDefault().Name,
-                    db.PettyCashRecordsCategories.Where(x => x.Id == modifiedModel.AutoEntryForCashPayments).FirstOrDefault().Name, 
-                    "Update: '{1}'");
-                log = addLog(log, SettingsModel.COL_AutoEntryForCashPayments.Id, SettingsModel.COL_AutoEntryForCashPayments.Display, originalModel.AutoEntryForCashPayments_Notes, modifiedModel.AutoEntryForCashPayments_Notes, "Notes: '{1}'");
-
                 log = addLog(log, SettingsModel.COL_StudentRole.Id, SettingsModel.COL_StudentRole.Display,
                     originalModel.StudentRole == null ? "" : db.UserAccountRoles.Where(x => x.Id == originalModel.StudentRole).FirstOrDefault().Name,
                     modifiedModel.StudentRole == null ? "" : db.UserAccountRoles.Where(x => x.Id == modifiedModel.StudentRole).FirstOrDefault().Name,
@@ -190,8 +184,6 @@ namespace iSpeakWebApp.Controllers
         {
             List<SettingsModel> models = new DBContext().Database.SqlQuery<SettingsModel>(@"
                 SELECT
-                    ISNULL(Settings_AutoEntryForCashPayments.Value_Guid,NULL) AS AutoEntryForCashPayments,
-                    ISNULL(Settings_AutoEntryForCashPayments.Notes,'') AS AutoEntryForCashPayments_Notes,
                     ISNULL(Settings_StudentRole.Value_Guid,NULL) AS StudentRole,
                     ISNULL(Settings_StudentRole.Notes,'') AS StudentRole_Notes,
                     ISNULL(Settings_TutorRole.Value_Guid,NULL) AS TutorRole,
@@ -209,8 +201,7 @@ namespace iSpeakWebApp.Controllers
                     ISNULL(Settings_ClubScheduleImage1.Value_String,'') AS ClubScheduleImage1,
                     ISNULL(Settings_ClubScheduleImage2.Value_String,'') AS ClubScheduleImage2,
                     ISNULL(Settings_ClubScheduleImage3.Value_String,'') AS ClubScheduleImage3
-                FROM Settings Settings_AutoEntryForCashPayments
-                    LEFT JOIN Settings Settings_StudentRole ON Settings_StudentRole.Id = @StudentRoleId
+                FROM Settings Settings_StudentRole
                     LEFT JOIN Settings Settings_TutorRole ON Settings_TutorRole.Id = @TutorRoleId
                     LEFT JOIN Settings Settings_ResetPassword ON Settings_ResetPassword.Id = @ResetPasswordId
                     LEFT JOIN Settings Settings_FullAccessForTutorSchedules ON Settings_FullAccessForTutorSchedules.Id = @FullAccessForTutorSchedulesId
@@ -221,9 +212,8 @@ namespace iSpeakWebApp.Controllers
                     LEFT JOIN Settings Settings_ClubScheduleImage1 ON Settings_ClubScheduleImage1.Id = @ClubScheduleImage1Id
                     LEFT JOIN Settings Settings_ClubScheduleImage2 ON Settings_ClubScheduleImage2.Id = @ClubScheduleImage2Id
                     LEFT JOIN Settings Settings_ClubScheduleImage3 ON Settings_ClubScheduleImage3.Id = @ClubScheduleImage3Id
-                WHERE Settings_AutoEntryForCashPayments.Id = @AutoEntryForCashPaymentsId
+                WHERE Settings_StudentRole.Id = @StudentRoleId
                 ",
-                    DBConnection.getSqlParameter(SettingsModel.COL_AutoEntryForCashPayments.Name + "Id", SettingsModel.COL_AutoEntryForCashPayments.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_StudentRole.Name + "Id", SettingsModel.COL_StudentRole.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_TutorRole.Name + "Id", SettingsModel.COL_TutorRole.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_ResetPassword.Name + "Id", SettingsModel.COL_ResetPassword.Id),
@@ -254,9 +244,6 @@ namespace iSpeakWebApp.Controllers
             if (modifiedModel.PayrollRatesRoles_List != null) modifiedModel.PayrollRatesRoles = string.Join(",", modifiedModel.PayrollRatesRoles_List.ToArray());
 
             db.Database.ExecuteSqlCommand(@"
-                    IF (SELECT COUNT(Id) FROM Settings WHERE Id = @AutoEntryForCashPaymentsId) = 0 INSERT INTO Settings (Id) VALUES(@AutoEntryForCashPaymentsId);
-                    UPDATE Settings SET Value_Guid=@AutoEntryForCashPayments, Notes=@AutoEntryForCashPayments_Notes WHERE Id=@AutoEntryForCashPaymentsId;
-
                     IF (SELECT COUNT(Id) FROM Settings WHERE Id = @StudentRoleId) = 0 INSERT INTO Settings (Id) VALUES(@StudentRoleId);
                     UPDATE Settings SET Value_Guid=@StudentRole, Notes=@StudentRole_Notes WHERE Id=@StudentRoleId;
 
@@ -287,9 +274,6 @@ namespace iSpeakWebApp.Controllers
                     IF (SELECT COUNT(Id) FROM Settings WHERE Id = @ClubScheduleImage3Id) = 0 INSERT INTO Settings (Id) VALUES(@ClubScheduleImage3Id);
                     UPDATE Settings SET Value_String=@ClubScheduleImage3, Notes=NULL WHERE Id=@ClubScheduleImage3Id;
                 ",
-                    DBConnection.getSqlParameter(SettingsModel.COL_AutoEntryForCashPayments.Name + "Id", SettingsModel.COL_AutoEntryForCashPayments.Id),
-                    DBConnection.getSqlParameter(SettingsModel.COL_AutoEntryForCashPayments.Name, Util.wrapNullable(modifiedModel.AutoEntryForCashPayments)),
-                    DBConnection.getSqlParameter(SettingsModel.COL_AutoEntryForCashPayments_Notes.Name, Util.wrapNullable(modifiedModel.AutoEntryForCashPayments_Notes)),
                     DBConnection.getSqlParameter(SettingsModel.COL_StudentRole.Name + "Id", SettingsModel.COL_StudentRole.Id),
                     DBConnection.getSqlParameter(SettingsModel.COL_StudentRole.Name, Util.wrapNullable(modifiedModel.StudentRole)),
                     DBConnection.getSqlParameter(SettingsModel.COL_StudentRole_Notes.Name, Util.wrapNullable(modifiedModel.StudentRole_Notes)),

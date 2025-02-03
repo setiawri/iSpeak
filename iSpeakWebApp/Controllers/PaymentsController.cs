@@ -135,7 +135,7 @@ namespace iSpeakWebApp.Controllers
                         ReferenceId = payment.Id,
                         No = "",
                         Timestamp = payment.Timestamp,
-                        PettyCashRecordsCategories_Id = SettingsController.get().AutoEntryForCashPayments.Value,
+                        PettyCashRecordsCategories_Id = PettyCashRecordsCategoriesController.CASHPAYMENT,
                         Notes = "Cash Payment [" + payment.No + "]",
                         Amount = payment.CashAmount,
                         Approved = false,

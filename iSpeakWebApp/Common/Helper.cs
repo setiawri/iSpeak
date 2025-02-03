@@ -229,6 +229,8 @@ namespace iSpeakWebApp
                 return new UserAccountsController().get((Guid)value).Fullname;
             else if (typeof(T) == typeof(BranchesModel))
                 return new BranchesController().get(new Guid(id)).Name;
+            else if (typeof(T) == typeof(FranchisesModel))
+                return db.Franchises.Where(x => x.Id.ToString().ToLower() == id).FirstOrDefault().Name;
             else if (typeof(T) == typeof(PromotionEventsModel))
                 return db.PromotionEvents.Where(x => x.Id.ToString().ToLower() == id).FirstOrDefault().Name;
             else if (typeof(T) == typeof(LanguagesModel))

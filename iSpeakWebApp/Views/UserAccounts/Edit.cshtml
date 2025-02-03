@@ -65,18 +65,18 @@
                             </div>
 
                             <div class="form-group row">
-                                @Html.LabelFor(model => model.Branches, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                                @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "col-form-label col-lg-1 required" })
                                 <div class="col-lg-4">
-                                    @Html.ListBoxFor(model => model.Branches_List, ViewBag.Branches as SelectList, new { @class = "form-control select2", @multiple = "multiple" })
-                                    @Html.ValidationMessageFor(model => model.Branches_List, "", new { @class = "text-danger" })
+                                    @Html.ListBoxFor(model => model.Roles_List, ViewBag.UserAccountRoles as SelectList, new { @class = "form-control select2", @multiple = "multiple" })
+                                    @Html.ValidationMessageFor(model => model.Roles_List, "", new { @class = "text-danger" })
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "col-form-label col-lg-1" })
+                                @Html.LabelFor(model => model.Branches, htmlAttributes: new { @class = "col-form-label col-lg-1" })
                                 <div class="col-lg-4">
-                                    @Html.ListBoxFor(model => model.Roles_List, ViewBag.UserAccountRoles as SelectList, new { @class = "form-control select2", @multiple = "multiple" })
-                                    @Html.ValidationMessageFor(model => model.Roles_List, "", new { @class = "text-danger" })
+                                    @Html.ListBoxFor(model => model.Branches_List, ViewBag.Branches as SelectList, new { @class = "form-control select2", @multiple = "multiple" })
+                                    @Html.ValidationMessageFor(model => model.Branches_List, "", new { @class = "text-danger" })
                                 </div>
                             </div>
 

@@ -11,6 +11,7 @@ namespace iSpeakWebApp.Controllers
     public class PettyCashRecordsCategoriesController : Controller
     {
         private readonly DBContext db = new DBContext();
+        public static Guid CASHPAYMENT = new Guid("8781106D-4DC7-4C39-90E5-02111EB1D144");
 
         /* FILTER *********************************************************************************************************************************************/
 
@@ -72,6 +73,7 @@ namespace iSpeakWebApp.Controllers
                 else
                 {
                     model.Id = Guid.NewGuid();
+                    model.Franchises_Id = (Guid)Helper.getActiveFranchiseId(this.Session);
                     model.Active = true;
                     db.PettyCashRecordsCategories.Add(model);
                     db.SaveChanges();
@@ -114,6 +116,7 @@ namespace iSpeakWebApp.Controllers
 
                     string log = string.Empty;
                     log = Helper.append(log, originalModel.Name, modifiedModel.Name, PettyCashRecordsCategoriesModel.COL_Name.LogDisplay);
+                    log = Helper.append<FranchisesModel>(log, originalModel.Franchises_Id, modifiedModel.Franchises_Id, UserAccountsModel.COL_Franchises_Id.LogDisplay);
                     log = Helper.append(log, originalModel.Default_row, modifiedModel.Default_row, PettyCashRecordsCategoriesModel.COL_Default_row.LogDisplay);
                     log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, PettyCashRecordsCategoriesModel.COL_Notes.LogDisplay);
                     log = Helper.append(log, originalModel.Active, modifiedModel.Active, PettyCashRecordsCategoriesModel.COL_Active.LogDisplay);
@@ -137,7 +140,7 @@ namespace iSpeakWebApp.Controllers
 
         public static void setDropDownListViewBag(Controller controller)
         {
-            controller.ViewBag.PettyCashRecordsCategories = new SelectList(get(), PettyCashRecordsCategoriesModel.COL_Id.Name, PettyCashRecordsCategoriesModel.COL_Name.Name);
+            controller.ViewBag.PettyCashRecordsCategories = new SelectList(get(controller), PettyCashRecordsCategoriesModel.COL_Id.Name, PettyCashRecordsCategoriesModel.COL_Name.Name);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
@@ -156,10 +159,10 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public List<PettyCashRecordsCategoriesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Active, FILTER_Keyword); }
-        public PettyCashRecordsCategoriesModel get(Guid Id) { return get(Id, null, null).FirstOrDefault(); }
-        public static List<PettyCashRecordsCategoriesModel> get() { return get(null, null, null); }
-        public static List<PettyCashRecordsCategoriesModel> get(Guid? Id, int? FILTER_Active, string FILTER_Keyword)
+        public List<PettyCashRecordsCategoriesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(this, null, FILTER_Active, FILTER_Keyword); }
+        public PettyCashRecordsCategoriesModel get(Guid Id) { return get(this, Id, null, null).FirstOrDefault(); }
+        public static List<PettyCashRecordsCategoriesModel> get(Controller controller) { return get(controller, null, null, null); }
+        public static List<PettyCashRecordsCategoriesModel> get(Controller controller, Guid? Id, int? FILTER_Active, string FILTER_Keyword)
         {
             return new DBContext().Database.SqlQuery<PettyCashRecordsCategoriesModel>(@"
                         SELECT PettyCashRecordsCategories.*
@@ -170,10 +173,12 @@ namespace iSpeakWebApp.Controllers
                                 (@Active IS NULL OR PettyCashRecordsCategories.Active = @Active)
     							AND (@FILTER_Keyword IS NULL OR (PettyCashRecordsCategories.Name LIKE '%'+@FILTER_Keyword+'%'))
                             ))
+							AND (@Franchises_Id IS NULL OR PettyCashRecordsCategories.Franchises_Id = @Franchises_Id)
 						ORDER BY PettyCashRecordsCategories.Name ASC
                     ",
                     DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Active.Name, FILTER_Active),
+                    DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Franchises_Id.Name, Helper.getUserFranchiseIdForQuery(controller.Session)), 
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
         }

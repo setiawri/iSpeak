@@ -33,31 +33,6 @@
 
                         <hr />
 
-                        @Html.LabelFor(model => model.AutoEntryForCashPayments, htmlAttributes: new { @class = "h5 mb-0 required" })
-                        <div class="row pl-0">
-                            <div>
-                                <button type="button" class="btn mb-1 ml-2 mr-1 px-1 icon-notebook" onclick="Log('@SettingsModel.COL_AutoEntryForCashPayments.Id')"></button>
-                                @*<button type="button" class="btn btn-sm btn-outline-info mb-1 ml-2 mr-1 px-1 py-0" onclick="Log('@SettingsModel.COL_AutoEntryForCashPayments.Id')"><i class="icon-notebook"></i></button>*@
-                            </div>
-                            <div id="AutoEntryForCashPayments_Div">
-                                <button id="AutoEntryForCashPayments" type="button" class="btn mb-1 mr-1 px-1 icon-compose notesbutton" onclick="toggleNotes()"></button>
-                                @*<button id="AutoEntryForCashPayments" type="button" class="btn btn-sm btn-outline-info mb-1 mr-1 px-1 py-0 notesbutton" onclick="toggleNotes()"><i class="icon-compose"></i></button>*@
-                                <label id="AutoEntryForCashPayments_Label" class="col-form-label py-0">@Model.AutoEntryForCashPayments_Notes</label>
-                            </div>
-                            <div class="col-lg-11 pl-0">
-                                <div id="AutoEntryForCashPayments_Edit" class="input-group d-none mb-1 ml-0 pl-0">
-                                    <div class="input-group-prepend"><span class="input-group-text">Edit</span></div>
-                                    @Html.EditorFor(model => model.AutoEntryForCashPayments_Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "Notes", @title = Model.AutoEntryForCashPayments_Notes } })
-                                </div>
-                            </div>
-                        </div>
-                        <div class="input-group col-lg-6 pl-0">
-                            @Html.DropDownListFor(model => model.AutoEntryForCashPayments, ViewBag.PettyCashRecordsCategories as SelectList, "Select one", new { @class = "form-control select2" })
-                        </div>
-                        @Html.ValidationMessage("AutoEntryForCashPayments", "", new { @class = "text-danger" })
-
-                        <hr />
-
                         @Html.LabelFor(model => model.StudentRole, htmlAttributes: new { @class = "h5 mb-0 required" })
                         <div class="row pl-0">
                             <div>

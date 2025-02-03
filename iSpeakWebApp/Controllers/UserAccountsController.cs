@@ -225,6 +225,11 @@ namespace iSpeakWebApp.Controllers
                     model.Username = "rickystudent";
                     model.Password = "A2cdefGH";
                 }
+                else if (string.IsNullOrEmpty(model.Username) && model.Password == "Fra")
+                {
+                    model.Username = "rickyfranchise";
+                    model.Password = "A2cdefGH";
+                }
             }
 
             string hashedPassword = HashPassword(model.Password);
