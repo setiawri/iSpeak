@@ -2,6 +2,10 @@
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * Articles are NOT filtered by Franchise. If it is needed, will implement in the future. It is currently only for landing page and there is only one
+     */
+
     public class ArticlesController : Controller
     {
         public const string CONTROLLERNAME = "Articles";

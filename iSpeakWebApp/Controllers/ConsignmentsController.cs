@@ -7,6 +7,10 @@ using LIBUtil;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * Consignment is NOT controller by franchise. Must be approved by Central.
+     */
+
     public class ConsignmentsController : Controller
     {
         private readonly DBContext db = new DBContext();

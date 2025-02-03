@@ -8,6 +8,10 @@ using LIBUtil;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * Club Classes are no longer an active program.
+     */
+
     public class ClubClassOnlineLinksController : Controller
     {
         private readonly DBContext db = new DBContext();

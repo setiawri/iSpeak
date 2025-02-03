@@ -9,6 +9,10 @@ using System.Web;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * Branches are NOT filtered by Franchise. It is controlled by central and only superusers can change it.
+     */
+
     public class BranchesController : Controller
     {
         private readonly DBContext db = new DBContext();

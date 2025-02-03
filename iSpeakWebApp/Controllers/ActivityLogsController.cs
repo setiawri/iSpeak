@@ -9,6 +9,10 @@ using LIBWebMVC;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * Activity Logs are NOT filtered by Franchise. If it is needed, will implement in the future. Activity logs are tied to records that are already separated by franchise
+     */
+
     public class ActivityLogsController : Controller
     {
 
