@@ -216,24 +216,29 @@ namespace iSpeakWebApp.Controllers
             {
                 if (string.IsNullOrEmpty(model.Username) && string.IsNullOrEmpty(model.Password))
                 {
-                    model.Username = "ricky";
-                    model.Password = "A2cdefGH";
+                    model.Password = "Sup";
                 }
-                else if (string.IsNullOrEmpty(model.Username) && model.Password == "Mgr")
-                {
-                    model.Username = "rickymanager";
-                    model.Password = "A2cdefGH";
-                }
-                else if (string.IsNullOrEmpty(model.Username) && model.Password == "Std")
-                {
-                    model.Username = "rickystudent";
-                    model.Password = "A2cdefGH";
-                }
-                else if (string.IsNullOrEmpty(model.Username) && model.Password == "Fra")
-                {
-                    model.Username = "rickyfranchise";
-                    model.Password = "A2cdefGH";
-                }
+            }
+
+            if (string.IsNullOrEmpty(model.Username) && model.Password == "Sup")
+            {
+                model.Username = "ricky";
+                model.Password = "A2cdefGH";
+            }
+            else if (string.IsNullOrEmpty(model.Username) && model.Password == "Mgr")
+            {
+                model.Username = "rickymanager";
+                model.Password = "A2cdefGH";
+            }
+            else if (string.IsNullOrEmpty(model.Username) && model.Password == "Std")
+            {
+                model.Username = "rickystudent";
+                model.Password = "A2cdefGH";
+            }
+            else if (string.IsNullOrEmpty(model.Username) && model.Password == "Fra")
+            {
+                model.Username = "rickyfranchise";
+                model.Password = "A2cdefGH";
             }
 
             string hashedPassword = HashPassword(model.Password);

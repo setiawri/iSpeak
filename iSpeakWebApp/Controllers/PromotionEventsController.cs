@@ -155,9 +155,10 @@ namespace iSpeakWebApp.Controllers
             return db.Database.SqlQuery<PromotionEventsModel>(@"
                         SELECT PromotionEvents.*
                         FROM PromotionEvents
+                            LEFT JOIN Branches ON Branches.Id = PromotionEvents.Branches_Id
                         WHERE 1=1 
-							AND (@Id IS NOT NULL OR PromotionEvents.Name = @Name)
-							AND (@Id IS NULL OR (PromotionEvents.Name = @Name AND PromotionEvents.Id <> @Id))
+							AND (@Id IS NOT NULL OR PromotionEvents.Name = @Name AND Branches.Franchises_Id = @Franchises_Id)
+							AND (@Id IS NULL OR (PromotionEvents.Name = @Name AND PromotionEvents.Id <> @Id AND Branches.Franchises_Id = @Franchises_Id))
                     ",
                     DBConnection.getSqlParameter(PromotionEventsModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(PromotionEventsModel.COL_Name.Name, Name)

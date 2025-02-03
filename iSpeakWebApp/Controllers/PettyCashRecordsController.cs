@@ -180,7 +180,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
                 DBConnection.getSqlParameter("FILTER_DateFrom", FILTER_DateFrom),
                 DBConnection.getSqlParameter("FILTER_DateTo", Util.getAsEndDate(FILTER_DateTo)),
-                DBConnection.getSqlParameter("Franchises_Id", Helper.getUserFranchiseIdForQuery(Session)),
+                DBConnection.getSqlParameter("Franchises_Id", Helper.getActiveFranchiseId(Session)),
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Approved.Name, Approved)
             ).ToList();
         }

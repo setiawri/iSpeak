@@ -78,8 +78,8 @@ namespace iSpeakWebApp.Controllers
                 else
                 {
                     model.Id = Guid.NewGuid();
-                    model.Franchises_Id = (Guid)Helper.getActiveFranchiseId(this.Session);
                     model.Active = true;
+                    model.Franchises_Id = (Guid)Helper.getActiveFranchiseId(this.Session);
                     db.PettyCashRecordsCategories.Add(model);
                     db.SaveChanges();
                     ActivityLogsController.AddCreateLog(db, Session, model.Id);
@@ -156,11 +156,12 @@ namespace iSpeakWebApp.Controllers
                         SELECT PettyCashRecordsCategories.*
                         FROM PettyCashRecordsCategories
                         WHERE 1=1 
-							AND (@Id IS NOT NULL OR PettyCashRecordsCategories.Name = @Name)
-							AND (@Id IS NULL OR (PettyCashRecordsCategories.Name = @Name AND PettyCashRecordsCategories.Id <> @Id))
+							AND (@Id IS NOT NULL OR PettyCashRecordsCategories.Name = @Name AND PettyCashRecordsCategories.Franchises_Id = @Franchises_Id)
+							AND (@Id IS NULL OR (PettyCashRecordsCategories.Name = @Name AND PettyCashRecordsCategories.Id <> @Id AND PettyCashRecordsCategories.Franchises_Id = @Franchises_Id))
                     ",
                     DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Id.Name, Id),
-                    DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Name.Name, Name)
+                    DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Name.Name, Name),
+                    DBConnection.getSqlParameter("Franchises_Id", Helper.getActiveFranchiseId(Session))
                 ).Count() > 0;
         }
 
@@ -183,7 +184,7 @@ namespace iSpeakWebApp.Controllers
                     ",
                     DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Active.Name, FILTER_Active),
-                    DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Franchises_Id.Name, Helper.getUserFranchiseIdForQuery(Session)), 
+                    DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Franchises_Id.Name, Helper.getActiveFranchiseId(Session)), 
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
         }

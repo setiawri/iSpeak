@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using iSpeakWebApp.Models;
 using LIBUtil;
@@ -77,6 +78,7 @@ namespace iSpeakWebApp.Controllers
                 {
                     model.Id = Guid.NewGuid();
                     model.Active = true;
+                    model.Franchises_Id = (Guid)Helper.getActiveFranchiseId(this.Session);
                     db.ExpenseCategories.Add(model);
                     db.SaveChanges();
                     ActivityLogsController.AddCreateLog(db, Session, model.Id);
@@ -117,6 +119,7 @@ namespace iSpeakWebApp.Controllers
                     ExpenseCategoriesModel originalModel = db.ExpenseCategories.AsNoTracking().Where(x => x.Id == modifiedModel.Id).FirstOrDefault();
 
                     string log = string.Empty;
+                    log = Helper.append<FranchisesModel>(log, originalModel.Franchises_Id, modifiedModel.Franchises_Id, UserAccountsModel.COL_Franchises_Id.LogDisplay);
                     log = Helper.append(log, originalModel.Name, modifiedModel.Name, ExpenseCategoriesModel.COL_Name.LogDisplay);
                     log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, ExpenseCategoriesModel.COL_Notes.LogDisplay);
                     log = Helper.append(log, originalModel.Active, modifiedModel.Active, ExpenseCategoriesModel.COL_Active.LogDisplay);
@@ -140,7 +143,7 @@ namespace iSpeakWebApp.Controllers
 
         public static void setDropDownListViewBag(Controller controller)
         {
-            controller.ViewBag.ExpenseCategories = new SelectList(get(), ExpenseCategoriesModel.COL_Id.Name, ExpenseCategoriesModel.COL_Name.Name);
+            controller.ViewBag.ExpenseCategories = new SelectList(get(controller.Session), ExpenseCategoriesModel.COL_Id.Name, ExpenseCategoriesModel.COL_Name.Name);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
@@ -151,18 +154,19 @@ namespace iSpeakWebApp.Controllers
                         SELECT ExpenseCategories.*
                         FROM ExpenseCategories
                         WHERE 1=1 
-							AND (@Id IS NOT NULL OR ExpenseCategories.Name = @Name)
-							AND (@Id IS NULL OR (ExpenseCategories.Name = @Name AND ExpenseCategories.Id <> @Id))
+							AND (@Id IS NOT NULL OR (ExpenseCategories.Name = @Name AND ExpenseCategories.Franchises_Id = @Franchises_Id))
+							AND (@Id IS NULL OR (ExpenseCategories.Name = @Name AND ExpenseCategories.Id <> @Id AND ExpenseCategories.Franchises_Id = @Franchises_Id))
                     ",
                     DBConnection.getSqlParameter(ExpenseCategoriesModel.COL_Id.Name, Id),
-                    DBConnection.getSqlParameter(ExpenseCategoriesModel.COL_Name.Name, Name)
+                    DBConnection.getSqlParameter(ExpenseCategoriesModel.COL_Name.Name, Name),
+                    DBConnection.getSqlParameter("Franchises_Id", Helper.getActiveFranchiseId(Session))
                 ).Count() > 0;
         }
 
-        public List<ExpenseCategoriesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Active, FILTER_Keyword); }
-        public ExpenseCategoriesModel get(Guid Id) { return get(Id, null, null).FirstOrDefault(); }
-        public static List<ExpenseCategoriesModel> get() { return get(null, null, null); }
-        public static List<ExpenseCategoriesModel> get(Guid? Id, int? FILTER_Active, string FILTER_Keyword)
+        public List<ExpenseCategoriesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(Session, null, FILTER_Active, FILTER_Keyword); }
+        public ExpenseCategoriesModel get(Guid Id) { return get(Session, Id, null, null).FirstOrDefault(); }
+        public static List<ExpenseCategoriesModel> get(HttpSessionStateBase Session) { return get(Session, null, null, null); }
+        public static List<ExpenseCategoriesModel> get(HttpSessionStateBase Session, Guid? Id, int? FILTER_Active, string FILTER_Keyword)
         {
             return new DBContext().Database.SqlQuery<ExpenseCategoriesModel>(@"
                         SELECT ExpenseCategories.*
@@ -173,11 +177,13 @@ namespace iSpeakWebApp.Controllers
                                 (@Active IS NULL OR ExpenseCategories.Active = @Active)
     							AND (@FILTER_Keyword IS NULL OR (ExpenseCategories.Name LIKE '%'+@FILTER_Keyword+'%'))
                             ))
+							AND (@Franchises_Id IS NULL OR ExpenseCategories.Franchises_Id = @Franchises_Id)
 						ORDER BY ExpenseCategories.Name ASC
                     ",
                     DBConnection.getSqlParameter(ExpenseCategoriesModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(ExpenseCategoriesModel.COL_Active.Name, FILTER_Active),
-                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
+                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
+                    DBConnection.getSqlParameter("Franchises_Id", Helper.getActiveFranchiseId(Session))
                 ).ToList();
         }
 
