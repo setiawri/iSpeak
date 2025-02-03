@@ -10,6 +10,10 @@ using LIBWebMVC;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * LessonSessions is filtered by Franchise. 
+     */
+
     public class LessonSessionsController : Controller
     {
         private readonly DBContext db = new DBContext();

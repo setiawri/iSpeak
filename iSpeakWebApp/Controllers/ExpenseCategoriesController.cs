@@ -8,6 +8,10 @@ using LIBUtil;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * ExpenseCategories is filtered by Franchise. 
+     */
+
     public class ExpenseCategoriesController : Controller
     {
         private readonly DBContext db = new DBContext();

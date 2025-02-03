@@ -9,6 +9,10 @@ using LIBUtil;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * PromotionEvents is filtered by Franchise. 
+     */
+
     public class PromotionEventsController : Controller
     {
         private readonly DBContext db = new DBContext();

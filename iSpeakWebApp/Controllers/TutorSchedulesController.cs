@@ -8,6 +8,10 @@ using LIBUtil;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * TutorSchedules is filtered by Franchise. 
+     */
+
     public class TutorSchedulesController : Controller
     {
         private readonly DBContext db = new DBContext();

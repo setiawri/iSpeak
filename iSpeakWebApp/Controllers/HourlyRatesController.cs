@@ -9,6 +9,10 @@ using LIBWebMVC;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * HourlyRates is filtered by Franchise. 
+     */
+
     public class HourlyRatesController : Controller
     {
         private readonly DBContext db = new DBContext();

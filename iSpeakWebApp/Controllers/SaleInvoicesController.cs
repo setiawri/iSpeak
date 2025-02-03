@@ -11,6 +11,10 @@ using LIBWebMVC;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * Sales is filtered by Franchise. 
+     */
+
     public class SaleInvoicesController : Controller
     {
         private readonly DBContext db = new DBContext();

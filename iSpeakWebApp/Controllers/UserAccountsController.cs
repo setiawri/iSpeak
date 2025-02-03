@@ -11,6 +11,10 @@ using System.Web.Services.Description;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * UserAccounts is filtered by Branch. 
+     */
+
     public class UserAccountsController : Controller
     {
         public const string ACTIONNAME_Login = "Login";

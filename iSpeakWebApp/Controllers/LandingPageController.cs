@@ -10,6 +10,10 @@ using LIBWebMVC;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * LandingPage is controlled by central.
+     */
+
     public class LandingPageController : Controller
     {
         /* LANDING PAGE ***************************************************************************************************************************************/

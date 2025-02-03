@@ -14,6 +14,10 @@ using Google.Apis.Auth.OAuth2.Web;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * Files is currently not working because of issues placing data at Google drive
+     */
+
     public class FilesController : Controller
     {
         private readonly DBContext db = new DBContext();

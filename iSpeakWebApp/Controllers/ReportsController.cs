@@ -13,6 +13,10 @@ using LIBWebMVC;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * Reports is filtered by Franchise. 
+     */
+
     public class ChartData
     {
         public string[] Labels { get; set; }

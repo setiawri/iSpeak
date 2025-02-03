@@ -7,6 +7,10 @@ using LIBUtil;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * Services is NOT controller by franchise. Can only be changed by central
+     */
+
     public class ServicesController : Controller
     {
         private readonly DBContext db = new DBContext();

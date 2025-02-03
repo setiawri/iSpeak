@@ -9,6 +9,10 @@ using LIBUtil;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * Languages is NOT controller by franchise. Can only be changed by central
+     */
+
     public class LanguagesController : Controller
     {
         private readonly DBContext db = new DBContext();

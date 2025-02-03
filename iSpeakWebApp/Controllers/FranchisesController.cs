@@ -9,6 +9,10 @@ using System.Web;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * Franchises is controlled by central.
+     */
+
     public class FranchisesController : Controller
     {
         private readonly DBContext db = new DBContext();

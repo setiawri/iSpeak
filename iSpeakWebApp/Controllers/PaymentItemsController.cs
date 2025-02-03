@@ -7,6 +7,10 @@ using LIBUtil;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * Payments is filtered by Franchise. 
+     */
+
     public class PaymentItemsController : Controller
     {
         /* DATABASE METHODS ***********************************************************************************************************************************/

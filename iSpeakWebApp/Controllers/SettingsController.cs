@@ -9,6 +9,10 @@ using LIBWebMVC;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * Settings is GLOBAL and is NOT filtered by Franchise. Changes must be made by superuser.
+     */
+
     public class SettingsController : Controller
     {
         private readonly DBContext db = new DBContext();

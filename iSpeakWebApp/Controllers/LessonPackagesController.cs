@@ -8,6 +8,10 @@ using LIBUtil;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * LessonPackages is NOT controller by franchise. Can only be changed by central
+     */
+
     public class LessonPackagesController : Controller
     {
         private readonly DBContext db = new DBContext();

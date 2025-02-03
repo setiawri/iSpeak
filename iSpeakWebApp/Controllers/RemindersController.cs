@@ -9,6 +9,10 @@ using System.Web.Mvc;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * Reminders is filtered by Franchise. 
+     */
+
     public class RemindersController : Controller
     {
         private readonly DBContext db = new DBContext();

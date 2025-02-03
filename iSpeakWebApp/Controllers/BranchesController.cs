@@ -10,7 +10,7 @@ using System.Web;
 namespace iSpeakWebApp.Controllers
 {
     /*
-     * Branches are NOT filtered by Franchise. It is controlled by central and only superusers can change it.
+     * Branches is GLOBAL and is is controlled by central and only central. In the navigation dropdownlist, branches shown only when related to the same Franchise
      */
 
     public class BranchesController : Controller

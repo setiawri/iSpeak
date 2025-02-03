@@ -10,6 +10,10 @@ using LIBWebMVC;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * Vouchers is filtered by Franchise. 
+     */
+
     public class VouchersController : Controller
     {
         private readonly DBContext db = new DBContext();

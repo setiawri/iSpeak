@@ -8,6 +8,10 @@ using LIBUtil;
 
 namespace iSpeakWebApp.Controllers
 {
+    /*
+     * PettyCashRecords is filtered by Franchise. 
+     */
+
     public class PettyCashRecordsController : Controller
     {
         private readonly DBContext db = new DBContext();

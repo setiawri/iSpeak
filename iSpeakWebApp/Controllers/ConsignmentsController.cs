@@ -8,7 +8,7 @@ using LIBUtil;
 namespace iSpeakWebApp.Controllers
 {
     /*
-     * Consignment is NOT controller by franchise. Must be approved by Central.
+     * Consignment is NOT controller by franchise. Can only be updated by central.
      */
 
     public class ConsignmentsController : Controller
