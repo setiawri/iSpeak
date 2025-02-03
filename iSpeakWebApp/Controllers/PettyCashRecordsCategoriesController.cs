@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using iSpeakWebApp.Models;
 using LIBUtil;
@@ -144,7 +145,7 @@ namespace iSpeakWebApp.Controllers
 
         public static void setDropDownListViewBag(Controller controller)
         {
-            controller.ViewBag.PettyCashRecordsCategories = new SelectList(get(controller), PettyCashRecordsCategoriesModel.COL_Id.Name, PettyCashRecordsCategoriesModel.COL_Name.Name);
+            controller.ViewBag.PettyCashRecordsCategories = new SelectList(get(controller.Session), PettyCashRecordsCategoriesModel.COL_Id.Name, PettyCashRecordsCategoriesModel.COL_Name.Name);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
@@ -163,10 +164,10 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public List<PettyCashRecordsCategoriesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(this, null, FILTER_Active, FILTER_Keyword); }
-        public PettyCashRecordsCategoriesModel get(Guid Id) { return get(this, Id, null, null).FirstOrDefault(); }
-        public static List<PettyCashRecordsCategoriesModel> get(Controller controller) { return get(controller, null, null, null); }
-        public static List<PettyCashRecordsCategoriesModel> get(Controller controller, Guid? Id, int? FILTER_Active, string FILTER_Keyword)
+        public List<PettyCashRecordsCategoriesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(Session, null, FILTER_Active, FILTER_Keyword); }
+        public PettyCashRecordsCategoriesModel get(Guid Id) { return get(Session, Id, null, null).FirstOrDefault(); }
+        public static List<PettyCashRecordsCategoriesModel> get(HttpSessionStateBase Session) { return get(Session, null, null, null); }
+        public static List<PettyCashRecordsCategoriesModel> get(HttpSessionStateBase Session, Guid? Id, int? FILTER_Active, string FILTER_Keyword)
         {
             return new DBContext().Database.SqlQuery<PettyCashRecordsCategoriesModel>(@"
                         SELECT PettyCashRecordsCategories.*
@@ -182,7 +183,7 @@ namespace iSpeakWebApp.Controllers
                     ",
                     DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Active.Name, FILTER_Active),
-                    DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Franchises_Id.Name, Helper.getUserFranchiseIdForQuery(controller.Session)), 
+                    DBConnection.getSqlParameter(PettyCashRecordsCategoriesModel.COL_Franchises_Id.Name, Helper.getUserFranchiseIdForQuery(Session)), 
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
         }

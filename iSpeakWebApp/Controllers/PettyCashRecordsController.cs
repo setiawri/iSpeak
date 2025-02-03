@@ -151,6 +151,8 @@ namespace iSpeakWebApp.Controllers
                             UserAccounts.Fullname AS UserAccounts_Fullname, 
                             InitialBalance.Amount + (SUM(PettyCashRecords.Amount) OVER(ORDER BY PettyCashRecords.Timestamp ASC)) AS Balance
                         FROM PettyCashRecords
+                            LEFT JOIN Branches ON Branches.Id = PettyCashRecords.Branches_Id
+                            LEFT JOIN Franchises ON Franchises.Id = Branches.Franchises_Id
                             LEFT JOIN PettyCashRecordsCategories ON PettyCashRecordsCategories.Id = PettyCashRecords.PettyCashRecordsCategories_Id
                             LEFT JOIN ExpenseCategories ON ExpenseCategories.Id = PettyCashRecords.ExpenseCategories_Id
                             LEFT JOIN UserAccounts ON UserAccounts.Id = PettyCashRecords.UserAccounts_Id
@@ -178,6 +180,7 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
                 DBConnection.getSqlParameter("FILTER_DateFrom", FILTER_DateFrom),
                 DBConnection.getSqlParameter("FILTER_DateTo", Util.getAsEndDate(FILTER_DateTo)),
+                DBConnection.getSqlParameter("Franchises_Id", Helper.getUserFranchiseIdForQuery(Session)),
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Approved.Name, Approved)
             ).ToList();
         }

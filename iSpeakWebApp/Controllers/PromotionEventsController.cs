@@ -145,7 +145,7 @@ namespace iSpeakWebApp.Controllers
 
         public static void setDropDownListViewBag(Controller controller)
         {
-            controller.ViewBag.PromotionEvents = new SelectList(PromotionEventsController.get(controller), PromotionEventsModel.COL_Id.Name, PromotionEventsModel.COL_Name.Name);
+            controller.ViewBag.PromotionEvents = new SelectList(PromotionEventsController.get(controller.Session), PromotionEventsModel.COL_Id.Name, PromotionEventsModel.COL_Name.Name);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
@@ -164,10 +164,10 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public PromotionEventsModel get(Guid Id) { return get(this, Id, null, null).FirstOrDefault(); }
-        public List<PromotionEventsModel> get(string FILTER_Keyword) { return get(this, null, FILTER_Keyword, null); }
-        public static List<PromotionEventsModel> get(Controller controller) { return new PromotionEventsController().get(controller, null, null, null); }
-        public List<PromotionEventsModel> get(Controller controller, Guid? Id, string FILTER_Keyword, Guid? Branches_Id)
+        public PromotionEventsModel get(Guid Id) { return get(Session, Id, null, null).FirstOrDefault(); }
+        public List<PromotionEventsModel> get(string FILTER_Keyword) { return get(Session, null, FILTER_Keyword, null); }
+        public static List<PromotionEventsModel> get(HttpSessionStateBase Session) { return new PromotionEventsController().get(Session, null, null, null); }
+        public List<PromotionEventsModel> get(HttpSessionStateBase Session, Guid? Id, string FILTER_Keyword, Guid? Branches_Id)
         {
             return new DBContext().Database.SqlQuery<PromotionEventsModel>(@"
                         SELECT PromotionEvents.*
@@ -184,7 +184,7 @@ namespace iSpeakWebApp.Controllers
                     ",
                     DBConnection.getSqlParameter(PromotionEventsModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(PromotionEventsModel.COL_Branches_Id.Name, Branches_Id),
-                    DBConnection.getSqlParameter("Franchises_Id", Helper.getUserFranchiseIdForQuery(controller.Session)),
+                    DBConnection.getSqlParameter("Franchises_Id", Helper.getUserFranchiseIdForQuery(Session)),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
         }

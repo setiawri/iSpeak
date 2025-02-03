@@ -161,9 +161,9 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public BranchesModel get(Guid Id) { return get(this.Session, Id, null, null, null).FirstOrDefault(); }
+        public BranchesModel get(Guid Id) { return get(Session, Id, null, null, null).FirstOrDefault(); }
         public static List<BranchesModel> get(int? FILTER_Active, string IdList) { return get(null, null, FILTER_Active, null, IdList); }
-        public List<BranchesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(this.Session, null, FILTER_Active, FILTER_Keyword, null); }
+        public List<BranchesModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(Session, null, FILTER_Active, FILTER_Keyword, null); }
         public static List<BranchesModel> get(HttpSessionStateBase Session) { return get(Session, null, null, null, null); }
         public static List<BranchesModel> get(HttpSessionStateBase Session, Guid? Id, int? FILTER_Active, string FILTER_Keyword, string IdList)
         {
