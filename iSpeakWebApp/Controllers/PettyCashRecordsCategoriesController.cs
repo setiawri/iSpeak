@@ -16,7 +16,9 @@ namespace iSpeakWebApp.Controllers
     public class PettyCashRecordsCategoriesController : Controller
     {
         private readonly DBContext db = new DBContext();
-        public static Guid CASHPAYMENT = new Guid("8781106D-4DC7-4C39-90E5-02111EB1D144");
+
+        public static string CASHPAYMENT_Name = "CASH PAYMENT";
+        public static Guid CASHPAYMENT_Id = new Guid("8781106D-4DC7-4C39-90E5-02111EB1D144");
 
         /* FILTER *********************************************************************************************************************************************/
 
@@ -145,7 +147,11 @@ namespace iSpeakWebApp.Controllers
 
         public static void setDropDownListViewBag(Controller controller)
         {
-            controller.ViewBag.PettyCashRecordsCategories = new SelectList(get(controller.Session), PettyCashRecordsCategoriesModel.COL_Id.Name, PettyCashRecordsCategoriesModel.COL_Name.Name);
+            List<PettyCashRecordsCategoriesModel> items = get(controller.Session);
+            PettyCashRecordsCategoriesModel cashPayment = new PettyCashRecordsCategoriesModel() { Id = PettyCashRecordsCategoriesController.CASHPAYMENT_Id, Name = PettyCashRecordsCategoriesController.CASHPAYMENT_Name };
+            items.Insert(0,cashPayment);
+
+            controller.ViewBag.PettyCashRecordsCategories = new SelectList(items, PettyCashRecordsCategoriesModel.COL_Id.Name, PettyCashRecordsCategoriesModel.COL_Name.Name, cashPayment.Id);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/

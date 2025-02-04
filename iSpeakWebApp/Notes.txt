@@ -15,9 +15,7 @@ FINAL: check for UTC date conversion
 ===============================================================================================================================================================
 
 ONGOING:
-* Add Franchises_Id to pettycashrecordscategories
-	- pakai hardocded value di GlobalVariables.PETTYCASHRECORDSCATEGORIES_CASHPAYMENT 
-	- hapus cashpayment dari pettycashrecordscategories table dan dari application settings edit page. 
+* 
 
 TO DO:
 

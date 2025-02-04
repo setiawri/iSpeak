@@ -69,7 +69,7 @@ namespace iSpeakWebApp.Controllers
                     string roles = "";
                     if (!getUserAccess(Session).UserAccounts_ViewAllRoles)
                         roles = SettingsController.get().StudentRole.ToString();
-                    return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id, roles, false));
+                    return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id, roles, false, Helper.getActiveFranchiseId(Session)));
                 }
             }
         }
@@ -83,7 +83,7 @@ namespace iSpeakWebApp.Controllers
             string roles = "";
             if (!getUserAccess(Session).UserAccounts_ViewAllRoles)
                 roles = SettingsController.get().StudentRole.ToString();
-            return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id, roles, false));
+            return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id, roles, false, Helper.getActiveFranchiseId(Session)));
         }
 
         /* CREATE *********************************************************************************************************************************************/
@@ -496,7 +496,7 @@ namespace iSpeakWebApp.Controllers
         public JsonResult Ajax_GetDDLItems(string keyword, int page, int take, string key)
         {
             int skip = take * (page - 1);
-            List<UserAccountsModel> models = get(skip, take, keyword, 1, null, null, key, SettingsController.ShowOnlyOwnUserData(Session));
+            List<UserAccountsModel> models = get(skip, take, keyword, 1, null, null, key, SettingsController.ShowOnlyOwnUserData(Session), Helper.getActiveFranchiseId(Session));
 
             List<Select2Pagination.Select2Results> results = new List<Select2Pagination.Select2Results>();
             results.AddRange(models.Select(model => new Select2Pagination.Select2Results
@@ -553,23 +553,27 @@ namespace iSpeakWebApp.Controllers
                         FROM UserAccounts
                         WHERE UserAccounts.Fullname = @Fullname
 							AND UserAccounts.Birthday = @Birthday
+                            AND (ExpenseCategories.Franchises_Id = @Franchises_Id)
                     ",
                     DBConnection.getSqlParameter(UserAccountsModel.COL_Fullname.Name, Fullname),
-                    DBConnection.getSqlParameter(UserAccountsModel.COL_Birthday.Name, Birthday)
+                    DBConnection.getSqlParameter(UserAccountsModel.COL_Birthday.Name, Birthday),
+                    DBConnection.getSqlParameter(UserAccountsModel.COL_Franchises_Id.Name, Helper.getActiveFranchiseId(Session))
                 ).Count() > 0;
         }
 
-        public UserAccountsModel get(string Username, string Password) { return get(null, null, null, true, null, Username, Password, null, null, null, null, null, null, false).FirstOrDefault(); }
-        public List<UserAccountsModel> getBirthdays(Guid Branches_Id, Guid? UserAccountRoles_Id, int BirthdayListMonth) { return get(null, null, Branches_Id, false, null, null, null, 1, UserAccountRoles_Id, BirthdayListMonth, null, null, null, false); }
-        public List<UserAccountsModel> get(int? skip, int? take, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_UserAccountRoles_Id, string Role, bool ShowOnlyOwnUserData) { return get(skip, take, null, false, null, null, null, FILTER_Active, FILTER_UserAccountRoles_Id, null, FILTER_Keyword, FILTER_Languages_Id, Role, ShowOnlyOwnUserData); }
-        public UserAccountsModel get(Guid Id) { return get(null, null, null, true, Id, null, null, null, null, null, null, null, null, false).FirstOrDefault(); }
-        public List<UserAccountsModel> get(int? skip, int? take, Guid? Default_Branches_Id, bool showAllBranches, Guid? Id, string Username, string Password, int? Active, Guid? UserAccountRoles_Id, int? BirthdayListMonth, string FILTER_Keyword, Guid? Language_Id, string Role, bool ShowOnlyOwnUserData)
+        public UserAccountsModel get(string Username, string Password) { return get(null, null, null, true, null, Username, Password, null, null, null, null, null, null, false, null).FirstOrDefault(); }
+        public List<UserAccountsModel> getBirthdays(Guid Branches_Id, Guid? UserAccountRoles_Id, int BirthdayListMonth) { return get(null, null, Branches_Id, false, null, null, null, 1, UserAccountRoles_Id, BirthdayListMonth, null, null, null, false, null); }
+        public List<UserAccountsModel> get(int? skip, int? take, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_UserAccountRoles_Id, string Role, bool ShowOnlyOwnUserData, Guid? Franchises_Id) { return get(skip, take, null, false, null, null, null, FILTER_Active, FILTER_UserAccountRoles_Id, null, FILTER_Keyword, FILTER_Languages_Id, Role, ShowOnlyOwnUserData, Franchises_Id); }
+        public UserAccountsModel get(Guid Id) { return get(null, null, null, true, Id, null, null, null, null, null, null, null, null, false, null).FirstOrDefault(); }
+        public List<UserAccountsModel> get(int? skip, int? take, Guid? Default_Branches_Id, bool showAllBranches, Guid? Id, string Username, string Password, int? Active, Guid? UserAccountRoles_Id, 
+            int? BirthdayListMonth, string FILTER_Keyword, Guid? Language_Id, string Role, bool ShowOnlyOwnUserData, Guid? Franchises_Id)
         {
             UserAccountsModel UserAccount = getUserAccount(Session);
             Guid? UserAccountId = null;
             if (UserAccount != null)
                 UserAccountId = UserAccount.Id;
 
+            //this gets only users created at the active branch
             string BranchClause = null;
             if (!showAllBranches)
                 BranchClause = string.Format(" AND UserAccounts.Branches LIKE '%{0}%' ", Helper.getActiveBranchId(Session));
@@ -627,6 +631,7 @@ namespace iSpeakWebApp.Controllers
                                         OR UserAccounts.No LIKE '%'+@FILTER_Keyword+'%'
                                     ))
                                 AND (@ShowOnlyOwnUserData = 0 OR (UserAccounts.Id = @UserAccounts_Id))
+							    AND (@Franchises_Id IS NULL OR Branches.Franchises_Id = @Franchises_Id)
                                 {0}{1}
                             )
 						ORDER BY UserAccounts.Fullname ASC
@@ -641,6 +646,7 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(UserAccountsModel.COL_Password.Name, Password),
                     DBConnection.getSqlParameter(UserAccountsModel.COL_Active.Name, Active),
                     DBConnection.getSqlParameter(UserAccountsModel.COL_Branches_Id.Name, Default_Branches_Id),
+                    DBConnection.getSqlParameter(UserAccountsModel.COL_Franchises_Id.Name, Franchises_Id), //do not get Active Franchise because it breaks the login process. instead, pass the value when needed
                     DBConnection.getSqlParameter("BirthdayListMonth", BirthdayListMonth),
                     DBConnection.getSqlParameter("UserAccountRoles_Id", UserAccountRoles_Id),
                     DBConnection.getSqlParameter("Languages_Id", Language_Id),

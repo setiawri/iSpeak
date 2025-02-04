@@ -77,6 +77,7 @@ namespace iSpeakWebApp.Controllers
                     UtilWebMVC.setBootboxMessage(this, "Kombinasi sudah terdaftar");
                 else
                 {
+                    model.Franchises_Id = (Guid)Helper.getActiveFranchiseId(this.Session);
                     add(model);
                     return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword });
                 }
@@ -121,6 +122,7 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.Rate, modifiedModel.Rate, HourlyRatesModel.COL_Rate.LogDisplay);
                     log = Helper.append(log, originalModel.FullTimeTutorPayrate, modifiedModel.FullTimeTutorPayrate, HourlyRatesModel.COL_FullTimeTutorPayrate.LogDisplay);
                     log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, HourlyRatesModel.COL_Notes.LogDisplay);
+                    log = Helper.append<FranchisesModel>(log, originalModel.Franchises_Id, modifiedModel.Franchises_Id, UserAccountsModel.COL_Franchises_Id.LogDisplay);
 
                     if (!string.IsNullOrEmpty(log))
                         update(modifiedModel, log);
@@ -151,19 +153,21 @@ namespace iSpeakWebApp.Controllers
                             AND (@Rate > 0 OR HourlyRates.Rate = 0)
                             AND (@FullTimeTutorPayrate = 0 OR HourlyRates.FullTimeTutorPayrate > 0)
                             AND (@FullTimeTutorPayrate > 0 OR HourlyRates.FullTimeTutorPayrate = 0)
+                            AND (HourlyRates.Franchises_Id = @Franchises_Id)
                     ",
                     DBConnection.getSqlParameter(HourlyRatesModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(HourlyRatesModel.COL_Branches_Id.Name, model.Branches_Id),
                     DBConnection.getSqlParameter(HourlyRatesModel.COL_UserAccounts_Id.Name, model.UserAccounts_Id),
                     DBConnection.getSqlParameter(HourlyRatesModel.COL_LessonPackages_Id.Name, model.LessonPackages_Id),
                     DBConnection.getSqlParameter(HourlyRatesModel.COL_Rate.Name, model.Rate),
-                    DBConnection.getSqlParameter(HourlyRatesModel.COL_FullTimeTutorPayrate.Name, model.FullTimeTutorPayrate)
+                    DBConnection.getSqlParameter(HourlyRatesModel.COL_FullTimeTutorPayrate.Name, model.FullTimeTutorPayrate),
+                    DBConnection.getSqlParameter(HourlyRatesModel.COL_Franchises_Id.Name, Helper.getActiveFranchiseId(Session))
                 ).Count() > 0;
         }
 
-        public List<HourlyRatesModel> get(string FILTER_Keyword) { return get(null, FILTER_Keyword, null); }
-        public HourlyRatesModel get(Guid Id) { return get(Id, null, null).FirstOrDefault(); }
-        public static List<HourlyRatesModel> get(Guid? Id, string FILTER_Keyword, Guid? UserAccounts_Id)
+        public List<HourlyRatesModel> get(string FILTER_Keyword) { return get(Session, null, FILTER_Keyword, null); }
+        public HourlyRatesModel get(Guid Id) { return get(Session, Id, null, null).FirstOrDefault(); }
+        public static List<HourlyRatesModel> get(HttpSessionStateBase Session, Guid? Id, string FILTER_Keyword, Guid? UserAccounts_Id)
         {
             return new DBContext().Database.SqlQuery<HourlyRatesModel>(@"
                         SELECT HourlyRates.*,
@@ -183,11 +187,13 @@ namespace iSpeakWebApp.Controllers
                                 ))
     							AND (@UserAccounts_Id IS NULL OR UserAccounts.Id = @UserAccounts_Id)
                             ))
+    						AND (@Franchises_Id IS NULL OR HourlyRates.Franchises_Id = @Franchises_Id)
 						ORDER BY UserAccounts.Fullname ASC
                     ",
                     DBConnection.getSqlParameter(HourlyRatesModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
-                    DBConnection.getSqlParameter(HourlyRatesModel.COL_UserAccounts_Id.Name, UserAccounts_Id)
+                    DBConnection.getSqlParameter(HourlyRatesModel.COL_UserAccounts_Id.Name, UserAccounts_Id),
+                    DBConnection.getSqlParameter(HourlyRatesModel.COL_Franchises_Id.Name, Helper.getActiveFranchiseId(Session))
                 ).ToList();
         }
 
@@ -200,7 +206,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_UserAccounts_Id.Name, model.UserAccounts_Id),
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_Rate.Name, model.Rate),
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_FullTimeTutorPayrate.Name, model.FullTimeTutorPayrate),
-                DBConnection.getSqlParameter(HourlyRatesModel.COL_Notes.Name, model.Notes)
+                DBConnection.getSqlParameter(HourlyRatesModel.COL_Notes.Name, model.Notes),
+                DBConnection.getSqlParameter(HourlyRatesModel.COL_Franchises_Id.Name, model.Franchises_Id)
             );
 
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
@@ -217,7 +224,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_UserAccounts_Id.Name, model.UserAccounts_Id),
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_Rate.Name, model.Rate),
                 DBConnection.getSqlParameter(HourlyRatesModel.COL_FullTimeTutorPayrate.Name, model.FullTimeTutorPayrate),
-                DBConnection.getSqlParameter(HourlyRatesModel.COL_Notes.Name, model.Notes)
+                DBConnection.getSqlParameter(HourlyRatesModel.COL_Notes.Name, model.Notes),
+                DBConnection.getSqlParameter(HourlyRatesModel.COL_Franchises_Id.Name, model.Franchises_Id)
             );
 
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
@@ -233,9 +241,11 @@ namespace iSpeakWebApp.Controllers
 						WHERE HourlyRates.FullTimeTutorPayrate > 0
 							AND UserAccounts.Active = 1
 							AND UserAccounts.Branches_Id = @Branches_Id
+                            AND (HourlyRates.Franchises_Id = @Franchises_Id)
 						ORDER BY UserAccounts.Fullname ASC
                     ",
-                    DBConnection.getSqlParameter("Branches_Id", Helper.getActiveBranchId(Session))
+                    DBConnection.getSqlParameter("Branches_Id", Helper.getActiveBranchId(Session)),
+                    DBConnection.getSqlParameter(HourlyRatesModel.COL_Franchises_Id.Name, Helper.getActiveFranchiseId(Session))
                 ).ToList();
         }
 

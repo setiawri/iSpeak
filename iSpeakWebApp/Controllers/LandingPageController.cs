@@ -20,6 +20,11 @@ namespace iSpeakWebApp.Controllers
 
         public ActionResult LandingPage()
         {
+            if (Server.MachineName == Helper.DEVCOMPUTERNAME)
+            {
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+
             return View();
         }
 

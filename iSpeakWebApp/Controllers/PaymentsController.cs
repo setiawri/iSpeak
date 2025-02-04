@@ -139,7 +139,7 @@ namespace iSpeakWebApp.Controllers
                         ReferenceId = payment.Id,
                         No = "",
                         Timestamp = payment.Timestamp,
-                        PettyCashRecordsCategories_Id = PettyCashRecordsCategoriesController.CASHPAYMENT,
+                        PettyCashRecordsCategories_Id = PettyCashRecordsCategoriesController.CASHPAYMENT_Id,
                         Notes = "Cash Payment [" + payment.No + "]",
                         Amount = payment.CashAmount,
                         Approved = false,

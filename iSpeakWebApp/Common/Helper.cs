@@ -103,7 +103,7 @@ namespace iSpeakWebApp
         }
 
         public static bool isActiveFranchiseAvailable(HttpSessionStateBase Session) { return Session[UserAccountsController.SESSION_ActiveFranchises_Id] != null; }
-        public static Guid? getActiveFranchiseId(HttpSessionStateBase Session)
+        public static Guid getActiveFranchiseId(HttpSessionStateBase Session)
         {
             return (Guid)Session[UserAccountsController.SESSION_ActiveFranchises_Id];
         }

@@ -119,10 +119,10 @@ namespace iSpeakWebApp.Controllers
                     ExpenseCategoriesModel originalModel = db.ExpenseCategories.AsNoTracking().Where(x => x.Id == modifiedModel.Id).FirstOrDefault();
 
                     string log = string.Empty;
-                    log = Helper.append<FranchisesModel>(log, originalModel.Franchises_Id, modifiedModel.Franchises_Id, UserAccountsModel.COL_Franchises_Id.LogDisplay);
                     log = Helper.append(log, originalModel.Name, modifiedModel.Name, ExpenseCategoriesModel.COL_Name.LogDisplay);
                     log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, ExpenseCategoriesModel.COL_Notes.LogDisplay);
                     log = Helper.append(log, originalModel.Active, modifiedModel.Active, ExpenseCategoriesModel.COL_Active.LogDisplay);
+                    log = Helper.append<FranchisesModel>(log, originalModel.Franchises_Id, modifiedModel.Franchises_Id, UserAccountsModel.COL_Franchises_Id.LogDisplay);
 
                     if (!string.IsNullOrEmpty(log))
                     {
@@ -154,8 +154,9 @@ namespace iSpeakWebApp.Controllers
                         SELECT ExpenseCategories.*
                         FROM ExpenseCategories
                         WHERE 1=1 
-							AND (@Id IS NOT NULL OR (ExpenseCategories.Name = @Name AND ExpenseCategories.Franchises_Id = @Franchises_Id))
-							AND (@Id IS NULL OR (ExpenseCategories.Name = @Name AND ExpenseCategories.Id <> @Id AND ExpenseCategories.Franchises_Id = @Franchises_Id))
+							AND (@Id IS NOT NULL OR ExpenseCategories.Name = @Name)
+							AND (@Id IS NULL OR (ExpenseCategories.Name = @Name AND ExpenseCategories.Id <> @Id))
+                            AND (ExpenseCategories.Franchises_Id = @Franchises_Id)
                     ",
                     DBConnection.getSqlParameter(ExpenseCategoriesModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(ExpenseCategoriesModel.COL_Name.Name, Name),

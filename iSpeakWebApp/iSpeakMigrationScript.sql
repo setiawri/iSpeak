@@ -66,6 +66,21 @@ ALTER TABLE ExpenseCategories ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NU
 GO
 
 
+---- HOURLY RATES TABLE =================================================================================================================
+
+
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'HourlyRates' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE HourlyRates ADD Franchises_Id UNIQUEIDENTIFIER NULL;
+GO
+
+UPDATE HourlyRates SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
+GO
+
+ALTER TABLE HourlyRates ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
+GO
+
+
+
 
 ---- LANDING PAGE UPDATE ================================================================================================================
 

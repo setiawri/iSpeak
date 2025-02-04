@@ -139,7 +139,7 @@ namespace iSpeakWebApp.Controllers
 
                     SELECT * FROM (
                         SELECT PettyCashRecords.*,
-                            PettyCashRecordsCategories.Name AS PettyCashRecordsCategories_Name,
+                            CASE WHEN PettyCashRecords.PettyCashRecordsCategories_Id = @CashPayment_Id THEN @CashPayment_Name ELSE PettyCashRecordsCategories.Name END AS PettyCashRecordsCategories_Name,
                             ExpenseCategories.Name AS ExpenseCategories_Name,
                             ISNULL(LEFT(UserAccounts.Fullname, 
                                     CASE 
@@ -177,11 +177,13 @@ namespace iSpeakWebApp.Controllers
                 ",
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Id.Name, Id),
                 DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Branches_Id.Name, Branches_Id),
+                DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Approved.Name, Approved),
                 DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
                 DBConnection.getSqlParameter("FILTER_DateFrom", FILTER_DateFrom),
                 DBConnection.getSqlParameter("FILTER_DateTo", Util.getAsEndDate(FILTER_DateTo)),
                 DBConnection.getSqlParameter("Franchises_Id", Helper.getActiveFranchiseId(Session)),
-                DBConnection.getSqlParameter(PettyCashRecordsModel.COL_Approved.Name, Approved)
+                DBConnection.getSqlParameter("CashPayment_Id", PettyCashRecordsCategoriesController.CASHPAYMENT_Id),
+                DBConnection.getSqlParameter("CashPayment_Name", PettyCashRecordsCategoriesController.CASHPAYMENT_Name)
             ).ToList();
         }
 
