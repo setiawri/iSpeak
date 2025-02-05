@@ -11,7 +11,7 @@ using LIBWebMVC;
 namespace iSpeakWebApp.Controllers
 {
     /*
-     * Payments is filtered by Franchise in PaymentItemsController. 
+     * Payments is filtered by Branch. 
      */
 
     public class PaymentsController : Controller

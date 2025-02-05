@@ -139,6 +139,7 @@ namespace iSpeakWebApp.Controllers
                                 AND (@FILTER_DateTo IS NULL OR PayrollPayments.Timestamp <= @FILTER_DateTo)
                                 AND (@Cancelled IS NULL OR PayrollPayments.Cancelled = @Cancelled)
                                 AND (@Approved IS NULL OR PayrollPayments.Approved = @Approved)
+                                AND (Branches.Franchises_Id = @Franchises_Id)
                             ))
 						ORDER BY UserAccounts.Fullname ASC
                     ",
@@ -148,7 +149,8 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter("FILTER_DateTo", Util.getAsEndDate(FILTER_DateTo)),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Branches_Id.Name, Helper.getActiveBranchId(Session)),
                     DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Cancelled.Name, Cancelled),
-                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Approved.Name, Approved)
+                    DBConnection.getSqlParameter(PayrollPaymentsModel.COL_Approved.Name, Approved),
+                    DBConnection.getSqlParameter("Franchises_Id", Helper.getActiveFranchiseId(Session))
                 ).ToList();
         }
 

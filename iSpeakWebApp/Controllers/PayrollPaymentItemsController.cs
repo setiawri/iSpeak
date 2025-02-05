@@ -249,6 +249,7 @@ namespace iSpeakWebApp.Controllers
                         END AS Student_UserAccounts_FirstName,
                         ROW_NUMBER() OVER (ORDER BY PayrollPaymentItems.Timestamp ASC, UserAccounts.Fullname ASC) AS InitialRowNumber
                     FROM PayrollPaymentItems
+	                    LEFT JOIN Branches ON Branches.Id = PayrollPaymentItems.Branches_Id
                         LEFT JOIN LessonSessions ON LessonSessions.PayrollPaymentItems_Id = PayrollPaymentItems.Id
                         LEFT JOIN SaleInvoiceItems ON SaleInvoiceItems.Id = LessonSessions.SaleInvoiceItems_Id
                         LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
@@ -262,6 +263,7 @@ namespace iSpeakWebApp.Controllers
                             AND (@UserAccounts_Id IS NULL OR PayrollPaymentItems.UserAccounts_Id = @UserAccounts_Id)
                             AND (@DatePeriod IS NULL OR (MONTH(PayrollPaymentItems.Timestamp) = MONTH(@DatePeriod) AND YEAR(PayrollPaymentItems.Timestamp) = YEAR(@DatePeriod)))
                             AND (@IsFullTime IS NULL OR PayrollPaymentItems.IsFullTime = @IsFullTime)
+                            AND (Branches.Franchises_Id = @Franchises_Id)
                         ))
 					ORDER BY PayrollPaymentItems.Timestamp ASC, UserAccounts.Fullname ASC
                 ",
@@ -270,7 +272,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_PayrollPayments_Id.Name, PayrollPayments_Id),
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_UserAccounts_Id.Name, UserAccounts_Id),
                 DBConnection.getSqlParameter(PayrollPaymentItemsModel.COL_IsFullTime.Name, IsFullTime),
-                DBConnection.getSqlParameter("DatePeriod", DatePeriod)
+                DBConnection.getSqlParameter("DatePeriod", DatePeriod),
+                DBConnection.getSqlParameter("Franchises_Id", Helper.getActiveFranchiseId(Session))
             ).ToList();
         }
 
