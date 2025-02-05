@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using iSpeakWebApp.Models;
 using LIBUtil;
+using System.Web;
 
 namespace iSpeakWebApp.Controllers
 {
@@ -15,7 +16,7 @@ namespace iSpeakWebApp.Controllers
     {
         /* DATABASE METHODS ***********************************************************************************************************************************/
 
-        public static List<PaymentItemsModel> get(Guid? Id, Guid? Payments_Id)
+        public static List<PaymentItemsModel> get(HttpSessionStateBase Session, Guid? Id, Guid? Payments_Id)
         {
             return new DBContext().Database.SqlQuery<PaymentItemsModel>(@"
                     SELECT PaymentItems.*,
@@ -25,15 +26,18 @@ namespace iSpeakWebApp.Controllers
                     FROM PaymentItems
                         LEFT JOIN Payments ON Payments.Id = PaymentItems.Payments_Id
                         LEFT JOIN SaleInvoices ON SaleInvoices.Id = PaymentItems.ReferenceId
+	                    LEFT JOIN Branches ON Branches.Id = SaleInvoices.Branches_Id
                     WHERE 1=1
 						AND (@Id IS NULL OR PaymentItems.Id = @Id)
 						AND (@Id IS NOT NULL OR (
                             (@Payments_Id IS NULL OR PaymentItems.Payments_Id = @Payments_Id)
                         ))
+                        AND (Branches.Franchises_Id = @Franchises_Id)
 					ORDER BY Payments.No ASC
                 ",
                 DBConnection.getSqlParameter(PaymentItemsModel.COL_Id.Name, Id),
-                DBConnection.getSqlParameter(PaymentItemsModel.COL_Payments_Id.Name, Payments_Id)
+                DBConnection.getSqlParameter(PaymentItemsModel.COL_Payments_Id.Name, Payments_Id),
+                DBConnection.getSqlParameter("Franchises_Id", Helper.getActiveFranchiseId(Session))
             ).ToList();
         }
 

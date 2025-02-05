@@ -11,7 +11,7 @@ using LIBWebMVC;
 namespace iSpeakWebApp.Controllers
 {
     /*
-     * Payments is filtered by Franchise. 
+     * Payments is filtered by Franchise in PaymentItemsController. 
      */
 
     public class PaymentsController : Controller
@@ -189,7 +189,7 @@ namespace iSpeakWebApp.Controllers
                 .OrderBy(x => x.SaleInvoices_No)
                 .ThenBy(x => x.RowNo)
                 .ToList(); 
-            ViewData["PaymentItems"] = PaymentItemsController.get(null, model.Id);
+            ViewData["PaymentItems"] = PaymentItemsController.get(Session, null, model.Id);
             ViewBag.TotalAmount = model.CashAmount + model.ConsignmentAmount + model.DebitAmount;
 
             return View(model);
@@ -215,7 +215,7 @@ namespace iSpeakWebApp.Controllers
         {
             UserAccountRolesModel access = UserAccountsController.getUserAccess(Session);
 
-            List<PaymentItemsModel> models = PaymentItemsController.get(null, id);
+            List<PaymentItemsModel> models = PaymentItemsController.get(Session, null, id);
             string content = string.Format(@"
                     <div class='table-responsive'>
                         <table class='table table-striped table-bordered'>
@@ -386,7 +386,7 @@ namespace iSpeakWebApp.Controllers
             ActivityLogsController.AddEditLog(db, Session, Id, string.Format(PaymentsModel.COL_CancelNotes.LogDisplay, CancelNotes));
 
             //Adjust sale invoice due amount
-            List<PaymentItemsModel> paymentItems = PaymentItemsController.get(null, Id);
+            List<PaymentItemsModel> paymentItems = PaymentItemsController.get(Session, null, Id);
             List<SaleInvoicesModel> saleInvoices;
             foreach (PaymentItemsModel paymentitem in paymentItems)
             {
