@@ -10,7 +10,7 @@ using LIBUtil;
 namespace iSpeakWebApp.Controllers
 {
     /*
-     * Inventory is filtered by Franchise. The list is already filtered by Branch, but franchise is also added just in case.
+     * Inventory is filtered by Franchise. The list is already filtered by Branch.
      */
 
     public class InventoryController : Controller
@@ -20,6 +20,7 @@ namespace iSpeakWebApp.Controllers
         /* INDEX **********************************************************************************************************************************************/
 
         // GET: Inventory
+        [HttpGet]
         public ActionResult Index(int? rss, string FILTER_Keyword)
         {
             if (!UserAccountsController.getUserAccess(Session).Inventory_View)

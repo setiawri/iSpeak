@@ -11,7 +11,7 @@ using LIBWebMVC;
 namespace iSpeakWebApp.Controllers
 {
     /*
-     * LessonSessions is filtered by Franchise. 
+     * LessonSessions is filtered by Franchise. The list is already filtered by Branch.
      */
 
     public class LessonSessionsController : Controller
@@ -21,6 +21,7 @@ namespace iSpeakWebApp.Controllers
         /* INDEX **********************************************************************************************************************************************/
 
         // GET: LessonSessions
+        [HttpGet]
         public ActionResult Index(int? rss, string FILTER_Keyword, string FILTER_InvoiceNo, int? FILTER_Cancelled, 
             bool? FILTER_chkDateFrom, DateTime? FILTER_DateFrom, bool? FILTER_chkDateTo, DateTime? FILTER_DateTo)
         {
@@ -322,6 +323,7 @@ namespace iSpeakWebApp.Controllers
                         Tutor_UserAccounts.No AS Tutor_UserAccounts_No,
                         ROW_NUMBER() OVER (ORDER BY LessonSessions.Timestamp DESC) AS InitialRowNumber
                     FROM LessonSessions
+                        LEFT JOIN Branches ON Branches.Id = LessonSessions.Branches_Id
                         LEFT JOIN SaleInvoiceItems ON SaleInvoiceItems.Id = LessonSessions.SaleInvoiceItems_Id
                         LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
                         LEFT JOIN UserAccounts Student_UserAccounts ON Student_UserAccounts.Id = SaleInvoices.Customer_UserAccounts_Id
@@ -342,6 +344,7 @@ namespace iSpeakWebApp.Controllers
 	                                LEFT JOIN SaleInvoices ON Saleinvoices.Id = SaleInvoiceItems.SaleInvoices_Id
                                 WHERE SaleInvoices.No = @FILTER_InvoiceNo
                             )))
+                            AND (Branches.Franchises_Id = @Franchises_Id)
                             {0}
                         ))
 					ORDER BY LessonSessions.Timestamp DESC
@@ -354,7 +357,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
                 DBConnection.getSqlParameter("FILTER_InvoiceNo", FILTER_InvoiceNo),
                 DBConnection.getSqlParameter("FILTER_DateFrom", FILTER_DateFrom),
-                DBConnection.getSqlParameter("FILTER_DateTo", Util.getAsEndDate(FILTER_DateTo))
+                DBConnection.getSqlParameter("FILTER_DateTo", Util.getAsEndDate(FILTER_DateTo)),
+                DBConnection.getSqlParameter("Franchises_Id", Helper.getActiveFranchiseId(Session))
             ).ToList();
         }
 
