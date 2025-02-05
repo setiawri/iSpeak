@@ -10,7 +10,7 @@ using LIBUtil;
 namespace iSpeakWebApp.Controllers
 {
     /*
-     * Inventory is filtered by Franchise. 
+     * Inventory is filtered by Franchise. The list is already filtered by Branch, but franchise is also added just in case.
      */
 
     public class InventoryController : Controller
@@ -192,6 +192,7 @@ namespace iSpeakWebApp.Controllers
                             ISNULL(GlobalInventory.AvailableQty,0) AS GlobalAvailableQty,
                             ROW_NUMBER() OVER (ORDER BY Inventory.ReceiveDate DESC) AS InitialRowNumber
                         FROM Inventory
+                            LEFT JOIN Branches ON Branches.Id = Inventory.Branches_Id
                             LEFT JOIN Products ON Products.Id = Inventory.Products_Id
                             LEFT JOIN Units ON Units.Id = Products.Units_Id
                             LEFT JOIN Suppliers ON Suppliers.Id = Inventory.Suppliers_Id     
@@ -255,12 +256,14 @@ namespace iSpeakWebApp.Controllers
     							(@FILTER_Keyword IS NULL OR (Products.Name LIKE '%'+@FILTER_Keyword+'%'))
     							AND (@Products_Id IS NULL OR Inventory.Products_Id = @Products_Id)
                             ))
+                            AND (Branches.Franchises_Id = @Franchises_Id)
 						ORDER BY Inventory.ReceiveDate DESC
                     ",
                     DBConnection.getSqlParameter(InventoryModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(InventoryModel.COL_Branches_Id.Name, Helper.getActiveBranchId(Session)),
                     DBConnection.getSqlParameter(InventoryModel.COL_Products_Id.Name, Products_Id),
-                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
+                    DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
+                    DBConnection.getSqlParameter("Franchises_Id", Helper.getActiveFranchiseId(Session))
                 ).ToList();
         }
 
