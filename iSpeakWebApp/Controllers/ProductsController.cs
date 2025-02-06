@@ -67,6 +67,7 @@ namespace iSpeakWebApp.Controllers
                     ModelState.AddModelError(ProductsModel.COL_Name.Name, $"{model.Name} sudah terdaftar");
                 else
                 {
+                    model.Franchises_Id = Helper.getActiveFranchiseId(Session);
                     add(model);
                     return RedirectToAction(nameof(Edit), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
                 }
@@ -114,6 +115,7 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.BuyPrice, modifiedModel.BuyPrice, ProductsModel.COL_BuyPrice.LogDisplay);
                     log = Helper.append(log, originalModel.SellPrice, modifiedModel.SellPrice, ProductsModel.COL_SellPrice.LogDisplay);
                     log = Helper.append(log, originalModel.ForSale, modifiedModel.ForSale, ProductsModel.COL_ForSale.LogDisplay);
+                    log = Helper.append<FranchisesModel>(log, originalModel.Franchises_Id, modifiedModel.Franchises_Id, BranchesModel.COL_Franchises_Id.LogDisplay);
 
                     if (!string.IsNullOrEmpty(log))
                         update(modifiedModel, log);
@@ -158,9 +160,11 @@ namespace iSpeakWebApp.Controllers
                         WHERE 1=1 
 							AND (@Id IS NOT NULL OR Products.Name = @Name)
 							AND (@Id IS NULL OR (Products.Name = @Name AND Products.Id <> @Id))
+                            AND (Products.Franchises_Id = @Franchises_Id)
                     ",
                     DBConnection.getSqlParameter(ProductsModel.COL_Id.Name, Id),
-                    DBConnection.getSqlParameter(ProductsModel.COL_Name.Name, Name)
+                    DBConnection.getSqlParameter(ProductsModel.COL_Name.Name, Name),
+                    DBConnection.getSqlParameter(ProductsModel.COL_Franchises_Id.Name, Helper.getActiveFranchiseId(Session))
                 ).Count() > 0;
         }
 
@@ -212,6 +216,7 @@ namespace iSpeakWebApp.Controllers
                             (@Active IS NULL OR Products.Active = @Active)
     						AND (@FILTER_Keyword IS NULL OR (Products.Name LIKE '%'+@FILTER_Keyword+'%'))
                             AND (@ForSale IS NULL OR Products.ForSale = @ForSale)
+                            AND (Products.Franchises_Id = @Franchises_Id)
                         ))
 					ORDER BY Products.Name ASC
                 ",
@@ -219,7 +224,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(ProductsModel.COL_Active.Name, Active),
                 DBConnection.getSqlParameter(ProductsModel.COL_ForSale.Name, ForSale),
                 DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
-                DBConnection.getSqlParameter("Branches_Id", Helper.getActiveBranchId(Session))
+                DBConnection.getSqlParameter("Branches_Id", Helper.getActiveBranchId(Session)),
+                DBConnection.getSqlParameter(ProductsModel.COL_Franchises_Id.Name, Helper.getActiveFranchiseId(Session))
             ).ToList();
         }
 
@@ -235,7 +241,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(ProductsModel.COL_Units_Id.Name, model.Units_Id),
                 DBConnection.getSqlParameter(ProductsModel.COL_ForSale.Name, model.ForSale),
                 DBConnection.getSqlParameter(ProductsModel.COL_BuyPrice.Name, model.BuyPrice),
-                DBConnection.getSqlParameter(ProductsModel.COL_SellPrice.Name, model.SellPrice)
+                DBConnection.getSqlParameter(ProductsModel.COL_SellPrice.Name, model.SellPrice),
+                DBConnection.getSqlParameter(ProductsModel.COL_Franchises_Id.Name, model.Franchises_Id)
             );
 
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
@@ -253,7 +260,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(ProductsModel.COL_Units_Id.Name, model.Units_Id),
                 DBConnection.getSqlParameter(ProductsModel.COL_ForSale.Name, model.ForSale),
                 DBConnection.getSqlParameter(ProductsModel.COL_BuyPrice.Name, model.BuyPrice),
-                DBConnection.getSqlParameter(ProductsModel.COL_SellPrice.Name, model.SellPrice)
+                DBConnection.getSqlParameter(ProductsModel.COL_SellPrice.Name, model.SellPrice),
+                DBConnection.getSqlParameter(ProductsModel.COL_Franchises_Id.Name, model.Franchises_Id)
             );
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
         }

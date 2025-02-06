@@ -80,6 +80,20 @@ ALTER TABLE HourlyRates ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
 GO
 
 
+---- PRODUCTS TABLE =====================================================================================================================
+
+
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'Products' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE Products ADD Franchises_Id UNIQUEIDENTIFIER NULL;
+GO
+
+UPDATE Products SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
+GO
+
+ALTER TABLE Products ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
+GO
+
+
 
 
 ---- LANDING PAGE UPDATE ================================================================================================================

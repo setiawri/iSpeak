@@ -118,7 +118,7 @@ namespace iSpeakWebApp.Controllers
 
                     string log = string.Empty;
                     log = Helper.append(log, originalModel.Name, modifiedModel.Name, BranchesModel.COL_Name.LogDisplay);
-                    log = Helper.append(log, originalModel.Franchises_Id, modifiedModel.Franchises_Id, BranchesModel.COL_Franchises_Id.LogDisplay);
+                    log = Helper.append<FranchisesModel>(log, originalModel.Franchises_Id, modifiedModel.Franchises_Id, BranchesModel.COL_Franchises_Id.LogDisplay);
                     log = Helper.append(log, originalModel.Address, modifiedModel.Address, BranchesModel.COL_Address.LogDisplay);
                     log = Helper.append(log, originalModel.PhoneNumber, modifiedModel.PhoneNumber, BranchesModel.COL_PhoneNumber.LogDisplay);
                     log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, BranchesModel.COL_Notes.LogDisplay);

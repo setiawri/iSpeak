@@ -60,6 +60,12 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_SellPrice = new ModelMember { Name = "SellPrice", Display = "Sell Price", LogDisplay = ActivityLogsController.editIntFormat("Sell Price") };
 
 
+        [Required]
+        [Display(Name = "Franchise")]
+        public Guid Franchises_Id { get; set; }
+        public static ModelMember COL_Franchises_Id = new ModelMember { Name = "Franchises_Id", Display = "Franchise", LogDisplay = ActivityLogsController.editStringFormat("Franchise") };
+        public string Franchises_Name { get; set; } = string.Empty;
+
         /******************************************************************************************************************************************************/
 
         public string DDLDescription { get; set; } = "";
