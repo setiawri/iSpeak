@@ -204,10 +204,12 @@ namespace iSpeakWebApp.Controllers
 										SaleInvoices.Amount AS Amount,
 										0.0 AS Profit
 									FROM SaleInvoices 
+										LEFT JOIN Branches ON Branches.Id = SaleInvoices.Branches_Id
 									WHERE 1=1
 										AND SaleInvoices.Cancelled = 0
 										AND (@FILTER_DateFrom IS NULL OR SaleInvoices.Timestamp >= @FILTER_DateFrom)
 										AND (@FILTER_DateTo IS NULL OR SaleInvoices.Timestamp <= @FILTER_DateTo)
+										AND (Branches.Franchises_Id = @Franchises_Id)
 								) Summary
 								GROUP BY Summary.MonthYear
 							) Revenues
@@ -218,18 +220,21 @@ namespace iSpeakWebApp.Controllers
 										CAST(YEAR(PayrollPaymentItems.Timestamp) AS VARCHAR(4)) + '-' + (SELECT RIGHT('00' + CAST(MONTH(PayrollPaymentItems.Timestamp) AS VARCHAR(2)),2)) AS MonthYear,
 										PayrollPaymentItems.Amount AS Amount
 									FROM PayrollPaymentItems 
+										LEFT JOIN Branches ON Branches.Id = PayrollPaymentItems.Branches_Id
 									WHERE 1=1
 										AND PayrollPaymentItems.CancelNotes IS NULL
 										AND PayrollPaymentItems.Timestamp IS NOT NULL
 										AND (@FILTER_DateFrom IS NULL OR PayrollPaymentItems.Timestamp >= @FILTER_DateFrom)
 										AND (@FILTER_DateTo IS NULL OR PayrollPaymentItems.Timestamp <= @FILTER_DateTo)
+										AND (Branches.Franchises_Id = @Franchises_Id)
 								) Summary
 								GROUP BY Summary.MonthYear
 							) Expenses ON Expenses.MonthYear = Revenues.MonthYear
 						ORDER BY Revenues.MonthYear ASC
                     ",
                     DBConnection.getSqlParameter("FILTER_DateFrom", FILTER_DateFrom),
-                    DBConnection.getSqlParameter("FILTER_DateTo", Util.getAsEndDate(FILTER_DateTo))
+                    DBConnection.getSqlParameter("FILTER_DateTo", Util.getAsEndDate(FILTER_DateTo)),
+                    DBConnection.getSqlParameter("Franchises_Id", Helper.getActiveFranchiseId(Session))
                 ).ToList();
         }
 

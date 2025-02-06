@@ -10,7 +10,7 @@ using System.Web.Mvc;
 namespace iSpeakWebApp.Controllers
 {
     /*
-     * Reminders is filtered by Franchise. 
+     * Reminders is filtered by Branch. Because it is using dbcontext, I am not adding filter by branch.
      */
 
     public class RemindersController : Controller
