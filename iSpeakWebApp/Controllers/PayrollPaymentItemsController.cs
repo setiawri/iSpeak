@@ -343,8 +343,10 @@ namespace iSpeakWebApp.Controllers
 									SUM(Hour) AS TotalHours,
 									SUM(Amount) AS PayableAmount
 								FROM PayrollPaymentItems
+	                                LEFT JOIN Branches ON Branches.Id = PayrollPaymentItems.Branches_Id
 								WHERE PayrollPaymentItems.Timestamp >= @StartDate AND PayrollPaymentItems.Timestamp <= @EndDate
                                     AND PayrollPaymentItems.Branches_Id = @Branches_Id
+                                    AND (Branches.Franchises_Id = @Franchises_Id)
 								GROUP BY UserAccounts_Id					
 							) Payrolls
 							LEFT JOIN UserAccounts ON UserAccounts.Id = Payrolls.Tutor_UserAccounts_Id
@@ -361,7 +363,8 @@ namespace iSpeakWebApp.Controllers
                     ",
                     DBConnection.getSqlParameter("Branches_Id", Helper.getActiveBranchId(Session)),
                     DBConnection.getSqlParameter("StartDate", StartDate),
-                    DBConnection.getSqlParameter("EndDate", EndDate)
+                    DBConnection.getSqlParameter("EndDate", EndDate),
+                    DBConnection.getSqlParameter("Franchises_Id", Helper.getActiveFranchiseId(Session))
                 ).ToList();
 
             return models;
