@@ -312,6 +312,7 @@ namespace iSpeakWebApp.Controllers
                             AND (@Approved IS NULL OR SaleInvoices.Approved = @Approved)
                             AND (@FILTER_HasDueAmount IS NULL OR ((@FILTER_HasDueAmount = 0 AND SaleInvoices.Due = 0) OR (@FILTER_HasDueAmount = 1 AND SaleInvoices.Due > 0)))
                             AND (@Branches_Id IS NULL OR SaleInvoices.Branches_Id = @Branches_Id)
+							AND (Branches.Franchises_Id = @Franchises_Id)
                             {0}{1}
                         ))
 					ORDER BY SaleInvoices.No DESC
@@ -326,7 +327,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter("FILTER_HasDueAmount", FILTER_HasDueAmount),
                 DBConnection.getSqlParameter(SaleInvoicesModel.COL_Branches_Id.Name, Branches_Id),
                 DBConnection.getSqlParameter(SaleInvoicesModel.COL_Cancelled.Name, Cancelled),
-                DBConnection.getSqlParameter(SaleInvoicesModel.COL_Approved.Name, Approved)
+                DBConnection.getSqlParameter(SaleInvoicesModel.COL_Approved.Name, Approved),
+                DBConnection.getSqlParameter("Franchises_Id", Helper.getActiveFranchiseId(Session))
             ).ToList();
         }
 

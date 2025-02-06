@@ -32,6 +32,7 @@ namespace iSpeakWebApp.Controllers
                             FROM SaleInvoiceItems_Inventory
                                 LEFT JOIN SaleInvoiceItems ON SaleInvoiceItems.Id = SaleInvoiceItems_Inventory.SaleInvoiceItems_Id
                                 LEFT JOIN SaleInvoices ON SaleInvoices.Id = SaleInvoiceItems.SaleInvoices_Id
+								LEFT JOIN Branches ON Branches.Id = SaleInvoices.Branches_Id
                                 LEFT JOIN Inventory ON Inventory.Id = SaleInvoiceItems_Inventory.Inventory_Id
                                 LEFT JOIN ( 
                                         SELECT SaleInvoiceItems_Inventory.Id, 
@@ -46,6 +47,7 @@ namespace iSpeakWebApp.Controllers
                                     SaleInvoices.Branches_Id = @Branches_Id
     							    AND (@SaleInvoiceItems_Id IS NULL OR (SaleInvoiceItems_Inventory.SaleInvoiceItems_Id = @SaleInvoiceItems_Id))
     							    AND (@Inventory_Id IS NULL OR (SaleInvoiceItems_Inventory.Inventory_Id = @Inventory_Id))
+									AND (Branches.Franchises_Id = @Franchises_Id)
                                 ))
                         ) ResultTable
                         ORDER BY ResultTable.Timestamp DESC
@@ -53,7 +55,8 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(SaleInvoiceItems_InventoryModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(SaleInvoiceItems_InventoryModel.COL_SaleInvoiceItems_Id.Name, SaleInvoiceItems_Id),
                     DBConnection.getSqlParameter(SaleInvoiceItems_InventoryModel.COL_Inventory_Id.Name, Inventory_Id),
-                    DBConnection.getSqlParameter("Branches_Id", Helper.getActiveBranchId(Session))
+                    DBConnection.getSqlParameter("Branches_Id", Helper.getActiveBranchId(Session)),
+                    DBConnection.getSqlParameter("Franchises_Id", Helper.getActiveFranchiseId(Session))
                 ).ToList();
         }
 
