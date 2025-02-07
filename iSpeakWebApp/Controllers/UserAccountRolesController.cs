@@ -19,7 +19,7 @@ using LIBUtil;
 namespace iSpeakWebApp.Controllers
 {
     /*
-     * User Account Roles is GLOBAL and are NOT filtered by Franchise. Changes must be made by superuser.
+     * User Account Roles is GLOBAL and are NOT filtered by Franchise. Changes must be made by central.
      */
 
     public class UserAccountRolesController : Controller

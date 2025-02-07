@@ -25,6 +25,7 @@ TO DO:
 	- Franchise manager and Manager should be able to see all roles except superuser and franchise manager roles.
 	- Admin can only see student and tutor roles
 	- Student and tutor can only see their info. They cannot see other roles
+	- masuk sebagai gading franchise manager. user account yang ditampilkan hanya student dan tutor. seharusnya account lain termasuk franchise manager diperlihatkan juga.
 *
 
 

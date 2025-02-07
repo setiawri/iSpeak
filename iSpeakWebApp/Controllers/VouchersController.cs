@@ -79,6 +79,7 @@ namespace iSpeakWebApp.Controllers
                 {
                     model.Id = Guid.NewGuid();
                     model.Active = true;
+                    model.Franchises_Id = Helper.getActiveFranchiseId(Session);
                     add(model);
                     return RedirectToAction(nameof(Index), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
                 }
@@ -121,6 +122,7 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.Active, modifiedModel.Active, VouchersModel.COL_Active.LogDisplay);
                     log = Helper.append(log, originalModel.Description, modifiedModel.Description, VouchersModel.COL_Description.LogDisplay);
                     log = Helper.append(log, originalModel.Amount, modifiedModel.Amount, VouchersModel.COL_Amount.LogDisplay);
+                    log = Helper.append<FranchisesModel>(log, originalModel.Franchises_Id, modifiedModel.Franchises_Id, VouchersModel.COL_Code.LogDisplay);
 
                     if (!string.IsNullOrEmpty(log))
                     {
@@ -139,12 +141,12 @@ namespace iSpeakWebApp.Controllers
 
         public static void setDropDownListViewBag(Controller controller)
         {
-            controller.ViewBag.Vouchers = new SelectList(get(1), VouchersModel.COL_Id.Name, VouchersModel.COL_DDLDescription.Name);
+            controller.ViewBag.Vouchers = new SelectList(get(controller.Session, 1), VouchersModel.COL_Id.Name, VouchersModel.COL_DDLDescription.Name);
         }
 
         public static void setViewBag(Controller controller)
         {
-            controller.ViewBag.VouchersModels = get(1);
+            controller.ViewBag.VouchersModels = get(controller.Session, 1);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
@@ -155,24 +157,29 @@ namespace iSpeakWebApp.Controllers
                         SELECT Vouchers.*,
                             '' AS DDLDescription
                         FROM Vouchers
+                            LEFT JOIN Franchises ON Franchises.Id = Vouchers.Franchises
                         WHERE 1=1 
 							AND (@Id IS NOT NULL OR Vouchers.Code = @Code)
 							AND (@Id IS NULL OR (Vouchers.Code = @Code AND Vouchers.Id <> @Id))
+                            AND (Products.Franchises_Id = @Franchises_Id)
                     ",
                     DBConnection.getSqlParameter(VouchersModel.COL_Id.Name, Id),
-                    DBConnection.getSqlParameter(VouchersModel.COL_Code.Name, Code)
+                    DBConnection.getSqlParameter(VouchersModel.COL_Code.Name, Code),
+                    DBConnection.getSqlParameter("Franchises_Id", Helper.getActiveFranchiseId(Session))
                 ).Count() > 0;
         }
 
-        public List<VouchersModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(null, FILTER_Keyword, FILTER_Active); }
-        public VouchersModel get(Guid Id) { return get(Id, null, null).FirstOrDefault(); }
-        public static List<VouchersModel> get(int? Active) { return get(null, null, Active); }
-        public static List<VouchersModel> get(Guid? Id, string FILTER_Keyword, int? Active)
+        public List<VouchersModel> get(string FILTER_Keyword, int? FILTER_Active) { return get(Session, null, FILTER_Keyword, FILTER_Active); }
+        public VouchersModel get(Guid Id) { return get(Session, Id, null, null).FirstOrDefault(); }
+        public static List<VouchersModel> get(HttpSessionStateBase Session, int? Active) { return get(Session, null, null, Active); }
+        public static List<VouchersModel> get(HttpSessionStateBase Session, Guid? Id, string FILTER_Keyword, int? Active)
         {
             return new DBContext().Database.SqlQuery<VouchersModel>(@"
                         SELECT Vouchers.*,
+                            Franchises.Name AS Franchises_Name,
                             Vouchers.Code + ' (' + FORMAT(Vouchers.Amount,'N0') + ')' AS DDLDescription
                         FROM Vouchers
+                            LEFT JOIN Franchises ON Franchises.Id = Vouchers.Franchises
                         WHERE 1=1
 							AND (@Id IS NULL OR Vouchers.Id = @Id)
 							AND (@Id IS NOT NULL OR (
@@ -183,6 +190,7 @@ namespace iSpeakWebApp.Controllers
                     ",
                     DBConnection.getSqlParameter(VouchersModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(VouchersModel.COL_Active.Name, Active),
+                    DBConnection.getSqlParameter(VouchersModel.COL_Franchises_Id.Name, Helper.getActiveFranchiseId(Session)),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword)
                 ).ToList();
         }
@@ -194,7 +202,8 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(VouchersModel.COL_Active.Name, model.Active),
                     DBConnection.getSqlParameter(VouchersModel.COL_Code.Name, model.Code),
                     DBConnection.getSqlParameter(VouchersModel.COL_Description.Name, model.Description),
-                    DBConnection.getSqlParameter(VouchersModel.COL_Amount.Name, model.Amount)
+                    DBConnection.getSqlParameter(VouchersModel.COL_Amount.Name, model.Amount),
+                    DBConnection.getSqlParameter(ProductsModel.COL_Franchises_Id.Name, model.Franchises_Id)
                 );
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
         }
@@ -206,7 +215,8 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(VouchersModel.COL_Active.Name, model.Active),
                     DBConnection.getSqlParameter(VouchersModel.COL_Code.Name, model.Code),
                     DBConnection.getSqlParameter(VouchersModel.COL_Description.Name, model.Description),
-                    DBConnection.getSqlParameter(VouchersModel.COL_Amount.Name, model.Amount)
+                    DBConnection.getSqlParameter(VouchersModel.COL_Amount.Name, model.Amount),
+                    DBConnection.getSqlParameter(ProductsModel.COL_Franchises_Id.Name, model.Franchises_Id)
                 );
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
         }

@@ -16,6 +16,7 @@
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.Franchises_Id)
             <!-- Form inputs -->
             <div class="card">
                 <div class="card-header header-elements-inline">

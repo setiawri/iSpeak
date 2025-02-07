@@ -31,12 +31,12 @@
             
             @if (access.Franchises_View)
             {
-                <span class="navbar-text mr-1" style="width:120px;">
+                <span class="navbar-text mr-1" style="width:150px;">
                     @Html.DropDownList("FranchiseId", slFranchises, new { @class = "select2" })
                 </span>
             }
 
-            <span class="navbar-text" style="width:120px;">
+            <span class="navbar-text" style="width:150px;">
                 @Html.DropDownList("BranchId", slBranches, new { @class = "select2", @onchange = "updateActiveBranch()" })
             </span>
             <ul class="navbar-nav">

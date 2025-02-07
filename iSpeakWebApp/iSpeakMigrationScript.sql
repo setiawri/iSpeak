@@ -94,6 +94,20 @@ ALTER TABLE Products ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
 GO
 
 
+---- VOUCHERS TABLE =====================================================================================================================
+
+
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'Vouchers' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE Vouchers ADD Franchises_Id UNIQUEIDENTIFIER NULL;
+GO
+
+UPDATE Vouchers SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
+GO
+
+ALTER TABLE Vouchers ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
+GO
+
+
 
 
 ---- LANDING PAGE UPDATE ================================================================================================================

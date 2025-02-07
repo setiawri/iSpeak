@@ -103,6 +103,7 @@ namespace iSpeakWebApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(UserAccountsModel model, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_UserAccountRoles_Id)
         {
+            //UtilWebMVC.debug(ModelState, ViewData);
             if (ModelState.IsValid)
             {
                 model.Fullname = model.Fullname.Replace("  ", " ").Replace("  ", " ");
@@ -150,7 +151,9 @@ namespace iSpeakWebApp.Controllers
             if (ModelState.IsValid)
             {
                 modifiedModel.Fullname = modifiedModel.Fullname.Replace("  ", " ").Replace("  ", " ");
-                if (isExists(modifiedModel.Id, modifiedModel.Username))
+                if (modifiedModel.Roles_List == null || modifiedModel.Roles_List.Count == 0)
+                    ModelState.AddModelError(UserAccountsModel.COL_Roles_List.Name, "Please select a role for this account");
+                else if (isExists(modifiedModel.Id, modifiedModel.Username))
                     ModelState.AddModelError(UserAccountsModel.COL_Username.Name, $"{modifiedModel.Username} sudah terdaftar");
                 else
                 {
@@ -238,6 +241,11 @@ namespace iSpeakWebApp.Controllers
             else if (string.IsNullOrEmpty(model.Username) && model.Password == "Fra")
             {
                 model.Username = "rickyfranchise";
+                model.Password = "A2cdefGH";
+            }
+            else if (string.IsNullOrEmpty(model.Username) && model.Password == "GdgFr")
+            {
+                model.Username = "rickyGadingFrMgr";
                 model.Password = "A2cdefGH";
             }
 
@@ -424,8 +432,19 @@ namespace iSpeakWebApp.Controllers
             if (model != null)
             {
                 Session[SESSION_UserAccount] = model;
-                Session[SESSION_ActiveBranches_Id] = model.Branches_Id;
-                Session[SESSION_ActiveFranchises_Id] = model.Franchises_Id;
+
+                //keep active branch the same if this is not first login
+                Guid? activeBranchId = null;
+                try
+                {
+                    activeBranchId = Helper.getActiveBranchId(Session);
+                } catch (Exception e) { }
+                if (activeBranchId == null)
+                {
+                    Session[SESSION_ActiveBranches_Id] = model.Branches_Id;
+                    Session[SESSION_ActiveFranchises_Id] = model.Franchises_Id;
+                }
+
                 Session[SESSION_UserAccountAccess] = UserAccountRolesController.getAccesses(model);
                 Session[SESSION_Branches_Models] = BranchesController.get(1, model.Branches);
                 if (ConnectToLiveDatabase != null) Session[SESSION_ConnectToLiveDatabase] = ConnectToLiveDatabase;
@@ -551,9 +570,10 @@ namespace iSpeakWebApp.Controllers
             return db.Database.SqlQuery<UserAccountsModel>(@"
                         SELECT UserAccounts.*
                         FROM UserAccounts
+                            LEFT JOIN Branches ON Branches.Id = UserAccounts.Branches_Id
                         WHERE UserAccounts.Fullname = @Fullname
 							AND UserAccounts.Birthday = @Birthday
-                            AND (ExpenseCategories.Franchises_Id = @Franchises_Id)
+                            AND (Branches.Franchises_Id = @Franchises_Id)
                     ",
                     DBConnection.getSqlParameter(UserAccountsModel.COL_Fullname.Name, Fullname),
                     DBConnection.getSqlParameter(UserAccountsModel.COL_Birthday.Name, Birthday),
@@ -711,7 +731,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(UserAccountsModel.COL_Roles.Name, model.Roles)
             );
 
-            updateLoginSession(Session);
+            if(model.Id == UserAccountsController.getUserAccount(Session).Id)
+                updateLoginSession(Session);
 
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
         }

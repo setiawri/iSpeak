@@ -177,6 +177,7 @@ namespace iSpeakWebApp.Controllers
             return new DBContext().Database.SqlQuery<ProductsModel>(@"
                     SELECT Products.*,
                         Units.Name AS Units_Name,
+                        Franchises.Name AS Franchises_Name,
                         ISNULL(InventoryCount.BuyQty,0) - ISNULL(SaleInvoiceItemsCount.SaleQty,0) + ISNULL(SaleReturnItemsCount.ReturnQty,0) AS AvailableQty,
                         Products.Name + ' (Available: ' + FORMAT(
                                 ISNULL(InventoryCount.BuyQty,0)
@@ -184,6 +185,7 @@ namespace iSpeakWebApp.Controllers
                                 + ISNULL(SaleReturnItemsCount.ReturnQty,0)
                             ,'N0') + ') ' + FORMAT(Products.SellPrice,'N0') AS DDLDescription
                     FROM Products
+                        LEFT JOIN Franchises ON Franchises.Id = Products.Franchises
                         LEFT JOIN Units ON Units.Id = Products.Units_Id
                         LEFT JOIN (
                                 SELECT Inventory.Products_Id, SUM(Inventory.BuyQty) AS BuyQty

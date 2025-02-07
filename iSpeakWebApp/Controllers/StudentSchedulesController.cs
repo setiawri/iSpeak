@@ -9,7 +9,7 @@ using LIBUtil;
 namespace iSpeakWebApp.Controllers
 {
     /*
-     * StudentSchedules is filtered by Franchise. 
+     * StudentSchedules is filtered by student branch. Franchise filter is NOT applied here
      */
 
     public class StudentSchedulesController : Controller
