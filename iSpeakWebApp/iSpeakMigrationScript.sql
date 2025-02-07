@@ -1,6 +1,14 @@
 
 
 
+
+
+--BACKUP DULU ONLINE DATABASE SEBELUM INI DI APPLY!!!
+
+
+
+
+
 ---- FRANCHISE TABLE ====================================================================================================================
 
 	--Franchises

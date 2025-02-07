@@ -434,12 +434,7 @@ namespace iSpeakWebApp.Controllers
                 Session[SESSION_UserAccount] = model;
 
                 //keep active branch the same if this is not first login
-                Guid? activeBranchId = null;
-                try
-                {
-                    activeBranchId = Helper.getActiveBranchId(Session);
-                } catch (Exception e) { }
-                if (activeBranchId == null)
+                if (Session[SESSION_ActiveBranches_Id] == null)
                 {
                     Session[SESSION_ActiveBranches_Id] = model.Branches_Id;
                     Session[SESSION_ActiveFranchises_Id] = model.Franchises_Id;
@@ -472,6 +467,8 @@ namespace iSpeakWebApp.Controllers
         {
             Session[SESSION_UserAccount] = null;
             Session[SESSION_UserAccountAccess] = null;
+            Session[SESSION_ActiveBranches_Id] = null;
+            Session[SESSION_ActiveFranchises_Id] = null;
             return RedirectToAction(nameof(Login));
         }
 
