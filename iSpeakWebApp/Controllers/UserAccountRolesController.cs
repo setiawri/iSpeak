@@ -364,8 +364,8 @@ namespace iSpeakWebApp.Controllers
             UserAccountRolesModel model = new UserAccountRolesModel();
             foreach(UserAccountRolesModel item in get(UserAccount.Roles))
             {
-                if (model.Roles_List == null && item.Roles_List.Count > 0) model.Roles_List = new List<string>();
-                if(item.Roles_List != null) model.Roles_List.AddRange(item.Roles_List);
+                if (model.Roles_List == null && item.Roles_List != null && item.Roles_List.Count > 0) model.Roles_List = new List<string>();
+                if(item.Roles_List != null && item.Roles_List.Count > 0) model.Roles_List.AddRange(item.Roles_List);
 
                 //ActivityLogs
                 if (item.ActivityLogs_View) model.ActivityLogs_View = true;
