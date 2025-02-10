@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using iSpeakWebApp.Controllers;
@@ -17,6 +18,12 @@ namespace iSpeakWebApp.Models
 
         public string Notes { get; set; }
         public static ModelMember COL_Notes = new ModelMember { Name = "Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Notes") };
+
+        [Display(Name = "Viewable Roles")]
+        public string Roles { get; set; }
+        public static ModelMember COL_Roles = new ModelMember { Name = "Roles", LogDisplay = ActivityLogsController.editListStringFormat("Roles") };
+        public List<string> Roles_List { get; set; }
+        public static ModelMember COL_Roles_List = new ModelMember { Name = "Roles_List" };
 
         /* ACTIVITY LOGS **************************************************************************************************************************************************************************************************************************************************************************************/
 

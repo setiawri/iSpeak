@@ -2,7 +2,7 @@
 @{
     ViewBag.SelectedNavigationMenu = "Home";
 
-    List<iSpeakWebApp.Models.UserAccountRolesModel> UserAccountRoles = iSpeakWebApp.Controllers.UserAccountRolesController.get();
+    List<iSpeakWebApp.Models.UserAccountRolesModel> UserAccountRoles = iSpeakWebApp.Controllers.UserAccountRolesController.get(Session);
 }
 
 <div class="row">

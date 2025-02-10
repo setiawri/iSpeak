@@ -5,6 +5,8 @@ using System.Data.Entity;
 using System;
 using System.Web.Mvc;
 using LIBUtil;
+using System.Reflection;
+using System.Web;
 
 /*
  * To add new user access:
@@ -41,7 +43,7 @@ namespace iSpeakWebApp.Controllers
 
             ViewBag.RemoveDatatablesStateSave = rss;
 
-            return View(get());
+            return View(get(this.Session));
         }
 
         /* CREATE *********************************************************************************************************************************************/
@@ -52,6 +54,7 @@ namespace iSpeakWebApp.Controllers
             if (!UserAccountsController.getUserAccess(Session).UserAccountRoles_Add)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
+            setViewBag(this);
             return View(new UserAccountRolesModel());
         }
 
@@ -74,8 +77,10 @@ namespace iSpeakWebApp.Controllers
                 }
             }
 
+            setViewBag(this);
             return View(model);
         }
+
 
         /* EDIT ***********************************************************************************************************************************************/
 
@@ -88,6 +93,7 @@ namespace iSpeakWebApp.Controllers
             if (id == null)
                 return RedirectToAction(nameof(Index));
 
+            setViewBag(this);
             var model = get(id);
             return View(model);
         }
@@ -107,6 +113,8 @@ namespace iSpeakWebApp.Controllers
 
                     string log = string.Empty;
                     log = Helper.append(log, originalModel.Name, model.Name, UserAccountRolesModel.COL_Name.LogDisplay);
+
+                    log = Helper.addLogForList<UserAccountRolesModel>(log, originalModel.Roles_List, model.Roles_List, UserAccountsModel.COL_Roles.LogDisplay);
 
                     //ActivityLogs
                     log = Helper.append(log, originalModel.ActivityLogs_Notes, model.ActivityLogs_Notes, UserAccountRolesModel.COL_ActivityLogs_Notes.LogDisplay);
@@ -128,7 +136,6 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.UserAccounts_Edit, model.UserAccounts_Edit, UserAccountRolesModel.COL_UserAccounts_Edit.LogDisplay);
                     log = Helper.append(log, originalModel.UserAccounts_View, model.UserAccounts_View, UserAccountRolesModel.COL_UserAccounts_View.LogDisplay);
                     log = Helper.append(log, originalModel.UserAccounts_ResetPassword, model.UserAccounts_ResetPassword, UserAccountRolesModel.COL_UserAccounts_ResetPassword.LogDisplay);
-                    log = Helper.append(log, originalModel.UserAccounts_EditRoles, model.UserAccounts_EditRoles, UserAccountRolesModel.COL_UserAccounts_EditRoles.LogDisplay);
                     log = Helper.append(log, originalModel.UserAccounts_ViewAllRoles, model.UserAccounts_ViewAllRoles, UserAccountRolesModel.COL_UserAccounts_ViewAllRoles.LogDisplay);
 
                     //User Account Roles
@@ -323,6 +330,7 @@ namespace iSpeakWebApp.Controllers
 
                     if (!string.IsNullOrEmpty(log))
                     {
+                        if (model.Roles_List != null) model.Roles = string.Join(",", Util.removeNullOrEmpty(model.Roles_List).ToArray());
                         db.Entry(model).State = EntityState.Modified;
                         db.SaveChanges();
                         ActivityLogsController.AddEditLog(db, Session, model.Id, log);
@@ -334,36 +342,31 @@ namespace iSpeakWebApp.Controllers
                 }
             }
 
+            setViewBag(this);
             return View(model);
         }
 
         /* METHODS ********************************************************************************************************************************************/
 
-        public static void setDropDownListViewBag(Controller controller) { setDropDownListViewBag(controller, true); }
-        public static void setDropDownListViewBag(Controller controller, bool UserAccounts_ViewAllRoles)
+        public static void setDropDownListViewBag(Controller controller)
         {
-            List<UserAccountRolesModel> models = new List<UserAccountRolesModel>();
-            if (!UserAccounts_ViewAllRoles)
-            {
-                models.Add(get(SettingsController.get().StudentRole.Value));
-                models.Add(get(SettingsController.get().TutorRole.Value));
-            }
-            else
-                models = get();
-
-            controller.ViewBag.UserAccountRoles = new SelectList(models, UserAccountRolesModel.COL_Id.Name, UserAccountRolesModel.COL_Name.Name);
+            controller.ViewBag.UserAccountRoles = new SelectList(get(controller.Session), UserAccountRolesModel.COL_Id.Name, UserAccountRolesModel.COL_Name.Name);
         }
 
         public static void setViewBag(Controller controller)
         {
-            controller.ViewBag.UserAccountRolesModels = get();
+            //controller.ViewBag.UserAccountRolesModels = get();
+            UserAccountRolesController.setDropDownListViewBag(controller);
         }
 
         public static UserAccountRolesModel getAccesses(UserAccountsModel UserAccount) 
         {
             UserAccountRolesModel model = new UserAccountRolesModel();
-            foreach( UserAccountRolesModel item in get(null, UserAccount))
+            foreach(UserAccountRolesModel item in get(UserAccount.Roles))
             {
+                if (model.Roles_List == null && item.Roles_List.Count > 0) model.Roles_List = new List<string>();
+                if(item.Roles_List != null) model.Roles_List.AddRange(item.Roles_List);
+
                 //ActivityLogs
                 if (item.ActivityLogs_View) model.ActivityLogs_View = true;
 
@@ -380,7 +383,6 @@ namespace iSpeakWebApp.Controllers
                 if (item.UserAccounts_Edit) model.UserAccounts_Edit = true;
                 if (item.UserAccounts_View) model.UserAccounts_View = true;
                 if (item.UserAccounts_ResetPassword) model.UserAccounts_ResetPassword = true;
-                if (item.UserAccounts_EditRoles) model.UserAccounts_EditRoles = true;
                 if (item.UserAccounts_ViewAllRoles) model.UserAccounts_ViewAllRoles = true;
 
                 //UserAccountRoles
@@ -544,6 +546,8 @@ namespace iSpeakWebApp.Controllers
 
             }
 
+            if (model.Roles_List != null) model.Roles = string.Join(",", model.Roles_List.ToArray());
+
             return model;
         }
 
@@ -557,13 +561,14 @@ namespace iSpeakWebApp.Controllers
             return result != null;
         }
 
-        public static List<UserAccountRolesModel> get() { return get(null, null); }
-        public static UserAccountRolesModel get(Guid? Id) { return get(Id, null).FirstOrDefault(); }
-        public static List<UserAccountRolesModel> get(Guid? Id, UserAccountsModel UserAccount)
+        public static List<UserAccountRolesModel> get(HttpSessionStateBase Session) { return get(null, UserAccountsController.getUserAccess(Session).Roles, UserAccountsController.getUserAccess(Session).UserAccounts_ViewAllRoles); }
+        public static List<UserAccountRolesModel> get(string UserAccountRoles) { return get(null, UserAccountRoles, false); }
+        public UserAccountRolesModel get(Guid? Id) { return get(Id, null, true).FirstOrDefault(); }
+        public static List<UserAccountRolesModel> get(Guid? Id, string UserAccountRoles, bool UserAccounts_ViewAllRoles)
         {
             string UserAccountRolesClause = "";
-            if (UserAccount != null && !string.IsNullOrEmpty(UserAccount.Roles))
-                UserAccountRolesClause = string.Format(" AND UserAccountRoles.Id IN ({0}) ", LIBWebMVC.UtilWebMVC.convertToSqlIdList(UserAccount.Roles));
+            if (!string.IsNullOrEmpty(UserAccountRoles) && !UserAccounts_ViewAllRoles)
+                UserAccountRolesClause = string.Format(" AND UserAccountRoles.Id IN ({0}) ", LIBWebMVC.UtilWebMVC.convertToSqlIdList(UserAccountRoles));
 
             string sql = string.Format(@"
                         SELECT UserAccountRoles.*
@@ -577,9 +582,15 @@ namespace iSpeakWebApp.Controllers
 						ORDER BY UserAccountRoles.Name ASC
                     ", UserAccountRolesClause);
 
-            return new DBContext().Database.SqlQuery<UserAccountRolesModel>(sql,
+            List<UserAccountRolesModel> models = new DBContext().Database.SqlQuery<UserAccountRolesModel>(sql,
                     DBConnection.getSqlParameter(UserAccountRolesModel.COL_Id.Name, Id)
                 ).ToList();
+
+            foreach (UserAccountRolesModel model in models)
+            {
+                if (!string.IsNullOrEmpty(model.Roles)) model.Roles_List = model.Roles.Split(',').ToList();
+            }
+            return models;
         }
 
         /******************************************************************************************************************************************************/

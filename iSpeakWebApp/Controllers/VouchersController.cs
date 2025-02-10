@@ -179,7 +179,7 @@ namespace iSpeakWebApp.Controllers
                             Franchises.Name AS Franchises_Name,
                             Vouchers.Code + ' (' + FORMAT(Vouchers.Amount,'N0') + ')' AS DDLDescription
                         FROM Vouchers
-                            LEFT JOIN Franchises ON Franchises.Id = Vouchers.Franchises
+                            LEFT JOIN Franchises ON Franchises.Id = Vouchers.Franchises_Id
                         WHERE 1=1
 							AND (@Id IS NULL OR Vouchers.Id = @Id)
 							AND (@Id IS NOT NULL OR (

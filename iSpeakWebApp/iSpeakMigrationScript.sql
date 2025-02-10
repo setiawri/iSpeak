@@ -116,6 +116,18 @@ ALTER TABLE Vouchers ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
 GO
 
 
+---- USER ACCOUNTS ROLES ================================================================================================================
+
+
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Roles' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE UserAccountRoles ADD Roles VARCHAR(MAX) NULL;
+GO
+
+UPDATE UserAccountRoles SET UserAccounts_ViewAllRoles=1 WHERE Id='7FFE2278-1C25-4FAC-80F4-74BD26A63D96'
+GO
+
+-- NOW SET viewable Roles for each individual roles
+
 
 
 ---- LANDING PAGE UPDATE ================================================================================================================

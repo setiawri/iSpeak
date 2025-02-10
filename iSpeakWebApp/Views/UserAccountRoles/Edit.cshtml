@@ -24,8 +24,8 @@
                     <div class="card-body">
                         <fieldset>
                             <div class="form-group row">
-                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label ml-2" })
-                                <div class="col-lg-2">
+                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label ml-2 required" })
+                                <div class="col-lg-5">
                                     @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                                 </div>
@@ -137,16 +137,20 @@
                                     </div>
                                     @Html.LabelFor(model => model.UserAccounts_ResetPassword, htmlAttributes: new { @class = "input-group-text mr-2" })
                                     <div class="input-group-text">
-                                        @Html.CheckBoxFor(model => model.UserAccounts_EditRoles)
-                                    </div>
-                                    @Html.LabelFor(model => model.UserAccounts_EditRoles, htmlAttributes: new { @class = "input-group-text mr-2" })
-                                    <div class="input-group-text">
                                         @Html.CheckBoxFor(model => model.UserAccounts_ViewAllRoles)
                                     </div>
                                     @Html.LabelFor(model => model.UserAccounts_ViewAllRoles, htmlAttributes: new { @class = "input-group-text mr-2" })
                                 </div>
                             </div>
 
+                            @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "h6 mb-0 mt-2" })
+                            <div class="form-group row">
+                                <div class="col-lg-5">
+                                    @Html.ListBoxFor(model => model.Roles_List, ViewBag.UserAccountRoles as SelectList, new { @class = "form-control select2", @multiple = "multiple" })
+                                    @Html.ValidationMessageFor(model => model.Roles_List, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            
                             <hr />
 
                             <label class="h5 mb-0">USER ACCOUNT ROLES</label>

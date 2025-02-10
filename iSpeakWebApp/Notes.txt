@@ -15,18 +15,21 @@ FINAL: check for UTC date conversion
 ===============================================================================================================================================================
 
 ONGOING:
-* 
+* Currently franchise manager can only see student/tutor roles. Add column supervisor and column franchise manager in user account roles table / edit page so this can be controlled
+	-> tambahkan ViewableRoles_List di table UserAccountRoles
+	-> Tab UserAccounts jangan ditampilkan di navigation untuk user dengan role student atau tutor
+	-> Buang akses ViewAllRoles dan yang satu lagi. periksa mereka tidak terpakai
+
+	> Superuser bisa lihat semua role akun
+	> Franchise Manager bisa lihat semua role akun kecuali Superuser
+	> Manager bisa lihat semua role akun kecuali Franchise Manager dan Superuser
+	> Student dan tutor cuma bisa lihat akun sendiri
+	> Akun lain bisa lihat 
+
 
 TO DO:
 
 * Need to filter reports by franchise.
-* Currently franchise manager can only see student/tutor roles. Add column supervisor and column franchise manager in user account roles table / edit page so this can be controlled
-	- Superuser can see all roles
-	- Franchise manager and Manager should be able to see all roles except superuser and franchise manager roles.
-	- Admin can only see student and tutor roles
-	- Student and tutor can only see their info. They cannot see other roles
-	- masuk sebagai gading franchise manager. user account yang ditampilkan hanya student dan tutor. seharusnya account lain termasuk franchise manager diperlihatkan juga.
-*
 
 
 - troubleshoot:

@@ -7,7 +7,7 @@
     ViewBag.Title = "Activity Logs";
     ViewBag.Subtitle = "Index";
 
-    List<iSpeakWebApp.Models.UserAccountRolesModel> UserAccountRoles = iSpeakWebApp.Controllers.UserAccountRolesController.get();
+    List<iSpeakWebApp.Models.UserAccountRolesModel> UserAccountRoles = iSpeakWebApp.Controllers.UserAccountRolesController.get(Session);
 }
 
 <div class="content-wrapper">

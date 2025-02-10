@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using LIBUtil;
 using LIBWebMVC;
 using System.Web.Services.Description;
+using static Google.Rpc.Context.AttributeContext.Types;
 
 namespace iSpeakWebApp.Controllers
 {
@@ -40,7 +41,7 @@ namespace iSpeakWebApp.Controllers
             ViewBag.FILTER_Keyword = FILTER_Keyword;
             ViewBag.FILTER_Active = FILTER_Active;
             ViewBag.FILTER_Languages_Id = FILTER_Languages_Id;
-            UserAccountRolesController.setDropDownListViewBag(this, getUserAccess(Session).UserAccounts_ViewAllRoles);
+            UserAccountRolesController.setDropDownListViewBag(this);
             BranchesController.setDropDownListViewBag(this);
             LanguagesController.setDropDownListViewBag(this);
             PromotionEventsController.setDropDownListViewBag(this);
@@ -66,10 +67,7 @@ namespace iSpeakWebApp.Controllers
                     return View();
                 else
                 {
-                    string roles = "";
-                    if (!getUserAccess(Session).UserAccounts_ViewAllRoles)
-                        roles = SettingsController.get().StudentRole.ToString();
-                    return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id, roles, false, Helper.getActiveFranchiseId(Session)));
+                    return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id, false, Helper.getActiveFranchiseId(Session)));
                 }
             }
         }
@@ -80,10 +78,7 @@ namespace iSpeakWebApp.Controllers
         {
             setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id);
 
-            string roles = "";
-            if (!getUserAccess(Session).UserAccounts_ViewAllRoles)
-                roles = SettingsController.get().StudentRole.ToString();
-            return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id, roles, false, Helper.getActiveFranchiseId(Session)));
+            return View(get(null, null, FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_UserAccountRoles_Id, false, Helper.getActiveFranchiseId(Session)));
         }
 
         /* CREATE *********************************************************************************************************************************************/
@@ -115,8 +110,6 @@ namespace iSpeakWebApp.Controllers
                     model.Branches_Id = Helper.getActiveBranchId(Session);
                     model.Branches = model.Branches_Id.ToString();
                     model.Username = generateUsername(model.Fullname, model.Birthday);
-                    if (!getUserAccess(Session).UserAccounts_ViewAllRoles)
-                        model.Roles = SettingsController.get().StudentRole.ToString();
 
                     add(model);
                     db.SaveChanges();
@@ -243,11 +236,32 @@ namespace iSpeakWebApp.Controllers
                 model.Username = "rickyfranchise";
                 model.Password = "A2cdefGH";
             }
-            else if (string.IsNullOrEmpty(model.Username) && model.Password == "GdgFr")
+            else if (string.IsNullOrEmpty(model.Username) && model.Password == "Gdgfr")
             {
                 model.Username = "rickyGadingFrMgr";
                 model.Password = "A2cdefGH";
             }
+            else if (string.IsNullOrEmpty(model.Username) && model.Password == "Gdgmgr")
+            {
+                model.Username = "rickyGadingMgr";
+                model.Password = "A2cdefGH";
+            }
+            else if (string.IsNullOrEmpty(model.Username) && model.Password == "Gdgadm")
+            {
+                model.Username = "rickyGadingAdmin";
+                model.Password = "A2cdefGH";
+            }
+            else if (string.IsNullOrEmpty(model.Username) && model.Password == "Gdgtut")
+            {
+                model.Username = "rickyGadingTutor ";
+                model.Password = "A2cdefGH";
+            }
+            else if (string.IsNullOrEmpty(model.Username) && model.Password == "Gdgstu")
+            {
+                model.Username = "rickyGadingStudent ";
+                model.Password = "A2cdefGH";
+            }
+
 
             string hashedPassword = HashPassword(model.Password);
             UserAccountsModel userAccount = get(model.Username, hashedPassword);
@@ -321,6 +335,7 @@ namespace iSpeakWebApp.Controllers
             }
 
             ViewBag.ReturnUrl = returnUrl;
+            ViewBag.CurrentPassword = CurrentPassword;
             ViewBag.NewPassword = NewPassword;
             ViewBag.ConfirmPassword = ConfirmPassword;
             return View(model);
@@ -512,7 +527,8 @@ namespace iSpeakWebApp.Controllers
         public JsonResult Ajax_GetDDLItems(string keyword, int page, int take, string key)
         {
             int skip = take * (page - 1);
-            List<UserAccountsModel> models = get(skip, take, keyword, 1, null, null, key, SettingsController.ShowOnlyOwnUserData(Session), Helper.getActiveFranchiseId(Session));
+
+            List<UserAccountsModel> models = get(skip, take, keyword, 1, null, Util.TryParseGuid(key), SettingsController.ShowOnlyOwnUserData(Session), Helper.getActiveFranchiseId(Session));
 
             List<Select2Pagination.Select2Results> results = new List<Select2Pagination.Select2Results>();
             results.AddRange(models.Select(model => new Select2Pagination.Select2Results
@@ -578,12 +594,12 @@ namespace iSpeakWebApp.Controllers
                 ).Count() > 0;
         }
 
-        public UserAccountsModel get(string Username, string Password) { return get(null, null, null, true, null, Username, Password, null, null, null, null, null, null, false, null).FirstOrDefault(); }
-        public List<UserAccountsModel> getBirthdays(Guid Branches_Id, Guid? UserAccountRoles_Id, int BirthdayListMonth) { return get(null, null, Branches_Id, false, null, null, null, 1, UserAccountRoles_Id, BirthdayListMonth, null, null, null, false, null); }
-        public List<UserAccountsModel> get(int? skip, int? take, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_UserAccountRoles_Id, string Role, bool ShowOnlyOwnUserData, Guid? Franchises_Id) { return get(skip, take, null, false, null, null, null, FILTER_Active, FILTER_UserAccountRoles_Id, null, FILTER_Keyword, FILTER_Languages_Id, Role, ShowOnlyOwnUserData, Franchises_Id); }
-        public UserAccountsModel get(Guid Id) { return get(null, null, null, true, Id, null, null, null, null, null, null, null, null, false, null).FirstOrDefault(); }
+        public UserAccountsModel get(string Username, string Password) { return get(null, null, null, true, null, Username, Password, null, null, null, null, null, false, null).FirstOrDefault(); }
+        public List<UserAccountsModel> getBirthdays(Guid Branches_Id, Guid? UserAccountRoles_Id, int BirthdayListMonth) { return get(null, null, Branches_Id, false, null, null, null, 1, UserAccountRoles_Id, BirthdayListMonth, null, null, false, null); }
+        public List<UserAccountsModel> get(int? skip, int? take, string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_UserAccountRoles_Id, bool ShowOnlyOwnUserData, Guid? Franchises_Id) { return get(skip, take, null, false, null, null, null, FILTER_Active, FILTER_UserAccountRoles_Id, null, FILTER_Keyword, FILTER_Languages_Id, ShowOnlyOwnUserData, Franchises_Id); }
+        public UserAccountsModel get(Guid Id) { return get(null, null, null, true, Id, null, null, null, null, null, null, null, false, null).FirstOrDefault(); }
         public List<UserAccountsModel> get(int? skip, int? take, Guid? Default_Branches_Id, bool showAllBranches, Guid? Id, string Username, string Password, int? Active, Guid? UserAccountRoles_Id, 
-            int? BirthdayListMonth, string FILTER_Keyword, Guid? Language_Id, string Role, bool ShowOnlyOwnUserData, Guid? Franchises_Id)
+            int? BirthdayListMonth, string FILTER_Keyword, Guid? Language_Id, bool ShowOnlyOwnUserData, Guid? Franchises_Id)
         {
             UserAccountsModel UserAccount = getUserAccount(Session);
             Guid? UserAccountId = null;
@@ -596,8 +612,8 @@ namespace iSpeakWebApp.Controllers
                 BranchClause = string.Format(" AND UserAccounts.Branches LIKE '%{0}%' ", Helper.getActiveBranchId(Session));
 
             string RoleClause = null;
-            if (!string.IsNullOrEmpty(Role))
-                RoleClause = string.Format(" AND UserAccounts.Roles LIKE '%{0}%' ", Role);
+            if(UserAccount != null && !getUserAccess(Session).UserAccounts_ViewAllRoles)
+                RoleClause = string.Format(" AND UserAccounts.Roles IN ({0}) ", LIBWebMVC.UtilWebMVC.convertToSqlIdList(getUserAccess(Session).Roles));
 
             string sql = string.Format(@"
                         SELECT UserAccounts.*,
