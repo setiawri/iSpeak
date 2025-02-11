@@ -612,7 +612,7 @@ namespace iSpeakWebApp.Controllers
                 BranchClause = string.Format(" AND UserAccounts.Branches LIKE '%{0}%' ", Helper.getActiveBranchId(Session));
 
             string RoleClause = null;
-            if(UserAccount != null && !getUserAccess(Session).UserAccounts_ViewAllRoles)
+            if(UserAccount != null && !getUserAccess(Session).UserAccounts_ViewAllRoles && getUserAccess(Session).Roles != null)
                 RoleClause = string.Format(" AND UserAccounts.Roles IN ({0}) ", LIBWebMVC.UtilWebMVC.convertToSqlIdList(getUserAccess(Session).Roles));
 
             string sql = string.Format(@"
