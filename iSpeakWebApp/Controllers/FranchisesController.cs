@@ -144,9 +144,9 @@ namespace iSpeakWebApp.Controllers
             controller.ViewBag.Franchises = new SelectList(get(), FranchisesModel.COL_Id.Name, FranchisesModel.COL_Name.Name);
         }
 
-        public static SelectList getDropDownListSelectList(Guid selectedBranchId)
+        public static SelectList getDropDownListSelectList(Guid selectedValue)
         {
-            return new SelectList(get(), FranchisesModel.COL_Id.Name, FranchisesModel.COL_Name.Name, selectedBranchId);
+            return new SelectList(get(), FranchisesModel.COL_Id.Name, FranchisesModel.COL_Name.Name, selectedValue);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
