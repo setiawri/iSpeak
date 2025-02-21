@@ -29,9 +29,6 @@ namespace iSpeakWebApp.Controllers
         public const string NAME = "UserAccountRoles";
 
         private readonly DBContext db = new DBContext();
-        public Guid STUDENT = new Guid("A6DCC946-9AC7-4C07-A367-23D5ED91493D");
-        public Guid TUTOR = new Guid("305678D6-7100-4D7E-8264-569E2491EB12");
-        public Guid SUPERUSER = new Guid("7FFE2278-1C25-4FAC-80F4-74BD26A63D96");
 
         /* INDEX **********************************************************************************************************************************************/
 
