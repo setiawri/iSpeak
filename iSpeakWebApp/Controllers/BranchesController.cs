@@ -79,7 +79,6 @@ namespace iSpeakWebApp.Controllers
                 {
                     model.Id = Guid.NewGuid();
                     add(model);
-                    ActivityLogsController.AddCreateLog(db, Session, model.Id);
                     return RedirectToAction(nameof(Index), new { id = model.Id, FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active });
                 }
             }
