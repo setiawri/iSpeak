@@ -157,11 +157,10 @@ namespace iSpeakWebApp.Controllers
                         SELECT Vouchers.*,
                             '' AS DDLDescription
                         FROM Vouchers
-                            LEFT JOIN Franchises ON Franchises.Id = Vouchers.Franchises
                         WHERE 1=1 
 							AND (@Id IS NOT NULL OR Vouchers.Code = @Code)
 							AND (@Id IS NULL OR (Vouchers.Code = @Code AND Vouchers.Id <> @Id))
-                            AND (Products.Franchises_Id = @Franchises_Id)
+                            AND (Vouchers.Franchises_Id = @Franchises_Id)
                     ",
                     DBConnection.getSqlParameter(VouchersModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(VouchersModel.COL_Code.Name, Code),
@@ -185,6 +184,7 @@ namespace iSpeakWebApp.Controllers
 							AND (@Id IS NOT NULL OR (
                                 (@Active IS NULL OR Vouchers.Active = @Active)
     							AND (@FILTER_Keyword IS NULL OR (Vouchers.Code LIKE '%'+@FILTER_Keyword+'%' OR Vouchers.Description LIKE '%'+@FILTER_Keyword+'%'))
+                                AND (@Franchises_Id IS NULL OR Vouchers.Franchises_Id = @Franchises_Id)
                             ))
 						ORDER BY Vouchers.Code ASC
                     ",
@@ -203,7 +203,7 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(VouchersModel.COL_Code.Name, model.Code),
                     DBConnection.getSqlParameter(VouchersModel.COL_Description.Name, model.Description),
                     DBConnection.getSqlParameter(VouchersModel.COL_Amount.Name, model.Amount),
-                    DBConnection.getSqlParameter(ProductsModel.COL_Franchises_Id.Name, model.Franchises_Id)
+                    DBConnection.getSqlParameter(VouchersModel.COL_Franchises_Id.Name, model.Franchises_Id)
                 );
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
         }
@@ -216,7 +216,7 @@ namespace iSpeakWebApp.Controllers
                     DBConnection.getSqlParameter(VouchersModel.COL_Code.Name, model.Code),
                     DBConnection.getSqlParameter(VouchersModel.COL_Description.Name, model.Description),
                     DBConnection.getSqlParameter(VouchersModel.COL_Amount.Name, model.Amount),
-                    DBConnection.getSqlParameter(ProductsModel.COL_Franchises_Id.Name, model.Franchises_Id)
+                    DBConnection.getSqlParameter(VouchersModel.COL_Franchises_Id.Name, model.Franchises_Id)
                 );
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
         }
