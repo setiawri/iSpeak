@@ -163,7 +163,7 @@ namespace iSpeakWebApp.Controllers
                     ",
                     DBConnection.getSqlParameter(PromotionEventsModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(PromotionEventsModel.COL_Name.Name, Name),
-                    DBConnection.getSqlParameter(ProductsModel.COL_Franchises_Id.Name, Helper.getActiveFranchiseId(Session))
+                    DBConnection.getSqlParameter("Franchises_Id", Helper.getActiveFranchiseId(Session))
                 ).Count() > 0;
         }
 

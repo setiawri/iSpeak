@@ -52,7 +52,7 @@ namespace iSpeakWebApp.Controllers
         // GET: Payments/Print
         public ActionResult Print(Guid? id)
         {
-            if (id == null || !UserAccountsController.getUserAccess(Session).Payments_View)
+            if (id == null || !UserAccountsController.getUserAccess(Session).PayrollPayments_View)
                 return RedirectToAction(nameof(HomeController.Index), "Home");
 
             PayrollPaymentsModel model = get(Session, (Guid)id);

@@ -151,7 +151,7 @@ namespace iSpeakWebApp.Controllers
             foreach (SaleInvoiceItems_InventoryModel model in models)
             {
                 saleInvoiceLink = !access.SaleInvoices_View ? model.SaleInvoices_No :
-                    string.Format("<a href='/SaleInvoices?FILTER_chkDateFrom=false&FILTER_chkDateTo=false&FILTER_Keyword={0}' target='_blank'>{0}</a>", model.SaleInvoices_No);
+                    string.Format("<a href='/SaleInvoices/Index?FILTER_chkDateFrom=false&FILTER_chkDateTo=false&FILTER_Keyword={0}' target='_blank'>{0}</a>", model.SaleInvoices_No);
 
                 content += string.Format(@"
                             <tr>

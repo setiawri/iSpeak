@@ -42,7 +42,7 @@ namespace iSpeakWebApp.Models
 
         [Required]
         [Display(Name = "Hours")]
-        [DisplayFormat(DataFormatString = "{0:N0}")]
+        [DisplayFormat(DataFormatString = "{0:N2}")]
         public decimal SessionHours { get; set; } = 0;
         public static ModelMember COL_SessionHours = new ModelMember { Name = "SessionHours", Display = "Hours", LogDisplay = ActivityLogsController.editDecimalFormat("Session Hours") };
 
