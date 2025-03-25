@@ -1,132 +1,136 @@
 
 
-
-
-
---BACKUP DULU ONLINE DATABASE SEBELUM INI DI APPLY!!!
-
-
-
-
-
----- FRANCHISE TABLE ====================================================================================================================
-
-	--Franchises
-	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE UserAccountRoles ADD Franchises_Notes varchar(MAX) null;
-	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE UserAccountRoles ADD Franchises_Add bit default 0 not null;
-	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE UserAccountRoles ADD Franchises_View bit default 0 not null;
-	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE UserAccountRoles ADD Franchises_Edit bit default 0 not null;
-	GO
-
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Franchises' AND TABLE_SCHEMA='dbo') 
-BEGIN
-	CREATE TABLE [dbo].[Franchises]
-	(
-		[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
-		[Name] VARCHAR(MAX) NOT NULL, 
-		[Active] BIT NOT NULL DEFAULT 1,
-		[Notes] VARCHAR(MAX) NULL
-	)
-END
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'LessonPackages' AND TABLE_SCHEMA='dbo') 
+	ALTER TABLE LessonPackages ADD Franchises_Id UNIQUEIDENTIFIER NULL;
 GO
 
-INSERT INTO Franchises(Id, Name, Active) VALUES(NEWID(), 'MAIN', 1);
-
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'Branches' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE Branches ADD Franchises_Id UNIQUEIDENTIFIER NULL;
+UPDATE LessonPackages SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
 GO
 
-UPDATE Branches SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
-GO
-
-ALTER TABLE Branches ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
-GO
-
----- PETTY CASH CATEGORIES TABLE ========================================================================================================
-
-
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'PettyCashRecordsCategories' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE PettyCashRecordsCategories ADD Franchises_Id UNIQUEIDENTIFIER NULL;
-GO
-
-UPDATE PettyCashRecordsCategories SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
-GO
-
-ALTER TABLE PettyCashRecordsCategories ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
+ALTER TABLE LessonPackages ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
 GO
 
 
----- EXPENSE CATEGORIES TABLE ===========================================================================================================
 
 
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'ExpenseCategories' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE ExpenseCategories ADD Franchises_Id UNIQUEIDENTIFIER NULL;
-GO
+------ FRANCHISE TABLE ====================================================================================================================
 
-UPDATE ExpenseCategories SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
-GO
+--	--Franchises
+--	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Notes' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE UserAccountRoles ADD Franchises_Notes varchar(MAX) null;
+--	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Add' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE UserAccountRoles ADD Franchises_Add bit default 0 not null;
+--	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_View' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE UserAccountRoles ADD Franchises_View bit default 0 not null;
+--	IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Edit' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE UserAccountRoles ADD Franchises_Edit bit default 0 not null;
+--	GO
 
-ALTER TABLE ExpenseCategories ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
-GO
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Franchises' AND TABLE_SCHEMA='dbo') 
+--BEGIN
+--	CREATE TABLE [dbo].[Franchises]
+--	(
+--		[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+--		[Name] VARCHAR(MAX) NOT NULL, 
+--		[Active] BIT NOT NULL DEFAULT 1,
+--		[Notes] VARCHAR(MAX) NULL
+--	)
+--END
+--GO
 
+--INSERT INTO Franchises(Id, Name, Active) VALUES(NEWID(), 'MAIN', 1);
 
----- HOURLY RATES TABLE =================================================================================================================
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'Branches' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE Branches ADD Franchises_Id UNIQUEIDENTIFIER NULL;
+--GO
 
+--UPDATE Branches SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
+--GO
 
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'HourlyRates' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE HourlyRates ADD Franchises_Id UNIQUEIDENTIFIER NULL;
-GO
+--ALTER TABLE Branches ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
+--GO
 
-UPDATE HourlyRates SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
-GO
-
-ALTER TABLE HourlyRates ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
-GO
-
-
----- PRODUCTS TABLE =====================================================================================================================
-
-
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'Products' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE Products ADD Franchises_Id UNIQUEIDENTIFIER NULL;
-GO
-
-UPDATE Products SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
-GO
-
-ALTER TABLE Products ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
-GO
-
-
----- VOUCHERS TABLE =====================================================================================================================
+------ PETTY CASH CATEGORIES TABLE ========================================================================================================
 
 
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'Vouchers' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE Vouchers ADD Franchises_Id UNIQUEIDENTIFIER NULL;
-GO
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'PettyCashRecordsCategories' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE PettyCashRecordsCategories ADD Franchises_Id UNIQUEIDENTIFIER NULL;
+--GO
 
-UPDATE Vouchers SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
-GO
+--UPDATE PettyCashRecordsCategories SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
+--GO
 
-ALTER TABLE Vouchers ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
-GO
-
-
----- USER ACCOUNTS ROLES ================================================================================================================
+--ALTER TABLE PettyCashRecordsCategories ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
+--GO
 
 
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Roles' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE UserAccountRoles ADD Roles VARCHAR(MAX) NULL;
-GO
+------ EXPENSE CATEGORIES TABLE ===========================================================================================================
 
-UPDATE UserAccountRoles SET UserAccounts_ViewAllRoles=1 WHERE Id='7FFE2278-1C25-4FAC-80F4-74BD26A63D96'
-GO
 
--- NOW SET viewable Roles for each individual roles
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'ExpenseCategories' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE ExpenseCategories ADD Franchises_Id UNIQUEIDENTIFIER NULL;
+--GO
+
+--UPDATE ExpenseCategories SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
+--GO
+
+--ALTER TABLE ExpenseCategories ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
+--GO
+
+
+------ HOURLY RATES TABLE =================================================================================================================
+
+
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'HourlyRates' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE HourlyRates ADD Franchises_Id UNIQUEIDENTIFIER NULL;
+--GO
+
+--UPDATE HourlyRates SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
+--GO
+
+--ALTER TABLE HourlyRates ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
+--GO
+
+
+------ PRODUCTS TABLE =====================================================================================================================
+
+
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'Products' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE Products ADD Franchises_Id UNIQUEIDENTIFIER NULL;
+--GO
+
+--UPDATE Products SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
+--GO
+
+--ALTER TABLE Products ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
+--GO
+
+
+------ VOUCHERS TABLE =====================================================================================================================
+
+
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'Vouchers' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE Vouchers ADD Franchises_Id UNIQUEIDENTIFIER NULL;
+--GO
+
+--UPDATE Vouchers SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
+--GO
+
+--ALTER TABLE Vouchers ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
+--GO
+
+
+------ USER ACCOUNTS ROLES ================================================================================================================
+
+
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Roles' AND TABLE_NAME = 'UserAccountRoles' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE UserAccountRoles ADD Roles VARCHAR(MAX) NULL;
+--GO
+
+--UPDATE UserAccountRoles SET UserAccounts_ViewAllRoles=1 WHERE Id='7FFE2278-1C25-4FAC-80F4-74BD26A63D96'
+--GO
+
+---- NOW SET viewable Roles for each individual roles
 
 
 

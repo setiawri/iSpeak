@@ -63,6 +63,12 @@ namespace iSpeakWebApp.Models
         public bool IsClubSubscription { get; set; } = false;
         public static ModelMember COL_IsClubSubscription = new ModelMember { Name = "IsClubSubscription", Display = "Club", LogDisplay = ActivityLogsController.editBooleanFormat("Club Subscription") };
 
+
+        [Display(Name = "Franchise")]
+        public Guid Franchises_Id { get; set; }
+        public static ModelMember COL_Franchises_Id = new ModelMember { Name = "Franchises_Id", Display = "Franchise", LogDisplay = ActivityLogsController.editStringFormat("Franchise") };
+        public string Franchises_Name { get; set; } = string.Empty;
+
         /******************************************************************************************************************************************************/
 
         public string DDLDescription { get; set; } = "";

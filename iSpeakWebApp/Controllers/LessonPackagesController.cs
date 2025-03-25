@@ -9,7 +9,7 @@ using LIBUtil;
 namespace iSpeakWebApp.Controllers
 {
     /*
-     * LessonPackages is NOT controller by franchise. Can only be changed by central
+     * LessonPackages is separated by franchise. 
      */
 
     public class LessonPackagesController : Controller
@@ -79,6 +79,7 @@ namespace iSpeakWebApp.Controllers
                     ModelState.AddModelError(LessonPackagesModel.COL_Name.Name, $"{model.Name} sudah terdaftar");
                 else
                 {
+                    model.Franchises_Id = Helper.getActiveFranchiseId(Session);
                     add(model);
                     return RedirectToAction(nameof(Index), new { FILTER_Keyword = FILTER_Keyword, FILTER_Active = FILTER_Active, FILTER_Languages_Id = FILTER_Languages_Id, FILTER_LessonTypes_Id = FILTER_LessonTypes_Id });
                 }
@@ -100,7 +101,7 @@ namespace iSpeakWebApp.Controllers
                 return RedirectToAction(nameof(Index));
 
             setViewBag(FILTER_Keyword, FILTER_Active, FILTER_Languages_Id, FILTER_LessonTypes_Id);
-            return View(get((Guid)id));
+            return View(get(Session, (Guid)id));
         }
 
         // POST: LessonPackages/Edit/{id}
@@ -114,7 +115,7 @@ namespace iSpeakWebApp.Controllers
                     ModelState.AddModelError(LessonPackagesModel.COL_Name.Name, $"{modifiedModel.Name} sudah terdaftar");
                 else
                 {
-                    LessonPackagesModel originalModel = get(modifiedModel.Id);
+                    LessonPackagesModel originalModel = get(Session, modifiedModel.Id);
 
                     string log = string.Empty;
                     log = Helper.append(log, originalModel.Name, modifiedModel.Name, LessonPackagesModel.COL_Name.LogDisplay);
@@ -126,6 +127,7 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.Price, modifiedModel.Price, LessonPackagesModel.COL_Price.LogDisplay);
                     log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, LessonPackagesModel.COL_Notes.LogDisplay);
                     log = Helper.append(log, originalModel.IsClubSubscription, modifiedModel.IsClubSubscription, LessonPackagesModel.COL_IsClubSubscription.LogDisplay);
+                    log = Helper.append<FranchisesModel>(log, originalModel.Franchises_Id, modifiedModel.Franchises_Id, LessonPackagesModel.COL_Franchises_Id.LogDisplay);
 
                     if (!string.IsNullOrEmpty(log))
                         update(modifiedModel, log);
@@ -142,12 +144,12 @@ namespace iSpeakWebApp.Controllers
 
         public static void setDropDownListViewBag(Controller controller)
         {
-            controller.ViewBag.LessonPackages = new SelectList(get(1).OrderBy(x => x.DDLDescription), LessonPackagesModel.COL_Id.Name, LessonPackagesModel.COL_DDLDescription.Name);
+            controller.ViewBag.LessonPackages = new SelectList(get(controller.Session, 1).OrderBy(x => x.DDLDescription), LessonPackagesModel.COL_Id.Name, LessonPackagesModel.COL_DDLDescription.Name);
         }
 
         public static void setViewBag(Controller controller)
         {
-            controller.ViewBag.LessonPackagesModels = get(1);
+            controller.ViewBag.LessonPackagesModels = get(controller.Session, 1);
         }
 
         /* DATABASE METHODS ***********************************************************************************************************************************/
@@ -158,26 +160,30 @@ namespace iSpeakWebApp.Controllers
                         SELECT LessonPackages.*,
                             NULL AS Languages_Name,
                             NULL AS LessonTypes_Name,
+                            NULL AS Franchises_Name,
                             '' AS DDLDescription
                         FROM LessonPackages
                         WHERE 1=1 
 							AND (@Id IS NOT NULL OR LessonPackages.Name = @Name)
 							AND (@Id IS NULL OR (LessonPackages.Name = @Name AND LessonPackages.Id <> @Id))
+                            AND LessonPackages.Franchises_Id = @Franchises_Id
                     ",
                     DBConnection.getSqlParameter(LessonPackagesModel.COL_Id.Name, Id),
-                    DBConnection.getSqlParameter(LessonPackagesModel.COL_Name.Name, Name)
+                    DBConnection.getSqlParameter(LessonPackagesModel.COL_Name.Name, Name),
+                    DBConnection.getSqlParameter(LessonPackagesModel.COL_Franchises_Id.Name, Helper.getActiveFranchiseId(Session))
                 ).Count() > 0;
         }
 
-        public List<LessonPackagesModel> get(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id) { return get(null, FILTER_Active, FILTER_Keyword, FILTER_Languages_Id, FILTER_LessonTypes_Id); }
-        public static LessonPackagesModel get(Guid Id) { return get(Id, null, null, null, null).FirstOrDefault(); }
-        public static List<LessonPackagesModel> get(int? Active) { return get(null, Active, null, null, null); }
-        public static List<LessonPackagesModel> get(Guid? Id, int? Active, string FILTER_Keyword, Guid? Languages_Id, Guid? LessonTypes_Id)
+        public List<LessonPackagesModel> get(string FILTER_Keyword, int? FILTER_Active, Guid? FILTER_Languages_Id, Guid? FILTER_LessonTypes_Id) { return get(Session, null, FILTER_Active, FILTER_Keyword, FILTER_Languages_Id, FILTER_LessonTypes_Id); }
+        public static LessonPackagesModel get(HttpSessionStateBase Session, Guid Id) { return get(Session, Id, null, null, null, null).FirstOrDefault(); }
+        public static List<LessonPackagesModel> get(HttpSessionStateBase Session, int? Active) { return get(Session, null, Active, null, null, null); }
+        public static List<LessonPackagesModel> get(HttpSessionStateBase Session, Guid? Id, int? Active, string FILTER_Keyword, Guid? Languages_Id, Guid? LessonTypes_Id)
         {
             return new DBContext().Database.SqlQuery<LessonPackagesModel>(@"
                         SELECT LessonPackages.*,
                             Languages.Name AS Languages_Name,
                             LessonTypes.Name AS LessonTypes_Name,
+                            Franchises.Name AS Franchises_Name,
                             '['+Languages.Name+': '+LessonTypes.Name+'] '+LessonPackages.Name+' (' + 
                                 CASE WHEN LessonPackages.IsClubSubscription = 0 
                                     THEN FORMAT(LessonPackages.SessionHours,'N2') + ' hours' 
@@ -187,6 +193,7 @@ namespace iSpeakWebApp.Controllers
                         FROM LessonPackages
                             LEFT JOIN Languages ON Languages.Id = LessonPackages.Languages_Id
                             LEFT JOIN LessonTypes ON LessonTypes.Id = LessonPackages.LessonTypes_Id
+                            LEFT JOIN Franchises ON Franchises.Id = LessonPackages.Franchises_Id
                         WHERE 1=1
 							AND (@Id IS NULL OR LessonPackages.Id = @Id)
 							AND (@Id IS NOT NULL OR (
@@ -195,13 +202,15 @@ namespace iSpeakWebApp.Controllers
                                 AND (@Languages_Id IS NULL OR LessonPackages.Languages_Id = @Languages_Id)
                                 AND (@LessonTypes_Id IS NULL OR LessonPackages.LessonTypes_Id = @LessonTypes_Id)
                             ))
+                            AND LessonPackages.Franchises_Id = @Franchises_Id
 						ORDER BY LessonPackages.Name ASC
                     ",
                     DBConnection.getSqlParameter(LessonPackagesModel.COL_Id.Name, Id),
                     DBConnection.getSqlParameter(LessonPackagesModel.COL_Active.Name, Active),
                     DBConnection.getSqlParameter("FILTER_Keyword", FILTER_Keyword),
                     DBConnection.getSqlParameter(LessonPackagesModel.COL_Languages_Id.Name, Languages_Id),
-                    DBConnection.getSqlParameter(LessonPackagesModel.COL_LessonTypes_Id.Name, LessonTypes_Id)
+                    DBConnection.getSqlParameter(LessonPackagesModel.COL_LessonTypes_Id.Name, LessonTypes_Id),
+                    DBConnection.getSqlParameter(LessonPackagesModel.COL_Franchises_Id.Name, Helper.getActiveFranchiseId(Session))
                 ).ToList();
         }
 
@@ -217,7 +226,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_SessionHours.Name, model.SessionHours),
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_ExpirationMonth.Name, model.ExpirationMonth),
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_Price.Name, model.Price),
-                DBConnection.getSqlParameter(LessonPackagesModel.COL_IsClubSubscription.Name, model.IsClubSubscription)
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_IsClubSubscription.Name, model.IsClubSubscription),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_Franchises_Id.Name, model.Franchises_Id)
             );
 
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
@@ -235,7 +245,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_SessionHours.Name, model.SessionHours),
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_ExpirationMonth.Name, model.ExpirationMonth),
                 DBConnection.getSqlParameter(LessonPackagesModel.COL_Price.Name, model.Price),
-                DBConnection.getSqlParameter(LessonPackagesModel.COL_IsClubSubscription.Name, model.IsClubSubscription)
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_IsClubSubscription.Name, model.IsClubSubscription),
+                DBConnection.getSqlParameter(LessonPackagesModel.COL_Franchises_Id.Name, model.Franchises_Id)
             );
 
             ActivityLogsController.AddCreateLog(db, Session, model.Id);

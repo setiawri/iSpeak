@@ -165,7 +165,7 @@ namespace iSpeakWebApp.Controllers
             if (typeof(T) == typeof(UserAccountRolesModel))
                 value = db.UserAccountRoles.Where(x => x.Id.ToString() == value).FirstOrDefault().Name;
             else if (typeof(T) == typeof(LessonPackagesModel))
-                value = LessonPackagesController.get(new Guid(value)).Name;
+                value = LessonPackagesController.get(Session, new Guid(value)).Name;
 
             return Util.append(log, value, ", ");
         }

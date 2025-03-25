@@ -21,7 +21,6 @@ namespace iSpeakWebApp
         public DbSet<PromotionEventsModel> PromotionEvents { get; set; }
         public DbSet<LanguagesModel> Languages { get; set; }
         public DbSet<LessonTypesModel> LessonTypes { get; set; }
-        public DbSet<LessonPackagesModel> LessonPackages { get; set; }
         public DbSet<VouchersModel> Vouchers { get; set; }
         public DbSet<SuppliersModel> Suppliers { get; set; }
         public DbSet<UnitsModel> Units { get; set; }
