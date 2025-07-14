@@ -155,8 +155,10 @@ namespace iSpeakWebApp.Controllers
         {
             return db.Database.SqlQuery<VouchersModel>(@"
                         SELECT Vouchers.*,
-                            '' AS DDLDescription
+                            '' AS DDLDescription,
+                            Franchises.Name AS Franchises_Name
                         FROM Vouchers
+                            LEFT JOIN Franchises ON Franchises.Id = Vouchers.Franchises_Id
                         WHERE 1=1 
 							AND (@Id IS NOT NULL OR Vouchers.Code = @Code)
 							AND (@Id IS NULL OR (Vouchers.Code = @Code AND Vouchers.Id <> @Id))
