@@ -25,10 +25,18 @@
         </div>
         <div class="collapse navbar-collapse" id="navbar-mobile">
             @*<span class="navbar-text ml-md-3 mr-md-auto h1 my-0 py-1">@Helper.COMPANYNAME</span>*@
-            <img src="@Helper.getImageUrl("LogoWithBorder.png", Request, Server)" class="navbar-text ml-md-0 mr-md-auto h1 my-0 py-0" style="width:110px;" onclick="Action('LandingPage','LandingPage')" />
+
+            @if ((EnumLogo)Session[iSpeakWebApp.Controllers.UserAccountsController.SESSION_LogoEnumId] == EnumLogo.RoyalKids)
+            {
+                <img src="@Helper.getImageUrl("RoyalKidsLogo.jpg", Request, Server)" class="navbar-text ml-md-0 mr-md-auto h1 my-0 py-0" style="width:110px;" onclick="Action('LandingPage','LandingPage')" />
+            }
+            else
+            {
+                <img src="@Helper.getImageUrl("LogoWithBorder.png", Request, Server)" class="navbar-text ml-md-0 mr-md-auto h1 my-0 py-0" style="width:110px;" onclick="Action('LandingPage','LandingPage')" />
+            }
             <span class="navbar-text">
             </span>
-            
+
             @if (access.Franchises_View)
             {
                 <span class="navbar-text mr-1" style="width:150px;">

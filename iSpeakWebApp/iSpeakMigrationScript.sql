@@ -1,14 +1,23 @@
 
 
-IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'LessonPackages' AND TABLE_SCHEMA='dbo') 
-	ALTER TABLE LessonPackages ADD Franchises_Id UNIQUEIDENTIFIER NULL;
-GO
+------ LOGO IN BRANCHES TABLE =============================================================================================================
 
-UPDATE LessonPackages SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
-GO
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Logo_enumid' AND TABLE_NAME = 'Branches' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE Branches ADD Logo_enumid int NOT NULL DEFAULT 0;
+--GO
 
-ALTER TABLE LessonPackages ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
-GO
+
+------ LESSON PACKAGES TABLE ==============================================================================================================
+
+--IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'Franchises_Id' AND TABLE_NAME = 'LessonPackages' AND TABLE_SCHEMA='dbo') 
+--	ALTER TABLE LessonPackages ADD Franchises_Id UNIQUEIDENTIFIER NULL;
+--GO
+
+--UPDATE LessonPackages SET Franchises_Id = (SELECT TOP 1 (Id) FROM Franchises) 
+--GO
+
+--ALTER TABLE LessonPackages ALTER COLUMN Franchises_Id UNIQUEIDENTIFIER NOT NULL;
+--GO
 
 
 

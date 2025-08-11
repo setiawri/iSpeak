@@ -23,7 +23,8 @@ namespace iSpeakWebApp.Controllers
         
         public const string SESSION_UserAccount = "UserAccount";
         public const string SESSION_UserAccountAccess = "UserAccountAccess";
-        public const string SESSION_ActiveBranches_Id = "ActiveBranches_Id";
+		public const string SESSION_LogoEnumId = "LogoEnumId";
+		public const string SESSION_ActiveBranches_Id = "ActiveBranches_Id";
         public const string SESSION_ActiveFranchises_Id = "ActiveFranchises_Id";
         public const string SESSION_OnlineToken = "OnlineToken";
         public const string SESSION_Branches_Models = "Branches_Models";
@@ -368,7 +369,11 @@ namespace iSpeakWebApp.Controllers
         {
             Session[SESSION_ActiveBranches_Id] = BranchId;
 
-            Guid message = new BranchesController().get(BranchId).Franchises_Id;
+			List<BranchesModel> branches = BranchesController.get(1, BranchId.ToString());
+			if (branches.Count > 0)
+				Session[SESSION_LogoEnumId] = branches[0].Logo_enumid;
+
+			Guid message = new BranchesController().get(BranchId).Franchises_Id;
             Session[SESSION_ActiveFranchises_Id] = message;
             return Json(new { content = message }, JsonRequestBehavior.AllowGet);
         }
@@ -451,9 +456,14 @@ namespace iSpeakWebApp.Controllers
                 //keep active branch the same if this is not first login
                 if (Session[SESSION_ActiveBranches_Id] == null)
                 {
-                    Session[SESSION_ActiveBranches_Id] = model.Branches_Id;
+					Session[SESSION_ActiveBranches_Id] = model.Branches_Id;
                     Session[SESSION_ActiveFranchises_Id] = model.Franchises_Id;
-                }
+
+                    Session[SESSION_LogoEnumId] = EnumLogo.iSpeak;
+					List<BranchesModel> branches = BranchesController.get(1, model.Branches_Id.ToString());
+                    if(branches.Count > 0)
+    					Session[SESSION_LogoEnumId] = branches[0].Logo_enumid;
+				}
 
                 Session[SESSION_UserAccountAccess] = UserAccountRolesController.getAccesses(model);
                 Session[SESSION_Branches_Models] = BranchesController.get(1, model.Branches);

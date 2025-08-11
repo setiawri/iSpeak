@@ -3,7 +3,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace iSpeakWebApp
 {
-    public enum EnumReminderStatuses : byte
+	public enum EnumLogo
+	{
+		iSpeak,
+        RoyalKids
+	}
+
+	public enum EnumReminderStatuses : byte
     {
         New,
         [Description("In Progress")]

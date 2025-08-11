@@ -33,11 +33,14 @@ namespace iSpeakWebApp.Models
         public static ModelMember COL_Franchises_Id = new ModelMember { Name = "Franchises_Id", Display = "Franchise", LogDisplay = ActivityLogsController.editStringFormat("Franchise") };
         public string Franchises_Name { get; set; } = string.Empty;
 
-        public string Notes { get; set; }
+		[Display(Name = "Logo")]
+		public EnumLogo Logo_enumid { get; set; }
+		public static ModelMember COL_Logo_enumid = new ModelMember { Name = "Logo_enumid", Display = "Logo", LogDisplay = ActivityLogsController.editStringFormat("Logo") };
+
+		public string Notes { get; set; }
         public static ModelMember COL_Notes = new ModelMember { Name = "Notes", Display = "Notes", LogDisplay = ActivityLogsController.editStringFormat("Notes") };
 
         public bool Active { get; set; } = true;
         public static ModelMember COL_Active = new ModelMember { Name = "Active", Display = "Active", LogDisplay = ActivityLogsController.editBooleanFormat("Active") };
-
-    }
+	}
 }

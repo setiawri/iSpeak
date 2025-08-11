@@ -42,7 +42,7 @@
 
                     <div class="card-body" id="print-area">
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-3">
                                 <div>
                                     <h4 class="text-primary mb-2 mt-md-2">RECEIPT #@Model.No</h4>
                                     <ul class="list list-unstyled mb-0">
@@ -51,19 +51,22 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
-                                <div style="float: right">
-                                    <div class="row">
-                                        <div class="col-sm-7">
-                                            <div class="text-sm-right mt-2">
-                                                <ul class="list list-unstyled mb-0">
-                                                    <li><span class="font-weight-semibold" style="white-space: pre-line">@ViewBag.InvoiceHeaderText</span></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-5 pr-4">
+                            <div class="col-sm-9">
+                                <div style="display: flex; justify-content: flex-end">
+                                    <div class="text-sm-right mt-2 mr-2">
+                                        <ul class="list list-unstyled mb-0">
+                                            <li><span class="font-weight-semibold" style="white-space: pre-line">@ViewBag.InvoiceHeaderText</span></li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        @if ((EnumLogo)Session[iSpeakWebApp.Controllers.UserAccountsController.SESSION_LogoEnumId] == EnumLogo.RoyalKids)
+                                        {
+                                            <img src="@Helper.getImageUrl("RoyalKidsLogo.jpg", Request, Server)" class="img-responsive" style="width: 250px" />
+                                        }
+                                        else
+                                        {
                                             <img src="@Helper.getImageUrl("logo.png", Request, Server)" class="img-responsive" style="width: 150px" />
-                                        </div>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -83,9 +86,10 @@
                                     </thead>
                                     <tbody>
                                         @foreach (var item in SaleInvoiceItems)
-                                        {
-                                            <tr>                                                
-                                                
+                                            {
+                                            <tr>
+
+
                                                 <td class="align-top">@Html.ActionLink(item.SaleInvoices_No, "Index", "SaleInvoices", new { FILTER_Keyword = item.SaleInvoices_No }, new { @target = "_blank" })</td>
                                                 <td class="align-top">
                                                     @Html.DisplayFor(modelItem => item.Description)

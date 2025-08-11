@@ -1,11 +1,12 @@
-﻿using System;
+﻿using iSpeakWebApp.Models;
+using LIBUtil;
+using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Collections.Generic;
-using System.Web.Mvc;
-using iSpeakWebApp.Models;
-using LIBUtil;
 using System.Web;
+using System.Web.Mvc;
+using System.Web.Security;
 
 namespace iSpeakWebApp.Controllers
 {
@@ -122,7 +123,8 @@ namespace iSpeakWebApp.Controllers
                     log = Helper.append(log, originalModel.PhoneNumber, modifiedModel.PhoneNumber, BranchesModel.COL_PhoneNumber.LogDisplay);
                     log = Helper.append(log, originalModel.Notes, modifiedModel.Notes, BranchesModel.COL_Notes.LogDisplay);
                     log = Helper.append(log, originalModel.InvoiceHeaderText, modifiedModel.InvoiceHeaderText, BranchesModel.COL_InvoiceHeaderText.LogDisplay);
-                    log = Helper.append(log, originalModel.Active, modifiedModel.Active, BranchesModel.COL_Active.LogDisplay);
+					log = Helper.append(log, originalModel.Logo_enumid, modifiedModel.Logo_enumid, BranchesModel.COL_Logo_enumid.LogDisplay); //Util.GetEnumDescription<EnumLogo>(modifiedModel.Logo_enumid)
+					log = Helper.append(log, originalModel.Active, modifiedModel.Active, BranchesModel.COL_Active.LogDisplay);
 
                     if (!string.IsNullOrEmpty(log))
                     {
@@ -204,7 +206,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(BranchesModel.COL_Address.Name, model.Address),
                 DBConnection.getSqlParameter(BranchesModel.COL_PhoneNumber.Name, model.PhoneNumber),
                 DBConnection.getSqlParameter(BranchesModel.COL_InvoiceHeaderText.Name, model.InvoiceHeaderText),
-                DBConnection.getSqlParameter(BranchesModel.COL_Active.Name, model.Active),
+				DBConnection.getSqlParameter(BranchesModel.COL_Logo_enumid.Name, model.Logo_enumid),
+				DBConnection.getSqlParameter(BranchesModel.COL_Active.Name, model.Active),
                 DBConnection.getSqlParameter(BranchesModel.COL_Notes.Name, model.Notes)
             );
             ActivityLogsController.AddCreateLog(db, Session, model.Id);
@@ -219,7 +222,8 @@ namespace iSpeakWebApp.Controllers
                 DBConnection.getSqlParameter(BranchesModel.COL_Address.Name, model.Address),
                 DBConnection.getSqlParameter(BranchesModel.COL_PhoneNumber.Name, model.PhoneNumber),
                 DBConnection.getSqlParameter(BranchesModel.COL_InvoiceHeaderText.Name, model.InvoiceHeaderText),
-                DBConnection.getSqlParameter(BranchesModel.COL_Active.Name, model.Active),
+				DBConnection.getSqlParameter(BranchesModel.COL_Logo_enumid.Name, model.Logo_enumid),
+				DBConnection.getSqlParameter(BranchesModel.COL_Active.Name, model.Active),
                 DBConnection.getSqlParameter(BranchesModel.COL_Notes.Name, model.Notes)
             );
             ActivityLogsController.AddEditLog(db, Session, model.Id, log);
