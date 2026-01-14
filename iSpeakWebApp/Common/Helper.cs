@@ -63,14 +63,22 @@ namespace iSpeakWebApp
 
         public const string DEVCOMPUTERNAME = "RQ";
         private const string SERVERNAME_DEV = @".";
-        private const string SERVERNAME_LIVE = "SG2NWPLS19SQL-v09.mssql.shr.prod.sin2.secureserver.net"; // "43.255.152.25"; //182.50.132.53
-        private const string DBNAME = "iSpeakWeb";
-        private const string USERID = "ispeak";
-        private const string PASSWORD = "1SpeakWell";
 
-        /* METHODS ********************************************************************************************************************************************/
+		private const string PASSWORD = "1SpeakWell";
 
-        public static string ConnectionString { get {
+		// godaddy
+		//private const string SERVERNAME_LIVE = "SG2NWPLS19SQL-v09.mssql.shr.prod.sin2.secureserver.net"; 
+		//private const string DBNAME = "iSpeakWeb";
+		//private const string USERID = "ispeak";
+
+		//jaringanhosting
+		private const string SERVERNAME_LIVE = "174.34.135.42,783"; // jaringanhosting
+		private const string DBNAME = "setiawri_iSpeakWeb";
+		private const string USERID = "setiawri_ispeak";
+
+		/* METHODS ********************************************************************************************************************************************/
+
+		public static string ConnectionString { get {
                 bool ConnectToLiveDB = Convert.ToBoolean(Util.getConfigVariable("ConnectToLiveDB"));
                 string datasource = Environment.MachineName == DEVCOMPUTERNAME && !ConnectToLiveDB ? SERVERNAME_DEV : SERVERNAME_LIVE;
                 return DBConnection.getWebConnectionString(datasource, DBNAME, USERID, PASSWORD); } }
